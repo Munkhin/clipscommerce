@@ -1,14 +1,51 @@
 import { ContentQueue, QueuedContent } from './ContentQueue';
-import { TikTokPoster, InstagramPoster, YouTubePoster, PlatformPoster } from './PlatformPoster';
+import { TikTokPoster, InstagramPoster, YouTubePoster, PlatformPoster, PostScheduleResult, PostStatusResult } from './PlatformPoster';
 import { MonitoringService } from './Monitoring';
+import { withExponentialBackoff, logError, notifyAdmin } from './ErrorHandling';
+import { PerformanceOptimizer } from './PerformanceOptimizer';
+
+interface SchedulerConfig {
+  batchSize?: number;
+  intervalMs?: number;
+  maxRetries?: number;
+  enableBatchProcessing?: boolean;
+  enableRealTimeUpdates?: boolean;
+}
+
+interface SchedulerMetrics {
+  totalProcessed: number;
+  successfulPosts: number;
+  failedPosts: number;
+  averageProcessingTime: number;
+  queueLength: number;
+  platformStats: Record<string, {
+    posts: number;
+    successes: number;
+    failures: number;
+  }>;
+}
 
 export class AutoPostingScheduler {
   private queue: ContentQueue;
   private platformPosters: Record<string, PlatformPoster>;
   private intervalId?: NodeJS.Timeout;
   private monitoring: MonitoringService;
+  private performanceOptimizer: PerformanceOptimizer;
+  private config: SchedulerConfig;
+  private metrics: SchedulerMetrics;
+  private isProcessing = false;
+  private subscribers: Set<(update: any) => void> = new Set();
 
-  constructor() {
+  constructor(config: SchedulerConfig = {}) {
+    this.config = {
+      batchSize: 10,
+      intervalMs: 300000, // 5 minutes
+      maxRetries: 3,
+      enableBatchProcessing: true,
+      enableRealTimeUpdates: false,
+      ...config
+    };
+    
     this.queue = new ContentQueue();
     this.platformPosters = {
       tiktok: new TikTokPoster(),
@@ -16,6 +53,25 @@ export class AutoPostingScheduler {
       youtube: new YouTubePoster(),
     };
     this.monitoring = new MonitoringService();
+    this.performanceOptimizer = new PerformanceOptimizer();
+    
+    this.metrics = {
+      totalProcessed: 0,
+      successfulPosts: 0,
+      failedPosts: 0,
+      averageProcessingTime: 0,
+      queueLength: 0,
+      platformStats: {}
+    };
+    
+    // Initialize platform stats
+    Object.keys(this.platformPosters).forEach(platform => {
+      this.metrics.platformStats[platform] = {
+        posts: 0,
+        successes: 0,
+        failures: 0
+      };
+    });
   }
 
   async processQueue(): Promise<void> {

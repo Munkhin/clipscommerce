@@ -76,14 +76,33 @@ describe('Middleware', () => {
         search: '',
         origin: 'http://localhost:3000',
         clone: jest.fn(),
-      },
+        href: 'http://localhost:3000/',
+        protocol: 'http:',
+        hostname: 'localhost',
+        port: '3000',
+        host: 'localhost:3000',
+        searchParams: new URLSearchParams(),
+        hash: '',
+        basePath: '',
+        buildId: '',
+        defaultLocale: '',
+        domainLocale: undefined,
+        locale: '',
+        locales: [],
+        trailingSlash: false,
+      } as any,
       headers: new Headers(),
       cookies: {
         get: jest.fn(),
         set: jest.fn(),
         delete: jest.fn(),
-      },
-    };
+        getAll: jest.fn(),
+        has: jest.fn(),
+        clear: jest.fn(),
+        [Symbol.iterator]: jest.fn(),
+        size: 0,
+      } as any,
+    } as any;
 
     mockSupabaseClient = {
       auth: {

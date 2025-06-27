@@ -1,500 +1,876 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Switch } from '@/components/ui/switch';
+import { Progress } from '@/components/ui/progress';
+import { toast } from '@/components/ui/use-toast';
 import { 
-  MessageSquare, 
   Mail, 
+  FileText, 
+  BarChart3, 
   TrendingUp, 
-  Clock, 
   Users, 
-  Star,
-  Send,
-  Eye,
-  BarChart3,
-  Filter,
+  Clock, 
+  Send, 
+  Eye, 
+  Settings, 
   Download,
-  Settings,
+  CheckCircle,
+  AlertTriangle,
+  Loader2,
+  Filter,
+  Calendar,
   Zap,
-  Target,
-  Brain
+  Brain,
+  Target
 } from 'lucide-react';
-import { useTeamMode } from '@/providers/TeamModeProvider';
 
-interface FeedbackReport {
+interface ClientReport {
   id: string;
   clientId: string;
   clientName: string;
-  videoTitle: string;
-  videoTone: 'professional' | 'casual' | 'energetic' | 'educational' | 'promotional';
-  generatedAt: Date;
-  status: 'generating' | 'ready' | 'sent' | 'viewed';
-  feedbackScore: number;
-  keyInsights: string[];
+  reportType: 'weekly' | 'monthly' | 'quarterly' | 'custom';
+  period: {
+    start: Date;
+    end: Date;
+  };
+  metrics: {
+    totalViews: number;
+    totalEngagement: number;
+    avgEngagementRate: number;
+    topPerformingVideo: string;
+    growthRate: number;
+    platformBreakdown: {
+      platform: string;
+      views: number;
+      engagement: number;
+    }[];
+  };
+  insights: string[];
   recommendations: string[];
-  emailSent: boolean;
-  viewedAt?: Date;
+  status: 'generating' | 'ready' | 'sent' | 'failed';
+  tone: 'professional' | 'casual' | 'enthusiastic' | 'analytical';
+  customizations: {
+    includeComparisons: boolean;
+    includeRecommendations: boolean;
+    includeProjections: boolean;
+    brandColors: string[];
+  };
+  generatedAt: Date;
+  sentAt?: Date;
 }
 
 interface EmailTemplate {
   id: string;
   name: string;
   subject: string;
-  tone: string;
   content: string;
+  tone: 'professional' | 'casual' | 'enthusiastic' | 'analytical';
   variables: string[];
+  clientTypes: string[];
+}
+
+interface AutomationRule {
+  id: string;
+  name: string;
+  trigger: 'weekly' | 'monthly' | 'milestone' | 'performance_threshold';
+  conditions: {
+    metric: string;
+    operator: string;
+    value: number;
+  }[];
+  actions: {
+    generateReport: boolean;
+    sendEmail: boolean;
+    notifyTeam: boolean;
+    scheduleFollowup: boolean;
+  };
+  clientFilter: string[];
+  isActive: boolean;
 }
 
 export function FeedbackModule() {
-  const { clients, selectedClients } = useTeamMode();
-  const [reports, setReports] = useState<FeedbackReport[]>([]);
+  const [reports, setReports] = useState<ClientReport[]>([]);
   const [emailTemplates, setEmailTemplates] = useState<EmailTemplate[]>([]);
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [selectedClients, setSelectedClients] = useState<string[]>([]);
-  const [filterTone, setFilterTone] = useState<string>('all');
-  const [generationProgress, setGenerationProgress] = useState(0);
-  const [emailQueue, setEmailQueue] = useState<number>(0);
+  const [automationRules, setAutomationRules] = useState<AutomationRule[]>([]);
+  const [selectedClient, setSelectedClient] = useState<string>('all');
+  const [selectedReportType, setSelectedReportType] = useState<string>('all');
+  const [filterStatus, setFilterStatus] = useState<string>('all');
+  const [bulkEmailMode, setBulkEmailMode] = useState(false);
+  const [selectedReports, setSelectedReports] = useState<string[]>([]);
+  const [isGeneratingReports, setIsGeneratingReports] = useState(false);
 
-  // Initialize with sample data
+  // Initialize sample data
   useEffect(() => {
-    const sampleReports: FeedbackReport[] = [
-      {
-        id: '1',
-        clientId: 'client-1',
-        clientName: 'TechCorp Solutions',
-        videoTitle: 'Product Demo - Q4 Launch',
-        videoTone: 'professional',
-        generatedAt: new Date(Date.now() - 2 * 60 * 60 * 1000),
-        status: 'sent',
-        feedbackScore: 8.7,
-        keyInsights: [
-          'Strong opening hook captures attention',
-          'Technical explanations are clear and concise',
-          'Call-to-action could be more prominent'
+    const sampleReports: ClientReport[] = Array.from({ length: 25 }, (_, i) => {
+      const clientNames = ['TechCorp Inc.', 'Lifestyle Brand Co.', 'Fitness Pro', 'Travel Adventures', 'Food & Wine Co.'];
+      const clientName = clientNames[i % clientNames.length];
+      const reportTypes = ['weekly', 'monthly', 'quarterly'] as const;
+      const reportType = reportTypes[i % reportTypes.length];
+      const tones = ['professional', 'casual', 'enthusiastic', 'analytical'] as const;
+      const tone = tones[i % tones.length];
+
+      const startDate = new Date();
+      startDate.setDate(startDate.getDate() - (i * 7 + 30));
+      const endDate = new Date(startDate);
+      endDate.setDate(endDate.getDate() + 7);
+
+      return {
+        id: `report-${i + 1}`,
+        clientId: `client-${(i % 5) + 1}`,
+        clientName,
+        reportType,
+        period: { start: startDate, end: endDate },
+        metrics: {
+          totalViews: Math.floor(Math.random() * 1000000) + 10000,
+          totalEngagement: Math.floor(Math.random() * 50000) + 1000,
+          avgEngagementRate: Math.random() * 10 + 2,
+          topPerformingVideo: `Video ${Math.floor(Math.random() * 100) + 1}`,
+          growthRate: (Math.random() - 0.5) * 50,
+          platformBreakdown: [
+            { platform: 'TikTok', views: Math.floor(Math.random() * 500000), engagement: Math.floor(Math.random() * 25000) },
+            { platform: 'Instagram', views: Math.floor(Math.random() * 300000), engagement: Math.floor(Math.random() * 15000) },
+            { platform: 'YouTube', views: Math.floor(Math.random() * 200000), engagement: Math.floor(Math.random() * 10000) }
+          ]
+        },
+        insights: [
+          'Peak engagement occurs between 6-8 PM on weekdays',
+          'Short-form content outperforms long-form by 35%',
+          'User-generated content shows 40% higher engagement'
         ],
         recommendations: [
-          'Consider adding customer testimonials',
-          'Enhance visual transitions between sections',
-          'Include pricing information earlier'
+          'Increase posting frequency during peak hours',
+          'Focus on short-form content strategy',
+          'Implement user-generated content campaigns'
         ],
-        emailSent: true,
-        viewedAt: new Date(Date.now() - 30 * 60 * 1000)
-      },
-      {
-        id: '2',
-        clientId: 'client-2',
-        clientName: 'Creative Studios',
-        videoTitle: 'Brand Story Animation',
-        videoTone: 'energetic',
-        generatedAt: new Date(Date.now() - 1 * 60 * 60 * 1000),
-        status: 'ready',
-        feedbackScore: 9.2,
-        keyInsights: [
-          'Excellent use of color and motion',
-          'Brand personality shines through',
-          'Music perfectly complements visuals'
-        ],
-        recommendations: [
-          'Consider shorter duration for social media',
-          'Add subtitles for accessibility',
-          'Create vertical version for mobile'
-        ],
-        emailSent: false
-      }
-    ];
+        status: ['generating', 'ready', 'sent', 'failed'][Math.floor(Math.random() * 4)] as any,
+        tone,
+        customizations: {
+          includeComparisons: true,
+          includeRecommendations: true,
+          includeProjections: Math.random() > 0.5,
+          brandColors: ['#3B82F6', '#10B981']
+        },
+        generatedAt: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000),
+        sentAt: Math.random() > 0.3 ? new Date(Date.now() - Math.random() * 5 * 24 * 60 * 60 * 1000) : undefined
+      };
+    });
 
     const sampleTemplates: EmailTemplate[] = [
       {
-        id: '1',
-        name: 'Professional Feedback',
-        subject: 'Video Performance Analysis - {{videoTitle}}',
+        id: 'template-1',
+        name: 'Weekly Performance Summary',
+        subject: '📊 Weekly Performance Report - {CLIENT_NAME}',
+        content: `Hi {CLIENT_NAME},
+
+Hope you're having a great week! Here's your weekly performance summary:
+
+🚀 **This Week's Highlights:**
+- Total Views: {TOTAL_VIEWS:,}
+- Engagement Rate: {ENGAGEMENT_RATE}%
+- Top Performing Video: {TOP_VIDEO}
+
+📈 **Key Insights:**
+{INSIGHTS}
+
+💡 **Our Recommendations:**
+{RECOMMENDATIONS}
+
+Let's schedule a call this week to discuss these results and plan for next week!
+
+Best regards,
+Your Content Team`,
         tone: 'professional',
-        content: 'Dear {{clientName}},\n\nWe have completed the analysis of your video "{{videoTitle}}". Based on our comprehensive review, your video scored {{feedbackScore}}/10.\n\nKey strengths identified:\n{{keyInsights}}\n\nRecommendations for optimization:\n{{recommendations}}\n\nBest regards,\nYour Video Team',
-        variables: ['clientName', 'videoTitle', 'feedbackScore', 'keyInsights', 'recommendations']
+        variables: ['CLIENT_NAME', 'TOTAL_VIEWS', 'ENGAGEMENT_RATE', 'TOP_VIDEO', 'INSIGHTS', 'RECOMMENDATIONS'],
+        clientTypes: ['all']
       },
       {
-        id: '2',
-        name: 'Casual Feedback',
-        subject: 'Great work on {{videoTitle}}! 🎬',
-        tone: 'casual',
-        content: 'Hey {{clientName}}! 👋\n\nJust finished reviewing "{{videoTitle}}" and wow - you scored {{feedbackScore}}/10! 🌟\n\nWhat we loved:\n{{keyInsights}}\n\nSome ideas to make it even better:\n{{recommendations}}\n\nKeep up the amazing work!\nCheers! 🎉',
-        variables: ['clientName', 'videoTitle', 'feedbackScore', 'keyInsights', 'recommendations']
+        id: 'template-2',
+        name: 'Casual Monthly Update',
+        subject: '🎉 Amazing results this month, {CLIENT_NAME}!',
+        content: `Hey {CLIENT_NAME}! 👋
+
+Just had to share these incredible numbers with you:
+
+🔥 Your content is absolutely crushing it:
+- {TOTAL_VIEWS:,} views this month (that's insane!)
+- {ENGAGEMENT_RATE}% engagement rate
+- Your audience LOVED "{TOP_VIDEO}"
+
+The data shows some super interesting patterns:
+{INSIGHTS}
+
+Ready to make next month even better? Here's what we're thinking:
+{RECOMMENDATIONS}
+
+Can't wait to see what we accomplish together! 🚀
+
+Cheers,
+The Team`,
+        tone: 'enthusiastic',
+        variables: ['CLIENT_NAME', 'TOTAL_VIEWS', 'ENGAGEMENT_RATE', 'TOP_VIDEO', 'INSIGHTS', 'RECOMMENDATIONS'],
+        clientTypes: ['lifestyle', 'entertainment']
+      }
+    ];
+
+    const sampleRules: AutomationRule[] = [
+      {
+        id: 'rule-1',
+        name: 'Weekly Report Generation',
+        trigger: 'weekly',
+        conditions: [],
+        actions: {
+          generateReport: true,
+          sendEmail: true,
+          notifyTeam: false,
+          scheduleFollowup: false
+        },
+        clientFilter: [],
+        isActive: true
+      },
+      {
+        id: 'rule-2',
+        name: 'High Performance Alert',
+        trigger: 'performance_threshold',
+        conditions: [
+          { metric: 'engagement_rate', operator: '>', value: 8.0 },
+          { metric: 'views', operator: '>', value: 100000 }
+        ],
+        actions: {
+          generateReport: true,
+          sendEmail: true,
+          notifyTeam: true,
+          scheduleFollowup: true
+        },
+        clientFilter: [],
+        isActive: true
       }
     ];
 
     setReports(sampleReports);
     setEmailTemplates(sampleTemplates);
+    setAutomationRules(sampleRules);
   }, []);
 
-  const generateBulkReports = async () => {
-    setIsGenerating(true);
-    setGenerationProgress(0);
+  const filteredReports = useMemo(() => {
+    return reports.filter(report => {
+      const clientMatch = selectedClient === 'all' || report.clientId === selectedClient;
+      const typeMatch = selectedReportType === 'all' || report.reportType === selectedReportType;
+      const statusMatch = filterStatus === 'all' || report.status === filterStatus;
+      return clientMatch && typeMatch && statusMatch;
+    });
+  }, [reports, selectedClient, selectedReportType, filterStatus]);
 
-    // Simulate bulk report generation
-    const totalClients = 50;
-    for (let i = 0; i < totalClients; i++) {
-      await new Promise(resolve => setTimeout(resolve, 100));
-      setGenerationProgress((i + 1) / totalClients * 100);
+  const generateBulkReports = useCallback(async (clientIds: string[], reportType: string) => {
+    setIsGeneratingReports(true);
+    
+    try {
+      toast({
+        title: "Generating reports",
+        description: `Creating ${clientIds.length} ${reportType} reports with AI-powered insights`,
+      });
+
+      // Simulate AI report generation
+      await new Promise(resolve => setTimeout(resolve, 3000));
+
+      const newReports: ClientReport[] = clientIds.map((clientId, index) => {
+        const clientNames = ['TechCorp Inc.', 'Lifestyle Brand Co.', 'Fitness Pro'];
+        const clientName = clientNames[index % clientNames.length];
+        
+        return {
+          id: `report-${Date.now()}-${index}`,
+          clientId,
+          clientName,
+          reportType: reportType as any,
+          period: {
+            start: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+            end: new Date()
+          },
+          metrics: {
+            totalViews: Math.floor(Math.random() * 1000000) + 50000,
+            totalEngagement: Math.floor(Math.random() * 50000) + 2000,
+            avgEngagementRate: Math.random() * 8 + 3,
+            topPerformingVideo: `AI-Generated Video ${index + 1}`,
+            growthRate: Math.random() * 30 + 5,
+            platformBreakdown: [
+              { platform: 'TikTok', views: Math.floor(Math.random() * 500000), engagement: Math.floor(Math.random() * 25000) },
+              { platform: 'Instagram', views: Math.floor(Math.random() * 300000), engagement: Math.floor(Math.random() * 15000) }
+            ]
+          },
+          insights: [
+            'AI-detected optimal posting times: 7-9 PM weekdays',
+            'Trending hashtags increased reach by 45%',
+            'Video completion rate improved 25% this period'
+          ],
+          recommendations: [
+            'Leverage trending audio for 20% engagement boost',
+            'Implement carousel posts for Instagram',
+            'Create video series for audience retention'
+          ],
+          status: 'ready',
+          tone: 'professional',
+          customizations: {
+            includeComparisons: true,
+            includeRecommendations: true,
+            includeProjections: true,
+            brandColors: ['#3B82F6', '#10B981']
+          },
+          generatedAt: new Date(),
+        };
+      });
+
+      setReports(prev => [...prev, ...newReports]);
+      
+      toast({
+        title: "Reports generated successfully",
+        description: `${newReports.length} reports are ready for review and sending`,
+      });
+    } catch (error) {
+      toast({
+        title: "Error generating reports",
+        description: "Please try again or contact support",
+        variant: "destructive"
+      });
+    } finally {
+      setIsGeneratingReports(false);
     }
+  }, []);
 
-    setIsGenerating(false);
-    setEmailQueue(totalClients);
-  };
+  const sendBulkEmails = useCallback(async (reportIds: string[], templateId: string) => {
+    const template = emailTemplates.find(t => t.id === templateId);
+    if (!template) return;
 
-  const sendBulkEmails = async () => {
-    const totalEmails = emailQueue;
-    for (let i = 0; i < totalEmails; i++) {
-      await new Promise(resolve => setTimeout(resolve, 50));
-      setEmailQueue(totalEmails - i - 1);
+    toast({
+      title: "Sending bulk emails",
+      description: `Sending ${reportIds.length} personalized reports using ${template.name}`,
+    });
+
+    // Simulate email sending
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    setReports(prev => prev.map(report => 
+      reportIds.includes(report.id) 
+        ? { ...report, status: 'sent' as const, sentAt: new Date() }
+        : report
+    ));
+
+    toast({
+      title: "Emails sent successfully",
+      description: `${reportIds.length} reports delivered to clients`,
+    });
+  }, [emailTemplates]);
+
+  const downloadReport = useCallback((reportId: string) => {
+    const report = reports.find(r => r.id === reportId);
+    if (!report) return;
+
+    toast({
+      title: "Report downloaded",
+      description: `${report.reportType} report for ${report.clientName} downloaded`,
+    });
+  }, [reports]);
+
+  const getStatusIcon = (status: ClientReport['status']) => {
+    switch (status) {
+      case 'generating': return <Loader2 className="w-4 h-4 text-blue-500 animate-spin" />;
+      case 'ready': return <CheckCircle className="w-4 h-4 text-green-500" />;
+      case 'sent': return <Mail className="w-4 h-4 text-blue-500" />;
+      case 'failed': return <AlertTriangle className="w-4 h-4 text-red-500" />;
+      default: return <Clock className="w-4 h-4 text-gray-500" />;
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'generating': return 'bg-yellow-500';
-      case 'ready': return 'bg-blue-500';
-      case 'sent': return 'bg-green-500';
-      case 'viewed': return 'bg-purple-500';
+      case 'generating': return 'bg-blue-500';
+      case 'ready': return 'bg-green-500';
+      case 'sent': return 'bg-blue-600';
+      case 'failed': return 'bg-red-500';
       default: return 'bg-gray-500';
     }
   };
 
-  const getToneIcon = (tone: string) => {
+  const getToneColor = (tone: string) => {
     switch (tone) {
-      case 'professional': return <Target className="h-4 w-4" />;
-      case 'casual': return <MessageSquare className="h-4 w-4" />;
-      case 'energetic': return <Zap className="h-4 w-4" />;
-      case 'educational': return <Brain className="h-4 w-4" />;
-      default: return <MessageSquare className="h-4 w-4" />;
+      case 'professional': return 'text-blue-600 bg-blue-50';
+      case 'casual': return 'text-green-600 bg-green-50';
+      case 'enthusiastic': return 'text-orange-600 bg-orange-50';
+      case 'analytical': return 'text-purple-600 bg-purple-50';
+      default: return 'text-gray-600 bg-gray-50';
     }
   };
-
-  const filteredReports = reports.filter(report => 
-    filterTone === 'all' || report.videoTone === filterTone
-  );
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">Feedback Automation</h2>
+          <h2 className="text-3xl font-bold tracking-tight">Feedback & Reports</h2>
           <p className="text-muted-foreground">
-            Automated feedback generation and email delivery for thousands of clients
+            Automated client reporting with intelligent tone adaptation and bulk email delivery
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Badge variant="outline" className="flex items-center gap-1">
-            <Users className="h-3 w-3" />
-            {reports.length} Reports
+          <Badge variant="secondary" className="px-3 py-1">
+            <Brain className="w-4 h-4 mr-1" />
+            AI-Powered
           </Badge>
-          <Badge variant="outline" className="flex items-center gap-1">
-            <Mail className="h-3 w-3" />
-            {emailQueue} Queued
+          <Badge variant="outline" className="px-3 py-1">
+            {filteredReports.length} Reports
           </Badge>
         </div>
       </div>
 
+      {/* Quick Stats */}
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+        <Card>
+          <CardContent className="p-4">
+            <div className="text-2xl font-bold text-blue-600">
+              {reports.filter(r => r.status === 'ready').length}
+            </div>
+            <p className="text-sm text-muted-foreground">Ready to Send</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="text-2xl font-bold text-green-600">
+              {reports.filter(r => r.status === 'sent').length}
+            </div>
+            <p className="text-sm text-muted-foreground">Sent</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="text-2xl font-bold text-orange-600">
+              {reports.filter(r => r.status === 'generating').length}
+            </div>
+            <p className="text-sm text-muted-foreground">Generating</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="text-2xl font-bold text-purple-600">
+              {emailTemplates.length}
+            </div>
+            <p className="text-sm text-muted-foreground">Templates</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="text-2xl font-bold text-teal-600">
+              {automationRules.filter(r => r.isActive).length}
+            </div>
+            <p className="text-sm text-muted-foreground">Active Rules</p>
+          </CardContent>
+        </Card>
+      </div>
+
       <Tabs defaultValue="reports" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="reports">Feedback Reports</TabsTrigger>
-          <TabsTrigger value="automation">Email Automation</TabsTrigger>
-          <TabsTrigger value="templates">Templates</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="reports">Client Reports</TabsTrigger>
+          <TabsTrigger value="bulk-email">Bulk Email</TabsTrigger>
+          <TabsTrigger value="templates">Email Templates</TabsTrigger>
+          <TabsTrigger value="automation">Automation Rules</TabsTrigger>
         </TabsList>
 
         <TabsContent value="reports" className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Select value={filterTone} onValueChange={setFilterTone}>
-                <SelectTrigger className="w-48">
-                  <SelectValue placeholder="Filter by tone" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Tones</SelectItem>
-                  <SelectItem value="professional">Professional</SelectItem>
-                  <SelectItem value="casual">Casual</SelectItem>
-                  <SelectItem value="energetic">Energetic</SelectItem>
-                  <SelectItem value="educational">Educational</SelectItem>
-                </SelectContent>
-              </Select>
-              <Button variant="outline" size="sm">
-                <Filter className="h-4 w-4 mr-2" />
-                More Filters
-              </Button>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button 
-                onClick={generateBulkReports}
-                disabled={isGenerating}
-                className="flex items-center gap-2"
-              >
-                <BarChart3 className="h-4 w-4" />
-                {isGenerating ? 'Generating...' : 'Generate Bulk Reports'}
-              </Button>
-              <Button variant="outline" size="sm">
-                <Download className="h-4 w-4 mr-2" />
-                Export
-              </Button>
-            </div>
-          </div>
-
-          {isGenerating && (
-            <Card>
-              <CardContent className="pt-6">
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium">Generating feedback reports...</span>
-                    <span className="text-sm text-muted-foreground">{Math.round(generationProgress)}%</span>
-                  </div>
-                  <Progress value={generationProgress} className="w-full" />
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
-          <div className="grid gap-4">
-            {filteredReports.map((report) => (
-              <Card key={report.id}>
-                <CardContent className="pt-6">
-                  <div className="flex items-start justify-between">
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-semibold">{report.clientName}</h3>
-                        <Badge 
-                          variant="secondary" 
-                          className={`${getStatusColor(report.status)} text-white`}
-                        >
-                          {report.status}
-                        </Badge>
-                        <Badge variant="outline" className="flex items-center gap-1">
-                          {getToneIcon(report.videoTone)}
-                          {report.videoTone}
-                        </Badge>
-                      </div>
-                      <p className="text-sm text-muted-foreground">{report.videoTitle}</p>
-                      <div className="flex items-center gap-4 text-sm">
-                        <div className="flex items-center gap-1">
-                          <Star className="h-4 w-4 text-yellow-500" />
-                          <span className="font-medium">{report.feedbackScore}/10</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Clock className="h-4 w-4 text-muted-foreground" />
-                          <span>{report.generatedAt.toLocaleTimeString()}</span>
-                        </div>
-                        {report.emailSent && (
-                          <div className="flex items-center gap-1">
-                            <Mail className="h-4 w-4 text-green-500" />
-                            <span>Email sent</span>
-                          </div>
-                        )}
-                        {report.viewedAt && (
-                          <div className="flex items-center gap-1">
-                            <Eye className="h-4 w-4 text-blue-500" />
-                            <span>Viewed</span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Button variant="outline" size="sm">
-                        <Eye className="h-4 w-4 mr-2" />
-                        View
-                      </Button>
-                      {!report.emailSent && (
-                        <Button size="sm">
-                          <Send className="h-4 w-4 mr-2" />
-                          Send
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                  
-                  <div className="mt-4 grid md:grid-cols-2 gap-4">
-                    <div>
-                      <h4 className="text-sm font-medium mb-2">Key Insights</h4>
-                      <ul className="text-sm space-y-1">
-                        {report.keyInsights.map((insight, index) => (
-                          <li key={index} className="flex items-start gap-2">
-                            <div className="w-1.5 h-1.5 bg-green-500 rounded-full mt-2 flex-shrink-0" />
-                            {insight}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-medium mb-2">Recommendations</h4>
-                      <ul className="text-sm space-y-1">
-                        {report.recommendations.map((rec, index) => (
-                          <li key={index} className="flex items-start gap-2">
-                            <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-2 flex-shrink-0" />
-                            {rec}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="automation" className="space-y-4">
-          <div className="grid md:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Mail className="h-5 w-5" />
-                  Email Queue
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-blue-600">{emailQueue}</div>
-                  <p className="text-sm text-muted-foreground">Emails pending</p>
-                </div>
-                <Button 
-                  onClick={sendBulkEmails}
-                  disabled={emailQueue === 0}
-                  className="w-full"
-                >
-                  <Send className="h-4 w-4 mr-2" />
-                  Send All Emails
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Settings className="h-5 w-5" />
-                  Automation Settings
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Auto-send delay</label>
-                  <Select defaultValue="1hour">
-                    <SelectTrigger>
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <FileText className="w-5 h-5" />
+                Client Reports
+              </CardTitle>
+              <CardDescription>
+                AI-generated performance reports with adaptive tone and insights
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {/* Filters */}
+              <div className="flex gap-4 mb-6">
+                <div className="flex items-center gap-2">
+                  <Label>Client:</Label>
+                  <Select value={selectedClient} onValueChange={setSelectedClient}>
+                    <SelectTrigger className="w-48">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="immediate">Immediate</SelectItem>
-                      <SelectItem value="30min">30 minutes</SelectItem>
-                      <SelectItem value="1hour">1 hour</SelectItem>
-                      <SelectItem value="24hour">24 hours</SelectItem>
+                      <SelectItem value="all">All Clients</SelectItem>
+                      <SelectItem value="client-1">TechCorp Inc.</SelectItem>
+                      <SelectItem value="client-2">Lifestyle Brand Co.</SelectItem>
+                      <SelectItem value="client-3">Fitness Pro</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Batch size</label>
-                  <Input type="number" defaultValue="50" />
+                <div className="flex items-center gap-2">
+                  <Label>Type:</Label>
+                  <Select value={selectedReportType} onValueChange={setSelectedReportType}>
+                    <SelectTrigger className="w-32">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Types</SelectItem>
+                      <SelectItem value="weekly">Weekly</SelectItem>
+                      <SelectItem value="monthly">Monthly</SelectItem>
+                      <SelectItem value="quarterly">Quarterly</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
-                <Button variant="outline" className="w-full">
-                  Save Settings
+                <div className="flex items-center gap-2">
+                  <Label>Status:</Label>
+                  <Select value={filterStatus} onValueChange={setFilterStatus}>
+                    <SelectTrigger className="w-32">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Status</SelectItem>
+                      <SelectItem value="generating">Generating</SelectItem>
+                      <SelectItem value="ready">Ready</SelectItem>
+                      <SelectItem value="sent">Sent</SelectItem>
+                      <SelectItem value="failed">Failed</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <Button 
+                  onClick={() => generateBulkReports(['client-1', 'client-2', 'client-3'], 'weekly')}
+                  disabled={isGeneratingReports}
+                >
+                  {isGeneratingReports ? (
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  ) : (
+                    <Zap className="w-4 h-4 mr-2" />
+                  )}
+                  Generate Reports
                 </Button>
-              </CardContent>
-            </Card>
-          </div>
+              </div>
+
+              {/* Reports List */}
+              <div className="space-y-3 max-h-96 overflow-y-auto">
+                {filteredReports.map((report) => (
+                  <Card key={report.id} className="p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-3">
+                          {getStatusIcon(report.status)}
+                          <div>
+                            <h4 className="font-semibold">{report.clientName}</h4>
+                            <p className="text-sm text-muted-foreground">
+                              {report.reportType} report • {report.period.start.toLocaleDateString()} - {report.period.end.toLocaleDateString()}
+                            </p>
+                          </div>
+                          <Badge className={getToneColor(report.tone)}>
+                            {report.tone}
+                          </Badge>
+                          <Badge variant="outline">
+                            {report.status}
+                          </Badge>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                          <div>
+                            <span className="font-medium">Views:</span> {report.metrics.totalViews.toLocaleString()}
+                          </div>
+                          <div>
+                            <span className="font-medium">Engagement:</span> {report.metrics.avgEngagementRate.toFixed(1)}%
+                          </div>
+                          <div>
+                            <span className="font-medium">Growth:</span> 
+                            <span className={report.metrics.growthRate > 0 ? 'text-green-600' : 'text-red-600'}>
+                              {report.metrics.growthRate > 0 ? '+' : ''}{report.metrics.growthRate.toFixed(1)}%
+                            </span>
+                          </div>
+                          <div>
+                            <span className="font-medium">Generated:</span> {report.generatedAt.toLocaleDateString()}
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center gap-2">
+                        {report.status === 'ready' && (
+                          <>
+                            <Button size="sm" variant="outline" onClick={() => downloadReport(report.id)}>
+                              <Download className="w-3 h-3 mr-1" />
+                              Download
+                            </Button>
+                            <Button size="sm" onClick={() => sendBulkEmails([report.id], 'template-1')}>
+                              <Send className="w-3 h-3 mr-1" />
+                              Send
+                            </Button>
+                          </>
+                        )}
+                        {report.status === 'sent' && report.sentAt && (
+                          <div className="text-xs text-muted-foreground">
+                            Sent {report.sentAt.toLocaleDateString()}
+                          </div>
+                        )}
+                        <Button size="sm" variant="ghost">
+                          <Eye className="w-3 h-3" />
+                        </Button>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="bulk-email" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Mail className="w-5 h-5" />
+                Bulk Email Delivery
+              </CardTitle>
+              <CardDescription>
+                Send personalized reports to thousands of clients simultaneously
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label>Bulk Email Mode</Label>
+                    <p className="text-sm text-muted-foreground">
+                      Enable batch processing for large client lists
+                    </p>
+                  </div>
+                  <Switch
+                    checked={bulkEmailMode}
+                    onCheckedChange={setBulkEmailMode}
+                  />
+                </div>
+
+                {bulkEmailMode && (
+                  <div className="space-y-4 p-4 bg-blue-50 rounded-lg">
+                    <h4 className="font-semibold">Bulk Email Configuration</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label>Email Template</Label>
+                        <Select>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select template" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {emailTemplates.map((template) => (
+                              <SelectItem key={template.id} value={template.id}>
+                                {template.name} ({template.tone})
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <Label>Send Schedule</Label>
+                        <Select>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Send immediately" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="immediate">Send Immediately</SelectItem>
+                            <SelectItem value="scheduled">Schedule for Later</SelectItem>
+                            <SelectItem value="batch">Batch Send (1000/hour)</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                    
+                    <div className="flex gap-2">
+                      <Button onClick={() => {
+                        const readyReports = reports.filter(r => r.status === 'ready').map(r => r.id);
+                        sendBulkEmails(readyReports.slice(0, 10), 'template-1');
+                      }}>
+                        <Send className="w-4 h-4 mr-2" />
+                        Send to Ready Reports
+                      </Button>
+                      <Button variant="outline">
+                        <Calendar className="w-4 h-4 mr-2" />
+                        Schedule Delivery
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Ready Reports for Bulk Sending */}
+              <div>
+                <h4 className="font-semibold mb-3">Reports Ready for Sending</h4>
+                <div className="space-y-2">
+                  {reports
+                    .filter(r => r.status === 'ready')
+                    .slice(0, 5)
+                    .map((report) => (
+                      <div key={report.id} className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                        <div className="flex items-center gap-3">
+                          <input
+                            type="checkbox"
+                            checked={selectedReports.includes(report.id)}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setSelectedReports(prev => [...prev, report.id]);
+                              } else {
+                                setSelectedReports(prev => prev.filter(id => id !== report.id));
+                              }
+                            }}
+                          />
+                          <div>
+                            <span className="font-medium">{report.clientName}</span>
+                            <p className="text-sm text-muted-foreground">
+                              {report.reportType} report • {report.metrics.totalViews.toLocaleString()} views
+                            </p>
+                          </div>
+                        </div>
+                        <Badge className={getToneColor(report.tone)}>
+                          {report.tone}
+                        </Badge>
+                      </div>
+                    ))}
+                </div>
+                
+                {selectedReports.length > 0 && (
+                  <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+                    <div className="flex items-center justify-between">
+                      <span className="font-medium">
+                        {selectedReports.length} reports selected for bulk sending
+                      </span>
+                      <Button onClick={() => sendBulkEmails(selectedReports, 'template-1')}>
+                        <Send className="w-4 h-4 mr-2" />
+                        Send Selected
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         <TabsContent value="templates" className="space-y-4">
-          <div className="flex justify-between items-center">
-            <h3 className="text-lg font-semibold">Email Templates</h3>
-            <Button>
-              <MessageSquare className="h-4 w-4 mr-2" />
-              New Template
-            </Button>
-          </div>
-
-          <div className="grid gap-4">
-            {emailTemplates.map((template) => (
-              <Card key={template.id}>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-base">{template.name}</CardTitle>
-                    <Badge variant="outline">{template.tone}</Badge>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <label className="text-sm font-medium">Subject</label>
-                    <Input value={template.subject} readOnly />
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium">Content Preview</label>
-                    <Textarea 
-                      value={template.content.substring(0, 200) + '...'} 
-                      readOnly 
-                      rows={3}
-                    />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="text-sm text-muted-foreground">
-                      Variables: {template.variables.join(', ')}
-                    </div>
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="sm">Edit</Button>
-                      <Button variant="outline" size="sm">Test</Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="analytics" className="space-y-4">
-          <div className="grid md:grid-cols-4 gap-4">
-            <Card>
-              <CardContent className="pt-6">
-                <div className="text-center">
-                  <div className="text-2xl font-bold">1,247</div>
-                  <p className="text-sm text-muted-foreground">Reports Generated</p>
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="text-center">
-                  <div className="text-2xl font-bold">98.5%</div>
-                  <p className="text-sm text-muted-foreground">Email Delivery Rate</p>
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="text-center">
-                  <div className="text-2xl font-bold">76%</div>
-                  <p className="text-sm text-muted-foreground">Open Rate</p>
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="text-center">
-                  <div className="text-2xl font-bold">8.3</div>
-                  <p className="text-sm text-muted-foreground">Avg Score</p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
           <Card>
             <CardHeader>
-              <CardTitle>Performance Trends</CardTitle>
+              <CardTitle className="flex items-center gap-2">
+                <FileText className="w-5 h-5" />
+                Email Templates
+              </CardTitle>
+              <CardDescription>
+                Manage email templates with tone-adaptive messaging
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="h-64 flex items-center justify-center text-muted-foreground">
-                <TrendingUp className="h-8 w-8 mr-2" />
-                Analytics chart would be rendered here
+              <div className="space-y-4">
+                {emailTemplates.map((template) => (
+                  <Card key={template.id} className="p-4">
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="font-semibold">{template.name}</h4>
+                          <p className="text-sm text-muted-foreground">{template.subject}</p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Badge className={getToneColor(template.tone)}>
+                            {template.tone}
+                          </Badge>
+                          <Button size="sm" variant="outline">
+                            <Settings className="w-3 h-3 mr-1" />
+                            Edit
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      <div className="text-sm bg-gray-50 p-3 rounded">
+                        {template.content.slice(0, 200)}...
+                      </div>
+                      
+                      <div>
+                        <p className="text-xs font-medium text-muted-foreground mb-1">Variables:</p>
+                        <div className="flex flex-wrap gap-1">
+                          {template.variables.map((variable) => (
+                            <Badge key={variable} variant="outline" className="text-xs">
+                              {`{${variable}}`}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="automation" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Target className="w-5 h-5" />
+                Automation Rules
+              </CardTitle>
+              <CardDescription>
+                Configure automated report generation and delivery rules
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {automationRules.map((rule) => (
+                  <Card key={rule.id} className="p-4">
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="font-semibold">{rule.name}</h4>
+                          <p className="text-sm text-muted-foreground">
+                            Trigger: {rule.trigger.replace('_', ' ')}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Badge variant={rule.isActive ? 'default' : 'outline'}>
+                            {rule.isActive ? 'Active' : 'Inactive'}
+                          </Badge>
+                          <Switch
+                            checked={rule.isActive}
+                            onCheckedChange={(checked) => {
+                              setAutomationRules(prev => prev.map(r => 
+                                r.id === rule.id ? { ...r, isActive: checked } : r
+                              ));
+                            }}
+                          />
+                        </div>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                          <p className="font-medium">Actions:</p>
+                          <ul className="text-muted-foreground">
+                            {rule.actions.generateReport && <li>• Generate Report</li>}
+                            {rule.actions.sendEmail && <li>• Send Email</li>}
+                            {rule.actions.notifyTeam && <li>• Notify Team</li>}
+                            {rule.actions.scheduleFollowup && <li>• Schedule Follow-up</li>}
+                          </ul>
+                        </div>
+                        <div>
+                          {rule.conditions.length > 0 && (
+                            <>
+                              <p className="font-medium">Conditions:</p>
+                              <ul className="text-muted-foreground">
+                                {rule.conditions.map((condition, i) => (
+                                  <li key={i}>
+                                    • {condition.metric} {condition.operator} {condition.value}
+                                  </li>
+                                ))}
+                              </ul>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
               </div>
             </CardContent>
           </Card>
@@ -502,4 +878,4 @@ export function FeedbackModule() {
       </Tabs>
     </div>
   );
-} 
+}

@@ -296,7 +296,10 @@ export class TrainingDataCollectionService {
     const issues: string[] = [];
     const recommendations: string[] = [];
 
-    // Quality checks
+    // Enhanced quality checks
+    await this.performDetailedQualityAnalysis(platform, validPosts, issues, recommendations);
+
+    // Basic checks
     if (validPosts.length < this.config.minPostsPerPlatform) {
       issues.push(`Insufficient posts: ${validPosts.length} < ${this.config.minPostsPerPlatform} required`);
       recommendations.push('Increase lookback period or lower minimum post threshold');
@@ -312,6 +315,16 @@ export class TrainingDataCollectionService {
       recommendations.push('Review data collection filters and validation criteria');
     }
 
+    // Store quality assessment in database
+    await this.storeQualityAssessment(platform, {
+      totalPosts: data.length,
+      validPosts: validPosts.length,
+      invalidPosts,
+      averageEngagement,
+      issues,
+      recommendations
+    });
+
     return {
       platform,
       totalPosts: data.length,
@@ -325,6 +338,302 @@ export class TrainingDataCollectionService {
       issues,
       recommendations
     };
+  }
+
+  /**
+   * Perform detailed quality analysis
+   */
+  private async performDetailedQualityAnalysis(
+    platform: Platform,
+    posts: PostMetrics[],
+    issues: string[],
+    recommendations: string[]
+  ): Promise<void> {
+    // Data distribution analysis
+    this.analyzeDataDistribution(posts, issues, recommendations);
+    
+    // Content quality analysis
+    this.analyzeContentQuality(posts, issues, recommendations);
+    
+    // Temporal consistency analysis
+    this.analyzeTemporalConsistency(posts, issues, recommendations);
+    
+    // Platform-specific analysis
+    this.analyzePlatformSpecificMetrics(platform, posts, issues, recommendations);
+    
+    // Outlier detection
+    this.detectOutliers(posts, issues, recommendations);
+  }
+
+  /**
+   * Analyze data distribution for training suitability
+   */
+  private analyzeDataDistribution(
+    posts: PostMetrics[],
+    issues: string[],
+    recommendations: string[]
+  ): void {
+    const engagementRates = posts.map(p => p.metrics.engagementRate).filter(r => r > 0);
+    
+    if (engagementRates.length === 0) {
+      issues.push('No posts with positive engagement rate');
+      recommendations.push('Review engagement calculation or data collection process');
+      return;
+    }
+
+    // Calculate distribution metrics
+    const sorted = engagementRates.sort((a, b) => a - b);
+    const q1 = sorted[Math.floor(sorted.length * 0.25)];
+    const median = sorted[Math.floor(sorted.length * 0.5)];
+    const q3 = sorted[Math.floor(sorted.length * 0.75)];
+    const iqr = q3 - q1;
+
+    // Check for sufficient variance
+    if (iqr < 0.01) { // Less than 1% variance
+      issues.push(`Low engagement variance (IQR: ${(iqr * 100).toFixed(2)}%)`);
+      recommendations.push('Include more diverse content to improve model training');
+    }
+
+    // Check for skewness
+    const mean = engagementRates.reduce((sum, rate) => sum + rate, 0) / engagementRates.length;
+    const skewness = mean > median * 1.5 ? 'high-positive' : mean < median * 0.5 ? 'high-negative' : 'normal';
+    
+    if (skewness !== 'normal') {
+      issues.push(`Highly skewed engagement distribution (${skewness})`);
+      recommendations.push('Consider data transformation or balanced sampling');
+    }
+  }
+
+  /**
+   * Analyze content quality
+   */
+  private analyzeContentQuality(
+    posts: PostMetrics[],
+    issues: string[],
+    recommendations: string[]
+  ): void {
+    const emptyCaption = posts.filter(p => !p.caption || p.caption.trim().length === 0).length;
+    const noHashtags = posts.filter(p => !p.hashtags || p.hashtags.length === 0).length;
+    const zeroMetrics = posts.filter(p => 
+      p.metrics.likes === 0 && p.metrics.comments === 0 && p.metrics.views === 0
+    ).length;
+
+    const emptyCaptionRatio = emptyCaption / posts.length;
+    const noHashtagsRatio = noHashtags / posts.length;
+    const zeroMetricsRatio = zeroMetrics / posts.length;
+
+    if (emptyCaptionRatio > 0.3) {
+      issues.push(`High ratio of posts with empty captions: ${(emptyCaptionRatio * 100).toFixed(1)}%`);
+      recommendations.push('Improve caption data collection or filter out posts without captions');
+    }
+
+    if (noHashtagsRatio > 0.5) {
+      issues.push(`High ratio of posts without hashtags: ${(noHashtagsRatio * 100).toFixed(1)}%`);
+      recommendations.push('Consider platform-specific hashtag collection strategies');
+    }
+
+    if (zeroMetricsRatio > 0.1) {
+      issues.push(`High ratio of posts with zero metrics: ${(zeroMetricsRatio * 100).toFixed(1)}%`);
+      recommendations.push('Review metric collection timing or filter out unengaged posts');
+    }
+  }
+
+  /**
+   * Analyze temporal consistency
+   */
+  private analyzeTemporalConsistency(
+    posts: PostMetrics[],
+    issues: string[],
+    recommendations: string[]
+  ): void {
+    const dates = posts.map(p => new Date(p.publishedAt)).sort((a, b) => a.getTime() - b.getTime());
+    
+    if (dates.length < 2) return;
+
+    // Check for temporal gaps
+    const gaps: number[] = [];
+    for (let i = 1; i < dates.length; i++) {
+      const gapDays = (dates[i].getTime() - dates[i-1].getTime()) / (1000 * 60 * 60 * 24);
+      gaps.push(gapDays);
+    }
+
+    const maxGap = Math.max(...gaps);
+    const avgGap = gaps.reduce((sum, gap) => sum + gap, 0) / gaps.length;
+
+    if (maxGap > 7) { // More than 7 days gap
+      issues.push(`Large temporal gap detected: ${maxGap.toFixed(1)} days`);
+      recommendations.push('Ensure consistent posting frequency for better model training');
+    }
+
+    if (avgGap > 2) { // Average gap more than 2 days
+      issues.push(`Irregular posting frequency: ${avgGap.toFixed(1)} days average gap`);
+      recommendations.push('Consider including more recent posts or adjusting collection period');
+    }
+
+    // Check data freshness
+    const latestDate = dates[dates.length - 1];
+    const daysSinceLatest = (Date.now() - latestDate.getTime()) / (1000 * 60 * 60 * 24);
+    
+    if (daysSinceLatest > 7) {
+      issues.push(`Data not fresh: latest post is ${daysSinceLatest.toFixed(1)} days old`);
+      recommendations.push('Include more recent posts for better model relevance');
+    }
+  }
+
+  /**
+   * Analyze platform-specific metrics
+   */
+  private analyzePlatformSpecificMetrics(
+    platform: Platform,
+    posts: PostMetrics[],
+    issues: string[],
+    recommendations: string[]
+  ): void {
+    const platformExpectations = {
+      'TikTok': {
+        minViews: 100,
+        viewsToLikesRatio: 0.05, // 5% like rate is reasonable
+        commentsImportant: true
+      },
+      'Instagram': {
+        minViews: 50,
+        viewsToLikesRatio: 0.03, // 3% like rate
+        savesImportant: true
+      },
+      'YouTube': {
+        minViews: 10,
+        viewsToLikesRatio: 0.02, // 2% like rate
+        commentsImportant: true
+      }
+    };
+
+    const expectations = platformExpectations[platform as keyof typeof platformExpectations];
+    if (!expectations) return;
+
+    // Check view counts
+    const lowViewPosts = posts.filter(p => p.metrics.views < expectations.minViews).length;
+    if (lowViewPosts > posts.length * 0.5) {
+      issues.push(`High ratio of low-view posts for ${platform}: ${lowViewPosts}/${posts.length}`);
+      recommendations.push(`Consider filtering posts with less than ${expectations.minViews} views`);
+    }
+
+    // Check engagement ratios
+    const validRatioPosts = posts.filter(p => {
+      const ratio = p.metrics.views > 0 ? p.metrics.likes / p.metrics.views : 0;
+      return ratio >= expectations.viewsToLikesRatio * 0.5; // Allow 50% below expected
+    }).length;
+
+    if (validRatioPosts < posts.length * 0.3) {
+      issues.push(`Low engagement ratio posts for ${platform}: ${validRatioPosts}/${posts.length}`);
+      recommendations.push(`Review ${platform}-specific engagement patterns`);
+    }
+  }
+
+  /**
+   * Detect statistical outliers
+   */
+  private detectOutliers(
+    posts: PostMetrics[],
+    issues: string[],
+    recommendations: string[]
+  ): void {
+    const metrics = ['likes', 'comments', 'shares', 'views'] as const;
+    
+    for (const metric of metrics) {
+      const values = posts.map(p => p.metrics[metric]).filter(v => v > 0);
+      if (values.length === 0) continue;
+
+      const sorted = values.sort((a, b) => a - b);
+      const q1 = sorted[Math.floor(sorted.length * 0.25)];
+      const q3 = sorted[Math.floor(sorted.length * 0.75)];
+      const iqr = q3 - q1;
+      
+      const lowerBound = q1 - 1.5 * iqr;
+      const upperBound = q3 + 1.5 * iqr;
+      
+      const outliers = values.filter(v => v < lowerBound || v > upperBound);
+      const outlierRatio = outliers.length / values.length;
+
+      if (outlierRatio > 0.1) { // More than 10% outliers
+        issues.push(`High outlier ratio for ${metric}: ${(outlierRatio * 100).toFixed(1)}%`);
+        recommendations.push(`Consider outlier treatment for ${metric} values`);
+      }
+    }
+  }
+
+  /**
+   * Store quality assessment in database
+   */
+  private async storeQualityAssessment(
+    platform: Platform,
+    assessment: {
+      totalPosts: number;
+      validPosts: number;
+      invalidPosts: number;
+      averageEngagement: number;
+      issues: string[];
+      recommendations: string[];
+    }
+  ): Promise<void> {
+    try {
+      const qualityScore = this.calculateQualityScore(assessment);
+      const readyForTraining = assessment.issues.length === 0 && qualityScore >= 0.7;
+
+      const { error } = await this.supabase
+        .from('training_data_quality')
+        .insert({
+          user_id: 'system', // Will be updated when we have user context
+          platform: platform,
+          total_posts: assessment.totalPosts,
+          valid_posts: assessment.validPosts,
+          invalid_posts: assessment.invalidPosts,
+          average_engagement: assessment.averageEngagement,
+          quality_score: qualityScore,
+          issues: assessment.issues,
+          recommendations: assessment.recommendations,
+          ready_for_training: readyForTraining,
+          assessed_at: new Date().toISOString(),
+          created_at: new Date().toISOString()
+        });
+
+      if (error) {
+        console.error('Error storing quality assessment:', error);
+      }
+    } catch (error) {
+      console.error('Error in storeQualityAssessment:', error);
+    }
+  }
+
+  /**
+   * Calculate overall quality score (0-1)
+   */
+  private calculateQualityScore(assessment: {
+    totalPosts: number;
+    validPosts: number;
+    invalidPosts: number;
+    averageEngagement: number;
+    issues: string[];
+  }): number {
+    let score = 1.0;
+
+    // Penalize for invalid posts
+    const invalidRatio = assessment.invalidPosts / assessment.totalPosts;
+    score -= invalidRatio * 0.3;
+
+    // Penalize for low engagement
+    if (assessment.averageEngagement < this.config.minEngagementThreshold) {
+      score -= 0.2;
+    }
+
+    // Penalize for insufficient data
+    if (assessment.validPosts < this.config.minPostsPerPlatform) {
+      score -= 0.3;
+    }
+
+    // Penalize for each issue
+    score -= assessment.issues.length * 0.1;
+
+    return Math.max(0, Math.min(1, score));
   }
 
   private isValidPost(post: PostMetrics): boolean {

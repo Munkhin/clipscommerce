@@ -462,5 +462,236 @@ export class YouTubeClient extends BasePlatformClient {
     }
   }
 
-  // TODO: Implement other YouTube specific methods like uploadVideo, etc.
+  // Implementation of abstract methods from BasePlatformClient
+
+  /**
+   * Fetch posts from YouTube (alias for getUserVideos)
+   */
+  public async fetchPosts(options?: {
+    userId?: string;
+    cursor?: string;
+    limit?: number;
+    includeMetrics?: boolean;
+  }): Promise<ApiResponse<{ posts: any[]; nextPageCursor?: string; hasMore?: boolean }>> {
+    const result = await this.getUserVideos(options);
+    
+    // If includeMetrics is true, fetch metrics for each post
+    if (options?.includeMetrics && result.data?.posts) {
+      const postsWithMetrics = await Promise.all(
+        result.data.posts.map(async (post) => {
+          const metricsResult = await this.getPostMetrics(post.id);
+          return {
+            ...post,
+            metrics: metricsResult.data
+          };
+        })
+      );
+      result.data.posts = postsWithMetrics;
+    }
+    
+    return result;
+  }
+
+  /**
+   * Upload video content to YouTube
+   */
+  public async uploadContent(content: {
+    title?: string;
+    description?: string;
+    mediaUrl?: string;
+    mediaFile?: Buffer | Blob;
+    thumbnailUrl?: string;
+    tags?: string[];
+    scheduledPublishTime?: string;
+  }, options?: {
+    privacy?: 'public' | 'private' | 'unlisted';
+    allowComments?: boolean;
+    allowDownloads?: boolean;
+    monetization?: boolean;
+  }): Promise<ApiResponse<{ id: string; url?: string; status: string }>> {
+    const url = `/videos`;
+    
+    if (!content.mediaFile && !content.mediaUrl) {
+      return {
+        error: {
+          code: 'MISSING_MEDIA',
+          message: 'Either mediaFile or mediaUrl must be provided for upload'
+        },
+        rateLimit: this.rateLimit || undefined
+      };
+    }
+
+    try {
+      // Prepare upload metadata
+      const snippet = {
+        title: content.title || 'Untitled Video',
+        description: content.description || '',
+        tags: content.tags || [],
+        categoryId: '22', // Default to "People & Blogs"
+        defaultLanguage: 'en',
+        defaultAudioLanguage: 'en'
+      };
+
+      const status = {
+        privacyStatus: options?.privacy || 'private',
+        publishAt: content.scheduledPublishTime || undefined,
+        selfDeclaredMadeForKids: false
+      };
+
+      // For now, we'll implement a basic upload structure
+      // In a real implementation, this would handle multipart uploads
+      const requestBody = {
+        snippet,
+        status,
+        // Additional metadata
+        recordingDetails: {
+          recordingDate: new Date().toISOString()
+        }
+      };
+
+      // This is a simplified implementation
+      // Real YouTube uploads require handling multipart/form-data with the video file
+      const response = await this.request<any>({
+        url,
+        method: 'POST',
+        data: requestBody,
+        params: {
+          part: 'snippet,status,recordingDetails',
+          uploadType: 'resumable' // YouTube's resumable upload
+        }
+      });
+
+      return {
+        data: {
+          id: response.data.id,
+          url: `https://www.youtube.com/watch?v=${response.data.id}`,
+          status: response.data.status?.uploadStatus || 'uploaded'
+        },
+        rateLimit: this.rateLimit || undefined
+      };
+    } catch (error: any) {
+      this.log('error', `Failed to upload content to YouTube`, { error: error.message, stack: error.stack });
+      if (error instanceof ApiError || error instanceof PlatformError || error instanceof RateLimitError) {
+        return { error: { code: error.code, message: error.message, details: error.details }, rateLimit: this.rateLimit || undefined };
+      }
+      return {
+        error: {
+          code: 'UPLOAD_FAILED',
+          message: error.message || 'Failed to upload content to YouTube'
+        },
+        rateLimit: this.rateLimit || undefined
+      };
+    }
+  }
+
+  /**
+   * Get analytics data from YouTube
+   */
+  public async getAnalytics(options?: {
+    dateRange?: { start: string; end: string };
+    metrics?: string[];
+    postIds?: string[];
+    granularity?: 'hour' | 'day' | 'week' | 'month';
+  }): Promise<ApiResponse<{
+    overview?: {
+      totalViews: number;
+      totalLikes: number;
+      totalComments: number;
+      totalShares: number;
+      engagementRate: number;
+    };
+    posts?: Array<{
+      id: string;
+      metrics: {
+        views: number;
+        likes: number;
+        comments: number;
+        shares: number;
+        engagementRate: number;
+      };
+      timestamp: string;
+    }>;
+    timeSeries?: Array<{
+      date: string;
+      views: number;
+      likes: number;
+      comments: number;
+      shares: number;
+    }>;
+  }>> {
+    try {
+      const channelId = await this.ensureChannelId();
+      
+      // Get channel analytics - using channels endpoint for overall stats
+      const channelResponse = await this.request<YouTubeChannelListResponse>({
+        url: `/channels`,
+        method: 'GET',
+        params: {
+          part: 'statistics',
+          id: channelId
+        }
+      });
+
+      const channelData = channelResponse.data?.items?.[0];
+      let overview;
+      
+      if (channelData?.statistics) {
+        const stats = channelData.statistics;
+        overview = {
+          totalViews: parseInt(stats.viewCount || '0', 10),
+          totalLikes: 0, // YouTube doesn't provide total likes at channel level
+          totalComments: 0, // YouTube doesn't provide total comments at channel level
+          totalShares: 0, // YouTube doesn't provide share counts
+          engagementRate: 0 // Would need to calculate from individual videos
+        };
+      }
+
+      // Get individual post metrics if postIds are provided
+      let posts;
+      if (options?.postIds && options.postIds.length > 0) {
+        posts = await Promise.all(
+          options.postIds.map(async (postId) => {
+            const metricsResult = await this.getPostMetrics(postId);
+            if (metricsResult.data) {
+              return {
+                id: postId,
+                metrics: {
+                  views: metricsResult.data.views,
+                  likes: metricsResult.data.likes,
+                  comments: metricsResult.data.comments,
+                  shares: metricsResult.data.shares,
+                  engagementRate: metricsResult.data.engagementRate || 0
+                },
+                timestamp: metricsResult.data.timestamp
+              };
+            }
+            return null;
+          })
+        );
+        posts = posts.filter(post => post !== null);
+      }
+
+      return {
+        data: {
+          overview,
+          posts,
+          // YouTube Analytics API would be needed for detailed time series data
+          timeSeries: [] // Placeholder - would require YouTube Analytics API
+        },
+        rateLimit: this.rateLimit || undefined
+      };
+    } catch (error: any) {
+      this.log('error', `Failed to get analytics from YouTube`, { error: error.message, stack: error.stack });
+      if (error instanceof ApiError || error instanceof PlatformError || error instanceof RateLimitError) {
+        return { error: { code: error.code, message: error.message, details: error.details }, rateLimit: this.rateLimit || undefined };
+      }
+      return {
+        error: {
+          code: 'ANALYTICS_FAILED',
+          message: error.message || 'Failed to get analytics from YouTube'
+        },
+        rateLimit: this.rateLimit || undefined
+      };
+    }
+  }
 }

@@ -8,7 +8,7 @@ let mockExperimentCounter = 0;
 jest.mock('../services/AIImprovementService', () => ({
   aiImprovementService: {
     initialize: jest.fn().mockResolvedValue(undefined),
-    createABTest: jest.fn().mockImplementation((request) => {
+    createABTest: jest.fn().mockImplementation((request: any) => {
       mockExperimentCounter++;
       return Promise.resolve({
         experiment: {
@@ -34,7 +34,7 @@ jest.mock('../services/AIImprovementService', () => ({
         assignmentInstructions: 'Assign users using assignVariant()',
       });
     }),
-    analyzeABTest: jest.fn().mockImplementation((experimentId) => Promise.resolve({
+    analyzeABTest: jest.fn().mockImplementation((experimentId: string) => Promise.resolve({
       analysis: {
         experimentId,
         status: 'insufficient_data',
@@ -183,7 +183,7 @@ describe('ABTestingAgent', () => {
     });
 
     it('should handle different variation types', async () => {
-      const variationTypes = ['caption', 'hashtags', 'timing'] as const;
+      const variationTypes = ['caption', 'hashtags', 'tone'] as const;
       
       for (const variationType of variationTypes) {
         const task: ABTestingTask = {
@@ -348,7 +348,7 @@ describe('ABTestingAgent', () => {
       });
       expect(completedAnalysis.status).toBe('completed');
       expect(completedAnalysis.results.length).toBe(2);
-      expect(completedAnalysis.results.some(r => r.isWinner)).toBe(true);
+      expect(completedAnalysis.results.some((r: any) => r.isWinner)).toBe(true);
     });
 
     it('should handle analysis errors gracefully', async () => {

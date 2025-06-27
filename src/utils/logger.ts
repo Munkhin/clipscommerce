@@ -313,12 +313,7 @@ class StructuredLogger {
 // Create the main logger instance
 export const logger = new StructuredLogger(baseLogger);
 
-// Export utility functions
-export {
-  getCorrelationContext,
-  setCorrelationContext,
-  runWithContext,
-};
+// Export utility functions - removed duplicate exports that were already exported above
 
 // Export the raw pino logger for special cases
 export const rawLogger = baseLogger;

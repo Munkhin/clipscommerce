@@ -23,12 +23,14 @@ import {
   Experiment,
   ExperimentVariant,
   ExperimentAnalysis,
+  ExperimentManager,
   createExperiment,
   analyzeExperiment,
   generateContentVariations,
   assignVariant,
   recordExperimentData
 } from '../functions/abTesting';
+import { SupabaseClient } from '@supabase/supabase-js';
 import { predictEngagement, evaluateModel, updateModel } from '../functions/updateModel';
 
 /**
@@ -38,9 +40,15 @@ import { predictEngagement, evaluateModel, updateModel } from '../functions/upda
 export class AIImprovementService {
   private feedbackLoop: AIImprovementFeedbackLoop;
   private initialized: boolean = false;
+  private supabase: SupabaseClient | null = null;
+  private experimentManager: ExperimentManager | null = null;
 
-  constructor() {
+  constructor(supabase?: SupabaseClient) {
     this.feedbackLoop = new AIImprovementFeedbackLoop();
+    if (supabase) {
+      this.supabase = supabase;
+      this.experimentManager = new ExperimentManager(supabase);
+    }
   }
 
   /**
@@ -195,20 +203,42 @@ export class AIImprovementService {
     // Generate content variations
     const variants = generateContentVariations({ ...baseContent, platform }, variationType);
 
-    // Create experiment
-    const experiment = createExperiment({
-      name,
-      description,
-      platform,
-      status: 'draft',
-      variants,
-      startDate: new Date(),
-      endDate: new Date(Date.now() + duration * 24 * 60 * 60 * 1000),
-      targetMetric,
-      minimumSampleSize: 100,
-      confidenceLevel: 0.95,
-      createdBy: userId,
-    });
+    // Create experiment using database-backed manager if available
+    let experiment: Experiment;
+    if (this.experimentManager) {
+      experiment = await this.experimentManager.createExperiment({
+        name,
+        description,
+        platform,
+        status: 'draft',
+        variants,
+        startDate: new Date(),
+        endDate: new Date(Date.now() + duration * 24 * 60 * 60 * 1000),
+        targetMetric,
+        minimumSampleSize: 100,
+        confidenceLevel: 0.95,
+        createdBy: userId,
+        priorAlpha: 1, // Default Bayesian prior
+        priorBeta: 1
+      });
+    } else {
+      // Fallback to in-memory for testing
+      experiment = await createExperiment({
+        name,
+        description,
+        platform,
+        status: 'draft',
+        variants,
+        startDate: new Date(),
+        endDate: new Date(Date.now() + duration * 24 * 60 * 60 * 1000),
+        targetMetric,
+        minimumSampleSize: 100,
+        confidenceLevel: 0.95,
+        createdBy: userId,
+        priorAlpha: 1,
+        priorBeta: 1
+      }, this.supabase!);
+    }
 
     const assignmentInstructions = this.generateAssignmentInstructions(experiment, variants);
 
@@ -229,7 +259,12 @@ export class AIImprovementService {
   }> {
     await this.ensureInitialized();
 
-    const analysis = analyzeExperiment(experimentId);
+    let analysis: ExperimentAnalysis | null;
+    if (this.experimentManager) {
+      analysis = await this.experimentManager.analyzeExperiment(experimentId);
+    } else {
+      analysis = await analyzeExperiment(experimentId, this.supabase!);
+    }
     
     if (!analysis) {
       return {

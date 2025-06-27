@@ -65,6 +65,9 @@ export class TrainingOrchestrator extends EventEmitter {
       currentPhase: 'Initializing training session'
     };
 
+    // Store session in database
+    await this.storeTrainingSession(this.currentSession, options);
+
     this.emit('session_started', this.currentSession);
 
     try {
@@ -78,10 +81,10 @@ export class TrainingOrchestrator extends EventEmitter {
       await this.executeModelTraining();
       
       // Phase 4: Completion
-      this.completeTraining();
+      await this.completeTraining();
 
     } catch (error) {
-      this.failTraining(error instanceof Error ? error.message : 'Unknown error');
+      await this.failTraining(error instanceof Error ? error.message : 'Unknown error');
       throw error;
     }
 
@@ -93,7 +96,7 @@ export class TrainingOrchestrator extends EventEmitter {
     platforms: Platform[],
     options: any
   ): Promise<void> {
-    this.updateSession('preparing', 5, 'Setting up training environment...');
+    await this.updateSession('preparing', 5, 'Setting up training environment...');
 
     // Configure data collection
     const dataConfig: DataCollectionConfig = {
@@ -138,7 +141,7 @@ export class TrainingOrchestrator extends EventEmitter {
     // Set up event listeners
     this.setupEventListeners();
 
-    this.updateSession('preparing', 10, 'Training environment ready');
+    await this.updateSession('preparing', 10, 'Training environment ready');
   }
 
   private async collectAndValidateData(): Promise<void> {
@@ -146,7 +149,7 @@ export class TrainingOrchestrator extends EventEmitter {
       throw new Error('Training environment not properly initialized');
     }
 
-    this.updateSession('collecting_data', 15, 'Starting data collection...');
+    await this.updateSession('collecting_data', 15, 'Starting data collection...');
 
     // Validate data access first
     const accessValidation = await this.dataCollectionService.validateDataAccess(this.currentSession.userId);
@@ -168,7 +171,7 @@ export class TrainingOrchestrator extends EventEmitter {
       throw new Error(`Data quality insufficient for training: ${issues}`);
     }
 
-    this.updateSession('collecting_data', 40, 
+    await this.updateSession('collecting_data', 40, 
       `Data collection completed: ${collectionResult.summary.totalPosts} posts collected`);
 
     this.emit('data_collection_completed', {
@@ -182,7 +185,7 @@ export class TrainingOrchestrator extends EventEmitter {
       throw new Error('Training pipeline not initialized');
     }
 
-    this.updateSession('training', 45, 'Starting model training...');
+    await this.updateSession('training', 45, 'Starting model training...');
 
     await this.trainingPipeline.startTraining(
       this.currentSession.userId,
@@ -192,10 +195,10 @@ export class TrainingOrchestrator extends EventEmitter {
     // Get training results
     this.currentSession.modelResults = this.trainingPipeline.getResults();
 
-    this.updateSession('training', 95, 'Model training completed');
+    await this.updateSession('training', 95, 'Model training completed');
   }
 
-  private completeTraining(): void {
+  private async completeTraining(): Promise<void> {
     if (!this.currentSession) return;
 
     this.currentSession.status = 'completed';
@@ -203,29 +206,38 @@ export class TrainingOrchestrator extends EventEmitter {
     this.currentSession.progress = 100;
     this.currentSession.currentPhase = 'Training completed successfully';
 
+    // Update in database
+    await this.updateTrainingSessionInDb(this.currentSession);
+
     this.emit('session_completed', this.currentSession);
   }
 
-  private failTraining(error: string): void {
+  private async failTraining(error: string): Promise<void> {
     if (!this.currentSession) return;
 
     this.currentSession.status = 'failed';
     this.currentSession.endTime = new Date();
     this.currentSession.error = error;
 
+    // Update in database
+    await this.updateTrainingSessionInDb(this.currentSession);
+
     this.emit('session_failed', { session: this.currentSession, error });
   }
 
-  private updateSession(
+  private async updateSession(
     status: TrainingSession['status'],
     progress: number,
     currentPhase: string
-  ): void {
+  ): Promise<void> {
     if (!this.currentSession) return;
 
     this.currentSession.status = status;
     this.currentSession.progress = progress;
     this.currentSession.currentPhase = currentPhase;
+
+    // Update in database
+    await this.updateTrainingSessionInDb(this.currentSession);
 
     this.emit('session_updated', this.currentSession);
   }
@@ -272,10 +284,146 @@ export class TrainingOrchestrator extends EventEmitter {
     };
   }
 
-  async getTrainingHistory(userId: string): Promise<TrainingSession[]> {
-    // In a real implementation, this would query a database
-    // For now, return empty array
-    return [];
+  async getTrainingHistory(userId: string, limit: number = 10): Promise<TrainingSession[]> {
+    try {
+      const { data, error } = await this.supabase
+        .from('model_training_sessions')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false })
+        .limit(limit);
+
+      if (error) {
+        console.error('Error fetching training history:', error);
+        return [];
+      }
+
+      return (data || []).map(row => this.mapDbRowToSession(row));
+    } catch (error) {
+      console.error('Error in getTrainingHistory:', error);
+      return [];
+    }
+  }
+
+  /**
+   * Store new training session in database
+   */
+  private async storeTrainingSession(session: TrainingSession, options: any): Promise<void> {
+    try {
+      const { error } = await this.supabase
+        .from('model_training_sessions')
+        .insert({
+          session_id: session.id,
+          user_id: session.userId,
+          platforms: session.platforms,
+          status: session.status,
+          progress: session.progress,
+          current_phase: session.currentPhase,
+          config: {
+            ...options,
+            startTime: session.startTime.toISOString()
+          },
+          started_at: session.startTime.toISOString(),
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        });
+
+      if (error) {
+        console.error('Error storing training session:', error);
+      }
+    } catch (error) {
+      console.error('Error in storeTrainingSession:', error);
+    }
+  }
+
+  /**
+   * Update training session in database
+   */
+  private async updateTrainingSessionInDb(session: TrainingSession): Promise<void> {
+    try {
+      const updateData: any = {
+        status: session.status,
+        progress: session.progress,
+        current_phase: session.currentPhase,
+        updated_at: new Date().toISOString()
+      };
+
+      if (session.endTime) {
+        updateData.completed_at = session.endTime.toISOString();
+      }
+
+      if (session.error) {
+        updateData.error_message = session.error;
+      }
+
+      if (session.dataQuality) {
+        updateData.data_quality = session.dataQuality;
+      }
+
+      if (session.modelResults) {
+        updateData.model_results = Object.fromEntries(session.modelResults);
+      }
+
+      const { error } = await this.supabase
+        .from('model_training_sessions')
+        .update(updateData)
+        .eq('session_id', session.id);
+
+      if (error) {
+        console.error('Error updating training session:', error);
+      }
+    } catch (error) {
+      console.error('Error in updateTrainingSessionInDb:', error);
+    }
+  }
+
+  /**
+   * Load training session from database
+   */
+  async loadTrainingSession(sessionId: string): Promise<TrainingSession | null> {
+    try {
+      const { data, error } = await this.supabase
+        .from('model_training_sessions')
+        .select('*')
+        .eq('session_id', sessionId)
+        .single();
+
+      if (error || !data) {
+        return null;
+      }
+
+      return this.mapDbRowToSession(data);
+    } catch (error) {
+      console.error('Error loading training session:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Map database row to TrainingSession object
+   */
+  private mapDbRowToSession(row: any): TrainingSession {
+    const session: TrainingSession = {
+      id: row.session_id,
+      userId: row.user_id,
+      platforms: row.platforms || [],
+      status: row.status,
+      progress: row.progress || 0,
+      currentPhase: row.current_phase || '',
+      startTime: new Date(row.started_at),
+      endTime: row.completed_at ? new Date(row.completed_at) : undefined,
+      error: row.error_message
+    };
+
+    if (row.data_quality) {
+      session.dataQuality = row.data_quality;
+    }
+
+    if (row.model_results) {
+      session.modelResults = new Map(Object.entries(row.model_results));
+    }
+
+    return session;
   }
 
   isTraining(): boolean {

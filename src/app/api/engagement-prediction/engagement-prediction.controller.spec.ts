@@ -1,7 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { EngagementPredictionController } from './engagement-prediction.controller';
 import { EngagementPredictionService } from './engagement-prediction.service';
-import { EngagementPredictionAgent, ModelEvaluation } from '../../workflows/reports/index';
+import { EngagementPredictionAgent } from '../../workflows/reports/index';
+import { EngagementPrediction, ModelEvaluation } from '../../workflows/reports/types/EngagementTypes';
 import { CreatePredictionDto } from './dto/create-prediction.dto';
 import { PredictionResponseDto } from './dto/prediction-response.dto';
 import { SupabaseClient } from '@supabase/supabase-js';
@@ -45,7 +46,7 @@ describe('EngagementPredictionController', () => {
     mockEngagementPredictionAgent.isReady.mockReturnValue(true); // Default to ready
 
     const module: TestingModule = await Test.createTestingModule({
-      imports: [ConfigModule.forRoot({ ছবিটিenvFilePath: '.env.test', ignoreEnvFile: false })], // Load test env vars
+      imports: [ConfigModule.forRoot({ envFilePath: '.env.test', ignoreEnvFile: false })], // Load test env vars
       controllers: [EngagementPredictionController],
       providers: [
         EngagementPredictionService,
@@ -150,6 +151,7 @@ describe('EngagementPredictionController', () => {
       const mockPerformance: ModelEvaluation = {
         engagementModel: { mae: 0.1, rmse: 0.1, r2Score: 0.8, mape: 10 },
         viralModel: { accuracy: 0.9, precision: 0.9, recall: 0.9, f1Score: 0.9, rocAuc: 0.9, prAuc: 0.9 },
+        crossValidationScores: [0.8, 0.85, 0.9, 0.82, 0.88],
         featureImportance: { testFeature: 0.5 },
         evaluationDate: new Date(),
       };

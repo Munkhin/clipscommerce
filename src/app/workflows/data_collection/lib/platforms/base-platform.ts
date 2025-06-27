@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosHeaders, InternalAxiosRequestConfig } from 'axios';
 import { EventEmitter } from 'events';
 import { PlatformError, RateLimitError, ApiError } from '../utils/errors';
-import { retryWithBackoff } from '../../../../shared_infra';
+import { retryWithBackoff } from '../../../shared_infra';
 import { Platform } from '../../../deliverables/types/deliverables_types';
 import { ApiRateLimit as ImportedApiRateLimit, ApiConfig } from './types'; // Import the specific type
 import {
@@ -110,6 +110,77 @@ export abstract class BasePlatformClient extends EventEmitter {
    * @param headers Response headers from the API
    */
   protected abstract handleRateLimit(headers: Record<string, HeaderValue>): void;
+
+  /**
+   * Fetch posts from the platform (must be implemented by child classes)
+   * @param options Options for fetching posts
+   * @returns Promise with posts data
+   */
+  public abstract fetchPosts(options?: {
+    userId?: string;
+    cursor?: string;
+    limit?: number;
+    includeMetrics?: boolean;
+  }): Promise<ApiResponse<{ posts: any[]; nextPageCursor?: string; hasMore?: boolean }>>;
+
+  /**
+   * Upload content to the platform (must be implemented by child classes)
+   * @param content Content to upload
+   * @param options Upload options
+   * @returns Promise with upload result
+   */
+  public abstract uploadContent(content: {
+    title?: string;
+    description?: string;
+    mediaUrl?: string;
+    mediaFile?: Buffer | Blob;
+    thumbnailUrl?: string;
+    tags?: string[];
+    scheduledPublishTime?: string;
+  }, options?: {
+    privacy?: 'public' | 'private' | 'unlisted';
+    allowComments?: boolean;
+    allowDownloads?: boolean;
+    monetization?: boolean;
+  }): Promise<ApiResponse<{ id: string; url?: string; status: string }>>;
+
+  /**
+   * Get analytics data from the platform (must be implemented by child classes)
+   * @param options Analytics options
+   * @returns Promise with analytics data
+   */
+  public abstract getAnalytics(options?: {
+    dateRange?: { start: string; end: string };
+    metrics?: string[];
+    postIds?: string[];
+    granularity?: 'hour' | 'day' | 'week' | 'month';
+  }): Promise<ApiResponse<{
+    overview?: {
+      totalViews: number;
+      totalLikes: number;
+      totalComments: number;
+      totalShares: number;
+      engagementRate: number;
+    };
+    posts?: Array<{
+      id: string;
+      metrics: {
+        views: number;
+        likes: number;
+        comments: number;
+        shares: number;
+        engagementRate: number;
+      };
+      timestamp: string;
+    }>;
+    timeSeries?: Array<{
+      date: string;
+      views: number;
+      likes: number;
+      comments: number;
+      shares: number;
+    }>;
+  }>>;
 
   constructor(config: ApiConfig, authTokenManager: IAuthTokenManager, userId?: string) {
     super();

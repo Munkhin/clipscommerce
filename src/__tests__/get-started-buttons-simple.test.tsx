@@ -107,6 +107,7 @@ describe('Get Started Button Redirects - Simple Tests', () => {
       name: 'Pro',
       currency: '$',
       price: 70,
+      order: 2,
       benefits: [
         { description: 'Unlimited posts' },
         { description: 'Advanced analytics' },
@@ -155,7 +156,7 @@ describe('Get Started Button Redirects - Simple Tests', () => {
         { component: <ValueStatementSection />, name: 'ValueStatementSection' },
       ];
 
-      for (const { component, name } of components) {
+      for (const { component } of components) {
         const { unmount } = render(component);
         
         const getStartedButtons = screen.queryAllByText('Get Started');
@@ -227,6 +228,7 @@ describe('Get Started Button Redirects - Simple Tests', () => {
         name: 'Pro',
         currency: '$',
         price: 70,
+        order: 2,
         benefits: [{ description: 'Test feature' }],
         stripePriceId: 'price_test_123'
       };
@@ -243,6 +245,7 @@ describe('Get Started Button Redirects - Simple Tests', () => {
         name: 'Free',
         currency: '$',
         price: 0,
+        order: 1,
         benefits: [{ description: 'Basic feature' }],
         stripePriceId: undefined
       };

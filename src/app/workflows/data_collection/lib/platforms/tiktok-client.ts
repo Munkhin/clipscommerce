@@ -549,16 +549,321 @@ export class TikTokClient extends BasePlatformClient {
     postId: string,
     options?: { cursor?: string; limit?: number }
   ): Promise<ApiResponse<{ comments: PlatformComment[]; nextPageCursor?: string; hasMore?: boolean }>> {
-    this.log('warn', 'getVideoComments is not yet implemented for TikTokClient (./tiktok-client.ts). Returning stubbed response.', { postId, options });
-    // Placeholder: Implement actual API call to TikTok for comments
-    // For now, return an empty list with no pagination
-    return Promise.resolve({
-      data: {
-        comments: [],
-        nextPageCursor: undefined,
-        hasMore: false,
-      },
-      rateLimit: this.rateLimit || undefined,
-    });
+    const url = `/video/comment/list/`;
+    const maxCount = options?.limit || 20;
+    const currentCursor = options?.cursor || '0';
+
+    const requestParams = {
+      video_id: postId,
+      cursor: currentCursor,
+      count: maxCount.toString()
+    };
+
+    this.log('debug', `[TikTokClient] Fetching video comments for postId: ${postId}`, requestParams);
+
+    try {
+      const axiosResponse = await this.client.get<unknown>(url, { params: requestParams });
+
+      // For now, we'll use a simplified validation since TikTok comment API structure may vary
+      // In a real implementation, you'd have a proper Zod schema for comment responses
+      const responseData = axiosResponse.data as any;
+
+      if (responseData.error && responseData.error.code !== 'ok' && responseData.error.code !== 0) {
+        this.log('error', `[TikTokClient] API error in getVideoComments: ${responseData.error.message}`, responseData.error);
+        return {
+          error: {
+            code: String(responseData.error.code),
+            message: responseData.error.message,
+            details: responseData.error,
+          },
+          rateLimit: this.rateLimit || undefined,
+        };
+      }
+
+      const comments: PlatformComment[] = (responseData.comments || []).map((comment: any): PlatformComment => ({
+        id: comment.id || comment.comment_id,
+        postId: postId,
+        userId: comment.user?.unique_id || comment.user?.user_id,
+        userName: comment.user?.display_name || comment.user?.nickname,
+        userProfileImageUrl: comment.user?.avatar_url,
+        text: comment.text || comment.comment_text,
+        likeCount: comment.like_count || 0,
+        replyCount: comment.reply_comment_total || 0,
+        publishedAt: comment.create_time ? new Date(comment.create_time * 1000).toISOString() : new Date().toISOString(),
+        updatedAt: comment.update_time ? new Date(comment.update_time * 1000).toISOString() : undefined,
+        platform: Platform.TIKTOK,
+        sourceData: comment,
+      }));
+
+      this.log('debug', `[TikTokClient] Successfully fetched ${comments.length} comments for video ${postId}.`);
+
+      return {
+        data: {
+          comments,
+          nextPageCursor: responseData.cursor?.toString(),
+          hasMore: responseData.has_more || false,
+        },
+        rateLimit: this.rateLimit || undefined,
+      };
+    } catch (error) {
+      this.log('error', `[TikTokClient] Failed to get video comments for postId ${postId}`, { error });
+      let errorCode: string = 'UNKNOWN_ERROR';
+      let errorMessage: string = 'An unexpected error occurred while fetching video comments from TikTok.';
+      let errorDetails: unknown = error;
+
+      if (error instanceof ApiError) {
+        errorCode = error.code;
+        errorMessage = error.message;
+        errorDetails = error.details;
+      } else if (error instanceof RateLimitError) {
+        errorCode = error.code;
+        errorMessage = error.message;
+        errorDetails = error.details;
+      } else if (error instanceof PlatformError) {
+        errorCode = error.code;
+        errorMessage = error.message;
+        errorDetails = error.details;
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+
+      return {
+        error: {
+          code: errorCode,
+          message: errorMessage,
+          details: errorDetails,
+        },
+        rateLimit: this.rateLimit || undefined,
+      };
+    }
+  }
+
+  // Implementation of abstract methods from BasePlatformClient
+
+  /**
+   * Fetch posts from TikTok (alias for getUserVideos)
+   */
+  public async fetchPosts(options?: {
+    userId?: string;
+    cursor?: string;
+    limit?: number;
+    includeMetrics?: boolean;
+  }): Promise<ApiResponse<{ posts: any[]; nextPageCursor?: string; hasMore?: boolean }>> {
+    const result = await this.getUserVideos(options);
+    
+    // If includeMetrics is true, fetch additional metrics for each post
+    if (options?.includeMetrics && result.data?.posts) {
+      const postsWithMetrics = await Promise.all(
+        result.data.posts.map(async (post) => {
+          const metricsResult = await this.getPostMetrics(post.id);
+          return {
+            ...post,
+            metrics: metricsResult.data || post.metrics
+          };
+        })
+      );
+      result.data.posts = postsWithMetrics;
+    }
+    
+    return result;
+  }
+
+  /**
+   * Upload content to TikTok
+   */
+  public async uploadContent(content: {
+    title?: string;
+    description?: string;
+    mediaUrl?: string;
+    mediaFile?: Buffer | Blob;
+    thumbnailUrl?: string;
+    tags?: string[];
+    scheduledPublishTime?: string;
+  }, options?: {
+    privacy?: 'public' | 'private' | 'unlisted';
+    allowComments?: boolean;
+    allowDownloads?: boolean;
+    monetization?: boolean;
+  }): Promise<ApiResponse<{ id: string; url?: string; status: string }>> {
+    const url = `/video/upload/`;
+    
+    if (!content.mediaFile && !content.mediaUrl) {
+      return {
+        error: {
+          code: 'MISSING_MEDIA',
+          message: 'Either mediaFile or mediaUrl must be provided for upload'
+        },
+        rateLimit: this.rateLimit || undefined
+      };
+    }
+
+    try {
+      // Prepare upload metadata for TikTok
+      const requestData = {
+        video_description: content.description || content.title || '',
+        privacy_level: options?.privacy === 'public' ? 'PUBLIC_TO_EVERYONE' : 
+                      options?.privacy === 'unlisted' ? 'MUTUAL_FOLLOW_FRIENDS' : 'SELF_ONLY',
+        disable_duet: !(options?.allowComments !== false),
+        disable_comment: !(options?.allowComments !== false),
+        disable_stitch: !(options?.allowComments !== false),
+        video_cover_timestamp_ms: 1000, // Default thumbnail at 1 second
+        brand_content_toggle: options?.monetization || false,
+        brand_organic_toggle: options?.monetization || false
+      };
+
+      // Add scheduling if provided
+      if (content.scheduledPublishTime) {
+        const scheduleTime = new Date(content.scheduledPublishTime).getTime() / 1000;
+        (requestData as any).post_time = Math.floor(scheduleTime);
+      }
+
+      // This is a simplified implementation
+      // Real TikTok uploads require handling multipart/form-data with the video file
+      // and potentially multiple API calls for large files
+      const response = await this.request<any>({
+        url,
+        method: 'POST',
+        data: requestData,
+        headers: {
+          'Content-Type': 'multipart/form-data' // For file uploads
+        }
+      });
+
+      return {
+        data: {
+          id: response.data.publish_id || response.data.video_id,
+          url: response.data.share_url,
+          status: response.data.status || 'uploaded'
+        },
+        rateLimit: this.rateLimit || undefined
+      };
+    } catch (error: any) {
+      this.log('error', `Failed to upload content to TikTok`, { error: error.message, stack: error.stack });
+      if (error instanceof ApiError || error instanceof PlatformError || error instanceof RateLimitError) {
+        return { error: { code: error.code, message: error.message, details: error.details }, rateLimit: this.rateLimit || undefined };
+      }
+      return {
+        error: {
+          code: 'UPLOAD_FAILED',
+          message: error.message || 'Failed to upload content to TikTok'
+        },
+        rateLimit: this.rateLimit || undefined
+      };
+    }
+  }
+
+  /**
+   * Get analytics data from TikTok
+   */
+  public async getAnalytics(options?: {
+    dateRange?: { start: string; end: string };
+    metrics?: string[];
+    postIds?: string[];
+    granularity?: 'hour' | 'day' | 'week' | 'month';
+  }): Promise<ApiResponse<{
+    overview?: {
+      totalViews: number;
+      totalLikes: number;
+      totalComments: number;
+      totalShares: number;
+      engagementRate: number;
+    };
+    posts?: Array<{
+      id: string;
+      metrics: {
+        views: number;
+        likes: number;
+        comments: number;
+        shares: number;
+        engagementRate: number;
+      };
+      timestamp: string;
+    }>;
+    timeSeries?: Array<{
+      date: string;
+      views: number;
+      likes: number;
+      comments: number;
+      shares: number;
+    }>;
+  }>> {
+    try {
+      // Get user activity for overview stats
+      const userActivityResult = await this.getUserActivity();
+      let overview;
+
+      if (userActivityResult.data) {
+        // Since TikTok doesn't provide total engagement metrics at user level,
+        // we'll need to aggregate from individual videos
+        overview = {
+          totalViews: 0, // Would need to sum from all videos
+          totalLikes: 0, // Would need to sum from all videos
+          totalComments: 0, // Would need to sum from all videos
+          totalShares: 0, // Would need to sum from all videos
+          engagementRate: 0 // Would need to calculate from aggregated data
+        };
+      }
+
+      // Get individual post metrics if postIds are provided
+      let posts;
+      if (options?.postIds && options.postIds.length > 0) {
+        posts = await Promise.all(
+          options.postIds.map(async (postId) => {
+            const metricsResult = await this.getPostMetrics(postId);
+            if (metricsResult.data) {
+              const metrics = metricsResult.data;
+              const engagementRate = metrics.views > 0 ? 
+                ((metrics.likes + metrics.comments + metrics.shares) / metrics.views) * 100 : 0;
+              
+              return {
+                id: postId,
+                metrics: {
+                  views: metrics.views,
+                  likes: metrics.likes,
+                  comments: metrics.comments,
+                  shares: metrics.shares,
+                  engagementRate
+                },
+                timestamp: metrics.timestamp
+              };
+            }
+            return null;
+          })
+        );
+        posts = posts.filter(post => post !== null);
+
+        // Update overview with aggregated data from requested posts
+        if (posts.length > 0 && overview) {
+          overview.totalViews = posts.reduce((sum, post) => sum + post.metrics.views, 0);
+          overview.totalLikes = posts.reduce((sum, post) => sum + post.metrics.likes, 0);
+          overview.totalComments = posts.reduce((sum, post) => sum + post.metrics.comments, 0);
+          overview.totalShares = posts.reduce((sum, post) => sum + post.metrics.shares, 0);
+          overview.engagementRate = overview.totalViews > 0 ? 
+            ((overview.totalLikes + overview.totalComments + overview.totalShares) / overview.totalViews) * 100 : 0;
+        }
+      }
+
+      return {
+        data: {
+          overview,
+          posts,
+          // TikTok doesn't provide historical time series data in their basic API
+          timeSeries: [] // Placeholder - would require TikTok Analytics API for detailed time series
+        },
+        rateLimit: this.rateLimit || undefined
+      };
+    } catch (error: any) {
+      this.log('error', `Failed to get analytics from TikTok`, { error: error.message, stack: error.stack });
+      if (error instanceof ApiError || error instanceof PlatformError || error instanceof RateLimitError) {
+        return { error: { code: error.code, message: error.message, details: error.details }, rateLimit: this.rateLimit || undefined };
+      }
+      return {
+        error: {
+          code: 'ANALYTICS_FAILED',
+          message: error.message || 'Failed to get analytics from TikTok'
+        },
+        rateLimit: this.rateLimit || undefined
+      };
+    }
   }
 }

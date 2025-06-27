@@ -321,6 +321,14 @@ export class ModelRegistry extends EventEmitter {
     }
 
     try {
+      // Validate deployment readiness
+      await this.validateDeploymentReadiness(model, environment);
+
+      // For production, ensure previous version is properly handled
+      if (environment === 'production') {
+        await this.handleProductionDeployment(model);
+      }
+
       // Update model status
       const { error } = await this.supabase
         .from('trained_models')
@@ -343,10 +351,13 @@ export class ModelRegistry extends EventEmitter {
       
       this.models.set(modelId, model);
 
+      // Initialize monitoring for deployed model
+      await this.initializeModelMonitoring(modelId, environment);
+
       this.emit('modelDeployed', { modelId, environment, config });
 
     } catch (error) {
-      this.emit('deploymentError', { modelId, environment, error: error.message });
+      this.emit('deploymentError', { modelId, environment, error: error instanceof Error ? error.message : String(error) });
       throw error;
     }
   }
@@ -595,6 +606,213 @@ export class ModelRegistry extends EventEmitter {
       default:
         return modelData;
     }
+  }
+
+  /**
+   * Create a new model version
+   */
+  async createModelVersion(
+    baseModelId: string,
+    updates: {
+      performanceMetrics: Record<string, number>;
+      modelData?: any;
+      description?: string;
+      tags?: string[];
+    }
+  ): Promise<string> {
+    const baseModel = await this.getModel(baseModelId);
+    if (!baseModel) {
+      throw new Error(`Base model ${baseModelId} not found`);
+    }
+
+    // Generate new version
+    const versionParts = baseModel.version.split('.');
+    const majorVersion = parseInt(versionParts[0]) || 1;
+    const minorVersion = parseInt(versionParts[1]) || 0;
+    const patchVersion = parseInt(versionParts[2]) || 0;
+    
+    const newVersion = `${majorVersion}.${minorVersion}.${patchVersion + 1}`;
+
+    // Register new version
+    return this.registerModel(
+      baseModel.name,
+      baseModel.type,
+      newVersion,
+      updates.modelData || {},
+      updates.performanceMetrics,
+      {
+        description: updates.description || `Version ${newVersion} of ${baseModel.name}`,
+        tags: updates.tags || baseModel.tags,
+        createdBy: baseModel.createdBy
+      }
+    );
+  }
+
+  /**
+   * Rollback to previous model version
+   */
+  async rollbackModel(modelId: string): Promise<void> {
+    const currentModel = await this.getModel(modelId);
+    if (!currentModel) {
+      throw new Error(`Model ${modelId} not found`);
+    }
+
+    // Find previous version
+    const versions = await this.getModelVersions(currentModel.name);
+    const currentVersionIndex = versions.findIndex(v => v.id === modelId);
+    
+    if (currentVersionIndex === -1 || currentVersionIndex === versions.length - 1) {
+      throw new Error('No previous version available for rollback');
+    }
+
+    const previousVersion = versions[currentVersionIndex + 1];
+
+    // Deploy previous version
+    await this.deployModel(
+      previousVersion.id,
+      currentModel.deploymentEnvironment || 'development'
+    );
+
+    // Retire current version
+    await this.retireModel(modelId, 'Rolled back to previous version');
+
+    this.emit('modelRolledBack', { 
+      fromModelId: modelId, 
+      toModelId: previousVersion.id 
+    });
+  }
+
+  /**
+   * Validate deployment readiness
+   */
+  private async validateDeploymentReadiness(
+    model: ModelMetadata,
+    environment: string
+  ): Promise<void> {
+    const validationErrors: string[] = [];
+
+    // Check model status
+    if (model.status !== 'trained') {
+      validationErrors.push('Model must be in trained status');
+    }
+
+    // Check performance thresholds
+    const minThresholds = {
+      development: { overallScore: 0.5 },
+      staging: { overallScore: 0.7 },
+      production: { overallScore: 0.8 }
+    };
+
+    const threshold = minThresholds[environment as keyof typeof minThresholds];
+    if (threshold && model.overallScore < threshold.overallScore) {
+      validationErrors.push(
+        `Model performance below ${environment} threshold: ${model.overallScore} < ${threshold.overallScore}`
+      );
+    }
+
+    // Check model freshness (not older than 30 days for production)
+    if (environment === 'production') {
+      const daysSinceTraining = (Date.now() - model.trainingDate.getTime()) / (1000 * 60 * 60 * 24);
+      if (daysSinceTraining > 30) {
+        validationErrors.push(`Model is too old for production: ${daysSinceTraining.toFixed(1)} days`);
+      }
+    }
+
+    if (validationErrors.length > 0) {
+      throw new Error(`Deployment validation failed: ${validationErrors.join(', ')}`);
+    }
+  }
+
+  /**
+   * Handle production deployment (retire previous version)
+   */
+  private async handleProductionDeployment(model: ModelMetadata): Promise<void> {
+    // Find current production model of same type
+    const { data: productionModels, error } = await this.supabase
+      .from('trained_models')
+      .select('*')
+      .eq('model_name', model.name)
+      .eq('deployment_environment', 'production')
+      .eq('status', 'deployed');
+
+    if (error) {
+      console.error('Error checking production models:', error);
+      return;
+    }
+
+    // Retire existing production model
+    if (productionModels && productionModels.length > 0) {
+      for (const prodModel of productionModels) {
+        await this.retireModel(prodModel.id, `Replaced by version ${model.version}`);
+      }
+    }
+  }
+
+  /**
+   * Initialize monitoring for deployed model
+   */
+  private async initializeModelMonitoring(
+    modelId: string,
+    environment: string
+  ): Promise<void> {
+    try {
+      // Create initial health snapshot
+      const { error } = await this.supabase
+        .from('model_health_snapshots')
+        .insert({
+          model_id: modelId,
+          status: 'healthy',
+          health_score: 1.0,
+          uptime_seconds: 0,
+          active_alerts_count: 0,
+          last_prediction_at: new Date().toISOString(),
+          snapshot_at: new Date().toISOString()
+        });
+
+      if (error) {
+        console.error('Error initializing model monitoring:', error);
+      }
+    } catch (error) {
+      console.error('Error in initializeModelMonitoring:', error);
+    }
+  }
+
+  /**
+   * Get deployment pipeline status
+   */
+  async getDeploymentPipeline(modelName: string): Promise<{
+    development?: ModelMetadata;
+    staging?: ModelMetadata;
+    production?: ModelMetadata;
+    nextVersion?: string;
+  }> {
+    const versions = await this.getModelVersions(modelName);
+    
+    const pipeline = {
+      development: versions.find(v => v.deploymentEnvironment === 'development'),
+      staging: versions.find(v => v.deploymentEnvironment === 'staging'),
+      production: versions.find(v => v.deploymentEnvironment === 'production'),
+      nextVersion: this.generateNextVersion(versions)
+    };
+
+    return pipeline;
+  }
+
+  /**
+   * Generate next version number
+   */
+  private generateNextVersion(versions: ModelMetadata[]): string {
+    if (versions.length === 0) {
+      return '1.0.0';
+    }
+
+    const latestVersion = versions[0]; // Versions are sorted by creation date
+    const versionParts = latestVersion.version.split('.');
+    const majorVersion = parseInt(versionParts[0]) || 1;
+    const minorVersion = parseInt(versionParts[1]) || 0;
+    const patchVersion = parseInt(versionParts[2]) || 0;
+
+    return `${majorVersion}.${minorVersion}.${patchVersion + 1}`;
   }
 
   // Getters

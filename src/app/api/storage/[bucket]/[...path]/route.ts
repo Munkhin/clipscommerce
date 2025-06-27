@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerClient } from '@/lib/supabase/server';
+import { createClient } from '@/lib/supabase/server';
 import { serverStorageService, BucketName } from '@/lib/storage/supabase-storage';
-import { cookies } from 'next/headers';
 
 interface RouteParams {
   params: {
@@ -12,18 +11,7 @@ interface RouteParams {
 
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
-    const cookieStore = cookies();
-    const supabase = createServerClient({
-      cookies: {
-        get: (name: string) => cookieStore.get(name)?.value,
-        set: (name: string, value: string, options: any) => {
-          cookieStore.set(name, value, options);
-        },
-        remove: (name: string, options: any) => {
-          cookieStore.delete(name);
-        }
-      }
-    });
+    const supabase = await createClient();
 
     // Check authentication
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -52,18 +40,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
 
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
-    const cookieStore = cookies();
-    const supabase = createServerClient({
-      cookies: {
-        get: (name: string) => cookieStore.get(name)?.value,
-        set: (name: string, value: string, options: any) => {
-          cookieStore.set(name, value, options);
-        },
-        remove: (name: string, options: any) => {
-          cookieStore.delete(name);
-        }
-      }
-    });
+    const supabase = await createClient();
 
     const { bucket, path } = params;
     const filePath = path.join('/');

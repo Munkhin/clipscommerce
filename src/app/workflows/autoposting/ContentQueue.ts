@@ -35,4 +35,80 @@ export class ContentQueue {
       item.metadata.status = status;
     }
   }
+
+  removeFromQueue(id: string): boolean {
+    const index = this.queue.findIndex(item => item.id === id);
+    if (index !== -1) {
+      this.queue.splice(index, 1);
+      return true;
+    }
+    return false;
+  }
+
+  getQueueStatus(): {
+    total: number;
+    pending: number;
+    scheduled: number;
+    failed: number;
+    posted: number;
+  } {
+    const total = this.queue.length;
+    const pending = this.queue.filter(item => item.metadata.status === 'pending').length;
+    const scheduled = this.queue.filter(item => item.metadata.status === 'scheduled').length;
+    const failed = this.queue.filter(item => item.metadata.status === 'failed').length;
+    const posted = this.queue.filter(item => item.metadata.status === 'posted').length;
+
+    return { total, pending, scheduled, failed, posted };
+  }
+
+  getItemById(id: string): QueuedContent | undefined {
+    return this.queue.find(item => item.id === id);
+  }
+
+  getItemsByStatus(status: QueuedContent['metadata']['status']): QueuedContent[] {
+    return this.queue.filter(item => item.metadata.status === status);
+  }
+
+  getItemsByPlatform(platform: string): QueuedContent[] {
+    return this.queue.filter(item => item.platforms.includes(platform));
+  }
+
+  clearQueue(): void {
+    this.queue = [];
+  }
+
+  getQueueLength(): number {
+    return this.queue.length;
+  }
+
+  // Priority queue functionality
+  addToQueueWithPriority(
+    content: Omit<QueuedContent, 'id' | 'metadata' | 'metadata.status'> & { 
+      metadata: Omit<QueuedContent['metadata'], 'status'> & { priority?: 'low' | 'normal' | 'high' | 'urgent' } 
+    }
+  ): string {
+    const id = uuidv4();
+    const item: QueuedContent = {
+      ...content,
+      id,
+      metadata: { ...content.metadata, status: 'pending' },
+    };
+
+    // Insert based on priority
+    const priority = content.metadata.priority || 'normal';
+    const priorityValues = { urgent: 4, high: 3, normal: 2, low: 1 };
+    const itemPriority = priorityValues[priority];
+
+    let insertIndex = this.queue.length;
+    for (let i = 0; i < this.queue.length; i++) {
+      const existingPriority = priorityValues[(this.queue[i].metadata as any).priority || 'normal'];
+      if (itemPriority > existingPriority) {
+        insertIndex = i;
+        break;
+      }
+    }
+
+    this.queue.splice(insertIndex, 0, item);
+    return id;
+  }
 } 

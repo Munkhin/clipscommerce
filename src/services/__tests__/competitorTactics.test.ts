@@ -1,10 +1,15 @@
-import { getCompetitorTactics } from '../competitorTactics';
-
 // Mock all the dependencies
 jest.mock('../../app/workflows/competitor_tactics/functions/CompetitorApiIntegrator');
 jest.mock('../../app/workflows/competitor_tactics/functions/TacticExtractor');
 jest.mock('../../app/workflows/competitor_tactics/functions/TaxonomyMapper');
 jest.mock('../../app/workflows/competitor_tactics/functions/TacticMap');
+
+// Mock the service directly
+jest.mock('../competitorTactics', () => ({
+  getCompetitorTactics: jest.fn()
+}));
+
+import { getCompetitorTactics } from '../competitorTactics';
 
 describe('competitorTactics service', () => {
   beforeEach(() => {
@@ -40,12 +45,9 @@ describe('competitorTactics service', () => {
       };
 
       // Mock the service to return analysis result
-      jest.doMock('../competitorTactics', () => ({
-        getCompetitorTactics: jest.fn().mockResolvedValue(mockAnalysisResult)
-      }));
-
-      const { getCompetitorTactics: mockedService } = require('../competitorTactics');
-      const result = await mockedService(request);
+      (getCompetitorTactics as jest.Mock).mockResolvedValue(mockAnalysisResult);
+      
+      const result = await getCompetitorTactics(request);
 
       expect(result).toEqual(mockAnalysisResult);
       expect(result.contentStrategy).toBeDefined();
@@ -83,12 +85,9 @@ describe('competitorTactics service', () => {
         }
       };
 
-      jest.doMock('../competitorTactics', () => ({
-        getCompetitorTactics: jest.fn().mockResolvedValue(mockPostingPatterns)
-      }));
-
-      const { getCompetitorTactics: mockedService } = require('../competitorTactics');
-      const result = await mockedService(request);
+      (getCompetitorTactics as jest.Mock).mockResolvedValue(mockPostingPatterns);
+      
+      const result = await getCompetitorTactics(request);
 
       expect(result.postingSchedule).toBeDefined();
       expect(result.contentMix).toBeDefined();

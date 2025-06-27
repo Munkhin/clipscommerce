@@ -1,745 +1,805 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+'use client';
+
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Switch } from '@/components/ui/switch';
+import { Progress } from '@/components/ui/progress';
+import { toast } from '@/components/ui/use-toast';
 import { 
   Lightbulb, 
   TrendingUp, 
-  Calendar, 
+  Eye, 
   Target, 
-  Zap,
-  Mail,
-  FileText,
-  BarChart3,
-  Clock,
-  Users,
-  Star,
-  Send,
-  Eye,
+  Brain, 
+  BarChart3, 
+  Users, 
+  Clock, 
+  Zap, 
   Download,
-  Filter,
-  Settings,
-  Brain,
-  Sparkles,
   RefreshCw,
-  Play,
-  Pause,
-  CheckCircle2,
-  AlertTriangle
+  CheckCircle,
+  AlertTriangle,
+  Loader2,
+  Filter,
+  Star,
+  Hash,
+  Video,
+  Music,
+  Globe
 } from 'lucide-react';
 
 interface ContentIdea {
   id: string;
   title: string;
   description: string;
-  category: 'trending' | 'evergreen' | 'seasonal' | 'viral' | 'educational';
+  category: 'trending' | 'evergreen' | 'seasonal' | 'competitor-inspired' | 'ai-generated';
+  platform: 'tiktok' | 'instagram' | 'youtube' | 'multi-platform';
+  engagementPrediction: number;
+  trendScore: number;
   difficulty: 'easy' | 'medium' | 'hard';
-  estimatedViews: number;
-  trendScore: number;
-  keywords: string[];
-  platforms: string[];
+  hashtags: string[];
+  suggestedMusic?: string;
+  references: string[];
   createdAt: Date;
-  status: 'generated' | 'approved' | 'in-production' | 'published';
-  clientId?: string;
-  clientName?: string;
+  status: 'new' | 'approved' | 'in-production' | 'completed';
+  clientMatch: string[];
 }
 
-interface IdeationReport {
+interface TrendAnalysis {
   id: string;
-  clientId: string;
-  clientName: string;
-  reportType: 'weekly' | 'monthly' | 'trending' | 'custom';
-  generatedAt: Date;
-  status: 'generating' | 'ready' | 'sent' | 'viewed';
-  ideasCount: number;
-  topCategories: string[];
-  avgTrendScore: number;
-  emailSent: boolean;
-  viewedAt?: Date;
+  keyword: string;
+  platform: string;
+  volume: number;
+  growth: number;
+  competition: number;
+  relevanceScore: number;
+  peakTimes: string[];
+  relatedTrends: string[];
+  expectedDuration: number; // days
+  source: 'api' | 'ai-detected' | 'competitor-analysis';
 }
 
-interface TrendingTopic {
+interface CompetitorInsight {
   id: string;
-  topic: string;
-  category: string;
-  trendScore: number;
-  searchVolume: number;
-  difficulty: number;
-  relatedKeywords: string[];
-  platforms: string[];
-  peakTime: string;
+  competitorName: string;
+  platform: string;
+  contentType: string;
+  performanceMetrics: {
+    views: number;
+    engagement: number;
+    shares: number;
+  };
+  contentElements: {
+    hashtags: string[];
+    musicUsed?: string;
+    visualStyle: string;
+    captionStyle: string;
+  };
+  adaptation: {
+    whatToImitate: string[];
+    whatToImprove: string[];
+    uniqueAngle: string;
+  };
+  analysisDate: Date;
 }
 
-const ContentIdeationModule: React.FC = () => {
-  const [ideas, setIdeas] = useState<ContentIdea[]>([]);
-  const [reports, setReports] = useState<IdeationReport[]>([]);
-  const [trendingTopics, setTrendingTopics] = useState<TrendingTopic[]>([]);
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [generationProgress, setGenerationProgress] = useState(0);
+interface ContentCalendar {
+  id: string;
+  date: Date;
+  ideas: ContentIdea[];
+  theme: string;
+  priority: 'high' | 'medium' | 'low';
+  assignedTo: string[];
+  status: 'planned' | 'in-progress' | 'completed';
+}
+
+export function ContentIdeationModule() {
+  const [contentIdeas, setContentIdeas] = useState<ContentIdea[]>([]);
+  const [trendAnalysis, setTrendAnalysis] = useState<TrendAnalysis[]>([]);
+  const [competitorInsights, setCompetitorInsights] = useState<CompetitorInsight[]>([]);
+  const [contentCalendar, setContentCalendar] = useState<ContentCalendar[]>([]);
+  const [selectedPlatform, setSelectedPlatform] = useState<string>('all');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [selectedDifficulty, setSelectedDifficulty] = useState<string>('all');
-  const [emailQueue, setEmailQueue] = useState<number>(0);
-  const [autoGeneration, setAutoGeneration] = useState(false);
+  const [selectedClient, setSelectedClient] = useState<string>('all');
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [aiMode, setAiMode] = useState(true);
+  const [autoRefresh, setAutoRefresh] = useState(true);
+  const [showOnlyHigh, setShowOnlyHigh] = useState(false);
 
-  // Initialize with sample data
+  // Initialize sample data
   useEffect(() => {
     const sampleIdeas: ContentIdea[] = [
       {
-        id: '1',
-        title: 'AI-Powered Video Editing Workflow',
-        description: 'Step-by-step guide to streamline video editing using AI tools',
+        id: 'idea-1',
+        title: 'Day in the Life: Remote Work Setup',
+        description: 'Showcase a productive home office setup with trending desk accessories and productivity hacks',
         category: 'trending',
-        difficulty: 'medium',
-        estimatedViews: 45000,
-        trendScore: 8.7,
-        keywords: ['AI editing', 'workflow', 'automation', 'video production'],
-        platforms: ['YouTube', 'TikTok', 'Instagram'],
-        createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000),
-        status: 'approved',
-        clientId: 'client-1',
-        clientName: 'TechCorp Solutions'
-      },
-      {
-        id: '2',
-        title: '10 Viral Video Hooks That Convert',
-        description: 'Proven opening techniques that grab attention in the first 3 seconds',
-        category: 'viral',
+        platform: 'tiktok',
+        engagementPrediction: 87,
+        trendScore: 92,
         difficulty: 'easy',
-        estimatedViews: 120000,
-        trendScore: 9.2,
-        keywords: ['viral hooks', 'engagement', 'conversion', 'attention'],
-        platforms: ['TikTok', 'Instagram Reels', 'YouTube Shorts'],
-        createdAt: new Date(Date.now() - 1 * 60 * 60 * 1000),
-        status: 'in-production',
-        clientId: 'client-2',
-        clientName: 'Creative Studios'
+        hashtags: ['#WFH', '#productivity', '#desksetup', '#workfromhome'],
+        suggestedMusic: 'Lofi Study Beats',
+        references: ['trending desk setup videos', 'productivity influencers'],
+        createdAt: new Date(),
+        status: 'new',
+        clientMatch: ['tech-companies', 'lifestyle-brands']
       },
       {
-        id: '3',
-        title: 'Behind the Scenes: Brand Story Creation',
-        description: 'Documentary-style content showing the creative process',
+        id: 'idea-2',
+        title: 'Quick Recipe: 15-Minute Gourmet Pasta',
+        description: 'Fast-paced cooking video featuring a simple but elegant pasta dish with trending ingredients',
         category: 'evergreen',
+        platform: 'instagram',
+        engagementPrediction: 78,
+        trendScore: 65,
+        difficulty: 'medium',
+        hashtags: ['#quickrecipes', '#pasta', '#cooking', '#foodie'],
+        references: ['popular food accounts', 'trending recipes'],
+        createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000),
+        status: 'approved',
+        clientMatch: ['food-brands', 'lifestyle-brands']
+      },
+      {
+        id: 'idea-3',
+        title: 'Fitness Challenge: 30-Day Transformation',
+        description: 'Document a complete fitness journey with before/after, daily workouts, and meal prep',
+        category: 'seasonal',
+        platform: 'youtube',
+        engagementPrediction: 95,
+        trendScore: 88,
         difficulty: 'hard',
-        estimatedViews: 25000,
-        trendScore: 7.5,
-        keywords: ['behind scenes', 'brand story', 'creative process', 'documentary'],
-        platforms: ['YouTube', 'LinkedIn'],
-        createdAt: new Date(Date.now() - 30 * 60 * 1000),
-        status: 'generated'
+        hashtags: ['#fitness', '#transformation', '#30daychallenge', '#workout'],
+        references: ['fitness influencers', 'transformation videos'],
+        createdAt: new Date(Date.now() - 48 * 60 * 60 * 1000),
+        status: 'in-production',
+        clientMatch: ['fitness-brands', 'wellness-companies']
       }
     ];
 
-    const sampleReports: IdeationReport[] = [
+    const sampleTrends: TrendAnalysis[] = [
       {
-        id: '1',
-        clientId: 'client-1',
-        clientName: 'TechCorp Solutions',
-        reportType: 'weekly',
-        generatedAt: new Date(Date.now() - 2 * 60 * 60 * 1000),
-        status: 'sent',
-        ideasCount: 15,
-        topCategories: ['trending', 'educational', 'viral'],
-        avgTrendScore: 8.3,
-        emailSent: true,
-        viewedAt: new Date(Date.now() - 30 * 60 * 1000)
+        id: 'trend-1',
+        keyword: 'sustainable living',
+        platform: 'tiktok',
+        volume: 1250000,
+        growth: 45,
+        competition: 3.2,
+        relevanceScore: 89,
+        peakTimes: ['18:00-20:00', '12:00-14:00'],
+        relatedTrends: ['zero waste', 'eco friendly', 'sustainable fashion'],
+        expectedDuration: 30,
+        source: 'ai-detected'
       },
       {
-        id: '2',
-        clientId: 'client-2',
-        clientName: 'Creative Studios',
-        reportType: 'trending',
-        generatedAt: new Date(Date.now() - 1 * 60 * 60 * 1000),
-        status: 'ready',
-        ideasCount: 8,
-        topCategories: ['viral', 'trending'],
-        avgTrendScore: 9.1,
-        emailSent: false
-      }
-    ];
-
-    const sampleTrending: TrendingTopic[] = [
-      {
-        id: '1',
-        topic: 'AI Video Generation',
-        category: 'Technology',
-        trendScore: 9.5,
-        searchVolume: 150000,
-        difficulty: 7,
-        relatedKeywords: ['AI video', 'automated editing', 'machine learning'],
-        platforms: ['YouTube', 'TikTok', 'LinkedIn'],
-        peakTime: '2-4 PM EST'
+        id: 'trend-2',
+        keyword: 'AI productivity',
+        platform: 'youtube',
+        volume: 890000,
+        growth: 78,
+        competition: 4.1,
+        relevanceScore: 92,
+        peakTimes: ['09:00-11:00', '15:00-17:00'],
+        relatedTrends: ['chatgpt', 'automation', 'productivity hacks'],
+        expectedDuration: 45,
+        source: 'api'
       },
       {
-        id: '2',
-        topic: 'Sustainable Content Creation',
-        category: 'Lifestyle',
-        trendScore: 8.2,
-        searchVolume: 85000,
-        difficulty: 5,
-        relatedKeywords: ['eco-friendly', 'sustainable', 'green content'],
-        platforms: ['Instagram', 'YouTube', 'Pinterest'],
-        peakTime: '6-8 PM EST'
+        id: 'trend-3',
+        keyword: 'micro workouts',
+        platform: 'instagram',
+        volume: 650000,
+        growth: 62,
+        competition: 2.8,
+        relevanceScore: 85,
+        peakTimes: ['06:00-08:00', '19:00-21:00'],
+        relatedTrends: ['quick fitness', '5 minute workout', 'busy schedule fitness'],
+        expectedDuration: 25,
+        source: 'competitor-analysis'
       }
     ];
 
-    setIdeas(sampleIdeas);
-    setReports(sampleReports);
-    setTrendingTopics(sampleTrending);
+    const sampleCompetitorInsights: CompetitorInsight[] = [
+      {
+        id: 'insight-1',
+        competitorName: '@FitnessInfluencer',
+        platform: 'tiktok',
+        contentType: 'Workout Tutorial',
+        performanceMetrics: {
+          views: 2500000,
+          engagement: 125000,
+          shares: 45000
+        },
+        contentElements: {
+          hashtags: ['#quickworkout', '#homefitness', '#noequipment'],
+          musicUsed: 'Energetic Workout Beat',
+          visualStyle: 'Bright, clean lighting with mirror background',
+          captionStyle: 'Short, punchy with emoji bullets'
+        },
+        adaptation: {
+          whatToImitate: ['Quick pace', 'Clear instructions', 'Progress tracking'],
+          whatToImprove: ['Better lighting', 'More engaging captions', 'Client branding'],
+          uniqueAngle: 'Focus on beginners with modifications'
+        },
+        analysisDate: new Date()
+      }
+    ];
+
+    setContentIdeas(sampleIdeas);
+    setTrendAnalysis(sampleTrends);
+    setCompetitorInsights(sampleCompetitorInsights);
   }, []);
 
-  const generateBulkIdeas = async () => {
-    setIsGenerating(true);
-    setGenerationProgress(0);
+  const filteredIdeas = useMemo(() => {
+    return contentIdeas.filter(idea => {
+      const platformMatch = selectedPlatform === 'all' || idea.platform === selectedPlatform || idea.platform === 'multi-platform';
+      const categoryMatch = selectedCategory === 'all' || idea.category === selectedCategory;
+      const clientMatch = selectedClient === 'all' || idea.clientMatch.includes(selectedClient);
+      const scoreMatch = !showOnlyHigh || idea.engagementPrediction >= 80;
+      
+      return platformMatch && categoryMatch && clientMatch && scoreMatch;
+    });
+  }, [contentIdeas, selectedPlatform, selectedCategory, selectedClient, showOnlyHigh]);
 
-    // Simulate bulk idea generation
-    const totalIdeas = 100;
-    for (let i = 0; i < totalIdeas; i++) {
-      await new Promise(resolve => setTimeout(resolve, 50));
-      setGenerationProgress((i + 1) / totalIdeas * 100);
-    }
-
-    setIsGenerating(false);
-    // Add generated ideas to the list
-    const newIdeas = Array.from({ length: 20 }, (_, i) => ({
-      id: `generated-${Date.now()}-${i}`,
-      title: `Generated Idea ${i + 1}`,
-      description: 'AI-generated content idea based on trending topics',
-      category: ['trending', 'viral', 'educational', 'evergreen'][Math.floor(Math.random() * 4)] as any,
-      difficulty: ['easy', 'medium', 'hard'][Math.floor(Math.random() * 3)] as any,
-      estimatedViews: Math.floor(Math.random() * 100000) + 10000,
-      trendScore: Math.random() * 3 + 7,
-      keywords: ['trending', 'viral', 'content'],
-      platforms: ['YouTube', 'TikTok', 'Instagram'],
-      createdAt: new Date(),
-      status: 'generated' as any
-    }));
+  const generateAIIdeas = useCallback(async (clientType: string, platform: string, count: number) => {
+    setIsAnalyzing(true);
     
-    setIdeas(prev => [...newIdeas, ...prev]);
-  };
+    try {
+      toast({
+        title: "Generating AI ideas",
+        description: `Creating ${count} personalized content ideas for ${clientType} on ${platform}`,
+      });
 
-  const generateReports = async () => {
-    setIsGenerating(true);
-    setGenerationProgress(0);
+      // Simulate AI processing
+      await new Promise(resolve => setTimeout(resolve, 3000));
 
-    const totalReports = 50;
-    for (let i = 0; i < totalReports; i++) {
-      await new Promise(resolve => setTimeout(resolve, 100));
-      setGenerationProgress((i + 1) / totalReports * 100);
+      const aiIdeas: ContentIdea[] = Array.from({ length: count }, (_, i) => ({
+        id: `ai-idea-${Date.now()}-${i}`,
+        title: `AI-Generated Idea ${i + 1}`,
+        description: `Smart content suggestion based on trending topics and audience analysis for ${clientType}`,
+        category: 'ai-generated',
+        platform: platform as any,
+        engagementPrediction: Math.random() * 30 + 70, // 70-100%
+        trendScore: Math.random() * 40 + 60, // 60-100
+        difficulty: ['easy', 'medium', 'hard'][Math.floor(Math.random() * 3)] as any,
+        hashtags: ['#trending', '#ai', '#content', '#viral'],
+        references: ['AI trend analysis', 'audience insights'],
+        createdAt: new Date(),
+        status: 'new',
+        clientMatch: [clientType]
+      }));
+
+      setContentIdeas(prev => [...prev, ...aiIdeas]);
+      
+      toast({
+        title: "AI ideas generated",
+        description: `${count} new content ideas ready for review`,
+      });
+    } catch (error) {
+      toast({
+        title: "Error generating ideas",
+        description: "Please try again or contact support",
+        variant: "destructive"
+      });
+    } finally {
+      setIsAnalyzing(false);
     }
+  }, []);
 
-    setIsGenerating(false);
-    setEmailQueue(totalReports);
-  };
+  const analyzeTrends = useCallback(async () => {
+    setIsAnalyzing(true);
+    
+    try {
+      toast({
+        title: "Analyzing trends",
+        description: "Scanning social platforms for emerging trends and opportunities",
+      });
 
-  const sendBulkEmails = async () => {
-    const totalEmails = emailQueue;
-    for (let i = 0; i < totalEmails; i++) {
-      await new Promise(resolve => setTimeout(resolve, 50));
-      setEmailQueue(totalEmails - i - 1);
+      // Simulate trend analysis
+      await new Promise(resolve => setTimeout(resolve, 2500));
+
+      const newTrends: TrendAnalysis[] = [
+        {
+          id: `trend-${Date.now()}`,
+          keyword: 'sustainable tech',
+          platform: 'tiktok',
+          volume: Math.floor(Math.random() * 1000000) + 500000,
+          growth: Math.floor(Math.random() * 50) + 30,
+          competition: Math.random() * 3 + 1,
+          relevanceScore: Math.floor(Math.random() * 30) + 70,
+          peakTimes: ['14:00-16:00', '20:00-22:00'],
+          relatedTrends: ['green tech', 'eco innovation', 'sustainable design'],
+          expectedDuration: Math.floor(Math.random() * 30) + 15,
+          source: 'ai-detected'
+        }
+      ];
+
+      setTrendAnalysis(prev => [...prev, ...newTrends]);
+      
+      toast({
+        title: "Trend analysis complete",
+        description: "New trends detected and added to your dashboard",
+      });
+    } catch (error) {
+      toast({
+        title: "Error analyzing trends",
+        description: "Please try again or contact support",
+        variant: "destructive"
+      });
+    } finally {
+      setIsAnalyzing(false);
     }
-  };
+  }, []);
+
+  const approveIdea = useCallback((ideaId: string) => {
+    setContentIdeas(prev => prev.map(idea => 
+      idea.id === ideaId ? { ...idea, status: 'approved' as const } : idea
+    ));
+    toast({
+      title: "Idea approved",
+      description: "Content idea has been approved and added to production queue",
+    });
+  }, []);
+
+  const rejectIdea = useCallback((ideaId: string) => {
+    setContentIdeas(prev => prev.filter(idea => idea.id !== ideaId));
+    toast({
+      title: "Idea rejected",
+      description: "Content idea has been removed from suggestions",
+    });
+  }, []);
 
   const getCategoryColor = (category: string) => {
     switch (category) {
-      case 'trending': return 'bg-red-500';
-      case 'viral': return 'bg-purple-500';
-      case 'evergreen': return 'bg-green-500';
-      case 'seasonal': return 'bg-orange-500';
-      case 'educational': return 'bg-blue-500';
-      default: return 'bg-gray-500';
+      case 'trending': return 'text-red-600 bg-red-50';
+      case 'evergreen': return 'text-green-600 bg-green-50';
+      case 'seasonal': return 'text-orange-600 bg-orange-50';
+      case 'competitor-inspired': return 'text-purple-600 bg-purple-50';
+      case 'ai-generated': return 'text-blue-600 bg-blue-50';
+      default: return 'text-gray-600 bg-gray-50';
+    }
+  };
+
+  const getPlatformColor = (platform: string) => {
+    switch (platform) {
+      case 'tiktok': return 'bg-black text-white';
+      case 'instagram': return 'bg-gradient-to-r from-purple-500 to-pink-500 text-white';
+      case 'youtube': return 'bg-red-600 text-white';
+      case 'multi-platform': return 'bg-gradient-to-r from-blue-500 to-green-500 text-white';
+      default: return 'bg-gray-500 text-white';
     }
   };
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
-      case 'easy': return 'text-green-600';
-      case 'medium': return 'text-yellow-600';
-      case 'hard': return 'text-red-600';
-      default: return 'text-gray-600';
+      case 'easy': return 'text-green-600 bg-green-50';
+      case 'medium': return 'text-yellow-600 bg-yellow-50';
+      case 'hard': return 'text-red-600 bg-red-50';
+      default: return 'text-gray-600 bg-gray-50';
     }
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'generating': return 'bg-yellow-500';
-      case 'ready': return 'bg-blue-500';
-      case 'sent': return 'bg-green-500';
-      case 'viewed': return 'bg-purple-500';
-      default: return 'bg-gray-500';
-    }
+  const getScoreColor = (score: number) => {
+    if (score >= 90) return 'text-green-600';
+    if (score >= 75) return 'text-blue-600';
+    if (score >= 60) return 'text-yellow-600';
+    return 'text-red-600';
   };
-
-  const filteredIdeas = ideas.filter(idea => {
-    const categoryMatch = selectedCategory === 'all' || idea.category === selectedCategory;
-    const difficultyMatch = selectedDifficulty === 'all' || idea.difficulty === selectedDifficulty;
-    return categoryMatch && difficultyMatch;
-  });
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">Content Ideation</h2>
+          <h2 className="text-3xl font-bold tracking-tight">Content Ideation</h2>
           <p className="text-muted-foreground">
-            AI-powered content idea generation and automated reporting
+            AI-powered content suggestions with trend analysis and competitor insights
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Badge variant="outline" className="flex items-center gap-1">
-            <Lightbulb className="h-3 w-3" />
-            {ideas.length} Ideas
+          <Badge variant="secondary" className="px-3 py-1">
+            <Brain className="w-4 h-4 mr-1" />
+            AI-Powered
           </Badge>
-          <Badge variant="outline" className="flex items-center gap-1">
-            <FileText className="h-3 w-3" />
-            {reports.length} Reports
-          </Badge>
-          <Badge variant="outline" className="flex items-center gap-1">
-            <Mail className="h-3 w-3" />
-            {emailQueue} Queued
+          <Badge variant="outline" className="px-3 py-1">
+            {filteredIdeas.length} Ideas
           </Badge>
         </div>
       </div>
 
+      {/* Quick Stats */}
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+        <Card>
+          <CardContent className="p-4">
+            <div className="text-2xl font-bold text-blue-600">
+              {contentIdeas.filter(idea => idea.status === 'new').length}
+            </div>
+            <p className="text-sm text-muted-foreground">New Ideas</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="text-2xl font-bold text-green-600">
+              {contentIdeas.filter(idea => idea.status === 'approved').length}
+            </div>
+            <p className="text-sm text-muted-foreground">Approved</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="text-2xl font-bold text-orange-600">
+              {contentIdeas.filter(idea => idea.status === 'in-production').length}
+            </div>
+            <p className="text-sm text-muted-foreground">In Production</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="text-2xl font-bold text-purple-600">
+              {trendAnalysis.length}
+            </div>
+            <p className="text-sm text-muted-foreground">Active Trends</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="text-2xl font-bold text-teal-600">
+              {Math.round(contentIdeas.reduce((sum, idea) => sum + idea.engagementPrediction, 0) / contentIdeas.length)}%
+            </div>
+            <p className="text-sm text-muted-foreground">Avg Score</p>
+          </CardContent>
+        </Card>
+      </div>
+
       <Tabs defaultValue="ideas" className="space-y-4">
-        <TabsList>
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="ideas">Content Ideas</TabsTrigger>
-          <TabsTrigger value="trending">Trending Topics</TabsTrigger>
-          <TabsTrigger value="reports">Ideation Reports</TabsTrigger>
-          <TabsTrigger value="automation">Automation</TabsTrigger>
+          <TabsTrigger value="trends">Trend Analysis</TabsTrigger>
+          <TabsTrigger value="competitors">Competitor Insights</TabsTrigger>
+          <TabsTrigger value="calendar">Content Calendar</TabsTrigger>
         </TabsList>
 
         <TabsContent value="ideas" className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="w-48">
-                  <SelectValue placeholder="Filter by category" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Categories</SelectItem>
-                  <SelectItem value="trending">Trending</SelectItem>
-                  <SelectItem value="viral">Viral</SelectItem>
-                  <SelectItem value="evergreen">Evergreen</SelectItem>
-                  <SelectItem value="seasonal">Seasonal</SelectItem>
-                  <SelectItem value="educational">Educational</SelectItem>
-                </SelectContent>
-              </Select>
-              <Select value={selectedDifficulty} onValueChange={setSelectedDifficulty}>
-                <SelectTrigger className="w-48">
-                  <SelectValue placeholder="Filter by difficulty" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Difficulties</SelectItem>
-                  <SelectItem value="easy">Easy</SelectItem>
-                  <SelectItem value="medium">Medium</SelectItem>
-                  <SelectItem value="hard">Hard</SelectItem>
-                </SelectContent>
-              </Select>
-              <Button variant="outline" size="sm">
-                <Filter className="h-4 w-4 mr-2" />
-                More Filters
-              </Button>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button 
-                onClick={generateBulkIdeas}
-                disabled={isGenerating}
-                className="flex items-center gap-2"
-              >
-                <Sparkles className="h-4 w-4" />
-                {isGenerating ? 'Generating...' : 'Generate Ideas'}
-              </Button>
-              <Button variant="outline" size="sm">
-                <Download className="h-4 w-4 mr-2" />
-                Export
-              </Button>
-            </div>
-          </div>
-
-          {isGenerating && (
-            <Card>
-              <CardContent className="pt-6">
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium">Generating content ideas...</span>
-                    <span className="text-sm text-muted-foreground">{Math.round(generationProgress)}%</span>
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Lightbulb className="w-5 h-5" />
+                AI Content Suggestions
+              </CardTitle>
+              <CardDescription>
+                Intelligent content ideas based on trends, audience analysis, and competitor research
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {/* Controls */}
+              <div className="space-y-4 mb-6">
+                <div className="flex gap-4">
+                  <div className="flex items-center gap-2">
+                    <Label>Platform:</Label>
+                    <Select value={selectedPlatform} onValueChange={setSelectedPlatform}>
+                      <SelectTrigger className="w-40">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Platforms</SelectItem>
+                        <SelectItem value="tiktok">TikTok</SelectItem>
+                        <SelectItem value="instagram">Instagram</SelectItem>
+                        <SelectItem value="youtube">YouTube</SelectItem>
+                        <SelectItem value="multi-platform">Multi-Platform</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
-                  <Progress value={generationProgress} className="w-full" />
+                  <div className="flex items-center gap-2">
+                    <Label>Category:</Label>
+                    <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                      <SelectTrigger className="w-40">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Categories</SelectItem>
+                        <SelectItem value="trending">Trending</SelectItem>
+                        <SelectItem value="evergreen">Evergreen</SelectItem>
+                        <SelectItem value="seasonal">Seasonal</SelectItem>
+                        <SelectItem value="competitor-inspired">Competitor</SelectItem>
+                        <SelectItem value="ai-generated">AI Generated</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Label>High Score Only:</Label>
+                    <Switch
+                      checked={showOnlyHigh}
+                      onCheckedChange={setShowOnlyHigh}
+                    />
+                  </div>
                 </div>
-              </CardContent>
-            </Card>
-          )}
 
-          <div className="grid gap-4">
-            {filteredIdeas.map((idea) => (
-              <Card key={idea.id}>
-                <CardContent className="pt-6">
-                  <div className="flex items-start justify-between">
-                    <div className="space-y-2 flex-1">
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-semibold">{idea.title}</h3>
-                        <Badge 
-                          variant="secondary" 
-                          className={`${getCategoryColor(idea.category)} text-white`}
-                        >
-                          {idea.category}
-                        </Badge>
-                        <Badge variant="outline" className={getDifficultyColor(idea.difficulty)}>
-                          {idea.difficulty}
-                        </Badge>
-                      </div>
-                      <p className="text-sm text-muted-foreground">{idea.description}</p>
-                      <div className="flex items-center gap-4 text-sm">
-                        <div className="flex items-center gap-1">
-                          <Eye className="h-4 w-4 text-muted-foreground" />
-                          <span>{idea.estimatedViews.toLocaleString()} views</span>
+                <div className="flex gap-2">
+                  <Button 
+                    onClick={() => generateAIIdeas('tech-companies', selectedPlatform === 'all' ? 'tiktok' : selectedPlatform, 5)}
+                    disabled={isAnalyzing}
+                  >
+                    {isAnalyzing ? (
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    ) : (
+                      <Brain className="w-4 h-4 mr-2" />
+                    )}
+                    Generate AI Ideas
+                  </Button>
+                  <Button variant="outline" onClick={analyzeTrends} disabled={isAnalyzing}>
+                    <TrendingUp className="w-4 h-4 mr-2" />
+                    Analyze Trends
+                  </Button>
+                  <Button variant="outline">
+                    <Download className="w-4 h-4 mr-2" />
+                    Export Ideas
+                  </Button>
+                </div>
+              </div>
+
+              {/* Ideas List */}
+              <div className="space-y-4 max-h-96 overflow-y-auto">
+                {filteredIdeas.map((idea) => (
+                  <Card key={idea.id} className="p-4">
+                    <div className="space-y-3">
+                      <div className="flex items-start justify-between">
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2">
+                            <h4 className="font-semibold">{idea.title}</h4>
+                            <Badge className={getPlatformColor(idea.platform) + ' text-xs'}>
+                              {idea.platform}
+                            </Badge>
+                            <Badge className={getCategoryColor(idea.category)}>
+                              {idea.category}
+                            </Badge>
+                            <Badge className={getDifficultyColor(idea.difficulty)}>
+                              {idea.difficulty}
+                            </Badge>
+                          </div>
+                          <p className="text-sm text-muted-foreground">{idea.description}</p>
+                          <div className="flex flex-wrap gap-1">
+                            {idea.hashtags.map((hashtag, i) => (
+                              <Badge key={i} variant="outline" className="text-xs">
+                                {hashtag}
+                              </Badge>
+                            ))}
+                          </div>
                         </div>
-                        <div className="flex items-center gap-1">
-                          <TrendingUp className="h-4 w-4 text-muted-foreground" />
-                          <span>{idea.trendScore.toFixed(1)}/10</span>
+                        
+                        <div className="text-right space-y-2">
+                          <div className="flex items-center gap-4">
+                            <div className="text-center">
+                              <div className={`text-lg font-bold ${getScoreColor(idea.engagementPrediction)}`}>
+                                {Math.round(idea.engagementPrediction)}%
+                              </div>
+                              <p className="text-xs text-muted-foreground">Prediction</p>
+                            </div>
+                            <div className="text-center">
+                              <div className={`text-lg font-bold ${getScoreColor(idea.trendScore)}`}>
+                                {Math.round(idea.trendScore)}%
+                              </div>
+                              <p className="text-xs text-muted-foreground">Trend</p>
+                            </div>
+                          </div>
+                          
+                          {idea.status === 'new' && (
+                            <div className="flex gap-2">
+                              <Button size="sm" onClick={() => approveIdea(idea.id)}>
+                                <CheckCircle className="w-3 h-3 mr-1" />
+                                Approve
+                              </Button>
+                              <Button size="sm" variant="outline" onClick={() => rejectIdea(idea.id)}>
+                                <AlertTriangle className="w-3 h-3" />
+                              </Button>
+                            </div>
+                          )}
+                          
+                          {idea.status !== 'new' && (
+                            <Badge variant="outline">
+                              {idea.status}
+                            </Badge>
+                          )}
                         </div>
-                        <div className="flex items-center gap-1">
-                          <Clock className="h-4 w-4 text-muted-foreground" />
-                          <span>{idea.createdAt.toLocaleTimeString()}</span>
+                      </div>
+                      
+                      {idea.suggestedMusic && (
+                        <div className="flex items-center gap-2 text-sm">
+                          <Music className="w-4 h-4" />
+                          <span className="text-muted-foreground">Suggested music:</span>
+                          <span>{idea.suggestedMusic}</span>
                         </div>
-                      </div>
-                      <div className="flex flex-wrap gap-1">
-                        {idea.keywords.map((keyword, index) => (
-                          <Badge key={index} variant="outline" className="text-xs">
-                            {keyword}
-                          </Badge>
-                        ))}
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm text-muted-foreground">Platforms:</span>
-                        {idea.platforms.map((platform, index) => (
-                          <Badge key={index} variant="secondary" className="text-xs">
-                            {platform}
-                          </Badge>
-                        ))}
-                      </div>
+                      )}
                     </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <Badge 
-                        variant="outline" 
-                        className={`${getStatusColor(idea.status)} text-white`}
-                      >
-                        {idea.status}
-                      </Badge>
-                      <div className="flex gap-2">
-                        <Button variant="outline" size="sm">
-                          <Eye className="h-4 w-4 mr-2" />
-                          View
-                        </Button>
-                        <Button size="sm">
-                          <CheckCircle2 className="h-4 w-4 mr-2" />
-                          Approve
-                        </Button>
-                      </div>
-                    </div>
+                  </Card>
+                ))}
+                
+                {filteredIdeas.length === 0 && (
+                  <div className="text-center py-8 text-muted-foreground">
+                    No content ideas match your current filters
                   </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
-        <TabsContent value="trending" className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold">Trending Topics</h3>
-            <Button variant="outline">
-              <RefreshCw className="h-4 w-4 mr-2" />
-              Refresh Trends
-            </Button>
-          </div>
-
-          <div className="grid gap-4">
-            {trendingTopics.map((topic) => (
-              <Card key={topic.id}>
-                <CardContent className="pt-6">
-                  <div className="flex items-start justify-between">
-                    <div className="space-y-2 flex-1">
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-semibold">{topic.topic}</h3>
-                        <Badge variant="outline">{topic.category}</Badge>
-                        <div className="flex items-center gap-1">
-                          <Star className="h-4 w-4 text-yellow-500" />
-                          <span className="text-sm font-medium">{topic.trendScore.toFixed(1)}</span>
+        <TabsContent value="trends" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <TrendingUp className="w-5 h-5" />
+                Trend Analysis
+              </CardTitle>
+              <CardDescription>
+                Real-time trending topics and growth opportunities across platforms
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {trendAnalysis.map((trend) => (
+                  <Card key={trend.id} className="p-4">
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2">
+                            <h4 className="font-semibold">{trend.keyword}</h4>
+                            <Badge className={getPlatformColor(trend.platform) + ' text-xs'}>
+                              {trend.platform}
+                            </Badge>
+                            <Badge variant="outline" className="text-xs">
+                              {trend.source}
+                            </Badge>
+                          </div>
+                          <p className="text-sm text-muted-foreground">
+                            {trend.volume.toLocaleString()} volume • {trend.growth}% growth • Duration: {trend.expectedDuration} days
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <div className={`text-2xl font-bold ${getScoreColor(trend.relevanceScore)}`}>
+                            {trend.relevanceScore}%
+                          </div>
+                          <p className="text-xs text-muted-foreground">Relevance</p>
                         </div>
                       </div>
-                      <div className="grid md:grid-cols-3 gap-4 text-sm">
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                          <span className="text-muted-foreground">Search Volume:</span>
-                          <div className="font-medium">{topic.searchVolume.toLocaleString()}</div>
-                        </div>
-                        <div>
-                          <span className="text-muted-foreground">Difficulty:</span>
-                          <div className="font-medium">{topic.difficulty}/10</div>
-                        </div>
-                        <div>
-                          <span className="text-muted-foreground">Peak Time:</span>
-                          <div className="font-medium">{topic.peakTime}</div>
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <div>
-                          <span className="text-sm text-muted-foreground">Related Keywords:</span>
+                          <p className="text-sm font-medium">Peak Times</p>
                           <div className="flex flex-wrap gap-1 mt-1">
-                            {topic.relatedKeywords.map((keyword, index) => (
-                              <Badge key={index} variant="outline" className="text-xs">
-                                {keyword}
+                            {trend.peakTimes.map((time, i) => (
+                              <Badge key={i} variant="secondary" className="text-xs">
+                                {time}
                               </Badge>
                             ))}
                           </div>
                         </div>
                         <div>
-                          <span className="text-sm text-muted-foreground">Best Platforms:</span>
-                          <div className="flex gap-1 mt-1">
-                            {topic.platforms.map((platform, index) => (
-                              <Badge key={index} variant="secondary" className="text-xs">
-                                {platform}
+                          <p className="text-sm font-medium">Related Trends</p>
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {trend.relatedTrends.slice(0, 3).map((related, i) => (
+                              <Badge key={i} variant="outline" className="text-xs">
+                                {related}
                               </Badge>
                             ))}
                           </div>
                         </div>
+                        <div>
+                          <p className="text-sm font-medium">Competition</p>
+                          <div className="flex items-center gap-2 mt-1">
+                            <Progress value={trend.competition * 20} className="h-2" />
+                            <span className="text-xs">{trend.competition}/5</span>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="sm">
-                        <Lightbulb className="h-4 w-4 mr-2" />
-                        Generate Ideas
-                      </Button>
-                      <Button size="sm">
-                        <Target className="h-4 w-4 mr-2" />
-                        Track
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                  </Card>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
-        <TabsContent value="reports" className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold">Ideation Reports</h3>
-            <div className="flex items-center gap-2">
-              <Button 
-                onClick={generateReports}
-                disabled={isGenerating}
-                className="flex items-center gap-2"
-              >
-                <FileText className="h-4 w-4" />
-                {isGenerating ? 'Generating...' : 'Generate Reports'}
-              </Button>
-              <Button variant="outline" size="sm">
-                <Download className="h-4 w-4 mr-2" />
-                Export
-              </Button>
-            </div>
-          </div>
-
-          {isGenerating && (
-            <Card>
-              <CardContent className="pt-6">
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium">Generating ideation reports...</span>
-                    <span className="text-sm text-muted-foreground">{Math.round(generationProgress)}%</span>
-                  </div>
-                  <Progress value={generationProgress} className="w-full" />
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
-          <div className="grid gap-4">
-            {reports.map((report) => (
-              <Card key={report.id}>
-                <CardContent className="pt-6">
-                  <div className="flex items-start justify-between">
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-semibold">{report.clientName}</h3>
-                        <Badge 
-                          variant="secondary" 
-                          className={`${getStatusColor(report.status)} text-white`}
-                        >
-                          {report.status}
+        <TabsContent value="competitors" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Eye className="w-5 h-5" />
+                Competitor Insights
+              </CardTitle>
+              <CardDescription>
+                Analysis of competitor content performance and actionable insights
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {competitorInsights.map((insight) => (
+                  <Card key={insight.id} className="p-4">
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="font-semibold">{insight.competitorName}</h4>
+                          <p className="text-sm text-muted-foreground">
+                            {insight.contentType} on {insight.platform}
+                          </p>
+                        </div>
+                        <Badge className={getPlatformColor(insight.platform) + ' text-xs'}>
+                          {insight.platform}
                         </Badge>
-                        <Badge variant="outline">{report.reportType}</Badge>
                       </div>
-                      <div className="grid md:grid-cols-3 gap-4 text-sm">
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                          <span className="text-muted-foreground">Ideas Generated:</span>
-                          <div className="font-medium">{report.ideasCount}</div>
+                          <p className="text-sm font-medium">Performance</p>
+                          <div className="space-y-1 text-sm">
+                            <div>Views: {insight.performanceMetrics.views.toLocaleString()}</div>
+                            <div>Engagement: {insight.performanceMetrics.engagement.toLocaleString()}</div>
+                            <div>Shares: {insight.performanceMetrics.shares.toLocaleString()}</div>
+                          </div>
                         </div>
                         <div>
-                          <span className="text-muted-foreground">Avg Trend Score:</span>
-                          <div className="font-medium">{report.avgTrendScore.toFixed(1)}/10</div>
+                          <p className="text-sm font-medium">Content Elements</p>
+                          <div className="space-y-1 text-sm">
+                            <div>Style: {insight.contentElements.visualStyle}</div>
+                            <div>Caption: {insight.contentElements.captionStyle}</div>
+                            {insight.contentElements.musicUsed && (
+                              <div>Music: {insight.contentElements.musicUsed}</div>
+                            )}
+                          </div>
                         </div>
                         <div>
-                          <span className="text-muted-foreground">Generated:</span>
-                          <div className="font-medium">{report.generatedAt.toLocaleTimeString()}</div>
+                          <p className="text-sm font-medium">Adaptation Strategy</p>
+                          <div className="space-y-1 text-sm">
+                            <div><strong>Imitate:</strong> {insight.adaptation.whatToImitate.join(', ')}</div>
+                            <div><strong>Improve:</strong> {insight.adaptation.whatToImprove.join(', ')}</div>
+                            <div><strong>Unique Angle:</strong> {insight.adaptation.uniqueAngle}</div>
+                          </div>
                         </div>
                       </div>
+                      
                       <div>
-                        <span className="text-sm text-muted-foreground">Top Categories:</span>
-                        <div className="flex gap-1 mt-1">
-                          {report.topCategories.map((category, index) => (
-                            <Badge key={index} variant="outline" className="text-xs">
-                              {category}
+                        <p className="text-sm font-medium mb-2">Hashtags Used</p>
+                        <div className="flex flex-wrap gap-1">
+                          {insight.contentElements.hashtags.map((hashtag, i) => (
+                            <Badge key={i} variant="outline" className="text-xs">
+                              {hashtag}
                             </Badge>
                           ))}
                         </div>
                       </div>
-                      <div className="flex items-center gap-4 text-sm">
-                        {report.emailSent && (
-                          <div className="flex items-center gap-1">
-                            <Mail className="h-4 w-4 text-green-500" />
-                            <span>Email sent</span>
-                          </div>
-                        )}
-                        {report.viewedAt && (
-                          <div className="flex items-center gap-1">
-                            <Eye className="h-4 w-4 text-blue-500" />
-                            <span>Viewed</span>
-                          </div>
-                        )}
-                      </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Button variant="outline" size="sm">
-                        <Eye className="h-4 w-4 mr-2" />
-                        View
-                      </Button>
-                      {!report.emailSent && (
-                        <Button size="sm">
-                          <Send className="h-4 w-4 mr-2" />
-                          Send
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                  </Card>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
-        <TabsContent value="automation" className="space-y-4">
-          <div className="grid md:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Zap className="h-5 w-5" />
-                  Auto Generation
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="font-medium">Enable Auto Generation</div>
-                    <p className="text-sm text-muted-foreground">
-                      Automatically generate ideas based on trending topics
-                    </p>
-                  </div>
-                  <Button 
-                    variant={autoGeneration ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setAutoGeneration(!autoGeneration)}
-                  >
-                    {autoGeneration ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-                  </Button>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Generation Frequency</label>
-                  <Select defaultValue="daily">
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="hourly">Every Hour</SelectItem>
-                      <SelectItem value="daily">Daily</SelectItem>
-                      <SelectItem value="weekly">Weekly</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Ideas per batch</label>
-                  <Input type="number" defaultValue="20" />
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Mail className="h-5 w-5" />
-                  Email Reports
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-blue-600">{emailQueue}</div>
-                  <p className="text-sm text-muted-foreground">Reports pending</p>
-                </div>
-                <Button 
-                  onClick={sendBulkEmails}
-                  disabled={emailQueue === 0}
-                  className="w-full"
-                >
-                  <Send className="h-4 w-4 mr-2" />
-                  Send All Reports
-                </Button>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Report Schedule</label>
-                  <Select defaultValue="weekly">
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="daily">Daily</SelectItem>
-                      <SelectItem value="weekly">Weekly</SelectItem>
-                      <SelectItem value="monthly">Monthly</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
+        <TabsContent value="calendar" className="space-y-4">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <BarChart3 className="h-5 w-5" />
-                Performance Metrics
+                <Clock className="w-5 h-5" />
+                Content Calendar
               </CardTitle>
+              <CardDescription>
+                Organized content planning with approved ideas and production timeline
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid md:grid-cols-4 gap-4">
-                <div className="text-center">
-                  <div className="text-2xl font-bold">2,847</div>
-                  <p className="text-sm text-muted-foreground">Ideas Generated</p>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold">8.4</div>
-                  <p className="text-sm text-muted-foreground">Avg Trend Score</p>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold">156</div>
-                  <p className="text-sm text-muted-foreground">Reports Sent</p>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold">92%</div>
-                  <p className="text-sm text-muted-foreground">Open Rate</p>
-                </div>
+              <div className="text-center py-12 text-muted-foreground">
+                <Clock className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+                <h3 className="text-lg font-semibold mb-2">Content Calendar Coming Soon</h3>
+                <p>Visual calendar interface for content planning and scheduling will be available in the next update.</p>
+                <Button className="mt-4" variant="outline">
+                  <Star className="w-4 h-4 mr-2" />
+                  Request Early Access
+                </Button>
               </div>
             </CardContent>
           </Card>
@@ -747,6 +807,5 @@ const ContentIdeationModule: React.FC = () => {
       </Tabs>
     </div>
   );
-};
+}
 
-export default ContentIdeationModule; 

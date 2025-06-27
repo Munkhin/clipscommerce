@@ -4,6 +4,15 @@
 -- Enable UUID extension if not already enabled
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
+-- Function to automatically update 'updated_at' timestamp
+CREATE OR REPLACE FUNCTION trigger_set_timestamp()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = NOW();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
 -- Table for storing user posts across all platforms (normalized view)
 CREATE TABLE IF NOT EXISTS user_posts (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),

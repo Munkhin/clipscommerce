@@ -1,5 +1,5 @@
 import { Platform } from '../../../deliverables/types/deliverables_types';
-import { retryWithBackoff } from '../../../../shared_infra';
+import { retryWithBackoff } from '../../../shared_infra/RetryPolicy';
 
 export class PlatformError extends Error {
   constructor(

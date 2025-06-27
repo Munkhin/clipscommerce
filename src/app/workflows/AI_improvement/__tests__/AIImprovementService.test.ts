@@ -7,7 +7,7 @@ import { featureStore } from '../functions/feedbackLoop';
 // Mock the feedback loop
 jest.mock('../functions/feedbackLoop', () => ({
   AIImprovementFeedbackLoop: jest.fn().mockImplementation(() => ({
-    runFeedbackLoop: jest.fn().mockResolvedValue(undefined),
+    runFeedbackLoop: jest.fn().mockResolvedValue(void 0),
   })),
   featureStore: {
     contentPerformance: [],
@@ -448,8 +448,8 @@ describe('NLP Functions', () => {
     );
     
     expect(variations.length).toBe(5);
-    expect(variations.every(v => v.variation && v.type && v.expectedPerformance)).toBe(true);
-    expect(variations.some(v => v.type === 'shortened')).toBe(true);
-    expect(variations.some(v => v.type === 'expanded')).toBe(true);
+    expect(variations.every((v: any) => v.variation && v.type && v.expectedPerformance)).toBe(true);
+    expect(variations.some((v: any) => v.type === 'shortened')).toBe(true);
+    expect(variations.some((v: any) => v.type === 'expanded')).toBe(true);
   });
 }); 

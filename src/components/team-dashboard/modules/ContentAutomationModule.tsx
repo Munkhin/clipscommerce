@@ -1,604 +1,516 @@
-'use client';
-
-import { useState, useRef } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Switch } from '@/components/ui/switch';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { 
-  Upload, 
-  Play, 
-  Pause, 
-  Settings, 
-  FileVideo, 
-  Zap, 
-  Clock,
-  CheckCircle2,
-  AlertCircle,
-  Eye,
-  Edit,
-  Download,
-  Send,
-  Users,
-  Loader2,
-  X,
-  Plus,
-  Calendar,
-  Hash,
+import { toast } from '@/components/ui/use-toast';
+import {
+  Play,
+  Pause,
+  Settings,
+  Upload,
+  FileVideo,
+  Tag,
   MessageSquare,
-  Sparkles,
-  Target,
-  Filter
+  Zap,
+  Users,
+  BarChart3,
+  TrendingUp,
+  Clock,
+  CheckCircle,
+  AlertTriangle,
+  Loader2
 } from 'lucide-react';
-import { useTeamMode } from '@/providers/TeamModeProvider';
 
-interface VideoFile {
+// Types
+export interface BrandVoice {
+  id: string;
+  name: string;
+  tone: 'professional' | 'casual' | 'friendly' | 'energetic' | 'authoritative';
+  description: string;
+  keywords: string[];
+}
+
+export interface VideoFile {
   id: string;
   name: string;
   size: number;
-  duration?: number;
-  thumbnail?: string;
-  status: 'pending' | 'processing' | 'completed' | 'error';
-  generatedContent?: {
-    description: string;
-    hashtags: string[];
-    title: string;
-    platforms: string[];
-  };
-  brandVoice?: string;
-  clientId?: string;
-  error?: string;
+  duration: number;
+  status: 'pending' | 'processing' | 'completed' | 'failed';
+  platforms: string[];
 }
 
-interface BrandVoiceProfile {
+export interface AutomationJob {
   id: string;
   name: string;
-  tone: string;
-  style: string;
-  keywords: string[];
-  restrictions: string[];
-  examples: string[];
-  clientIds: string[];
-}
-
-interface ProcessingBatch {
-  id: string;
-  name: string;
-  videos: VideoFile[];
-  brandVoiceId: string;
-  status: 'preparing' | 'processing' | 'completed' | 'paused';
+  videoCount: number;
   progress: number;
-  startedAt?: Date;
-  completedAt?: Date;
-  estimatedTimeRemaining?: number;
+  status: 'running' | 'paused' | 'completed' | 'failed';
+  estimatedCompletion: string;
+  settings: {
+    generateDescriptions: boolean;
+    generateHashtags: boolean;
+    optimizeForPlatform: boolean;
+    brandVoice: string;
+  };
 }
 
-export function ContentAutomationModule() {
-  const { clients, selectedClients } = useTeamMode();
-  const [activeTab, setActiveTab] = useState('upload');
-  const [videos, setVideos] = useState<VideoFile[]>([]);
-  const [brandVoices, setBrandVoices] = useState<BrandVoiceProfile[]>([
-    {
-      id: 'default',
-      name: 'Default Brand Voice',
-      tone: 'Professional and engaging',
-      style: 'Clear, concise, action-oriented',
-      keywords: ['innovative', 'quality', 'results'],
-      restrictions: ['avoid jargon', 'keep under 150 characters'],
-      examples: ['Transform your business with our innovative solutions'],
-      clientIds: []
+// Mock data
+const mockBrandVoices: BrandVoice[] = [
+  {
+    id: '1',
+    name: 'Professional Tech',
+    tone: 'professional',
+    description: 'Clear, informative, and trustworthy tone for technology content',
+    keywords: ['innovative', 'efficient', 'reliable', 'cutting-edge']
+  },
+  {
+    id: '2',
+    name: 'Casual Lifestyle',
+    tone: 'casual',
+    description: 'Relaxed and approachable for lifestyle and entertainment content',
+    keywords: ['fun', 'easy', 'amazing', 'love', 'perfect']
+  },
+  {
+    id: '3',
+    name: 'Energetic Fitness',
+    tone: 'energetic',
+    description: 'High-energy and motivational for fitness and wellness content',
+    keywords: ['powerful', 'strong', 'transform', 'achieve', 'crush']
+  }
+];
+
+const mockActiveJobs: AutomationJob[] = [
+  {
+    id: '1',
+    name: 'TikTok Batch #1',
+    videoCount: 25,
+    progress: 68,
+    status: 'running',
+    estimatedCompletion: '2 hours',
+    settings: {
+      generateDescriptions: true,
+      generateHashtags: true,
+      optimizeForPlatform: true,
+      brandVoice: 'casual'
     }
-  ]);
-  const [currentBatch, setCurrentBatch] = useState<ProcessingBatch | null>(null);
-  const [selectedBrandVoice, setSelectedBrandVoice] = useState('default');
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [showBrandVoiceEditor, setShowBrandVoiceEditor] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // Mock processing simulation
-  const startProcessing = async () => {
-    if (videos.length === 0) return;
-
-    const batch: ProcessingBatch = {
-      id: `batch_${Date.now()}`,
-      name: `Batch ${new Date().toLocaleString()}`,
-      videos: videos.map(v => ({ ...v, status: 'pending' })),
-      brandVoiceId: selectedBrandVoice,
-      status: 'processing',
-      progress: 0,
-      startedAt: new Date(),
-      estimatedTimeRemaining: videos.length * 2 // 2 seconds per video simulation
-    };
-
-    setCurrentBatch(batch);
-    setIsProcessing(true);
-    setActiveTab('processing');
-
-    // Simulate processing each video
-    for (let i = 0; i < videos.length; i++) {
-      await new Promise(resolve => setTimeout(resolve, 2000)); // 2 second delay per video
-      
-      const updatedVideos = [...batch.videos];
-      updatedVideos[i] = {
-        ...updatedVideos[i],
-        status: 'completed',
-        generatedContent: {
-          description: `Engaging content for ${updatedVideos[i].name} - professionally crafted to drive results and engagement across all platforms.`,
-          hashtags: ['#content', '#marketing', '#engagement', '#professional', '#results'],
-          title: `${updatedVideos[i].name.replace(/\.[^/.]+$/, '')} - Professional Content`,
-          platforms: ['instagram', 'tiktok', 'twitter', 'linkedin']
-        }
-      };
-
-      const updatedBatch = {
-        ...batch,
-        videos: updatedVideos,
-        progress: ((i + 1) / videos.length) * 100,
-        estimatedTimeRemaining: (videos.length - i - 1) * 2
-      };
-
-      setCurrentBatch(updatedBatch);
-      setVideos(updatedVideos);
+  },
+  {
+    id: '2',
+    name: 'Instagram Reels Batch',
+    videoCount: 15,
+    progress: 100,
+    status: 'completed',
+    estimatedCompletion: 'Completed',
+    settings: {
+      generateDescriptions: true,
+      generateHashtags: true,
+      optimizeForPlatform: true,
+      brandVoice: 'professional'
     }
+  },
+  {
+    id: '3',
+    name: 'YouTube Shorts Batch',
+    videoCount: 10,
+    progress: 0,
+    status: 'paused',
+    estimatedCompletion: 'Paused',
+    settings: {
+      generateDescriptions: true,
+      generateHashtags: false,
+      optimizeForPlatform: true,
+      brandVoice: 'energetic'
+    }
+  }
+];
 
-    setCurrentBatch(prev => prev ? { ...prev, status: 'completed', completedAt: new Date() } : null);
-    setIsProcessing(false);
+export const ContentAutomationModule: React.FC = () => {
+  const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>(['tiktok']);
+  const [selectedBrandVoice, setSelectedBrandVoice] = useState<string>('');
+  const [uploadedFiles, setUploadedFiles] = useState<VideoFile[]>([]);
+  const [automationSettings, setAutomationSettings] = useState({
+    generateDescriptions: true,
+    generateHashtags: true,
+    optimizeForPlatform: true,
+    autoPost: false
+  });
+
+  const handlePlatformToggle = (platform: string) => {
+    setSelectedPlatforms(prev =>
+      prev.includes(platform)
+        ? prev.filter(p => p !== platform)
+        : [...prev, platform]
+    );
   };
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);
-    const newVideos: VideoFile[] = files.map(file => ({
-      id: `video_${Date.now()}_${Math.random()}`,
+    const newFiles: VideoFile[] = files.map((file, index) => ({
+      id: `file_${Date.now()}_${index}`,
       name: file.name,
       size: file.size,
+      duration: 30, // Mock duration
       status: 'pending',
-      brandVoice: selectedBrandVoice
+      platforms: selectedPlatforms
     }));
+    
+    setUploadedFiles(prev => [...prev, ...newFiles]);
+    
+    toast({
+      title: "Files uploaded",
+      description: `${files.length} video(s) ready for automation`,
+    });
+  }, [selectedPlatforms]);
 
-    setVideos(prev => [...prev, ...newVideos]);
-  };
-
-  const removeVideo = (videoId: string) => {
-    setVideos(prev => prev.filter(v => v.id !== videoId));
-  };
-
-  const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-  };
-
-  const getStatusIcon = (status: VideoFile['status']) => {
-    switch (status) {
-      case 'pending': return <Clock className="h-4 w-4 text-warning" />;
-      case 'processing': return <Loader2 className="h-4 w-4 text-info animate-spin" />;
-      case 'completed': return <CheckCircle2 className="h-4 w-4 text-mint" />;
-      case 'error': return <AlertCircle className="h-4 w-4 text-coral" />;
+  const handleStartAutomation = () => {
+    if (uploadedFiles.length === 0) {
+      toast({
+        title: "No files selected",
+        description: "Please upload videos before starting automation",
+        variant: "destructive"
+      });
+      return;
     }
+
+    toast({
+      title: "Starting automation",
+      description: `Processing ${uploadedFiles.length} videos with your settings`,
+    });
   };
 
-  const getStatusColor = (status: VideoFile['status']) => {
-    switch (status) {
-      case 'pending': return 'bg-warning/20 text-warning border-warning';
-      case 'processing': return 'bg-info/20 text-info border-info';
-      case 'completed': return 'bg-mint/20 text-mint border-mint';
-      case 'error': return 'bg-coral/20 text-coral border-coral';
-    }
+  const handleJobAction = (jobId: string, action: 'pause' | 'resume' | 'cancel') => {
+    toast({
+      title: `Job ${action}d`,
+      description: `Automation job has been ${action}d`,
+    });
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold text-creative">Content Automation</h2>
-          <p className="text-muted-foreground">
-            Process thousands of videos with automated content generation
-          </p>
-        </div>
-        
-        <div className="flex items-center space-x-3">
-          <Badge variant="outline" className="flex items-center space-x-1">
-            <FileVideo className="h-3 w-3" />
-            <span>{videos.length} videos</span>
+    <Card className="w-full">
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle className="flex items-center gap-2">
+              <Zap className="h-5 w-5 text-blue-500" />
+              Content Automation
+            </CardTitle>
+            <CardDescription>
+              Bulk video processing with brand voice specification and AI-powered optimization
+            </CardDescription>
+          </div>
+          <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+            AI-Powered
           </Badge>
-          
-          {selectedClients.length > 0 && (
-            <Badge variant="outline" className="flex items-center space-x-1">
-              <Users className="h-3 w-3" />
-              <span>{selectedClients.length} clients selected</span>
-            </Badge>
-          )}
         </div>
-      </div>
+      </CardHeader>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="upload" className="flex items-center space-x-2">
-            <Upload className="h-4 w-4" />
-            <span>Upload</span>
-          </TabsTrigger>
-          <TabsTrigger value="brand-voice" className="flex items-center space-x-2">
-            <MessageSquare className="h-4 w-4" />
-            <span>Brand Voice</span>
-          </TabsTrigger>
-          <TabsTrigger value="processing" className="flex items-center space-x-2">
-            <Zap className="h-4 w-4" />
-            <span>Processing</span>
-          </TabsTrigger>
-          <TabsTrigger value="results" className="flex items-center space-x-2">
-            <Target className="h-4 w-4" />
-            <span>Results</span>
-          </TabsTrigger>
-        </TabsList>
+      <CardContent>
+        {/* Stats Overview */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+          <div className="bg-green-50 p-3 rounded-lg">
+            <div className="flex items-center gap-2">
+              <CheckCircle className="h-4 w-4 text-green-600" />
+              <span className="text-sm font-medium">Completed</span>
+            </div>
+            <div className="text-2xl font-bold text-green-700">1,247</div>
+          </div>
+          <div className="bg-blue-50 p-3 rounded-lg">
+            <div className="flex items-center gap-2">
+              <Loader2 className="h-4 w-4 text-blue-600" />
+              <span className="text-sm font-medium">Processing</span>
+            </div>
+            <div className="text-2xl font-bold text-blue-700">35</div>
+          </div>
+          <div className="bg-yellow-50 p-3 rounded-lg">
+            <div className="flex items-center gap-2">
+              <Clock className="h-4 w-4 text-yellow-600" />
+              <span className="text-sm font-medium">Queued</span>
+            </div>
+            <div className="text-2xl font-bold text-yellow-700">128</div>
+          </div>
+          <div className="bg-red-50 p-3 rounded-lg">
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="h-4 w-4 text-red-600" />
+              <span className="text-sm font-medium">Failed</span>
+            </div>
+            <div className="text-2xl font-bold text-red-700">3</div>
+          </div>
+        </div>
 
-        <TabsContent value="upload" className="space-y-4">
-          <Card className="border-border">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Upload className="h-5 w-5" />
-                <span>Bulk Video Upload</span>
-              </CardTitle>
-              <CardDescription>
-                Upload thousands of videos for automated content generation
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {/* Upload Area */}
-              <div className="border-2 border-dashed border-border rounded-lg p-8 text-center">
-                <FileVideo className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                <h3 className="text-lg font-medium mb-2">Upload Video Files</h3>
-                <p className="text-muted-foreground mb-4">
-                  Drag and drop videos here, or click to browse
-                </p>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="video/*"
-                  multiple
-                  onChange={handleFileUpload}
-                  className="hidden"
-                />
-                <Button onClick={() => fileInputRef.current?.click()}>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Choose Files
-                </Button>
+        <Tabs defaultValue="bulk" className="w-full">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="bulk">Bulk Automation</TabsTrigger>
+            <TabsTrigger value="brand-voice">Brand Voice</TabsTrigger>
+            <TabsTrigger value="active-jobs">Active Jobs</TabsTrigger>
+          </TabsList>
+
+          {/* Bulk Automation Tab */}
+          <TabsContent value="bulk" className="space-y-6">
+            {/* Platform Selection */}
+            <div className="space-y-3">
+              <h3 className="text-lg font-semibold">Select Platforms</h3>
+              <div className="flex gap-2">
+                {['tiktok', 'instagram', 'youtube', 'twitter'].map((platform) => (
+                  <Button
+                    key={platform}
+                    variant={selectedPlatforms.includes(platform) ? "default" : "outline"}
+                    onClick={() => handlePlatformToggle(platform)}
+                    className="capitalize"
+                  >
+                    {platform}
+                  </Button>
+                ))}
               </div>
+            </div>
 
-              {/* Video List */}
-              {videos.length > 0 && (
+            {/* File Upload */}
+            <div className="space-y-3">
+              <h3 className="text-lg font-semibold">Upload Videos</h3>
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6">
+                <div className="text-center">
+                  <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                  <div className="mt-4">
+                    <label htmlFor="video-upload" className="cursor-pointer">
+                      <span className="mt-2 block text-sm font-medium text-gray-900">
+                        Drop videos here or click to upload
+                      </span>
+                      <Input
+                        id="video-upload"
+                        name="video-upload"
+                        type="file"
+                        multiple
+                        accept="video/*"
+                        className="hidden"
+                        aria-label="Select Videos"
+                        onChange={handleFileUpload}
+                      />
+                    </label>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Uploaded Files */}
+              {uploadedFiles.length > 0 && (
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-medium">Uploaded Videos ({videos.length})</h4>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setVideos([])}
-                    >
-                      Clear All
-                    </Button>
-                  </div>
-                  
-                  <div className="max-h-64 overflow-y-auto space-y-2">
-                    {videos.map((video) => (
-                      <div key={video.id} className="flex items-center justify-between p-3 rounded-lg border border-border">
-                        <div className="flex items-center space-x-3">
-                          {getStatusIcon(video.status)}
-                          <div>
-                            <p className="font-medium">{video.name}</p>
-                            <p className="text-sm text-muted-foreground">
-                              {formatFileSize(video.size)}
-                            </p>
-                          </div>
-                        </div>
-                        
-                        <div className="flex items-center space-x-2">
-                          <Badge className={getStatusColor(video.status)}>
-                            {video.status}
-                          </Badge>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => removeVideo(video.id)}
-                            disabled={isProcessing}
-                          >
-                            <X className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                  <h4 className="font-medium">Uploaded Files ({uploadedFiles.length})</h4>
+                  {uploadedFiles.slice(0, 3).map((file) => (
+                    <div key={file.id} className="flex items-center gap-2 p-2 bg-gray-50 rounded">
+                      <FileVideo className="h-4 w-4 text-blue-500" />
+                      <span className="text-sm">{file.name}</span>
+                      <Badge variant="outline" className="ml-auto">
+                        {(file.size / 1024 / 1024).toFixed(1)} MB
+                      </Badge>
+                    </div>
+                  ))}
+                  {uploadedFiles.length > 3 && (
+                    <p className="text-sm text-gray-500">+{uploadedFiles.length - 3} more files</p>
+                  )}
                 </div>
               )}
+            </div>
 
-              {/* Action Buttons */}
-              <div className="flex items-center justify-between pt-4 border-t border-border">
-                <div className="flex items-center space-x-2">
-                  <Label>Brand Voice:</Label>
-                  <Select value={selectedBrandVoice} onValueChange={setSelectedBrandVoice}>
-                    <SelectTrigger className="w-48">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {brandVoices.map((voice) => (
-                        <SelectItem key={voice.id} value={voice.id}>
-                          {voice.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+            {/* Automation Settings */}
+            <div className="space-y-3">
+              <h3 className="text-lg font-semibold">Automation Settings</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-medium">Generate Descriptions</p>
+                    <p className="text-sm text-gray-500">AI-powered video descriptions</p>
+                  </div>
+                  <Switch
+                    checked={automationSettings.generateDescriptions}
+                    onCheckedChange={(checked) => 
+                      setAutomationSettings(prev => ({...prev, generateDescriptions: checked}))
+                    }
+                  />
                 </div>
                 
-                <Button
-                  onClick={startProcessing}
-                  disabled={videos.length === 0 || isProcessing}
-                  className="bg-mint text-background hover:bg-mint/90"
-                >
-                  <Sparkles className="h-4 w-4 mr-2" />
-                  Start Processing ({videos.length} videos)
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="brand-voice" className="space-y-4">
-          <Card className="border-border">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <MessageSquare className="h-5 w-5" />
-                <span>Brand Voice Management</span>
-              </CardTitle>
-              <CardDescription>
-                Configure brand voice profiles for automated content generation
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {brandVoices.map((voice) => (
-                <div key={voice.id} className="p-4 rounded-lg border border-border">
-                  <div className="flex items-center justify-between mb-3">
-                    <h4 className="font-medium">{voice.name}</h4>
-                    <div className="flex items-center space-x-2">
-                      <Badge variant="outline">
-                        {voice.clientIds.length || 'All'} clients
-                      </Badge>
-                      <Button variant="ghost" size="sm">
-                        <Edit className="h-3 w-3" />
-                      </Button>
-                    </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-medium">Generate Hashtags</p>
+                    <p className="text-sm text-gray-500">Trending hashtag suggestions</p>
                   </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <Label className="text-xs font-medium text-muted-foreground">TONE</Label>
-                      <p>{voice.tone}</p>
-                    </div>
-                    <div>
-                      <Label className="text-xs font-medium text-muted-foreground">STYLE</Label>
-                      <p>{voice.style}</p>
-                    </div>
-                    <div>
-                      <Label className="text-xs font-medium text-muted-foreground">KEYWORDS</Label>
-                      <div className="flex flex-wrap gap-1 mt-1">
+                  <Switch
+                    checked={automationSettings.generateHashtags}
+                    onCheckedChange={(checked) => 
+                      setAutomationSettings(prev => ({...prev, generateHashtags: checked}))
+                    }
+                  />
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-medium">Platform Optimization</p>
+                    <p className="text-sm text-gray-500">Optimize for each platform</p>
+                  </div>
+                  <Switch
+                    checked={automationSettings.optimizeForPlatform}
+                    onCheckedChange={(checked) => 
+                      setAutomationSettings(prev => ({...prev, optimizeForPlatform: checked}))
+                    }
+                  />
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-medium">Auto-Post</p>
+                    <p className="text-sm text-gray-500">Automatically post when ready</p>
+                  </div>
+                  <Switch
+                    checked={automationSettings.autoPost}
+                    onCheckedChange={(checked) => 
+                      setAutomationSettings(prev => ({...prev, autoPost: checked}))
+                    }
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Brand Voice Selection */}
+            <div className="space-y-3">
+              <h3 className="text-lg font-semibold">Brand Voice</h3>
+              <Select value={selectedBrandVoice} onValueChange={setSelectedBrandVoice}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select brand voice" />
+                </SelectTrigger>
+                <SelectContent>
+                  {mockBrandVoices.map((voice) => (
+                    <SelectItem key={voice.id} value={voice.id}>
+                      <div className="flex items-center gap-2">
+                        <span>{voice.name}</span>
+                        <Badge variant="outline" className="text-xs">
+                          {voice.tone}
+                        </Badge>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Start Automation */}
+            <Button 
+              onClick={handleStartAutomation}
+              disabled={uploadedFiles.length === 0}
+              size="lg"
+              className="w-full"
+            >
+              <Play className="mr-2 h-4 w-4" />
+              Start Automation ({uploadedFiles.length} videos)
+            </Button>
+          </TabsContent>
+
+          {/* Brand Voice Tab */}
+          <TabsContent value="brand-voice" className="space-y-6">
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Brand Voice Library</h3>
+              {mockBrandVoices.map((voice) => (
+                <Card key={voice.id} className="p-4">
+                  <div className="flex items-start justify-between">
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <h4 className="font-semibold">{voice.name}</h4>
+                        <Badge variant="secondary">{voice.tone}</Badge>
+                      </div>
+                      <p className="text-sm text-gray-600">{voice.description}</p>
+                      <div className="flex gap-1">
                         {voice.keywords.map((keyword) => (
-                          <Badge key={keyword} variant="secondary" className="text-xs">
+                          <Badge key={keyword} variant="outline" className="text-xs">
                             {keyword}
                           </Badge>
                         ))}
                       </div>
                     </div>
-                    <div>
-                      <Label className="text-xs font-medium text-muted-foreground">RESTRICTIONS</Label>
-                      <ul className="text-xs text-muted-foreground mt-1">
-                        {voice.restrictions.map((restriction, index) => (
-                          <li key={index}>• {restriction}</li>
-                        ))}
-                      </ul>
-                    </div>
+                    <Button variant="ghost" size="sm">
+                      <Settings className="h-4 w-4" />
+                    </Button>
                   </div>
-                </div>
+                </Card>
               ))}
-              
-              <Button variant="outline" className="w-full">
-                <Plus className="h-4 w-4 mr-2" />
-                Create New Brand Voice
-              </Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
+            </div>
+          </TabsContent>
 
-        <TabsContent value="processing" className="space-y-4">
-          {currentBatch ? (
-            <Card className="border-border">
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <Zap className="h-5 w-5" />
-                  <span>Processing Batch</span>
-                </CardTitle>
-                <CardDescription>
-                  {currentBatch.name} - {currentBatch.videos.length} videos
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {/* Progress Overview */}
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium">Overall Progress</span>
-                    <span className="text-sm text-muted-foreground">
-                      {Math.round(currentBatch.progress)}%
-                    </span>
-                  </div>
-                  <Progress value={currentBatch.progress} className="h-2" />
-                  
-                  {currentBatch.estimatedTimeRemaining && currentBatch.estimatedTimeRemaining > 0 && (
-                    <p className="text-xs text-muted-foreground">
-                      Estimated time remaining: {Math.ceil(currentBatch.estimatedTimeRemaining / 60)} minutes
-                    </p>
-                  )}
-                </div>
-
-                {/* Processing Stats */}
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-mint">
-                      {currentBatch.videos.filter(v => v.status === 'completed').length}
-                    </div>
-                    <div className="text-sm text-muted-foreground">Completed</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-info">
-                      {currentBatch.videos.filter(v => v.status === 'processing').length}
-                    </div>
-                    <div className="text-sm text-muted-foreground">Processing</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-warning">
-                      {currentBatch.videos.filter(v => v.status === 'pending').length}
-                    </div>
-                    <div className="text-sm text-muted-foreground">Pending</div>
-                  </div>
-                </div>
-
-                {/* Control Buttons */}
-                <div className="flex items-center justify-center space-x-2">
-                  <Button
-                    variant="outline"
-                    disabled={currentBatch.status === 'completed'}
-                  >
-                    <Pause className="h-4 w-4 mr-2" />
-                    Pause
-                  </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => setActiveTab('results')}
-                    disabled={currentBatch.status !== 'completed'}
-                  >
-                    <Eye className="h-4 w-4 mr-2" />
-                    View Results
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ) : (
-            <Card className="border-border">
-              <CardContent className="flex items-center justify-center h-64">
-                <div className="text-center">
-                  <Zap className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                  <p className="text-muted-foreground">No processing batch active</p>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    Upload videos and start processing to see progress here
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          )}
-        </TabsContent>
-
-        <TabsContent value="results" className="space-y-4">
-          <Card className="border-border">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Target className="h-5 w-5" />
-                <span>Generated Content</span>
-              </CardTitle>
-              <CardDescription>
-                Review and edit automatically generated content
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {videos.filter(v => v.status === 'completed').length > 0 ? (
-                <div className="space-y-4">
-                  {videos.filter(v => v.status === 'completed').map((video) => (
-                    <div key={video.id} className="p-4 rounded-lg border border-border">
-                      <div className="flex items-center justify-between mb-3">
-                        <h4 className="font-medium">{video.name}</h4>
-                        <div className="flex items-center space-x-2">
-                          <Button variant="ghost" size="sm">
-                            <Edit className="h-3 w-3 mr-1" />
-                            Edit
-                          </Button>
-                          <Button variant="ghost" size="sm">
-                            <Send className="h-3 w-3 mr-1" />
-                            Schedule
-                          </Button>
-                        </div>
+          {/* Active Jobs Tab */}
+          <TabsContent value="active-jobs" className="space-y-6">
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Active Automation Jobs</h3>
+              {mockActiveJobs.map((job) => (
+                <Card key={job.id} className="p-4">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="font-semibold">{job.name}</h4>
+                        <p className="text-sm text-gray-600">
+                          {job.videoCount} videos • Est. completion: {job.estimatedCompletion}
+                        </p>
                       </div>
-                      
-                      {video.generatedContent && (
-                        <div className="space-y-3">
-                          <div>
-                            <Label className="text-xs font-medium text-muted-foreground">TITLE</Label>
-                            <p className="text-sm">{video.generatedContent.title}</p>
-                          </div>
-                          
-                          <div>
-                            <Label className="text-xs font-medium text-muted-foreground">DESCRIPTION</Label>
-                            <p className="text-sm">{video.generatedContent.description}</p>
-                          </div>
-                          
-                          <div>
-                            <Label className="text-xs font-medium text-muted-foreground">HASHTAGS</Label>
-                            <div className="flex flex-wrap gap-1 mt-1">
-                              {video.generatedContent.hashtags.map((hashtag) => (
-                                <Badge key={hashtag} variant="secondary" className="text-xs">
-                                  <Hash className="h-2 w-2 mr-1" />
-                                  {hashtag.replace('#', '')}
-                                </Badge>
-                              ))}
-                            </div>
-                          </div>
-                          
-                          <div>
-                            <Label className="text-xs font-medium text-muted-foreground">PLATFORMS</Label>
-                            <div className="flex flex-wrap gap-1 mt-1">
-                              {video.generatedContent.platforms.map((platform) => (
-                                <Badge key={platform} variant="outline" className="text-xs">
-                                  {platform}
-                                </Badge>
-                              ))}
-                            </div>
-                          </div>
+                      <div className="flex items-center gap-2">
+                        <Badge 
+                          variant={
+                            job.status === 'running' ? 'default' :
+                            job.status === 'completed' ? 'secondary' :
+                            job.status === 'paused' ? 'outline' : 'destructive'
+                          }
+                        >
+                          {job.status}
+                        </Badge>
+                        {job.status === 'running' && (
+                          <Button size="sm" variant="ghost" onClick={() => handleJobAction(job.id, 'pause')}>
+                            <Pause className="h-4 w-4" />
+                          </Button>
+                        )}
+                        {job.status === 'paused' && (
+                          <Button size="sm" variant="ghost" onClick={() => handleJobAction(job.id, 'resume')}>
+                            <Play className="h-4 w-4" />
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                    
+                    {job.status !== 'completed' && (
+                      <div className="space-y-1">
+                        <div className="flex justify-between text-sm">
+                          <span>Progress</span>
+                          <span>{job.progress}%</span>
                         </div>
+                        <Progress value={job.progress} className="h-2" />
+                      </div>
+                    )}
+                    
+                    <div className="flex gap-2 text-xs">
+                      {job.settings.generateDescriptions && (
+                        <Badge variant="outline">
+                          <MessageSquare className="h-3 w-3 mr-1" />
+                          Descriptions
+                        </Badge>
+                      )}
+                      {job.settings.generateHashtags && (
+                        <Badge variant="outline">
+                          <Tag className="h-3 w-3 mr-1" />
+                          Hashtags
+                        </Badge>
+                      )}
+                      {job.settings.optimizeForPlatform && (
+                        <Badge variant="outline">
+                          <TrendingUp className="h-3 w-3 mr-1" />
+                          Optimized
+                        </Badge>
                       )}
                     </div>
-                  ))}
-                  
-                  <div className="flex items-center justify-between pt-4 border-t border-border">
-                    <p className="text-sm text-muted-foreground">
-                      {videos.filter(v => v.status === 'completed').length} videos processed
-                    </p>
-                    <div className="flex items-center space-x-2">
-                      <Button variant="outline">
-                        <Download className="h-4 w-4 mr-2" />
-                        Export All
-                      </Button>
-                      <Button>
-                        <Calendar className="h-4 w-4 mr-2" />
-                        Schedule All
-                      </Button>
-                    </div>
                   </div>
-                </div>
-              ) : (
-                <div className="text-center py-8">
-                  <Target className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                  <p className="text-muted-foreground">No completed content yet</p>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    Process videos to see generated content here
-                  </p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
-    </div>
+                </Card>
+              ))}
+            </div>
+          </TabsContent>
+        </Tabs>
+      </CardContent>
+    </Card>
   );
-}
+};
