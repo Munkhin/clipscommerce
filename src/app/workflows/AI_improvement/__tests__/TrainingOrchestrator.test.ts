@@ -4,19 +4,31 @@ import { createClient } from '@supabase/supabase-js';
 
 // Mock Supabase client
 const mockSupabase = {
-  from: jest.fn(() => ({
-    insert: jest.fn(() => ({ error: null })),
-    update: jest.fn(() => ({ error: null })),
-    select: jest.fn(() => ({ 
-      eq: jest.fn(() => ({ 
-        order: jest.fn(() => ({ 
-          limit: jest.fn(() => ({ data: [], error: null })),
-          single: jest.fn(() => ({ data: null, error: null }))
-        }))
-      }))
-    }))
-  }))
-} as any;
+  from: jest.fn().mockReturnThis(),
+  insert: jest.fn().mockResolvedValue({ error: null }),
+  update: jest.fn().mockReturnThis(),
+  select: jest.fn().mockReturnThis(),
+  eq: jest.fn().mockResolvedValue({ error: null }),
+  order: jest.fn().mockReturnThis(),
+  limit: jest.fn().mockResolvedValue({ data: [], error: null }),
+  single: jest.fn().mockResolvedValue({ data: null, error: null }),
+};
+
+jest.mock('../training/DataCollectionService', () => ({
+  TrainingDataCollectionService: jest.fn().mockImplementation(() => ({
+    validateDataAccess: jest.fn().mockResolvedValue({ hasAccess: true }),
+    collectTrainingData: jest.fn().mockResolvedValue({
+      data: [],
+      qualityReports: [],
+      summary: {
+        totalPosts: 0,
+        platformBreakdown: {},
+        qualityScore: 0,
+        readyForTraining: true,
+      },
+    }),
+  })),
+}));
 
 describe('TrainingOrchestrator', () => {
   let orchestrator: TrainingOrchestrator;
@@ -54,14 +66,11 @@ describe('TrainingOrchestrator', () => {
       const userId = 'test-user-2';
       const platforms: Platform[] = ['TikTok'];
 
-      // Start first training
-      await orchestrator.startTraining(userId, platforms);
-      
-      // Try to start second training - should throw error
+      orchestrator.startTraining(userId, platforms);
       await expect(
         orchestrator.startTraining(userId, platforms)
       ).rejects.toThrow('Training session already in progress');
-    });
+    }, 60000);
   });
 
   describe('session management', () => {

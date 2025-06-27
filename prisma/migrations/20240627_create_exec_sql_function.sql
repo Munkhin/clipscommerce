@@ -1,0 +1,5 @@
+CREATE OR REPLACE FUNCTION exec_sql(sql TEXT) RETURNS void AS $$
+BEGIN
+  EXECUTE sql;
+END;
+$$ LANGUAGE plpgsql;

@@ -85,32 +85,22 @@ Object.defineProperty(window, 'getComputedStyle', {
   configurable: true,
 });
 
-// Mock location object properly - only if it doesn't already exist
-if (!window.location) {
-  Object.defineProperty(window, 'location', {
-    value: {
-      href: 'http://localhost/',
-      origin: 'http://localhost',
-      protocol: 'http:',
-      host: 'localhost',
-      hostname: 'localhost',
-      port: '',
-      pathname: '/',
-      search: '',
-      hash: '',
-      reload: jest.fn(),
-      assign: jest.fn(),
-      replace: jest.fn(),
-    },
-    writable: true,
-    configurable: true,
-  });
-} else {
-  // If location exists, just mock the methods we need
-  window.location.reload = jest.fn();
-  window.location.assign = jest.fn();
-  window.location.replace = jest.fn();
-}
+// Mock location object properly
+delete window.location;
+window.location = {
+  href: 'http://localhost/',
+  origin: 'http://localhost',
+  protocol: 'http:',
+  host: 'localhost',
+  hostname: 'localhost',
+  port: '',
+  pathname: '/',
+  search: '',
+  hash: '',
+  reload: jest.fn(),
+  assign: jest.fn(),
+  replace: jest.fn(),
+};
 
 // Original console methods
 const originalConsole = {

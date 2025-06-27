@@ -48,7 +48,7 @@ export default function IdeatorPage() {
         ],
         guidelines: "These guidelines are dynamically tailored to maximize engagement for your specific content type and target audience.",
       });
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError("Failed to generate content ideas. Please try again.");
     } finally {
       setLoading(false);
@@ -56,7 +56,9 @@ export default function IdeatorPage() {
   };
 
   const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      navigator.clipboard.writeText(text);
+    }
   };
 
   const copyAllResults = () => {
@@ -80,7 +82,7 @@ ${results.hashtags.join(' ')}
 GUIDELINES:
 ${results.guidelines}
       `;
-      navigator.clipboard.writeText(allContent);
+      copyToClipboard(allContent);
     }
   };
 

@@ -3,6 +3,7 @@ import { cookies } from 'next/headers';
 import { AuthTokenManagerService } from '../../../../workflows/data_collection/lib/auth-token-manager.service';
 import { Platform } from '../../../../workflows/deliverables/types/deliverables_types';
 import { PlatformClientIdentifier } from '../../../../workflows/data_collection/lib/auth.types';
+import { URL } from 'url';
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -17,11 +18,9 @@ export async function GET(request: NextRequest) {
   }
 
   if (!state || !storedState || state !== storedState) {
-    console.error('TikTok OAuth callback error: State validation failed. State from query:', state, 'Stored state from cookie:', storedState);
     // Redirect to an error page or return an error response
     return NextResponse.redirect(new URL('/oauth-error?error=state_validation_failed', request.url));
   }
-  console.log('TikTok OAuth callback: State validation successful.');
 
   // IMPORTANT: Validate the 'state' parameter to prevent CSRF attacks.
   // This typically involves:
@@ -33,7 +32,6 @@ export async function GET(request: NextRequest) {
   // The actual validation logic is now above.
 
   if (!code) {
-    console.error('TikTok OAuth callback error: Authorization code parameter missing.');
     return NextResponse.redirect(new URL('/oauth-error?error=code_missing', request.url));
   }
 
@@ -44,12 +42,10 @@ export async function GET(request: NextRequest) {
   const tiktokRedirectUri = process.env.TIKTOK_REDIRECT_URI || `${request.nextUrl.origin}/api/oauth/tiktok/callback`;
 
   if (!tiktokClientId || !tiktokClientSecret) {
-    console.error('TikTok OAuth callback critical error: Missing TIKTOK_CLIENT_ID or TIKTOK_CLIENT_SECRET in environment variables.');
     // This is a server configuration issue, should not redirect with sensitive info.
     return new NextResponse('Server configuration error for TikTok OAuth.', { status: 500 });
   }
   if (!tiktokRedirectUri) {
-    console.error('TikTok OAuth callback critical error: Missing TIKTOK_REDIRECT_URI in environment variables or could not determine from request.');
     return new NextResponse('Server configuration error for TikTok OAuth Redirect URI.', { status: 500 });
   }
 
@@ -69,7 +65,6 @@ export async function GET(request: NextRequest) {
     );
 
     if (credentials && credentials.accessToken) {
-      console.log(`TikTok OAuth successful for open_id: ${credentials.openId}. Access token obtained.`);
       // Successful authentication.
       // TODO: Set up a user session (e.g., using cookies or a session store).
       // Redirect to a success page, like a user dashboard.
@@ -79,11 +74,9 @@ export async function GET(request: NextRequest) {
       }
       return NextResponse.redirect(successUrl);
     } else {
-      console.error('TikTok OAuth callback error: Failed to exchange authorization code for token.');
       return NextResponse.redirect(new URL('/oauth-error?error=token_exchange_failed', request.url));
     }
   } catch (error) {
-    console.error('TikTok OAuth callback critical error: Exception during token exchange process.', error);
     // Avoid redirecting with potentially sensitive error details from internal exceptions.
     return NextResponse.redirect(new URL('/oauth-error?error=internal_server_error', request.url));
   }

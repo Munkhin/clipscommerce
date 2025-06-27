@@ -12,11 +12,13 @@ export default function PaymentSuccessPage() {
 
   useEffect(() => {
     // Check for stored redirect path
-    const storedRedirect = localStorage.getItem('post_payment_redirect');
-    
-    if (storedRedirect) {
-      setRedirectPath(storedRedirect);
-      localStorage.removeItem('post_payment_redirect');
+    if (typeof window !== 'undefined') {
+      const storedRedirect = localStorage.getItem('post_payment_redirect');
+      
+      if (storedRedirect) {
+        setRedirectPath(storedRedirect);
+        localStorage.removeItem('post_payment_redirect');
+      }
     }
 
     // Redirect after 3 seconds
@@ -97,4 +99,5 @@ export default function PaymentSuccessPage() {
       </motion.div>
     </div>
   );
-} 
+}
+ 

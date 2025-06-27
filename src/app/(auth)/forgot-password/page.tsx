@@ -7,14 +7,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { useFormState, useFormStatus } from "react-dom";
 
 export default function ForgotPasswordPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [state, formAction] = useFormState(forgotPasswordAction, null);
-  const { pending } = useFormStatus();
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,6 +28,8 @@ export default function ForgotPasswordPage() {
         router.push(
           `/sign-in?message=${encodeURIComponent('Password reset link sent! Please check your email.')}&type=success`
         );
+      } else {
+        setError(result?.error || "An unknown error occurred.");
       }
     } finally {
       setIsLoading(false);
@@ -47,9 +47,9 @@ export default function ForgotPasswordPage() {
             </p>
           </div>
 
-          {state?.error && (
+          {error && (
             <div className="bg-red-500/10 border border-red-500/30 text-red-300 p-4 rounded-lg text-sm">
-              {state.error}
+              {error}
             </div>
           )}
 
@@ -65,16 +65,16 @@ export default function ForgotPasswordPage() {
                 placeholder="you@example.com"
                 required
                 className="bg-dominator-dark/50 border-dominator-dark/50 text-white placeholder-dominator-400"
-                disabled={isLoading || pending}
+                disabled={isLoading}
               />
             </div>
 
             <Button
               type="submit"
               className="w-full bg-gradient-to-r from-dominator-blue to-dominator-magenta hover:from-dominator-blue/90 hover:to-dominator-magenta/90 text-white font-semibold py-2.5 rounded-lg transition-all hover:shadow-[0_0_20px_rgba(0,245,255,0.5)]"
-              disabled={isLoading || pending}
+              disabled={isLoading}
             >
-              {isLoading || pending ? "Sending Reset Link..." : "Send Reset Link"}
+              {isLoading ? "Sending Reset Link..." : "Send Reset Link"}
             </Button>
           </form>
 

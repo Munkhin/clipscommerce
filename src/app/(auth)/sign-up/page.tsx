@@ -34,8 +34,6 @@ export default function SignUpPage() {
   const searchParams = useSearchParams();
   const [state, formAction] = useActionState(signUpAction, null);
   const [isLoading, setIsLoading] = useState(false);
-  const [formError, setFormError] = useState<string | null>(null);
-  const { pending } = useFormStatus();
   
   // Get message and type from URL search params
   const message = searchParams?.get('message');
@@ -44,15 +42,14 @@ export default function SignUpPage() {
   useEffect(() => {
     if (state?.success) {
       router.push("/sign-in?message=Account created successfully! Please check your email to confirm your account.&type=success");
-    } else if (state?.error) {
-      setFormError(state.error);
     }
   }, [state, router]);
 
-  const handleFormAction = async (formData: FormData) => {
+  const handleFormAction = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     setIsLoading(true);
-    setFormError(null);
     try {
+      const formData = new FormData(event.currentTarget);
       await formAction(formData);
     } finally {
       setIsLoading(false);
@@ -88,7 +85,7 @@ export default function SignUpPage() {
             </div>
 
             <div className="bg-gray-900/50 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-8 shadow-2xl">
-              <form action={handleFormAction} className="space-y-6">
+              <form onSubmit={handleFormAction} className="space-y-6">
                 <div className="space-y-2">
                   <Label htmlFor="email" className="text-gray-300 font-medium">Email</Label>
                   <Input

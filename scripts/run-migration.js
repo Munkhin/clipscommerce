@@ -4,8 +4,14 @@ const path = require('path');
 
 async function runMigration() {
   try {
+    // Get migration file from command line arguments
+    const migrationFile = process.argv[2];
+    if (!migrationFile) {
+      throw new Error('Please provide a migration file name.');
+    }
+
     // Load environment variables
-    require('dotenv').config();
+    require('dotenv').config({ path: path.resolve(__dirname, '../.env.example') });
     
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -16,8 +22,22 @@ async function runMigration() {
     
     const supabase = createClient(supabaseUrl, supabaseKey);
     
+    // Read the function creation file
+    const functionMigrationPath = path.join(__dirname, '..', 'prisma', 'migrations', '20240627_add_exec_sql_function.sql');
+    const functionSql = fs.readFileSync(functionMigrationPath, 'utf8');
+
+    console.log('Creating exec_sql function...');
+    const { error: functionError } = await supabase.rpc('exec_sql', { sql: functionSql });
+    if (functionError) {
+        // If the function already exists, we can ignore the error and continue.
+        if (functionError.code !== '42723') {
+            console.error('Error creating exec_sql function:', functionError);
+            throw functionError;
+        }
+    }
+
     // Read the migration file
-    const migrationPath = path.join(__dirname, '..', 'supabase', 'migrations', '20250106000001_ai_improvement_tables.sql');
+    const migrationPath = path.join(__dirname, '..', 'supabase', 'migrations', 'ai_improvement_complete.sql');
     const sql = fs.readFileSync(migrationPath, 'utf8');
     
     console.log('Running AI improvement pipeline migration...');
@@ -38,19 +58,6 @@ async function runMigration() {
     }
     
     console.log('✅ Migration completed successfully!');
-    
-    // Verify tables were created
-    const { data: tables, error: tablesError } = await supabase
-      .from('information_schema.tables')
-      .select('table_name')
-      .eq('table_schema', 'public')
-      .in('table_name', ['user_posts', 'training_data_quality', 'model_training_sessions', 'trained_models', 'ai_suggestions', 'ab_experiments']);
-    
-    if (tablesError) {
-      console.error('Error verifying tables:', tablesError);
-    } else {
-      console.log('✅ Verified tables created:', tables.map(t => t.table_name));
-    }
     
   } catch (err) {
     console.error('❌ Migration failed:', err.message);

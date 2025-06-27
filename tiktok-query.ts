@@ -45,64 +45,14 @@ const rl = readline.createInterface({
   output: process.stdout
 });
 
-// Simple mock AuthTokenManager for testing
-class MockAuthTokenManager implements IAuthTokenManager {
-  getToken: jest.Mock;
-  refreshToken: jest.Mock;
-  
-  constructor() {
-    this.getToken = jest.fn().mockResolvedValue('mock-access-token');
-    this.refreshToken = jest.fn().mockResolvedValue({
-      accessToken: 'new-mock-token',
-      refreshToken: 'new-refresh-token',
-      expiresAt: Math.floor(Date.now() / 1000) + 3600,
-      tokenType: 'bearer',
-      strategy: AuthStrategy.OAUTH2
-    });
-  }
-  
-  async getValidCredentials(identifier: PlatformClientIdentifier): Promise<PlatformCredentials | null> {
-    return {
-      accessToken: 'mock-access-token',
-      refreshToken: 'mock-refresh-token',
-      expiresAt: Math.floor(Date.now() / 1000) + 3600,
-      tokenType: 'bearer',
-      strategy: AuthStrategy.OAUTH2
-    } as OAuth2Credentials;
-  }
-  
-  async storeCredentials(identifier: PlatformClientIdentifier, credentials: PlatformCredentials): Promise<void> {
-    // Mock implementation
-    console.log(`Storing credentials for ${identifier.platform}:`, credentials);
-  }
-  
-  async clearCredentials(identifier: PlatformClientIdentifier): Promise<void> {
-    // Mock implementation
-    console.log(`Clearing credentials for ${identifier.platform}`);
-  }
-  
-  // Add missing methods from IAuthTokenManager
-  async getAuthUrl(platform: Platform): Promise<string> {
-    return `https://${platform}.com/auth`;
-  }
-  
-  async handleCallback(platform: Platform, code: string): Promise<PlatformCredentials> {
-    return {
-      accessToken: 'mock-access-token',
-      refreshToken: 'mock-refresh-token',
-      expiresAt: Math.floor(Date.now() / 1000) + 3600,
-      tokenType: 'bearer',
-      strategy: AuthStrategy.OAUTH2
-    } as OAuth2Credentials;
-  }
-}
+import { SupabaseAuthTokenManager } from './src/app/workflows/data_collection/lib/auth';
 
 async function main() {
   console.log('🚀 TikTok Data Query Tool 🎵');
   console.log('--------------------------');
   
   // Initialize TikTok client with mock auth
-  const authManager = new MockAuthTokenManager();
+  const authManager = new SupabaseAuthTokenManager();
   
   const config: ApiConfig = {
     baseUrl: 'https://open.tiktokapis.com',

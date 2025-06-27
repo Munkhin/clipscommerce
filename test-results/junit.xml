@@ -1,3 +1,391 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="jest tests" tests="0" failures="0" errors="0" time="1.708">
+<testsuites name="jest tests" tests="95" failures="17" errors="0" time="56.206">
+  <testsuite name="TrainingOrchestrator" errors="0" failures="2" skipped="0" timestamp="2025-06-27T14:41:12" time="49.979" tests="9">
+    <testcase classname="TrainingOrchestrator startTraining should start training successfully with valid parameters" name="TrainingOrchestrator startTraining should start training successfully with valid parameters" time="8.634">
+    </testcase>
+    <testcase classname="TrainingOrchestrator startTraining should throw error if training is already in progress" name="TrainingOrchestrator startTraining should throw error if training is already in progress" time="0.006">
+    </testcase>
+    <testcase classname="TrainingOrchestrator session management should track session progress correctly" name="TrainingOrchestrator session management should track session progress correctly" time="10.028">
+    </testcase>
+    <testcase classname="TrainingOrchestrator session management should return current session correctly" name="TrainingOrchestrator session management should return current session correctly" time="10.023">
+    </testcase>
+    <testcase classname="TrainingOrchestrator training history should fetch training history from database" name="TrainingOrchestrator training history should fetch training history from database" time="0.002">
+    </testcase>
+    <testcase classname="TrainingOrchestrator session lifecycle should handle training completion correctly" name="TrainingOrchestrator session lifecycle should handle training completion correctly" time="0.004">
+    </testcase>
+    <testcase classname="TrainingOrchestrator session lifecycle should handle training failure correctly" name="TrainingOrchestrator session lifecycle should handle training failure correctly" time="0.004">
+    </testcase>
+    <testcase classname="TrainingOrchestrator isTraining should return correct training status" name="TrainingOrchestrator isTraining should return correct training status" time="10.023">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: true
+Received: false
+    at Object.&lt;anonymous&gt; (/workspaces/clipscommerce/src/app/workflows/AI_improvement/__tests__/TrainingOrchestrator.test.ts:186:41)</failure>
+    </testcase>
+    <testcase classname="TrainingOrchestrator stopTraining should stop training gracefully" name="TrainingOrchestrator stopTraining should stop training gracefully" time="10.016">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: true
+Received: false
+    at Object.&lt;anonymous&gt; (/workspaces/clipscommerce/src/app/workflows/AI_improvement/__tests__/TrainingOrchestrator.test.ts:196:41)</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="AIImprovementService" errors="0" failures="4" skipped="0" timestamp="2025-06-27T14:42:02" time="1.045" tests="21">
+    <testcase classname="AIImprovementService Content Optimization should provide content optimization suggestions" name="AIImprovementService Content Optimization should provide content optimization suggestions" time="0.026">
+    </testcase>
+    <testcase classname="AIImprovementService Content Optimization should analyze sentiment correctly" name="AIImprovementService Content Optimization should analyze sentiment correctly" time="0.003">
+    </testcase>
+    <testcase classname="AIImprovementService Content Optimization should analyze tone correctly" name="AIImprovementService Content Optimization should analyze tone correctly" time="0.001">
+    </testcase>
+    <testcase classname="AIImprovementService Engagement Prediction should predict engagement for a post" name="AIImprovementService Engagement Prediction should predict engagement for a post" time="0.004">
+    </testcase>
+    <testcase classname="AIImprovementService Engagement Prediction should provide higher scores for optimal timing" name="AIImprovementService Engagement Prediction should provide higher scores for optimal timing" time="0.001">
+    </testcase>
+    <testcase classname="AIImprovementService A/B Testing should create A/B test experiments" name="AIImprovementService A/B Testing should create A/B test experiments" time="0.001">
+      <failure>TypeError: (0 , abTesting_1.createExperiment) is not a function
+    at AIImprovementService.createABTest (/workspaces/clipscommerce/src/app/workflows/AI_improvement/services/AIImprovementService.ts:226:42)
+    at Object.&lt;anonymous&gt; (/workspaces/clipscommerce/src/app/workflows/AI_improvement/__tests__/AIImprovementService.test.ts:144:22)</failure>
+    </testcase>
+    <testcase classname="AIImprovementService A/B Testing should generate appropriate variants for different variation types" name="AIImprovementService A/B Testing should generate appropriate variants for different variation types" time="0.001">
+      <failure>TypeError: (0 , abTesting_1.createExperiment) is not a function
+    at AIImprovementService.createABTest (/workspaces/clipscommerce/src/app/workflows/AI_improvement/services/AIImprovementService.ts:226:42)
+    at Object.&lt;anonymous&gt; (/workspaces/clipscommerce/src/app/workflows/AI_improvement/__tests__/AIImprovementService.test.ts:171:22)</failure>
+    </testcase>
+    <testcase classname="AIImprovementService Performance Insights should provide comprehensive performance insights" name="AIImprovementService Performance Insights should provide comprehensive performance insights" time="0.013">
+    </testcase>
+    <testcase classname="AIImprovementService Performance Insights should identify top performing platform correctly" name="AIImprovementService Performance Insights should identify top performing platform correctly" time="0.001">
+    </testcase>
+    <testcase classname="AIImprovementService Post Performance Recording should record post performance correctly" name="AIImprovementService Post Performance Recording should record post performance correctly" time="0.001">
+    </testcase>
+    <testcase classname="AIImprovementService Workflow Improvements should provide workflow improvement suggestions" name="AIImprovementService Workflow Improvements should provide workflow improvement suggestions" time="0.002">
+    </testcase>
+    <testcase classname="AIImprovementService Feedback System should handle positive feedback correctly" name="AIImprovementService Feedback System should handle positive feedback correctly" time="0.003">
+    </testcase>
+    <testcase classname="AIImprovementService Feedback System should handle negative feedback correctly" name="AIImprovementService Feedback System should handle negative feedback correctly" time="0.001">
+    </testcase>
+    <testcase classname="AIImprovementService Feedback System should handle neutral feedback correctly" name="AIImprovementService Feedback System should handle neutral feedback correctly" time="0.001">
+    </testcase>
+    <testcase classname="AIImprovementService Error Handling should handle missing experiment gracefully" name="AIImprovementService Error Handling should handle missing experiment gracefully" time="0.001">
+      <failure>TypeError: (0 , abTesting_1.analyzeExperiment) is not a function
+    at AIImprovementService.analyzeABTest (/workspaces/clipscommerce/src/app/workflows/AI_improvement/services/AIImprovementService.ts:266:41)
+    at Object.&lt;anonymous&gt; (/workspaces/clipscommerce/src/app/workflows/AI_improvement/__tests__/AIImprovementService.test.ts:345:22)</failure>
+    </testcase>
+    <testcase classname="AIImprovementService Error Handling should handle empty content gracefully" name="AIImprovementService Error Handling should handle empty content gracefully" time="0.001">
+    </testcase>
+    <testcase classname="AIImprovementService Integration Points should initialize service correctly" name="AIImprovementService Integration Points should initialize service correctly" time="0.002">
+    </testcase>
+    <testcase classname="AIImprovementService Integration Points should auto-initialize when calling methods" name="AIImprovementService Integration Points should auto-initialize when calling methods" time="0.001">
+    </testcase>
+    <testcase classname="A/B Testing Functions should create experiments with proper validation" name="A/B Testing Functions should create experiments with proper validation" time="0.001">
+      <failure>TypeError: createExperiment is not a function
+    at Object.&lt;anonymous&gt; (/workspaces/clipscommerce/src/app/workflows/AI_improvement/__tests__/AIImprovementService.test.ts:419:24)
+    at Promise.then.completed (/workspaces/clipscommerce/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/workspaces/clipscommerce/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:316:40)
+    at _runTest (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:121:9)
+    at run (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/workspaces/clipscommerce/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/workspaces/clipscommerce/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/workspaces/clipscommerce/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/workspaces/clipscommerce/node_modules/jest-runner/build/runTest.js:444:34)</failure>
+    </testcase>
+    <testcase classname="NLP Functions should analyze sentiment with emotion detection" name="NLP Functions should analyze sentiment with emotion detection" time="0">
+    </testcase>
+    <testcase classname="NLP Functions should generate caption variations" name="NLP Functions should generate caption variations" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="ABTestingAgent" errors="0" failures="3" skipped="0" timestamp="2025-06-27T14:42:03" time="0.511" tests="24">
+    <testcase classname="ABTestingAgent should instantiate correctly" name="ABTestingAgent should instantiate correctly" time="0.001">
+    </testcase>
+    <testcase classname="ABTestingAgent should start and stop correctly" name="ABTestingAgent should start and stop correctly" time="0.007">
+    </testcase>
+    <testcase classname="ABTestingAgent should execute create_experiment task" name="ABTestingAgent should execute create_experiment task" time="0.006">
+    </testcase>
+    <testcase classname="ABTestingAgent should execute analyze_experiment task" name="ABTestingAgent should execute analyze_experiment task" time="0.003">
+    </testcase>
+    <testcase classname="ABTestingAgent should execute prioritize_experiments task" name="ABTestingAgent should execute prioritize_experiments task" time="0.002">
+    </testcase>
+    <testcase classname="ABTestingAgent should handle unknown task type gracefully" name="ABTestingAgent should handle unknown task type gracefully" time="0.033">
+    </testcase>
+    <testcase classname="ABTestingAgent performance should decrease on task failure" name="ABTestingAgent performance should decrease on task failure" time="0.002">
+    </testcase>
+    <testcase classname="ABTestingAgent experiment management should track multiple active experiments" name="ABTestingAgent experiment management should track multiple active experiments" time="0.003">
+    </testcase>
+    <testcase classname="ABTestingAgent experiment management should handle different variation types" name="ABTestingAgent experiment management should handle different variation types" time="0.02">
+    </testcase>
+    <testcase classname="ABTestingAgent experiment management should handle different target metrics" name="ABTestingAgent experiment management should handle different target metrics" time="0.005">
+    </testcase>
+    <testcase classname="ABTestingAgent experiment management should handle different platforms consistently" name="ABTestingAgent experiment management should handle different platforms consistently" time="0.005">
+    </testcase>
+    <testcase classname="ABTestingAgent experiment analysis should analyze experiments with different statuses" name="ABTestingAgent experiment analysis should analyze experiments with different statuses" time="0.014">
+      <failure>Error: expect(received).toContain(expected) // indexOf
+
+Matcher error: received value must not be null nor undefined
+
+Received has value: undefined
+    at Object.&lt;anonymous&gt; (/workspaces/clipscommerce/src/app/workflows/AI_improvement/__tests__/ABTestingAgent.test.ts:342:40)</failure>
+    </testcase>
+    <testcase classname="ABTestingAgent experiment analysis should handle analysis errors gracefully" name="ABTestingAgent experiment analysis should handle analysis errors gracefully" time="0.015">
+      <failure>Error: expect(received).rejects.toThrow()
+
+Received promise resolved instead of rejected
+Resolved to value: {&quot;analysisDate&quot;: 2025-06-27T14:42:03.717Z, &quot;confidenceLevel&quot;: 0.95, &quot;experimentId&quot;: &quot;exp2&quot;, &quot;recommendations&quot;: [&quot;Implement winning variant&quot;], &quot;results&quot;: [{&quot;confidenceInterval&quot;: {&quot;lower&quot;: 0.04, &quot;upper&quot;: 0.06}, &quot;conversionRate&quot;: 0.05, &quot;isWinner&quot;: false, &quot;sampleSize&quot;: 1000, &quot;variantId&quot;: &quot;v1&quot;, &quot;variantName&quot;: &quot;Original&quot;}, {&quot;confidenceInterval&quot;: {&quot;lower&quot;: 0.06, &quot;upper&quot;: 0.08}, &quot;conversionRate&quot;: 0.07, &quot;isWinner&quot;: true, &quot;sampleSize&quot;: 1000, &quot;variantId&quot;: &quot;v2&quot;, &quot;variantName&quot;: &quot;Optimized&quot;}], &quot;status&quot;: &quot;completed&quot;}
+    at expect (/workspaces/clipscommerce/node_modules/expect/build/index.js:113:15)
+    at Object.&lt;anonymous&gt; (/workspaces/clipscommerce/src/app/workflows/AI_improvement/__tests__/ABTestingAgent.test.ts:371:13)</failure>
+    </testcase>
+    <testcase classname="ABTestingAgent experiment analysis should analyze non-existent experiment gracefully" name="ABTestingAgent experiment analysis should analyze non-existent experiment gracefully" time="0.006">
+    </testcase>
+    <testcase classname="ABTestingAgent experiment prioritization should prioritize experiments based on different criteria" name="ABTestingAgent experiment prioritization should prioritize experiments based on different criteria" time="0.013">
+    </testcase>
+    <testcase classname="ABTestingAgent experiment prioritization should handle empty experiment list in prioritization" name="ABTestingAgent experiment prioritization should handle empty experiment list in prioritization" time="0.002">
+    </testcase>
+    <testcase classname="ABTestingAgent experiment prioritization should prioritize experiments with multiple active experiments" name="ABTestingAgent experiment prioritization should prioritize experiments with multiple active experiments" time="0.015">
+    </testcase>
+    <testcase classname="ABTestingAgent performance and resource management should maintain performance under high load" name="ABTestingAgent performance and resource management should maintain performance under high load" time="0.013">
+    </testcase>
+    <testcase classname="ABTestingAgent performance and resource management should handle concurrent task execution" name="ABTestingAgent performance and resource management should handle concurrent task execution" time="0.009">
+    </testcase>
+    <testcase classname="ABTestingAgent performance and resource management should track resource utilization" name="ABTestingAgent performance and resource management should track resource utilization" time="0.004">
+    </testcase>
+    <testcase classname="ABTestingAgent error handling and edge cases should handle invalid experiment details" name="ABTestingAgent error handling and edge cases should handle invalid experiment details" time="0.005">
+    </testcase>
+    <testcase classname="ABTestingAgent error handling and edge cases should handle service unavailability" name="ABTestingAgent error handling and edge cases should handle service unavailability" time="0.002">
+    </testcase>
+    <testcase classname="ABTestingAgent error handling and edge cases should handle malformed task data" name="ABTestingAgent error handling and edge cases should handle malformed task data" time="0.012">
+      <failure>Error: expect(received).rejects.toThrow()
+
+Received promise resolved instead of rejected
+Resolved to value: null
+    at expect (/workspaces/clipscommerce/node_modules/expect/build/index.js:113:15)
+    at Object.&lt;anonymous&gt; (/workspaces/clipscommerce/src/app/workflows/AI_improvement/__tests__/ABTestingAgent.test.ts:602:13)
+    at Promise.then.completed (/workspaces/clipscommerce/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/workspaces/clipscommerce/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:316:40)
+    at _runTest (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:121:9)
+    at _runTestsForDescribeBlock (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:121:9)
+    at run (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/workspaces/clipscommerce/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/workspaces/clipscommerce/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/workspaces/clipscommerce/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/workspaces/clipscommerce/node_modules/jest-runner/build/runTest.js:444:34)</failure>
+    </testcase>
+    <testcase classname="ABTestingAgent error handling and edge cases should maintain state consistency after errors" name="ABTestingAgent error handling and edge cases should maintain state consistency after errors" time="0.002">
+    </testcase>
+  </testsuite>
+  <testsuite name="TrainingDataCollectionService" errors="0" failures="1" skipped="0" timestamp="2025-06-27T14:42:04" time="0.752" tests="4">
+    <testcase classname="TrainingDataCollectionService collectTrainingData should collect and process data successfully" name="TrainingDataCollectionService collectTrainingData should collect and process data successfully" time="0.013">
+    </testcase>
+    <testcase classname="TrainingDataCollectionService collectTrainingData should use existing data if available" name="TrainingDataCollectionService collectTrainingData should use existing data if available" time="0.003">
+    </testcase>
+    <testcase classname="TrainingDataCollectionService assessDataQuality should identify insufficient posts" name="TrainingDataCollectionService assessDataQuality should identify insufficient posts" time="0.001">
+    </testcase>
+    <testcase classname="TrainingDataCollectionService assessDataQuality should identify low average engagement" name="TrainingDataCollectionService assessDataQuality should identify low average engagement" time="0.001">
+      <failure>Error: expect(received).toContain(expected) // indexOf
+
+Expected value: &quot;Low average engagement: 1.00% &lt; 5% required&quot;
+Received array: [&quot;Low engagement variance (IQR: 0.00%)&quot;, &quot;High ratio of posts without hashtags: 100.0%&quot;, &quot;Low engagement ratio posts for TikTok: 0/10&quot;, &quot;Low average engagement: 0.01% &lt; 5% required&quot;]
+    at Object.&lt;anonymous&gt; (/workspaces/clipscommerce/src/app/workflows/AI_improvement/__tests__/TrainingDataCollectionService.test.ts:109:31)</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="DataCollectionOptimizationAgent" errors="0" failures="6" skipped="0" timestamp="2025-06-27T14:42:04" time="0.371" tests="15">
+    <testcase classname="DataCollectionOptimizationAgent should initialize with sample counts for all platforms" name="DataCollectionOptimizationAgent should initialize with sample counts for all platforms" time="0.01">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: 3
+Received: 6
+    at Object.&lt;anonymous&gt; (/workspaces/clipscommerce/src/app/workflows/AI_improvement/__tests__/DataCollectionOptimizationAgent.test.ts:36:32)
+    at Promise.then.completed (/workspaces/clipscommerce/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/workspaces/clipscommerce/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:316:40)
+    at _runTest (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:121:9)
+    at run (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/workspaces/clipscommerce/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/workspaces/clipscommerce/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/workspaces/clipscommerce/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/workspaces/clipscommerce/node_modules/jest-runner/build/runTest.js:444:34)</failure>
+    </testcase>
+    <testcase classname="DataCollectionOptimizationAgent should add a new niche and initialize its counts to 0 for all platforms" name="DataCollectionOptimizationAgent should add a new niche and initialize its counts to 0 for all platforms" time="0.002">
+    </testcase>
+    <testcase classname="DataCollectionOptimizationAgent should warn and not add a duplicate niche" name="DataCollectionOptimizationAgent should warn and not add a duplicate niche" time="0.001">
+    </testcase>
+    <testcase classname="DataCollectionOptimizationAgent should increment sample count for a niche on a specific platform using incrementSampleCount method" name="DataCollectionOptimizationAgent should increment sample count for a niche on a specific platform using incrementSampleCount method" time="0.002">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: 10
+Received: 0
+    at Object.&lt;anonymous&gt; (/workspaces/clipscommerce/src/app/workflows/AI_improvement/__tests__/DataCollectionOptimizationAgent.test.ts:73:77)
+    at Promise.then.completed (/workspaces/clipscommerce/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/workspaces/clipscommerce/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:316:40)
+    at _runTest (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:121:9)
+    at run (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/workspaces/clipscommerce/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/workspaces/clipscommerce/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/workspaces/clipscommerce/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/workspaces/clipscommerce/node_modules/jest-runner/build/runTest.js:444:34)</failure>
+    </testcase>
+    <testcase classname="DataCollectionOptimizationAgent should not increment count for a non-existent niche and log an error via incrementSampleCount" name="DataCollectionOptimizationAgent should not increment count for a non-existent niche and log an error via incrementSampleCount" time="0.002">
+    </testcase>
+    <testcase classname="DataCollectionOptimizationAgent getOverallSampleCounts should return all niche counts across platforms" name="DataCollectionOptimizationAgent getOverallSampleCounts should return all niche counts across platforms" time="0.003">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: ArrayContaining [{&quot;count&quot;: 100, &quot;nicheId&quot;: &quot;test-niche-data-quality&quot;, &quot;nicheName&quot;: &quot;Data Quality Test Niche&quot;, &quot;platform&quot;: &quot;TikTok&quot;}, {&quot;count&quot;: 50, &quot;nicheId&quot;: &quot;test-niche-data-quality&quot;, &quot;nicheName&quot;: &quot;Data Quality Test Niche&quot;, &quot;platform&quot;: &quot;Instagram&quot;}, {&quot;count&quot;: 75, &quot;nicheId&quot;: &quot;nX&quot;, &quot;nicheName&quot;: &quot;Niche X&quot;, &quot;platform&quot;: &quot;TikTok&quot;}, {&quot;count&quot;: 0, &quot;nicheId&quot;: &quot;nX&quot;, &quot;nicheName&quot;: &quot;Niche X&quot;, &quot;platform&quot;: &quot;Instagram&quot;}]
+Received: [{&quot;count&quot;: 0, &quot;nicheId&quot;: &quot;test-niche-data-quality&quot;, &quot;nicheName&quot;: &quot;Data Quality Test Niche&quot;, &quot;platform&quot;: &quot;tiktok&quot;}, {&quot;count&quot;: 0, &quot;nicheId&quot;: &quot;nX&quot;, &quot;nicheName&quot;: &quot;Niche X&quot;, &quot;platform&quot;: &quot;tiktok&quot;}, {&quot;count&quot;: 0, &quot;nicheId&quot;: &quot;test-niche-data-quality&quot;, &quot;nicheName&quot;: &quot;Data Quality Test Niche&quot;, &quot;platform&quot;: &quot;instagram&quot;}, {&quot;count&quot;: 0, &quot;nicheId&quot;: &quot;nX&quot;, &quot;nicheName&quot;: &quot;Niche X&quot;, &quot;platform&quot;: &quot;instagram&quot;}, {&quot;count&quot;: 0, &quot;nicheId&quot;: &quot;test-niche-data-quality&quot;, &quot;nicheName&quot;: &quot;Data Quality Test Niche&quot;, &quot;platform&quot;: &quot;youtube&quot;}, {&quot;count&quot;: 0, &quot;nicheId&quot;: &quot;nX&quot;, &quot;nicheName&quot;: &quot;Niche X&quot;, &quot;platform&quot;: &quot;youtube&quot;}, {&quot;count&quot;: 0, &quot;nicheId&quot;: &quot;test-niche-data-quality&quot;, &quot;nicheName&quot;: &quot;Data Quality Test Niche&quot;, &quot;platform&quot;: &quot;facebook&quot;}, {&quot;count&quot;: 0, &quot;nicheId&quot;: &quot;nX&quot;, &quot;nicheName&quot;: &quot;Niche X&quot;, &quot;platform&quot;: &quot;facebook&quot;}, {&quot;count&quot;: 0, &quot;nicheId&quot;: &quot;test-niche-data-quality&quot;, &quot;nicheName&quot;: &quot;Data Quality Test Niche&quot;, &quot;platform&quot;: &quot;twitter&quot;}, {&quot;count&quot;: 0, &quot;nicheId&quot;: &quot;nX&quot;, &quot;nicheName&quot;: &quot;Niche X&quot;, &quot;platform&quot;: &quot;twitter&quot;}, …]
+    at Object.&lt;anonymous&gt; (/workspaces/clipscommerce/src/app/workflows/AI_improvement/__tests__/DataCollectionOptimizationAgent.test.ts:98:27)
+    at Promise.then.completed (/workspaces/clipscommerce/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/workspaces/clipscommerce/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:316:40)
+    at _runTest (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:121:9)
+    at run (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/workspaces/clipscommerce/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/workspaces/clipscommerce/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/workspaces/clipscommerce/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/workspaces/clipscommerce/node_modules/jest-runner/build/runTest.js:444:34)</failure>
+    </testcase>
+    <testcase classname="DataCollectionOptimizationAgent addSample - Data Quality Checks should add a high-quality sample successfully" name="DataCollectionOptimizationAgent addSample - Data Quality Checks should add a high-quality sample successfully" time="0.002">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: 1
+Received: 0
+    at Object.&lt;anonymous&gt; (/workspaces/clipscommerce/src/app/workflows/AI_improvement/__tests__/DataCollectionOptimizationAgent.test.ts:142:79)
+    at Promise.then.completed (/workspaces/clipscommerce/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/workspaces/clipscommerce/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:316:40)
+    at _runTest (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:121:9)
+    at _runTestsForDescribeBlock (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:121:9)
+    at run (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/workspaces/clipscommerce/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/workspaces/clipscommerce/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/workspaces/clipscommerce/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/workspaces/clipscommerce/node_modules/jest-runner/build/runTest.js:444:34)</failure>
+    </testcase>
+    <testcase classname="DataCollectionOptimizationAgent addSample - Data Quality Checks should reject a sample with missing critical metadata (low completeness)" name="DataCollectionOptimizationAgent addSample - Data Quality Checks should reject a sample with missing critical metadata (low completeness)" time="0.003">
+    </testcase>
+    <testcase classname="DataCollectionOptimizationAgent addSample - Data Quality Checks should reject an old sample (low recency) even if other metadata is complete" name="DataCollectionOptimizationAgent addSample - Data Quality Checks should reject an old sample (low recency) even if other metadata is complete" time="0.001">
+    </testcase>
+    <testcase classname="DataCollectionOptimizationAgent addSample - Data Quality Checks metadataCompletenessScore should be calculated correctly based on critical fields" name="DataCollectionOptimizationAgent addSample - Data Quality Checks metadataCompletenessScore should be calculated correctly based on critical fields" time="0.002">
+    </testcase>
+    <testcase classname="DataCollectionOptimizationAgent addSample - Data Quality Checks isRecent flag should be set correctly" name="DataCollectionOptimizationAgent addSample - Data Quality Checks isRecent flag should be set correctly" time="0.013">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: false
+Received: undefined
+    at Object.&lt;anonymous&gt; (/workspaces/clipscommerce/src/app/workflows/AI_improvement/__tests__/DataCollectionOptimizationAgent.test.ts:237:32)
+    at Promise.then.completed (/workspaces/clipscommerce/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/workspaces/clipscommerce/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:316:40)
+    at _runTest (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:121:9)
+    at _runTestsForDescribeBlock (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:121:9)
+    at run (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/workspaces/clipscommerce/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/workspaces/clipscommerce/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/workspaces/clipscommerce/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/workspaces/clipscommerce/node_modules/jest-runner/build/runTest.js:444:34)</failure>
+    </testcase>
+    <testcase classname="DataCollectionOptimizationAgent addSample - Data Quality Checks overallQualityScore should reflect component scores and weights" name="DataCollectionOptimizationAgent addSample - Data Quality Checks overallQualityScore should reflect component scores and weights" time="0.013">
+    </testcase>
+    <testcase classname="DataCollectionOptimizationAgent addSample - Data Quality Checks getAverageQualityScore should calculate correctly after adding multiple samples" name="DataCollectionOptimizationAgent addSample - Data Quality Checks getAverageQualityScore should calculate correctly after adding multiple samples" time="0.002">
+      <failure>Error: expect(received).toBeCloseTo(expected)
+
+Expected: 100
+Received: 0
+
+Expected precision:    2
+Expected difference: &lt; 0.005
+Received difference:   100
+    at Object.&lt;anonymous&gt; (/workspaces/clipscommerce/src/app/workflows/AI_improvement/__tests__/DataCollectionOptimizationAgent.test.ts:280:87)
+    at Promise.then.completed (/workspaces/clipscommerce/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/workspaces/clipscommerce/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:316:40)
+    at _runTest (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:121:9)
+    at _runTestsForDescribeBlock (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:121:9)
+    at run (/workspaces/clipscommerce/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/workspaces/clipscommerce/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/workspaces/clipscommerce/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/workspaces/clipscommerce/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/workspaces/clipscommerce/node_modules/jest-runner/build/runTest.js:444:34)</failure>
+    </testcase>
+    <testcase classname="DataCollectionOptimizationAgent addSample - Data Quality Checks addSample should return null and log error for non-existent niche" name="DataCollectionOptimizationAgent addSample - Data Quality Checks addSample should return null and log error for non-existent niche" time="0.002">
+    </testcase>
+    <testcase classname="DataCollectionOptimizationAgent addSample - Data Quality Checks getAverageQualityScore should return 0 if no samples or niche does not exist" name="DataCollectionOptimizationAgent addSample - Data Quality Checks getAverageQualityScore should return 0 if no samples or niche does not exist" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="ExperimentManager" errors="0" failures="1" skipped="0" timestamp="2025-06-27T14:42:05" time="0.31" tests="9">
+    <testcase classname="ExperimentManager createExperiment should create experiment with valid data" name="ExperimentManager createExperiment should create experiment with valid data" time="0.002">
+    </testcase>
+    <testcase classname="ExperimentManager createExperiment should validate experiment configuration" name="ExperimentManager createExperiment should validate experiment configuration" time="0.048">
+    </testcase>
+    <testcase classname="ExperimentManager createExperiment should validate variant weights sum to 100" name="ExperimentManager createExperiment should validate variant weights sum to 100" time="0.001">
+    </testcase>
+    <testcase classname="ExperimentManager updateExperiment should update existing experiment" name="ExperimentManager updateExperiment should update existing experiment" time="0.001">
+      <failure>Error: Experiment must have at least 2 variants
+    at ExperimentManager.validateExperiment (/workspaces/clipscommerce/src/app/workflows/AI_improvement/functions/abTesting.ts:591:13)
+    at ExperimentManager.updateExperiment (/workspaces/clipscommerce/src/app/workflows/AI_improvement/functions/abTesting.ts:150:10)
+    at Object.&lt;anonymous&gt; (/workspaces/clipscommerce/src/app/workflows/AI_improvement/__tests__/ExperimentManager.test.ts:152:33)</failure>
+    </testcase>
+    <testcase classname="ExperimentManager getExperiment should retrieve experiment from database" name="ExperimentManager getExperiment should retrieve experiment from database" time="0.001">
+    </testcase>
+    <testcase classname="ExperimentManager getExperiment should return null for non-existent experiment" name="ExperimentManager getExperiment should return null for non-existent experiment" time="0">
+    </testcase>
+    <testcase classname="ExperimentManager recordExperimentData should record experiment data successfully" name="ExperimentManager recordExperimentData should record experiment data successfully" time="0.002">
+    </testcase>
+    <testcase classname="ExperimentManager recordExperimentData should fail to record data for non-running experiment" name="ExperimentManager recordExperimentData should fail to record data for non-running experiment" time="0">
+    </testcase>
+    <testcase classname="ExperimentManager analyzeExperiment should perform Bayesian analysis on experiment results" name="ExperimentManager analyzeExperiment should perform Bayesian analysis on experiment results" time="0.003">
+    </testcase>
+  </testsuite>
+  <testsuite name="ModelMonitoringService" errors="0" failures="0" skipped="0" timestamp="2025-06-27T14:42:05" time="0.537" tests="6">
+    <testcase classname="ModelMonitoringService recordMetrics should record performance metrics successfully" name="ModelMonitoringService recordMetrics should record performance metrics successfully" time="0.015">
+    </testcase>
+    <testcase classname="ModelMonitoringService recordMetrics should create alerts when thresholds are exceeded" name="ModelMonitoringService recordMetrics should create alerts when thresholds are exceeded" time="0.002">
+    </testcase>
+    <testcase classname="ModelMonitoringService threshold management should update thresholds correctly" name="ModelMonitoringService threshold management should update thresholds correctly" time="0.001">
+    </testcase>
+    <testcase classname="ModelMonitoringService monitoring lifecycle should start and stop monitoring correctly" name="ModelMonitoringService monitoring lifecycle should start and stop monitoring correctly" time="0.002">
+    </testcase>
+    <testcase classname="ModelMonitoringService alert management should create alerts with correct severity levels" name="ModelMonitoringService alert management should create alerts with correct severity levels" time="0.001">
+    </testcase>
+    <testcase classname="ModelMonitoringService alert management should acknowledge alerts correctly" name="ModelMonitoringService alert management should acknowledge alerts correctly" time="0.038">
+    </testcase>
+  </testsuite>
+  <testsuite name="ContentOptimizationAgent" errors="0" failures="0" skipped="0" timestamp="2025-06-27T14:42:06" time="0.498" tests="7">
+    <testcase classname="ContentOptimizationAgent should instantiate correctly" name="ContentOptimizationAgent should instantiate correctly" time="0.002">
+    </testcase>
+    <testcase classname="ContentOptimizationAgent should start and stop correctly" name="ContentOptimizationAgent should start and stop correctly" time="0.005">
+    </testcase>
+    <testcase classname="ContentOptimizationAgent should execute update_optimization_models task" name="ContentOptimizationAgent should execute update_optimization_models task" time="0.011">
+    </testcase>
+    <testcase classname="ContentOptimizationAgent should execute optimize_content task" name="ContentOptimizationAgent should execute optimize_content task" time="0.002">
+    </testcase>
+    <testcase classname="ContentOptimizationAgent should handle unknown task type" name="ContentOptimizationAgent should handle unknown task type" time="0.021">
+    </testcase>
+    <testcase classname="ContentOptimizationAgent should report active status when busy and idle when not" name="ContentOptimizationAgent should report active status when busy and idle when not" time="0.001">
+    </testcase>
+    <testcase classname="ContentOptimizationAgent performance should decrease on task failure" name="ContentOptimizationAgent performance should decrease on task failure" time="0.001">
+    </testcase>
+  </testsuite>
 </testsuites>

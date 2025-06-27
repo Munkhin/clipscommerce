@@ -75,10 +75,10 @@ export class TrainingOrchestrator extends EventEmitter {
       await this.setupTrainingEnvironment(userId, platforms, options);
       
       // Phase 2: Data collection and validation
-      await this.collectAndValidateData();
+      const trainingData = await this.collectAndValidateData();
       
       // Phase 3: Model training
-      await this.executeModelTraining();
+      await this.executeModelTraining(trainingData);
       
       // Phase 4: Completion
       await this.completeTraining();
@@ -144,7 +144,7 @@ export class TrainingOrchestrator extends EventEmitter {
     await this.updateSession('preparing', 10, 'Training environment ready');
   }
 
-  private async collectAndValidateData(): Promise<void> {
+  private async collectAndValidateData(): Promise<PostMetrics[]> {
     if (!this.dataCollectionService || !this.currentSession) {
       throw new Error('Training environment not properly initialized');
     }
@@ -178,19 +178,18 @@ export class TrainingOrchestrator extends EventEmitter {
       summary: collectionResult.summary,
       qualityReports: collectionResult.qualityReports
     });
+
+    return collectionResult.data;
   }
 
-  private async executeModelTraining(): Promise<void> {
+  private async executeModelTraining(trainingData: PostMetrics[]): Promise<void> {
     if (!this.trainingPipeline || !this.currentSession) {
       throw new Error('Training pipeline not initialized');
     }
 
     await this.updateSession('training', 45, 'Starting model training...');
 
-    await this.trainingPipeline.startTraining(
-      this.currentSession.userId,
-      this.currentSession.platforms
-    );
+    await this.trainingPipeline.startTraining(trainingData);
 
     // Get training results
     this.currentSession.modelResults = this.trainingPipeline.getResults();
@@ -424,6 +423,73 @@ export class TrainingOrchestrator extends EventEmitter {
     }
 
     return session;
+  }
+
+  async resumeTraining(sessionId: string): Promise<void> {
+    const session = await this.loadTrainingSession(sessionId);
+    if (!session) {
+      throw new Error(`Session with ID ${sessionId} not found.`);
+    }
+
+    if (session.status !== 'failed' && session.status !== 'collecting_data') {
+      throw new Error(`Session with ID ${sessionId} cannot be resumed. Status: ${session.status}`);
+    }
+
+    this.currentSession = session;
+    this.emit('session_started', this.currentSession);
+
+    try {
+      if (session.status === 'failed') {
+        // If the session failed during training, restart the training process
+        await this.executeModelTraining([]);
+      } else {
+        // If the session was interrupted during data collection, restart the data collection
+        const trainingData = await this.collectAndValidateData();
+        await this.executeModelTraining(trainingData);
+      }
+      
+      await this.completeTraining();
+    } catch (error) {
+      await this.failTraining(error instanceof Error ? error.message : 'Unknown error');
+      throw error;
+    }
+  }
+
+  async getSessionStatus(sessionId: string): Promise<void> {
+    const session = await this.loadTrainingSession(sessionId);
+    if (!session) {
+      console.log(`Session with ID ${sessionId} not found.`);
+      return;
+    }
+
+    console.log('📊 Session Status:');
+    console.log(`   Session ID: ${session.id}`);
+    console.log(`   User ID: ${session.userId}`);
+    console.log(`   Status: ${session.status}`);
+    console.log(`   Progress: ${session.progress}%`);
+    console.log(`   Current Phase: ${session.currentPhase}`);
+    if (session.error) {
+      console.log(`   Error: ${session.error}`);
+    }
+  }
+
+  async displayTrainingHistory(userId: string): Promise<void> {
+    const history = await this.getTrainingHistory(userId);
+    if (history.length === 0) {
+      console.log(`No training history found for user ${userId}.`);
+      return;
+    }
+
+    console.log('📜 Training History:');
+    history.forEach(session => {
+      console.log(`
+   Session ID: ${session.id}
+   Status: ${session.status}
+   Start Time: ${session.startTime.toLocaleString()}
+   End Time: ${session.endTime?.toLocaleString() || 'N/A'}
+   Error: ${session.error || 'None'}
+      `);
+    });
   }
 
   isTraining(): boolean {

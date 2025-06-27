@@ -5,6 +5,7 @@ import { SettingsProvider } from '@/providers/SettingsProvider';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { GlobalErrorBoundary } from '@/components/errors/GlobalErrorBoundary';
 import { setUser, addBreadcrumb } from '@/lib/errors/errorReporting';
+import { URL } from 'url';
 
 const inter = Inter({ 
   subsets: ['latin'], 

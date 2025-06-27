@@ -81,7 +81,7 @@ export default function CompetitorTacticsPage() {
       ];
       
       setCompetitors(dynamicCompetitors);
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError("Failed to load competitor data dynamically. Please check your niche settings.");
     } finally {
       setLoading(false);
@@ -244,7 +244,11 @@ export default function CompetitorTacticsPage() {
                           size="sm" 
                           variant="ghost" 
                           className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity p-1 h-6 w-6"
-                          onClick={() => navigator.clipboard.writeText(hook)}
+                          onClick={() => {
+                            if (typeof navigator !== 'undefined' && navigator.clipboard) {
+                              navigator.clipboard.writeText(hook)
+                            }
+                          }}
                         >
                           <Copy className="h-3 w-3" />
                         </Button>
@@ -349,4 +353,4 @@ export default function CompetitorTacticsPage() {
       </div>
     </div>
   );
-} 
+}

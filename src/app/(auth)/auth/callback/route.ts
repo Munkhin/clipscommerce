@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
+import { URL } from "url";
 
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
@@ -10,7 +11,6 @@ export async function GET(request: Request) {
 
   // Handle OAuth errors
   if (error) {
-    console.error("Auth error:", error, errorDescription);
     return NextResponse.redirect(
       new URL(
         `/sign-in?error=${encodeURIComponent(errorDescription || 'Authentication failed')}&type=error`,
@@ -27,7 +27,6 @@ export async function GET(request: Request) {
       const { error: authError } = await supabase.auth.exchangeCodeForSession(code);
       
       if (authError) {
-        console.error("Error exchanging code for session:", authError);
         return NextResponse.redirect(
           new URL(
             `/sign-in?error=${encodeURIComponent('Failed to authenticate. Please try signing in again.')}&type=error`,
@@ -46,8 +45,7 @@ export async function GET(request: Request) {
           )
         );
       }
-    } catch (error) {
-      console.error("Error in auth callback:", error);
+    } catch (e) {
       return NextResponse.redirect(
         new URL(
           `/sign-in?error=${encodeURIComponent('An unexpected error occurred. Please try again.')}&type=error`,

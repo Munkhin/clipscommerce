@@ -1,11 +1,12 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import Stripe from 'stripe';
+import { URL } from 'url';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const priceId = searchParams.get('price_id');
@@ -47,7 +48,6 @@ export async function GET(request: Request) {
 
     return NextResponse.redirect(stripeSession.url!);
   } catch (error) {
-    console.error('Error creating checkout session:', error);
     return NextResponse.json(
       { error: 'Error creating checkout session' },
       { status: 500 }

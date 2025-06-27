@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { serverStorageService, BucketName } from '@/lib/storage/supabase-storage';
+import { URL } from 'url';
 
 export async function POST(request: NextRequest) {
   try {
@@ -67,7 +68,6 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Upload error:', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Internal server error' },
       { status: 500 }
@@ -89,20 +89,19 @@ export async function GET(request: NextRequest) {
     const action = searchParams.get('action');
 
     switch (action) {
-      case 'stats':
+      case 'stats': {
         const stats = await serverStorageService.getUserFileStats(user.id);
         return NextResponse.json({ success: true, stats });
-
-      case 'cleanup':
+      }
+      case 'cleanup': {
         const cleaned = await serverStorageService.cleanupExpiredFiles(user.id);
         return NextResponse.json({ success: true, cleanedFiles: cleaned });
-
+      }
       default:
         return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
     }
 
   } catch (error) {
-    console.error('Storage API error:', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Internal server error' },
       { status: 500 }

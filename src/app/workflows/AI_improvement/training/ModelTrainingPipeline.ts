@@ -79,23 +79,19 @@ export class ModelTrainingPipeline extends EventEmitter {
     };
   }
 
-  async startTraining(userId: string, platforms: Platform[]): Promise<void> {
+  async startTraining(trainingData: PostMetrics[]): Promise<void> {
     if (this.isTraining) {
       throw new Error('Training is already in progress');
     }
 
     this.isTraining = true;
-    this.updateProgress('data_collection', 0, 'running', 'Starting data collection...');
+    this.updateProgress('preprocessing', 0, 'running', 'Starting preprocessing...');
 
     try {
-      // Phase 1: Data Collection
-      const trainingData = await this.collectTrainingData(userId, platforms);
-      this.updateProgress('data_collection', 20, 'running', `Collected ${trainingData.length} posts`);
-
-      // Phase 2: Data Preprocessing
-      this.updateProgress('preprocessing', 25, 'running', 'Preprocessing data...');
+      // Phase 1: Data Preprocessing
+      this.updateProgress('preprocessing', 5, 'running', 'Preprocessing data...');
       const preprocessedData = await this.preprocessData(trainingData);
-      this.updateProgress('preprocessing', 40, 'running', 'Data preprocessing completed');
+      this.updateProgress('preprocessing', 20, 'running', 'Data preprocessing completed');
 
       // Phase 3: Feature Engineering
       this.updateProgress('feature_engineering', 45, 'running', 'Engineering features...');
@@ -126,67 +122,7 @@ export class ModelTrainingPipeline extends EventEmitter {
     }
   }
 
-  private async collectTrainingData(userId: string, platforms: Platform[]): Promise<PostMetrics[]> {
-    const allPosts: PostMetrics[] = [];
-    
-    for (const platform of platforms) {
-      try {
-        // Query historical posts from database
-        const { data: posts, error } = await this.supabase
-          .from('posts')
-          .select('*')
-          .eq('user_id', userId)
-          .eq('platform', platform)
-          .gte('created_at', new Date(Date.now() - this.config.dataRequirements.lookbackDays * 24 * 60 * 60 * 1000).toISOString())
-          .order('created_at', { ascending: false });
-
-        if (error) {
-          console.error(`Error fetching posts for ${platform}:`, error);
-          continue;
-        }
-
-        if (posts && posts.length >= this.config.dataRequirements.minPostsPerPlatform) {
-          allPosts.push(...posts.map(post => this.transformToPostMetrics(post)));
-          this.emit('data_collected', { platform, count: posts.length });
-        } else {
-          this.emit('insufficient_data', { 
-            platform, 
-            found: posts?.length || 0, 
-            required: this.config.dataRequirements.minPostsPerPlatform 
-          });
-        }
-      } catch (error) {
-        console.error(`Failed to collect data for ${platform}:`, error);
-        this.emit('collection_error', { platform, error });
-      }
-    }
-
-    return allPosts;
-  }
-
-  private transformToPostMetrics(dbPost: any): PostMetrics {
-    return {
-      id: dbPost.id,
-      platform: dbPost.platform as Platform,
-      url: dbPost.url || '',
-      caption: dbPost.caption || '',
-      hashtags: dbPost.hashtags || [],
-      publishedAt: dbPost.created_at || new Date().toISOString(),
-      metrics: {
-        views: dbPost.views || 0,
-        likes: dbPost.likes || 0,
-        comments: dbPost.comments || 0,
-        shares: dbPost.shares || 0,
-        saves: dbPost.saves || 0,
-        engagementRate: dbPost.engagement_rate || 0
-      },
-      metadata: {
-        contentType: dbPost.content_type || 'video',
-        duration: dbPost.duration,
-        thumbnailUrl: dbPost.thumbnail_url
-      }
-    };
-  }
+  
 
   private async preprocessData(data: PostMetrics[]): Promise<PostMetrics[]> {
     // Filter out posts with insufficient engagement data
@@ -451,6 +387,49 @@ export class ModelTrainingPipeline extends EventEmitter {
 
   getResults(): Map<string, TrainingResult> {
     return new Map(this.trainingResults);
+  }
+
+  async resumeTraining(trainingData: PostMetrics[]): Promise<void> {
+    if (this.isTraining) {
+      throw new Error('Training is already in progress');
+    }
+
+    this.isTraining = true;
+    this.updateProgress('preprocessing', 0, 'running', 'Resuming preprocessing...');
+
+    try {
+      // Phase 1: Data Preprocessing
+      this.updateProgress('preprocessing', 5, 'running', 'Preprocessing data...');
+      const preprocessedData = await this.preprocessData(trainingData);
+      this.updateProgress('preprocessing', 20, 'running', 'Data preprocessing completed');
+
+      // Phase 2: Feature Engineering
+      this.updateProgress('feature_engineering', 25, 'running', 'Engineering features...');
+      const features = await this.engineerFeatures(preprocessedData);
+      this.updateProgress('feature_engineering', 40, 'running', 'Feature engineering completed');
+
+      // Phase 3: Model Training
+      this.updateProgress('model_training', 45, 'running', 'Training models...');
+      await this.trainModels(features);
+      this.updateProgress('model_training', 85, 'running', 'Model training completed');
+
+      // Phase 4: Validation
+      this.updateProgress('validation', 90, 'running', 'Validating models...');
+      await this.validateModels();
+      this.updateProgress('validation', 95, 'running', 'Model validation completed');
+
+      // Phase 5: Deployment
+      this.updateProgress('deployment', 98, 'running', 'Deploying models...');
+      await this.deployModels();
+      this.updateProgress('deployment', 100, 'completed', 'Training pipeline completed successfully');
+
+    } catch (error) {
+      this.updateProgress(this.currentProgress.phase, this.currentProgress.progress, 'failed', 
+        `Training failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw error;
+    } finally {
+      this.isTraining = false;
+    }
   }
 
   isCurrentlyTraining(): boolean {

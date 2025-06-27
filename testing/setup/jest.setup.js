@@ -32,6 +32,26 @@ if (!global.performance) {
 }
 
 // =============================================================================
+// LOGGER MOCKS
+// =============================================================================
+
+jest.mock('pino', () => {
+  const pino = jest.fn(() => ({
+    info: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn(),
+    debug: jest.fn(),
+    trace: jest.fn(),
+    fatal: jest.fn(),
+    child: jest.fn(() => pino()),
+  }));
+  pino.stdTimeFunctions = {
+    isoTime: () => new Date().toISOString(),
+  };
+  return pino;
+});
+
+// =============================================================================
 // NEXT.JS MOCKS
 // =============================================================================
 
@@ -113,6 +133,15 @@ jest.mock('next/navigation', () => ({
   useParams: () => ({}),
   notFound: jest.fn(),
   redirect: jest.fn(),
+}));
+
+jest.mock('next/headers', () => ({
+  cookies: () => ({
+    get: jest.fn(),
+    set: jest.fn(),
+    delete: jest.fn(),
+    has: jest.fn(),
+  }),
 }));
 
 // =============================================================================
@@ -277,26 +306,15 @@ Object.defineProperty(window, 'getComputedStyle', {
   configurable: true,
 });
 
-// Mock location object
-// delete window.location;
-// Object.defineProperty(window, 'location', {
-//   value: {
-//     href: 'http://localhost:3000/',
-//     origin: 'http://localhost:3000',
-//     protocol: 'http:',
-//     host: 'localhost:3000',
-//     hostname: 'localhost',
-//     port: '3000',
-//     pathname: '/',
-//     search: '',
-//     hash: '',
-//     reload: jest.fn(),
-//     assign: jest.fn(),
-//     replace: jest.fn(),
-//   },
-//   writable: true,
-//   configurable: true,
-// });
+// JSDOM doesn't implement window.location.reload, and the default object is not extensible
+// So we have to delete and replace it.
+delete window.location;
+window.location = {
+  href: '/',
+  assign: jest.fn(),
+  replace: jest.fn(),
+  reload: jest.fn(),
+};
 
 // Mock localStorage and sessionStorage
 const createStorageMock = () => {

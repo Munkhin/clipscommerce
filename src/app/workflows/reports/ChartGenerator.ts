@@ -1,4 +1,18 @@
-// ChartGenerator.ts
+import { renderToStaticMarkup } from 'react-dom/server';
+import {
+  LineChart,
+  Line,
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from 'recharts';
 
 /**
  * Data for chart rendering.
@@ -20,11 +34,65 @@ export class ChartGenerator {
     data: ChartData,
     format: 'svg' | 'json' = 'svg'
   ): Promise<string> {
-    // TODO: Implement SVG/JSON chart rendering
-    if (format === 'svg') {
-      return `<svg><!-- Chart: ${data.title} --></svg>`;
+    if (format === 'json') {
+      return JSON.stringify(data);
     }
-    return JSON.stringify(data);
+
+    const { type, title, data: chartData, xAxis, yAxis } = data;
+
+    let chartComponent;
+
+    switch (type) {
+      case 'line':
+        chartComponent = (
+          <LineChart width={500} height={300} data={chartData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey={xAxis} />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            {Array.isArray(yAxis) ? (
+              yAxis.map((key, index) => (
+                <Line key={index} type="monotone" dataKey={key} stroke={`#${Math.floor(Math.random()*16777215).toString(16)}`} />
+              ))
+            ) : (
+              <Line type="monotone" dataKey={yAxis} stroke="#8884d8" />
+            )}
+          </LineChart>
+        );
+        break;
+      case 'bar':
+        chartComponent = (
+          <BarChart width={500} height={300} data={chartData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey={xAxis} />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            {Array.isArray(yAxis) ? (
+              yAxis.map((key, index) => (
+                <Bar key={index} dataKey={key} fill={`#${Math.floor(Math.random()*16777215).toString(16)}`} />
+              ))
+            ) : (
+              <Bar dataKey={yAxis} fill="#8884d8" />
+            )}
+          </BarChart>
+        );
+        break;
+      case 'pie':
+        chartComponent = (
+          <PieChart width={500} height={300}>
+            <Pie data={chartData} dataKey={yAxis as string} nameKey={xAxis} cx="50%" cy="50%" outerRadius={100} fill="#8884d8" label />
+            <Tooltip />
+            <Legend />
+          </PieChart>
+        );
+        break;
+      default:
+        return `<svg><!-- Chart type not supported: ${type} --></svg>`;
+    }
+
+    return renderToStaticMarkup(chartComponent);
   }
 
   static async createDashboard(

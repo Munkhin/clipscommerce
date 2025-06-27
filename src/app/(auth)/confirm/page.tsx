@@ -14,6 +14,7 @@ export default function ConfirmEmailPage() {
   const token_hash = searchParams.get("token_hash");
   const type = searchParams.get("type");
   const next = searchParams.get("next") || "/dashboard";
+  const supabase = createClient();
 
   useEffect(() => {
     const confirmEmail = async () => {
@@ -22,8 +23,6 @@ export default function ConfirmEmailPage() {
         setMessage("Email verification link is invalid or expired.");
         return;
       }
-
-      const supabase = createClient();
 
       try {
         const { error } = await supabase.auth.verifyOtp({
@@ -43,14 +42,13 @@ export default function ConfirmEmailPage() {
           router.push(`/dashboard?message=${encodeURIComponent('Email verified successfully!')}&type=success`);
         }, 3000);
       } catch (error: any) {
-        console.error("Error confirming email:", error);
         setStatus("error");
         setMessage(error.message || "An error occurred while verifying your email.");
       }
     };
 
     confirmEmail();
-  }, [token_hash, type, router, next]);
+  }, [token_hash, type, router, next, supabase.auth]);
 
   return (
     <div className="min-h-screen bg-dominator-black text-white flex items-center justify-center p-4">

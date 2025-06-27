@@ -8,13 +8,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { useFormStatus } from "react-dom";
 import Image from 'next/image';
-
-interface FormState {
-  error: string | null;
-  success: boolean;
-}
 
 function SubmitButton({ 
   children, 
@@ -40,7 +34,6 @@ export default function SignInPage() {
   const formRef = useRef<HTMLFormElement>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { pending } = useFormStatus();
 
   const message = searchParams.get('message');
   const type = searchParams.get('type') as 'success' | 'error' | 'info' | 'warning' | null;
@@ -56,8 +49,7 @@ export default function SignInPage() {
         } else {
           setIsLoading(false);
         }
-      } catch (error) {
-        console.error('Error checking session:', error);
+      } catch (err) {
         setIsLoading(false);
       }
     };
@@ -65,11 +57,13 @@ export default function SignInPage() {
     checkSession();
   }, [router]);
 
-  const handleSubmit = async (formData: FormData) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     setIsLoading(true);
     setError(null);
     
     try {
+      const formData = new FormData(event.currentTarget);
       const result = await signInAction({}, formData);
       
       if (result?.error) {
@@ -79,8 +73,7 @@ export default function SignInPage() {
       } else {
         setError('An unknown error occurred');
       }
-    } catch (error) {
-      console.error('Sign in failed:', error);
+    } catch (err) {
       setError('An error occurred during sign in');
     } finally {
       setIsLoading(false);
@@ -113,7 +106,7 @@ export default function SignInPage() {
           <p className="text-gray-400 text-base">Sign in to your ClipsCommerce account</p>
         </div>
 
-        <form action={handleSubmit} ref={formRef} className="space-y-5">
+        <form onSubmit={handleSubmit} ref={formRef} className="space-y-5">
           <div className="space-y-1.5">
             <Label htmlFor="email" className="text-gray-300 font-medium text-sm">Email</Label>
             <Input
@@ -123,7 +116,7 @@ export default function SignInPage() {
               placeholder="Enter your email"
               required
               className="bg-[#1C1C22] border-none text-white placeholder-gray-500 focus:ring-2 focus:ring-[#8D5AFF]/70 focus:border-transparent rounded-lg h-11 transition-all text-sm px-4 py-2.5"
-              disabled={isLoading || pending}
+              disabled={isLoading}
             />
           </div>
           
@@ -136,12 +129,12 @@ export default function SignInPage() {
               placeholder="Enter your password"
               required
               className="bg-[#1C1C22] border-none text-white placeholder-gray-500 focus:ring-2 focus:ring-[#8D5AFF]/70 focus:border-transparent rounded-lg h-11 transition-all text-sm px-4 py-2.5"
-              disabled={isLoading || pending}
+              disabled={isLoading}
             />
           </div>
           
           <div className="pt-2">
-            <SubmitButton loading={isLoading || pending}>
+            <SubmitButton loading={isLoading}>
               Sign In To Your Account
             </SubmitButton>
           </div>
@@ -168,7 +161,7 @@ export default function SignInPage() {
             <Link
               href="/forgot-password"
               className="text-sm text-[#BF9FFF] hover:text-[#A07EFF] transition-colors font-medium"
-              tabIndex={(isLoading || pending) ? -1 : 0}
+              tabIndex={isLoading ? -1 : 0}
             >
               Forgot password?
             </Link>
@@ -179,7 +172,7 @@ export default function SignInPage() {
               <Link
                 href="/sign-up"
                 className="font-medium text-[#BF9FFF] hover:text-[#A07EFF] hover:underline transition-colors"
-                tabIndex={(isLoading || pending) ? -1 : 0}
+                tabIndex={isLoading ? -1 : 0}
               >
                 Sign up
               </Link>

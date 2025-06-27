@@ -55,6 +55,7 @@ import { useUsageLimits } from '@/hooks/useUsageLimits';
 import { useFeatureUsage } from '@/hooks/useFeatureUsage';
 import { LoginPromptPopup } from '@/components/dashboard/LoginPromptPopup';
 import { SubscriptionPromptPopup } from '@/components/dashboard/SubscriptionPromptPopup';
+import { AutopostScheduler } from '@/components/dashboard/autopost/AutopostScheduler';
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -109,20 +110,36 @@ export default function DashboardPage() {
 
   // Real-time data updates
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentTime(new Date());
-      setRealtimeData(prev => ({
-        revenue: prev.revenue + Math.floor(Math.random() * 100) - 50,
-        revenueGrowth: Math.max(0, prev.revenueGrowth + (Math.random() - 0.5) * 0.5),
-        orders: prev.orders + Math.floor(Math.random() * 5) - 2,
-        ordersGrowth: Math.max(0, prev.ordersGrowth + (Math.random() - 0.5) * 0.3),
-        conversion: Math.max(0, prev.conversion + (Math.random() - 0.5) * 0.1),
-        conversionGrowth: Math.max(0, prev.conversionGrowth + (Math.random() - 0.5) * 0.2),
-        visitors: prev.visitors + Math.floor(Math.random() * 20) - 10,
-        visitorsGrowth: Math.max(0, prev.visitorsGrowth + (Math.random() - 0.5) * 0.4)
-      }));
-    }, 3000);
-    return () => clearInterval(interval);
+    const supabase = createClientComponentClient();
+
+    async function fetchInitialData() {
+      const { data, error } = await supabase.from('realtime_metrics').select('*');
+      if (error) {
+        console.error('Error fetching initial real-time data:', error);
+      } else {
+        const initialData = data.reduce((acc, metric) => {
+          acc[metric.metric_name] = metric.value;
+          return acc;
+        }, {} as any);
+        setRealtimeData(initialData);
+      }
+    }
+
+    fetchInitialData();
+
+    const channel = supabase
+      .channel('realtime-metrics')
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'realtime_metrics' }, (payload) => {
+        setRealtimeData((prev) => ({
+          ...prev,
+          [payload.new.metric_name]: payload.new.value,
+        }));
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   // Load analytics data
@@ -433,6 +450,15 @@ export default function DashboardPage() {
       >
         <div className="p-6">
           {/* WorkflowTaskList content */}
+        </div>
+      </GlassCard>
+
+      <GlassCard
+        className="mt-8"
+        style={{ opacity: animationStage >= 4 ? 1 : 0, transform: `translateY(${animationStage >= 4 ? 0 : 20}px)`, transitionDelay: '1.0s' }}
+      >
+        <div className="p-6">
+          <AutopostScheduler />
         </div>
       </GlassCard>
     </div>

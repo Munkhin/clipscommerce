@@ -17,9 +17,11 @@ import {
   RefreshCw as RefreshCwIcon,
   ChevronRight
 } from 'lucide-react';
+import { useRole } from '@/hooks/useRole';
 
 const mainNav = [
   { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
+  { name: 'Reports', href: '/dashboard/reports', icon: LineChartIcon },
 ];
 
 const sellFasterNav = [
@@ -43,6 +45,7 @@ export default function Sidebar() {
   const pathname = usePathname();
   const [sellFasterOpen, setSellFasterOpen] = useState<boolean>(true);
   const [sellOpen, setSellOpen] = useState<boolean>(true);
+  const role = useRole();
 
   return (
     <div className="w-[280px] h-screen bg-[#F9FAFB] border-r border-[#E5E7EB] flex flex-col">
@@ -70,6 +73,9 @@ export default function Sidebar() {
         {/* Primary Navigation */}
         <div>
           {mainNav.map((item) => {
+            if (item.name === 'Reports' && role !== 'admin') {
+              return null;
+            }
             const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
             return (
               <Link 
@@ -145,7 +151,7 @@ export default function Sidebar() {
         <div>
           <button
             onClick={() => setSellOpen(!sellOpen)}
-            className="flex items-center justify-between w-full text-sm font-medium text-[#6B7280] uppercase tracking-wider mb-2 px-4 py-2 hover:text-[#374151] transition-colors"
+            className="flex items-center justify-between w-.full text-sm font-medium text-[#6B7280] uppercase tracking-wider mb-2 px-4 py-2 hover:text-[#374151] transition-colors"
           >
             <span>How to Sell</span>
             <ChevronRight 

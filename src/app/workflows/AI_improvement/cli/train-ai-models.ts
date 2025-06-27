@@ -33,6 +33,13 @@ interface CLIOptions {
 function parseArguments(): CLIOptions {
   const args = process.argv.slice(2);
   const options: Partial<CLIOptions> = {};
+  let command: string | undefined;
+
+  // Check for commands first
+  if (args.length > 0 && !args[0].startsWith('--')) {
+    command = args[0];
+    args.shift();
+  }
 
   for (let i = 0; i < args.length; i += 2) {
     const key = args[i];
@@ -64,11 +71,15 @@ function parseArguments(): CLIOptions {
           abTesting: modelList.includes('abtesting')
         };
         break;
+      case '--session-id':
+        options.sessionId = value;
+        break;
     }
   }
 
   // Set defaults
   return {
+    command,
     userId: options.userId || 'default-user',
     platforms: options.platforms || ['TikTok', 'Instagram', 'YouTube'],
     lookbackDays: options.lookbackDays || 90,
@@ -80,7 +91,8 @@ function parseArguments(): CLIOptions {
       sentimentAnalysis: true,
       viralityPrediction: true,
       abTesting: false
-    }
+    },
+    sessionId: options.sessionId,
   };
 }
 
@@ -88,7 +100,13 @@ function printUsage() {
   console.log(`
 🤖 AI Model Training CLI
 
-Usage: npm run train-ai-models [options]
+Usage: npm run train-ai-models [command] [options]
+
+Commands:
+  train (default)       Start a new training session
+  resume                Resume a failed or interrupted session
+  status                Check the status of a session
+  history               View training history
 
 Options:
   --user-id <id>              User ID for training data (default: default-user)
@@ -98,15 +116,13 @@ Options:
   --min-engagement <count>    Minimum engagement threshold (default: 10)
   --models <list>             Models to train: engagement,content,sentiment,virality,abtesting
                              (default: engagement,content,sentiment,virality)
+  --session-id <id>           Session ID to resume or check status
 
 Examples:
-  npm run train-ai-models
-  npm run train-ai-models -- --user-id=user123 --platforms=tiktok,instagram
-  npm run train-ai-models -- --lookback-days=180 --models=engagement,content
-
-Environment Variables Required:
-  NEXT_PUBLIC_SUPABASE_URL
-  NEXT_PUBLIC_SUPABASE_ANON_KEY
+  npm run train-ai-models train
+  npm run train-ai-models resume -- --session-id <session-id>
+  npm run train-ai-models status -- --session-id <session-id>
+  npm run train-ai-models history -- --user-id <user-id>
 `);
 }
 
@@ -151,18 +167,6 @@ async function main() {
 
   // Parse arguments
   const options = parseArguments();
-
-  console.log('📋 Training Configuration:');
-  console.log(`   User ID: ${options.userId}`);
-  console.log(`   Platforms: ${options.platforms.join(', ')}`);
-  console.log(`   Lookback Days: ${options.lookbackDays}`);
-  console.log(`   Min Posts per Platform: ${options.minPostsPerPlatform}`);
-  console.log(`   Min Engagement Threshold: ${options.minEngagementThreshold}`);
-  console.log(`   Models to Train: ${Object.entries(options.models)
-    .filter(([_, enabled]) => enabled)
-    .map(([model, _]) => model)
-    .join(', ')}`);
-  console.log('');
 
   // Initialize Supabase client
   const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -218,7 +222,7 @@ async function main() {
     
     if (session.modelResults) {
       console.log(`   Models Trained: ${session.modelResults.size}`);
-      session.modelResults.forEach((result: any, modelName: string) => {
+      session.modelResults.forEach((result, modelName) => {
         console.log(`     - ${modelName}: ${result.version}`);
       });
     }
@@ -231,22 +235,58 @@ async function main() {
   });
 
   try {
-    // Start training
-    const sessionId = await orchestrator.startTraining(
-      options.userId,
-      options.platforms,
-      {
-        lookbackDays: options.lookbackDays,
-        minPostsPerPlatform: options.minPostsPerPlatform,
-        minEngagementThreshold: options.minEngagementThreshold,
-        models: options.models
-      }
-    );
+    switch (options.command) {
+      case 'resume':
+        if (!options.sessionId) {
+          console.error('❌ Session ID is required to resume a session.');
+          process.exit(1);
+        }
+        await orchestrator.resumeTraining(options.sessionId);
+        break;
+      case 'status':
+        if (!options.sessionId) {
+          console.error('❌ Session ID is required to check the status of a session.');
+          process.exit(1);
+        }
+        await orchestrator.getSessionStatus(options.sessionId);
+        break;
+      case 'history':
+        if (!options.userId) {
+          console.error('❌ User ID is required to view training history.');
+          process.exit(1);
+        }
+        await orchestrator.displayTrainingHistory(options.userId);
+        break;
+      case 'train':
+      default:
+        console.log('📋 Training Configuration:');
+        console.log(`   User ID: ${options.userId}`);
+        console.log(`   Platforms: ${options.platforms.join(', ')}`);
+        console.log(`   Lookback Days: ${options.lookbackDays}`);
+        console.log(`   Min Posts per Platform: ${options.minPostsPerPlatform}`);
+        console.log(`   Min Engagement Threshold: ${options.minEngagementThreshold}`);
+        console.log(`   Models to Train: ${Object.entries(options.models)
+          .filter(([_, enabled]) => enabled)
+          .map(([model, _]) => model)
+          .join(', ')}`);
+        console.log('');
+        
+        const sessionId = await orchestrator.startTraining(
+          options.userId,
+          options.platforms,
+          {
+            lookbackDays: options.lookbackDays,
+            minPostsPerPlatform: options.minPostsPerPlatform,
+            minEngagementThreshold: options.minEngagementThreshold,
+            models: options.models
+          }
+        );
 
-    console.log(`✨ Training completed! Session ID: ${sessionId}`);
-    
+        console.log(`✨ Training completed! Session ID: ${sessionId}`);
+        break;
+    }
   } catch (error) {
-    console.error('❌ Training failed:', error instanceof Error ? error.message : error);
+    console.error('❌ Operation failed:', error instanceof Error ? error.message : error);
     process.exit(1);
   }
 }

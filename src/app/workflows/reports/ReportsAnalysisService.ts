@@ -10,6 +10,12 @@ import { generateInsights } from './InsightsEngine';
 import { ReportGenerator, ReportOptions } from './ReportGenerator';
 import { ChartGenerator, ChartData } from './ChartGenerator';
 import { TextSummaryEngine } from './TextSummaryEngine';
+import { TikTokClient } from '../data_collection/lib/platforms/TikTokClient';
+import { InstagramClient } from '../data_collection/lib/platforms/InstagramClient';
+import { YouTubeClient } from '../data_collection/lib/platforms/YouTubeClient';
+import { SupabaseAuthTokenManager } from '../data_collection/lib/auth';
+import { Platform } from '../deliverables/types/deliverables_types';
+import { CacheService } from '@/services/CacheService';
 
 interface GetReportRequest extends BaseAnalysisRequest {
   eCommerceData?: any; // Define a more specific type if eCommerce data structure is known
@@ -17,9 +23,11 @@ interface GetReportRequest extends BaseAnalysisRequest {
 
 export class ReportsAnalysisService {
   private historicalPerformanceEngine: HistoricalPerformanceEngine;
+  private cacheService: CacheService;
 
   constructor(supabase: SupabaseClient) {
     this.historicalPerformanceEngine = new HistoricalPerformanceEngine(supabase);
+    this.cacheService = new CacheService();
   }
 
   /**
@@ -86,8 +94,34 @@ export class ReportsAnalysisService {
     request: GetReportRequest,
     options: ReportOptions
   ): Promise<string | Buffer> {
+    const cacheKey = `report:${request.userId}:${request.platform}:${request.timeRange.start}:${request.timeRange.end}:${options.format}`;
+    const cachedReport = await this.cacheService.get<string | Buffer>(cacheKey);
+
+    if (cachedReport) {
+      return cachedReport;
+    }
+
+    const { platform, userId } = request;
+    const authManager = new SupabaseAuthTokenManager();
+    let client;
+
+    switch (platform) {
+      case Platform.TIKTOK:
+        client = new TikTokClient({} as any, authManager, userId);
+        break;
+      case Platform.INSTAGRAM:
+        client = new InstagramClient({} as any, authManager, userId);
+        break;
+      case Platform.YOUTUBE:
+        client = new YouTubeClient({} as any, authManager, userId);
+        break;
+      default:
+        throw new Error(`Platform not supported: ${platform}`);
+    }
+
     // 1. Aggregate data
     const data = await collectReportData({
+      client,
       platform: request.platform.toLowerCase() as 'tiktok' | 'instagram' | 'youtube',
       dateRange: {
         start: new Date(request.timeRange.start),
@@ -125,6 +159,9 @@ export class ReportsAnalysisService {
       insights,
       options
     );
+
+    await this.cacheService.set(cacheKey, report, 3600); // Cache for 1 hour
+
     return report;
   }
 }

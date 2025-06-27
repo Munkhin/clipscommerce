@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
 import { resetPasswordAction } from "@/lib/auth/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -59,9 +58,12 @@ export default function ResetPasswordPage() {
           `/sign-in?message=${encodeURIComponent('Password reset successfully! Please sign in with your new password.')}&type=success`
         );
       }, 3000);
-    } catch (error: any) {
-      console.error("Error resetting password:", error);
-      setError(error.message || "An error occurred while resetting your password. Please try again.");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message || "An error occurred while resetting your password. Please try again.");
+      } else {
+        setError("An unknown error occurred.");
+      }
     } finally {
       setIsLoading(false);
     }

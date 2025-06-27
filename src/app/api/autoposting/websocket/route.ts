@@ -3,7 +3,7 @@
  * Handles WebSocket connections and real-time communication
  */
 
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { realtimeService } from '@/app/workflows/autoposting/RealtimeService';
 import { rateLimit } from '@/lib/rate-limit';
 
@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
     // Rate limiting
     const rateLimitResult = await rateLimit('websocket-connect');
     if (!rateLimitResult.success) {
-      return new NextResponse('Too many connection attempts', { status: 429 });
+      return new Response('Too many connection attempts', { status: 429 });
     }
 
     // Get user info from headers (in production, validate JWT token)
@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
     const teamId = request.headers.get('x-team-id');
 
     if (!userId) {
-      return new NextResponse('Authentication required', { status: 401 });
+      return new Response('Authentication required', { status: 401 });
     }
 
     // Create Server-Sent Events response
@@ -100,7 +100,7 @@ export async function GET(request: NextRequest) {
       }
     });
 
-    return new NextResponse(customReadable, {
+    return new Response(customReadable, {
       headers: {
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',
@@ -112,7 +112,7 @@ export async function GET(request: NextRequest) {
 
   } catch (error) {
     console.error('WebSocket connection error:', error);
-    return new NextResponse('Internal Server Error', { status: 500 });
+    return new Response('Internal Server Error', { status: 500 });
   }
 }
 
@@ -121,7 +121,7 @@ export async function POST(request: NextRequest) {
     // Rate limiting
     const rateLimitResult = await rateLimit('websocket-action');
     if (!rateLimitResult.success) {
-      return new NextResponse('Too many requests', { status: 429 });
+      return new Response('Too many requests', { status: 429 });
     }
 
     const body = await request.json();
@@ -129,28 +129,28 @@ export async function POST(request: NextRequest) {
 
     const userId = request.headers.get('x-user-id');
     if (!userId) {
-      return new NextResponse('Authentication required', { status: 401 });
+      return new Response('Authentication required', { status: 401 });
     }
 
     switch (action) {
-      case 'subscribe':
+      case 'subscribe': {
         const subscriptions = data?.subscriptions || [];
         const subscribeSuccess = realtimeService.subscribe(connectionId, subscriptions);
         
-        return NextResponse.json({
+        return Response.json({
           success: subscribeSuccess,
           message: subscribeSuccess ? 'Subscribed successfully' : 'Connection not found'
         });
-
-      case 'unsubscribe':
+      }
+      case 'unsubscribe': {
         const unsubscriptions = data?.subscriptions || [];
         const unsubscribeSuccess = realtimeService.unsubscribe(connectionId, unsubscriptions);
         
-        return NextResponse.json({
+        return Response.json({
           success: unsubscribeSuccess,
           message: unsubscribeSuccess ? 'Unsubscribed successfully' : 'Connection not found'
         });
-
+      }
       case 'send_message':
         // Allow users to send custom messages (for testing or specific use cases)
         if (data?.targetUserId) {
@@ -159,33 +159,33 @@ export async function POST(request: NextRequest) {
             data: data.message
           });
           
-          return NextResponse.json({
+          return Response.json({
             success: sent,
             message: sent ? 'Message sent' : 'Target user not connected'
           });
         }
         
-        return NextResponse.json({
+        return Response.json({
           success: false,
           message: 'Target user ID required'
         });
 
-      case 'get_stats':
+      case 'get_stats': {
         const stats = realtimeService.getStats();
-        return NextResponse.json({
+        return Response.json({
           success: true,
           data: stats
         });
-
-      case 'health_check':
+      }
+      case 'health_check': {
         const health = realtimeService.healthCheck();
-        return NextResponse.json({
+        return Response.json({
           success: true,
           data: health
         });
-
+      }
       default:
-        return NextResponse.json({
+        return Response.json({
           success: false,
           message: 'Unknown action'
         }, { status: 400 });
@@ -193,7 +193,7 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('WebSocket action error:', error);
-    return NextResponse.json({
+    return Response.json({
       success: false,
       message: 'Internal Server Error'
     }, { status: 500 });
@@ -202,7 +202,7 @@ export async function POST(request: NextRequest) {
 
 // Handle preflight requests for CORS
 export async function OPTIONS(request: NextRequest) {
-  return new NextResponse(null, {
+  return new Response(null, {
     status: 200,
     headers: {
       'Access-Control-Allow-Origin': '*',
