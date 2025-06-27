@@ -1,0 +1,80 @@
+<!-- TacticMapUI.html: Simple HTML/JS visualization for TacticMapData -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tactic Map Visualization</title>
+  <style>
+    body { font-family: inherit; padding: 16px; }
+    h3 { border-bottom: 1px solid #eee; margin-bottom: 16px; }
+    .tactic-section { display: inline-block; vertical-align: top; margin-right: 32px; }
+    .group { margin-bottom: 12px; }
+    .group-label { font-weight: bold; color: #444; }
+    .group-list { margin-left: 16px; color: #666; }
+  </style>
+</head>
+<body>
+  <h3>Tactic Map Visualization</h3>
+  <div id="tactic-map-root"></div>
+  <script>
+    // Example TacticMapData
+    const tacticMap = {
+      nodes: [
+        { id: 'hook-group:try', label: 'try', type: 'hook' },
+        { id: 'hook:Try this now', label: 'Try this now', type: 'hook' },
+        { id: 'hook-group:check', label: 'check', type: 'hook' },
+        { id: 'hook:Check out our new product', label: 'Check out our new product', type: 'hook' },
+        { id: 'cta-group:like', label: 'like', type: 'cta' },
+        { id: 'cta:like', label: 'like', type: 'cta' },
+        { id: 'cta-group:follow', label: 'follow', type: 'cta' },
+        { id: 'cta:follow', label: 'follow', type: 'cta' },
+        { id: 'format-group:video', label: 'video', type: 'format' },
+        { id: 'format:video', label: 'video', type: 'format' },
+        { id: 'format-group:image', label: 'image', type: 'format' },
+        { id: 'format:image', label: 'image', type: 'format' },
+      ],
+      edges: [
+        { from: 'hook-group:try', to: 'hook:Try this now', relation: 'group' },
+        { from: 'hook-group:check', to: 'hook:Check out our new product', relation: 'group' },
+        { from: 'cta-group:like', to: 'cta:like', relation: 'group' },
+        { from: 'cta-group:follow', to: 'cta:follow', relation: 'group' },
+        { from: 'format-group:video', to: 'format:video', relation: 'group' },
+        { from: 'format-group:image', to: 'format:image', relation: 'group' },
+      ]
+    };
+    function renderSection(type, label) {
+      const root = document.createElement('div');
+      root.className = 'tactic-section';
+      const h4 = document.createElement('h4');
+      h4.textContent = label;
+      root.appendChild(h4);
+      const groups = tacticMap.nodes.filter(n => n.id.startsWith(type + '-group:'));
+      groups.forEach(group => {
+        const groupDiv = document.createElement('div');
+        groupDiv.className = 'group';
+        const groupLabel = document.createElement('div');
+        groupLabel.className = 'group-label';
+        groupLabel.textContent = group.label;
+        groupDiv.appendChild(groupLabel);
+        const ul = document.createElement('ul');
+        ul.className = 'group-list';
+        tacticMap.edges.filter(e => e.from === group.id).forEach(e => {
+          const child = tacticMap.nodes.find(n => n.id === e.to);
+          if (child) {
+            const li = document.createElement('li');
+            li.textContent = child.label;
+            ul.appendChild(li);
+          }
+        });
+        groupDiv.appendChild(ul);
+        root.appendChild(groupDiv);
+      });
+      return root;
+    }
+    const root = document.getElementById('tactic-map-root');
+    root.appendChild(renderSection('hook', 'Hooks'));
+    root.appendChild(renderSection('cta', 'CTAs'));
+    root.appendChild(renderSection('format', 'Formats'));
+  </script>
+</body>
+</html> 

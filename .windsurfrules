@@ -1,0 +1,76 @@
+# Technologies used:
+- only use these technologies, introduce new ones if absolutely necessary and provide justification
+
+Core Framework
+Next.js (v15.3.2) - React framework for server-rendered applications
+React (v19.1.0) - Frontend library for building user interfaces
+Styling & UI
+Tailwind CSS - Utility-first CSS framework
+Radix UI - Unstyled, accessible UI components
+Framer Motion - Animation library for React
+Class Variance Authority - For managing component variants
+Tailwind Merge - For merging Tailwind classes
+Backend & Database
+Supabase - Backend-as-a-Service (BaaS) with database and authentication
+AWS S3 - Cloud storage via @aws-sdk/client-s3
+Redis - For caching and rate limiting via ioredis and @upstash/redis
+AI & Machine Learning
+OpenAI (v4.103.0) - For AI capabilities
+TensorFlow.js - Machine learning in the browser
+Universal Sentence Encoder - For natural language processing
+Media Processing
+FFmpeg - For audio/video processing
+fluent-ffmpeg - Node.js wrapper for FFmpeg
+Development Tools
+TypeScript - Static type checking
+Jest - Testing framework
+ESLint - Code linting
+Prettier - Code formatting
+SWC - Speedy Web Compiler for Next.js
+Payment & Monetization
+Stripe - Payment processing
+Polar.sh - Funding and sponsorship platform
+Other Notable Libraries
+date-fns - Date utility library
+react-hook-form - Form state management
+react-day-picker - Date picker component
+lucide-react - Icon library
+
+# style guide for flow diagrams:
+- box up and name the major pipelines(not individual modules)
+- use arrows to show data flow
+- use dotted lines to show group related components
+example:
+
+## 1. Data Collection Pipeline
+┌─────────────────────────────────────────────────────────────┐
+│  [Data Collection]                                          │
+│  ┌─────────────────┐     ┌───────────────────────┐          │
+│  │                 │     │                       │          │
+│  │   Start Scan    │────▶│  Initialize Platform  │         │
+│  │                 │     │       Clients         │          │
+│  └─────────────────┘     └──────────┬────────────┘          │
+│                                    │                        │
+│                                    ▼                        │
+│  ┌─────────────────┐     ┌───────────────────────┐          │
+│  │                 │     │                       │          │
+│  │  Fetch User    │◀────┤  Platform Clients     │          │
+│  │     Posts      │      │  (TikTok, Instagram,  │          │
+│  └───────┬────────┘      │       YouTube)        │          │
+│          │               └──────────┬────────────┘          │
+│          │                          │                       │
+│          ▼                          ▼                       │
+│  ┌─────────────────┐     ┌───────────────────────┐          │
+│  │                 │     │                       │          │
+│  │  Store Raw Data │     │   Trigger Analysis    │          │
+│  │   in Database   │────▶│   (Core Pipeline)    │          │
+│  └─────────────────┘     └───────────────────────┘          │
+└─────────────────────────────────────────────────────────────┘
+
+- Always plan in plan.md file precisely and comprehensively, noting down salient items
+- Always implement step by step checking for errors before moving on to the next step
+- check the content of the file entirely before editing
+- refactor when the edit is more than 250 loc
+- Ensure that the implementation is modular and maintainable
+- List what needs to be checked manually at the end of each response
+- Always proceed with the next steps of implementation without needing permission

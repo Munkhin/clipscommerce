@@ -1,0 +1,982 @@
+2025-06-13 15:36:02,369 - INFO - Starting lead generation for ~10005 leads...
+2025-06-13 15:36:02,370 - INFO - Target: ~10,000 leads across 667 batches
+2025-06-13 15:36:02,371 - INFO - Configuration: 12 concurrent requests, 15 leads per batch
+2025-06-13 15:36:02,379 - INFO - Processing batches 1-12...
+2025-06-13 15:36:26,168 - INFO - Filtered out 2 duplicates from batch
+2025-06-13 15:36:27,087 - INFO - Filtered out 4 duplicates from batch
+2025-06-13 15:36:27,407 - INFO - Filtered out 8 duplicates from batch
+2025-06-13 15:36:29,017 - INFO - Filtered out 5 duplicates from batch
+2025-06-13 15:36:29,052 - INFO - [SUCCESS] Batch 1 completed (~14 unique leads)
+2025-06-13 15:36:29,354 - INFO - [SUCCESS] Batch 2 completed (~14 unique leads)
+2025-06-13 15:36:29,662 - INFO - [SUCCESS] Batch 3 completed (~14 unique leads)
+2025-06-13 15:36:29,966 - INFO - [SUCCESS] Batch 4 completed (~9 unique leads)
+2025-06-13 15:36:30,277 - INFO - [SUCCESS] Batch 5 completed (~14 unique leads)
+2025-06-13 15:36:30,593 - INFO - [SUCCESS] Batch 6 completed (~14 unique leads)
+2025-06-13 15:36:30,896 - INFO - [SUCCESS] Batch 7 completed (~14 unique leads)
+2025-06-13 15:36:31,201 - INFO - [SUCCESS] Batch 8 completed (~14 unique leads)
+2025-06-13 15:36:31,506 - INFO - [SUCCESS] Batch 9 completed (~6 unique leads)
+2025-06-13 15:36:31,808 - INFO - [SUCCESS] Batch 10 completed (~10 unique leads)
+2025-06-13 15:36:32,121 - INFO - [SUCCESS] Batch 11 completed (~12 unique leads)
+2025-06-13 15:36:32,427 - INFO - [SUCCESS] Batch 12 completed (~14 unique leads)
+2025-06-13 15:36:32,739 - INFO - Progress: 12/667 batches (1.8%) - 149 leads
+2025-06-13 15:36:32,740 - INFO - Processing batches 13-24...
+2025-06-13 15:36:55,761 - INFO - Filtered out 3 duplicates from batch
+2025-06-13 15:36:56,689 - INFO - Filtered out 4 duplicates from batch
+2025-06-13 15:36:56,801 - INFO - Filtered out 2 duplicates from batch
+2025-06-13 15:36:57,029 - INFO - Filtered out 6 duplicates from batch
+2025-06-13 15:36:57,300 - INFO - Filtered out 8 duplicates from batch
+2025-06-13 15:36:57,533 - INFO - Filtered out 2 duplicates from batch
+2025-06-13 15:36:58,014 - INFO - Filtered out 4 duplicates from batch
+2025-06-13 15:36:58,424 - INFO - Filtered out 1 duplicates from batch
+2025-06-13 15:36:58,433 - INFO - Filtered out 5 duplicates from batch
+2025-06-13 15:36:58,729 - INFO - Filtered out 6 duplicates from batch
+2025-06-13 15:36:59,652 - INFO - Filtered out 6 duplicates from batch
+2025-06-13 15:36:59,655 - INFO - [SUCCESS] Batch 13 completed (~12 unique leads)
+2025-06-13 15:36:59,958 - INFO - [SUCCESS] Batch 14 completed (~11 unique leads)
+2025-06-13 15:37:00,266 - INFO - [SUCCESS] Batch 15 completed (~8 unique leads)
+2025-06-13 15:37:00,575 - INFO - [SUCCESS] Batch 16 completed (~8 unique leads)
+2025-06-13 15:37:00,884 - INFO - [SUCCESS] Batch 17 completed (~13 unique leads)
+2025-06-13 15:37:01,200 - INFO - [SUCCESS] Batch 18 completed (~9 unique leads)
+2025-06-13 15:37:01,510 - INFO - [SUCCESS] Batch 19 completed (~6 unique leads)
+2025-06-13 15:37:01,825 - INFO - [SUCCESS] Batch 20 completed (~14 unique leads)
+2025-06-13 15:37:02,138 - INFO - [SUCCESS] Batch 21 completed (~10 unique leads)
+2025-06-13 15:37:02,446 - INFO - [SUCCESS] Batch 22 completed (~8 unique leads)
+2025-06-13 15:37:02,749 - INFO - [SUCCESS] Batch 23 completed (~10 unique leads)
+2025-06-13 15:37:03,056 - INFO - [SUCCESS] Batch 24 completed (~12 unique leads)
+2025-06-13 15:37:03,362 - INFO - Progress: 24/667 batches (3.6%) - 270 leads
+2025-06-13 15:37:03,363 - INFO - Processing batches 25-36...
+2025-06-13 15:37:26,075 - INFO - Filtered out 1 duplicates from batch
+2025-06-13 15:37:26,429 - INFO - Filtered out 1 duplicates from batch
+2025-06-13 15:37:26,588 - INFO - Filtered out 4 duplicates from batch
+2025-06-13 15:37:26,695 - INFO - Filtered out 5 duplicates from batch
+2025-06-13 15:37:26,989 - INFO - Filtered out 2 duplicates from batch
+2025-06-13 15:37:27,737 - INFO - Filtered out 5 duplicates from batch
+2025-06-13 15:37:28,017 - INFO - Filtered out 8 duplicates from batch
+2025-06-13 15:37:28,127 - INFO - Filtered out 8 duplicates from batch
+2025-06-13 15:37:28,152 - INFO - Filtered out 7 duplicates from batch
+2025-06-13 15:37:28,676 - INFO - Filtered out 8 duplicates from batch
+2025-06-13 15:37:28,997 - INFO - Filtered out 4 duplicates from batch
+2025-06-13 15:37:29,417 - INFO - [SUCCESS] Batch 25 completed (~13 unique leads)
+2025-06-13 15:37:29,724 - INFO - [SUCCESS] Batch 26 completed (~9 unique leads)
+2025-06-13 15:37:30,027 - INFO - [SUCCESS] Batch 27 completed (~10 unique leads)
+2025-06-13 15:37:30,335 - INFO - [SUCCESS] Batch 28 completed (~13 unique leads)
+2025-06-13 15:37:30,637 - INFO - [SUCCESS] Batch 29 completed (~14 unique leads)
+2025-06-13 15:37:30,952 - INFO - [SUCCESS] Batch 30 completed (~6 unique leads)
+2025-06-13 15:37:31,260 - INFO - [SUCCESS] Batch 31 completed (~7 unique leads)
+2025-06-13 15:37:31,568 - INFO - [SUCCESS] Batch 32 completed (~6 unique leads)
+2025-06-13 15:37:31,879 - INFO - [SUCCESS] Batch 33 completed (~12 unique leads)
+2025-06-13 15:37:32,185 - INFO - [SUCCESS] Batch 34 completed (~6 unique leads)
+2025-06-13 15:37:32,488 - INFO - [SUCCESS] Batch 35 completed (~9 unique leads)
+2025-06-13 15:37:32,798 - INFO - [SUCCESS] Batch 36 completed (~10 unique leads)
+2025-06-13 15:37:33,100 - INFO - Progress: 36/667 batches (5.4%) - 385 leads
+2025-06-13 15:37:33,102 - INFO - Processing batches 37-48...
+2025-06-13 15:37:55,951 - INFO - Filtered out 2 duplicates from batch
+2025-06-13 15:37:56,280 - INFO - Filtered out 3 duplicates from batch
+2025-06-13 15:37:56,282 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:37:56,373 - INFO - Filtered out 3 duplicates from batch
+2025-06-13 15:37:57,028 - INFO - Filtered out 7 duplicates from batch
+2025-06-13 15:37:58,227 - INFO - Filtered out 4 duplicates from batch
+2025-06-13 15:37:58,312 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:37:58,402 - INFO - Filtered out 8 duplicates from batch
+2025-06-13 15:37:58,637 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 15:37:58,729 - INFO - Filtered out 4 duplicates from batch
+2025-06-13 15:37:59,354 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:38:00,991 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 15:38:00,992 - INFO - [SUCCESS] Batch 37 completed (~11 unique leads)
+2025-06-13 15:38:01,297 - INFO - [SUCCESS] Batch 38 completed (~4 unique leads)
+2025-06-13 15:38:01,605 - INFO - [SUCCESS] Batch 39 completed (~7 unique leads)
+2025-06-13 15:38:01,917 - INFO - [SUCCESS] Batch 40 completed (~5 unique leads)
+2025-06-13 15:38:02,227 - INFO - [SUCCESS] Batch 41 completed (~10 unique leads)
+2025-06-13 15:38:02,536 - INFO - [SUCCESS] Batch 42 completed (~11 unique leads)
+2025-06-13 15:38:02,839 - INFO - [SUCCESS] Batch 43 completed (~10 unique leads)
+2025-06-13 15:38:03,150 - INFO - [SUCCESS] Batch 44 completed (~12 unique leads)
+2025-06-13 15:38:03,453 - INFO - [SUCCESS] Batch 45 completed (~3 unique leads)
+2025-06-13 15:38:03,763 - INFO - [SUCCESS] Batch 46 completed (~4 unique leads)
+2025-06-13 15:38:04,068 - INFO - [SUCCESS] Batch 47 completed (~5 unique leads)
+2025-06-13 15:38:04,384 - INFO - [SUCCESS] Batch 48 completed (~6 unique leads)
+2025-06-13 15:38:04,699 - INFO - Progress: 48/667 batches (7.2%) - 473 leads
+2025-06-13 15:38:04,700 - INFO - Processing batches 49-60...
+2025-06-13 15:38:26,892 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:38:28,281 - INFO - Filtered out 1 duplicates from batch
+2025-06-13 15:38:28,299 - INFO - Filtered out 6 duplicates from batch
+2025-06-13 15:38:28,842 - INFO - Filtered out 7 duplicates from batch
+2025-06-13 15:38:29,457 - INFO - Filtered out 7 duplicates from batch
+2025-06-13 15:38:29,464 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 15:38:29,479 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 15:38:30,141 - INFO - Filtered out 5 duplicates from batch
+2025-06-13 15:38:30,389 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 15:38:30,519 - INFO - Filtered out 5 duplicates from batch
+2025-06-13 15:38:30,789 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 15:38:31,354 - INFO - Filtered out 8 duplicates from batch
+2025-06-13 15:38:31,356 - INFO - [SUCCESS] Batch 49 completed (~5 unique leads)
+2025-06-13 15:38:31,663 - INFO - [SUCCESS] Batch 50 completed (~6 unique leads)
+2025-06-13 15:38:31,975 - INFO - [SUCCESS] Batch 51 completed (~5 unique leads)
+2025-06-13 15:38:32,282 - INFO - [SUCCESS] Batch 52 completed (~7 unique leads)
+2025-06-13 15:38:32,592 - INFO - [SUCCESS] Batch 53 completed (~13 unique leads)
+2025-06-13 15:38:32,898 - INFO - [SUCCESS] Batch 54 completed (~2 unique leads)
+2025-06-13 15:38:33,214 - INFO - [SUCCESS] Batch 55 completed (~7 unique leads)
+2025-06-13 15:38:33,518 - INFO - [SUCCESS] Batch 56 completed (~2 unique leads)
+2025-06-13 15:38:33,830 - INFO - [SUCCESS] Batch 57 completed (~9 unique leads)
+2025-06-13 15:38:34,134 - INFO - [SUCCESS] Batch 58 completed (~8 unique leads)
+2025-06-13 15:38:34,440 - INFO - [SUCCESS] Batch 59 completed (~9 unique leads)
+2025-06-13 15:38:34,743 - INFO - [SUCCESS] Batch 60 completed (~4 unique leads)
+2025-06-13 15:38:35,058 - INFO - Progress: 60/667 batches (9.0%) - 550 leads
+2025-06-13 15:38:35,059 - INFO - Processing batches 61-72...
+2025-06-13 15:38:57,444 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 15:38:58,234 - INFO - Filtered out 7 duplicates from batch
+2025-06-13 15:38:59,668 - INFO - Filtered out 5 duplicates from batch
+2025-06-13 15:38:59,974 - INFO - Filtered out 6 duplicates from batch
+2025-06-13 15:38:59,976 - INFO - Filtered out 5 duplicates from batch
+2025-06-13 15:38:59,978 - INFO - Filtered out 7 duplicates from batch
+2025-06-13 15:39:00,178 - INFO - Filtered out 5 duplicates from batch
+2025-06-13 15:39:00,261 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 15:39:00,686 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:39:00,777 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:39:00,926 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 15:39:01,304 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:39:01,306 - INFO - [SUCCESS] Batch 61 completed (~7 unique leads)
+2025-06-13 15:39:01,619 - INFO - [SUCCESS] Batch 62 completed (~5 unique leads)
+2025-06-13 15:39:01,927 - INFO - [SUCCESS] Batch 63 completed (~5 unique leads)
+2025-06-13 15:39:02,231 - INFO - [SUCCESS] Batch 64 completed (~3 unique leads)
+2025-06-13 15:39:02,538 - INFO - [SUCCESS] Batch 65 completed (~5 unique leads)
+2025-06-13 15:39:02,848 - INFO - [SUCCESS] Batch 66 completed (~9 unique leads)
+2025-06-13 15:39:03,162 - INFO - [SUCCESS] Batch 67 completed (~4 unique leads)
+2025-06-13 15:39:03,478 - INFO - [SUCCESS] Batch 68 completed (~9 unique leads)
+2025-06-13 15:39:03,796 - INFO - [SUCCESS] Batch 69 completed (~7 unique leads)
+2025-06-13 15:39:04,102 - INFO - [SUCCESS] Batch 70 completed (~4 unique leads)
+2025-06-13 15:39:04,417 - INFO - [SUCCESS] Batch 71 completed (~9 unique leads)
+2025-06-13 15:39:04,724 - INFO - [SUCCESS] Batch 72 completed (~8 unique leads)
+2025-06-13 15:39:05,038 - INFO - Progress: 72/667 batches (10.8%) - 625 leads
+2025-06-13 15:39:05,039 - INFO - Processing batches 73-84...
+2025-06-13 15:39:27,726 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 15:39:29,158 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:39:29,521 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 15:39:29,522 - INFO - Filtered out 6 duplicates from batch
+2025-06-13 15:39:29,560 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:39:29,692 - INFO - Filtered out 8 duplicates from batch
+2025-06-13 15:39:30,223 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:39:30,297 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 15:39:30,591 - INFO - Filtered out 8 duplicates from batch
+2025-06-13 15:39:31,000 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 15:39:31,307 - INFO - Filtered out 6 duplicates from batch
+2025-06-13 15:39:32,018 - INFO - Filtered out 5 duplicates from batch
+2025-06-13 15:39:32,019 - INFO - [SUCCESS] Batch 73 completed (~2 unique leads)
+2025-06-13 15:39:32,322 - INFO - [SUCCESS] Batch 74 completed (~4 unique leads)
+2025-06-13 15:39:32,631 - INFO - [SUCCESS] Batch 75 completed (~6 unique leads)
+2025-06-13 15:39:32,943 - INFO - [SUCCESS] Batch 76 completed (~5 unique leads)
+2025-06-13 15:39:33,251 - INFO - [SUCCESS] Batch 77 completed (~4 unique leads)
+2025-06-13 15:39:33,565 - INFO - [SUCCESS] Batch 78 completed (~2 unique leads)
+2025-06-13 15:39:33,881 - INFO - [SUCCESS] Batch 79 completed (~6 unique leads)
+2025-06-13 15:39:34,191 - INFO - [SUCCESS] Batch 80 completed (~8 unique leads)
+2025-06-13 15:39:34,501 - INFO - [SUCCESS] Batch 81 completed (~4 unique leads)
+2025-06-13 15:39:34,817 - INFO - [SUCCESS] Batch 82 completed (~5 unique leads)
+2025-06-13 15:39:35,131 - INFO - [SUCCESS] Batch 83 completed (~9 unique leads)
+2025-06-13 15:39:35,435 - INFO - [SUCCESS] Batch 84 completed (~8 unique leads)
+2025-06-13 15:39:35,748 - INFO - Progress: 84/667 batches (12.6%) - 688 leads
+2025-06-13 15:39:35,752 - INFO - Processing batches 85-96...
+2025-06-13 15:39:58,552 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 15:39:58,853 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 15:39:59,263 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:39:59,469 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 15:39:59,877 - INFO - Filtered out 6 duplicates from batch
+2025-06-13 15:40:00,084 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 15:40:00,388 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:40:00,413 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:40:00,690 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 15:40:00,996 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 15:40:01,063 - INFO - Filtered out 6 duplicates from batch
+2025-06-13 15:40:02,411 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 15:40:02,413 - INFO - [SUCCESS] Batch 85 completed (~5 unique leads)
+2025-06-13 15:40:02,728 - INFO - [SUCCESS] Batch 86 completed (~3 unique leads)
+2025-06-13 15:40:03,040 - INFO - [SUCCESS] Batch 87 completed (~1 unique leads)
+2025-06-13 15:40:03,347 - INFO - [SUCCESS] Batch 88 completed (~2 unique leads)
+2025-06-13 15:40:03,656 - INFO - [SUCCESS] Batch 89 completed (~4 unique leads)
+2025-06-13 15:40:03,973 - INFO - [SUCCESS] Batch 90 completed (~8 unique leads)
+2025-06-13 15:40:04,281 - INFO - [SUCCESS] Batch 91 completed (~3 unique leads)
+2025-06-13 15:40:04,597 - INFO - [SUCCESS] Batch 92 completed (~8 unique leads)
+2025-06-13 15:40:04,914 - INFO - [SUCCESS] Batch 93 completed (~1 unique leads)
+2025-06-13 15:40:05,225 - INFO - [SUCCESS] Batch 94 completed (~0 unique leads)
+2025-06-13 15:40:05,534 - INFO - [SUCCESS] Batch 95 completed (~2 unique leads)
+2025-06-13 15:40:05,852 - INFO - [SUCCESS] Batch 96 completed (~1 unique leads)
+2025-06-13 15:40:06,161 - INFO - Progress: 96/667 batches (14.4%) - 726 leads
+2025-06-13 15:40:06,172 - INFO - Processing batches 97-108...
+2025-06-13 15:40:28,108 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 15:40:28,856 - INFO - Filtered out 8 duplicates from batch
+2025-06-13 15:40:29,843 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 15:40:30,189 - INFO - Filtered out 7 duplicates from batch
+2025-06-13 15:40:30,191 - INFO - Filtered out 8 duplicates from batch
+2025-06-13 15:40:30,289 - INFO - Filtered out 7 duplicates from batch
+2025-06-13 15:40:30,298 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:40:30,596 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 15:40:31,107 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 15:40:31,624 - INFO - Filtered out 8 duplicates from batch
+2025-06-13 15:40:32,025 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 15:40:32,370 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:40:32,373 - INFO - [SUCCESS] Batch 97 completed (~6 unique leads)
+2025-06-13 15:40:32,688 - INFO - [SUCCESS] Batch 98 completed (~7 unique leads)
+2025-06-13 15:40:32,998 - INFO - [SUCCESS] Batch 99 completed (~1 unique leads)
+2025-06-13 15:40:33,313 - INFO - [SUCCESS] Batch 100 completed (~7 unique leads)
+2025-06-13 15:40:33,631 - INFO - [SUCCESS] Batch 101 completed (~4 unique leads)
+2025-06-13 15:40:33,947 - INFO - [SUCCESS] Batch 102 completed (~1 unique leads)
+2025-06-13 15:40:34,256 - INFO - [SUCCESS] Batch 103 completed (~6 unique leads)
+2025-06-13 15:40:34,559 - INFO - [SUCCESS] Batch 104 completed (~5 unique leads)
+2025-06-13 15:40:34,871 - INFO - [SUCCESS] Batch 105 completed (~1 unique leads)
+2025-06-13 15:40:35,180 - INFO - [SUCCESS] Batch 106 completed (~5 unique leads)
+2025-06-13 15:40:35,497 - INFO - [SUCCESS] Batch 107 completed (~3 unique leads)
+2025-06-13 15:40:35,804 - INFO - [SUCCESS] Batch 108 completed (~6 unique leads)
+2025-06-13 15:40:36,113 - INFO - Progress: 108/667 batches (16.2%) - 778 leads
+2025-06-13 15:40:36,115 - INFO - Processing batches 109-120...
+2025-06-13 15:40:59,988 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 15:40:59,990 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 15:41:00,077 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:41:00,109 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 15:41:00,703 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:41:01,009 - INFO - Filtered out 8 duplicates from batch
+2025-06-13 15:41:01,419 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:41:01,623 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 15:41:01,931 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:41:01,933 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 15:41:02,238 - INFO - Filtered out 4 duplicates from batch
+2025-06-13 15:41:03,467 - INFO - Filtered out 8 duplicates from batch
+2025-06-13 15:41:03,469 - INFO - [SUCCESS] Batch 109 completed (~6 unique leads)
+2025-06-13 15:41:03,780 - INFO - [SUCCESS] Batch 110 completed (~1 unique leads)
+2025-06-13 15:41:04,090 - INFO - [SUCCESS] Batch 111 completed (~2 unique leads)
+2025-06-13 15:41:04,405 - INFO - [SUCCESS] Batch 112 completed (~3 unique leads)
+2025-06-13 15:41:04,722 - INFO - [SUCCESS] Batch 113 completed (~3 unique leads)
+2025-06-13 15:41:05,035 - INFO - [SUCCESS] Batch 114 completed (~6 unique leads)
+2025-06-13 15:41:05,352 - INFO - [SUCCESS] Batch 115 completed (~5 unique leads)
+2025-06-13 15:41:05,667 - INFO - [SUCCESS] Batch 116 completed (~10 unique leads)
+2025-06-13 15:41:05,975 - INFO - [SUCCESS] Batch 117 completed (~3 unique leads)
+2025-06-13 15:41:06,283 - INFO - [SUCCESS] Batch 118 completed (~0 unique leads)
+2025-06-13 15:41:06,589 - INFO - [SUCCESS] Batch 119 completed (~1 unique leads)
+2025-06-13 15:41:06,898 - INFO - [SUCCESS] Batch 120 completed (~4 unique leads)
+2025-06-13 15:41:07,207 - INFO - Progress: 120/667 batches (18.0%) - 822 leads
+2025-06-13 15:41:07,208 - INFO - Processing batches 121-132...
+2025-06-13 15:41:30,325 - INFO - Filtered out 8 duplicates from batch
+2025-06-13 15:41:30,910 - INFO - Filtered out 2 duplicates from batch
+2025-06-13 15:41:31,061 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 15:41:31,216 - INFO - Filtered out 8 duplicates from batch
+2025-06-13 15:41:31,421 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:41:31,627 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:41:31,933 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 15:41:32,474 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 15:41:32,561 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:41:32,577 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:41:32,595 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:41:32,639 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 15:41:32,641 - INFO - [SUCCESS] Batch 121 completed (~12 unique leads)
+2025-06-13 15:41:32,952 - INFO - [SUCCESS] Batch 122 completed (~6 unique leads)
+2025-06-13 15:41:33,260 - INFO - [SUCCESS] Batch 123 completed (~3 unique leads)
+2025-06-13 15:41:33,576 - INFO - [SUCCESS] Batch 124 completed (~6 unique leads)
+2025-06-13 15:41:33,886 - INFO - [SUCCESS] Batch 125 completed (~4 unique leads)
+2025-06-13 15:41:34,191 - INFO - [SUCCESS] Batch 126 completed (~1 unique leads)
+2025-06-13 15:41:34,506 - INFO - [SUCCESS] Batch 127 completed (~3 unique leads)
+2025-06-13 15:41:34,817 - INFO - [SUCCESS] Batch 128 completed (~0 unique leads)
+2025-06-13 15:41:35,133 - INFO - [SUCCESS] Batch 129 completed (~4 unique leads)
+2025-06-13 15:41:35,449 - INFO - [SUCCESS] Batch 130 completed (~5 unique leads)
+2025-06-13 15:41:35,752 - INFO - [SUCCESS] Batch 131 completed (~2 unique leads)
+2025-06-13 15:41:36,058 - INFO - [SUCCESS] Batch 132 completed (~4 unique leads)
+2025-06-13 15:41:36,364 - INFO - Progress: 132/667 batches (19.8%) - 872 leads
+2025-06-13 15:41:36,365 - INFO - Processing batches 133-144...
+2025-06-13 15:41:58,249 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:41:58,693 - INFO - Filtered out 7 duplicates from batch
+2025-06-13 15:41:58,811 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 15:41:58,885 - INFO - Filtered out 8 duplicates from batch
+2025-06-13 15:41:59,683 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 15:42:00,472 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 15:42:01,020 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 15:42:01,021 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 15:42:01,051 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 15:42:01,527 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 15:42:01,531 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 15:42:02,358 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:42:02,360 - INFO - [SUCCESS] Batch 133 completed (~4 unique leads)
+2025-06-13 15:42:02,674 - INFO - [SUCCESS] Batch 134 completed (~2 unique leads)
+2025-06-13 15:42:02,977 - INFO - [SUCCESS] Batch 135 completed (~0 unique leads)
+2025-06-13 15:42:03,280 - INFO - [SUCCESS] Batch 136 completed (~4 unique leads)
+2025-06-13 15:42:03,591 - INFO - [SUCCESS] Batch 137 completed (~5 unique leads)
+2025-06-13 15:42:03,908 - INFO - [SUCCESS] Batch 138 completed (~6 unique leads)
+2025-06-13 15:42:04,226 - INFO - [SUCCESS] Batch 139 completed (~2 unique leads)
+2025-06-13 15:42:04,535 - INFO - [SUCCESS] Batch 140 completed (~7 unique leads)
+2025-06-13 15:42:04,843 - INFO - [SUCCESS] Batch 141 completed (~5 unique leads)
+2025-06-13 15:42:05,160 - INFO - [SUCCESS] Batch 142 completed (~5 unique leads)
+2025-06-13 15:42:05,463 - INFO - [SUCCESS] Batch 143 completed (~5 unique leads)
+2025-06-13 15:42:05,778 - INFO - [SUCCESS] Batch 144 completed (~1 unique leads)
+2025-06-13 15:42:06,085 - INFO - Progress: 144/667 batches (21.6%) - 918 leads
+2025-06-13 15:42:06,086 - INFO - Processing batches 145-156...
+2025-06-13 15:50:30,254 - INFO - Filtered out 8 duplicates from batch
+2025-06-13 15:50:30,284 - INFO - Filtered out 5 duplicates from batch
+2025-06-13 15:50:30,559 - INFO - Filtered out 7 duplicates from batch
+2025-06-13 15:50:30,689 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 15:50:30,771 - INFO - Filtered out 7 duplicates from batch
+2025-06-13 15:50:30,832 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 15:50:31,070 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 15:50:32,299 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 15:50:32,300 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 15:50:32,528 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 15:50:33,015 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:50:33,528 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 15:50:33,532 - INFO - [SUCCESS] Batch 145 completed (~5 unique leads)
+2025-06-13 15:50:33,846 - INFO - [SUCCESS] Batch 146 completed (~6 unique leads)
+2025-06-13 15:50:34,152 - INFO - [SUCCESS] Batch 147 completed (~5 unique leads)
+2025-06-13 15:50:34,457 - INFO - [SUCCESS] Batch 148 completed (~5 unique leads)
+2025-06-13 15:50:34,763 - INFO - [SUCCESS] Batch 149 completed (~5 unique leads)
+2025-06-13 15:50:35,080 - INFO - [SUCCESS] Batch 150 completed (~1 unique leads)
+2025-06-13 15:50:35,391 - INFO - [SUCCESS] Batch 151 completed (~5 unique leads)
+2025-06-13 15:50:35,744 - INFO - [SUCCESS] Batch 152 completed (~4 unique leads)
+2025-06-13 15:50:36,051 - INFO - [SUCCESS] Batch 153 completed (~7 unique leads)
+2025-06-13 15:50:36,360 - INFO - [SUCCESS] Batch 154 completed (~9 unique leads)
+2025-06-13 15:50:36,675 - INFO - [SUCCESS] Batch 155 completed (~1 unique leads)
+2025-06-13 15:50:36,994 - INFO - [SUCCESS] Batch 156 completed (~7 unique leads)
+2025-06-13 15:50:37,302 - INFO - Progress: 156/667 batches (23.4%) - 978 leads
+2025-06-13 15:50:37,303 - INFO - Processing batches 157-168...
+2025-06-13 15:50:59,436 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:51:00,357 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:51:00,479 - INFO - Filtered out 5 duplicates from batch
+2025-06-13 15:51:00,766 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 15:51:01,256 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:51:01,339 - INFO - Filtered out 4 duplicates from batch
+2025-06-13 15:51:02,028 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:51:02,301 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:51:02,713 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:51:02,794 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 15:51:03,023 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:51:03,942 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:51:03,945 - INFO - [SUCCESS] Batch 157 completed (~4 unique leads)
+2025-06-13 15:51:04,264 - INFO - [SUCCESS] Batch 158 completed (~3 unique leads)
+2025-06-13 15:51:04,566 - INFO - [SUCCESS] Batch 159 completed (~3 unique leads)
+2025-06-13 15:51:04,878 - INFO - [SUCCESS] Batch 160 completed (~3 unique leads)
+2025-06-13 15:51:05,181 - INFO - [SUCCESS] Batch 161 completed (~3 unique leads)
+2025-06-13 15:51:05,489 - INFO - [SUCCESS] Batch 162 completed (~5 unique leads)
+2025-06-13 15:51:05,800 - INFO - [SUCCESS] Batch 163 completed (~3 unique leads)
+2025-06-13 15:51:06,107 - INFO - [SUCCESS] Batch 164 completed (~10 unique leads)
+2025-06-13 15:51:06,414 - INFO - [SUCCESS] Batch 165 completed (~3 unique leads)
+2025-06-13 15:51:06,719 - INFO - [SUCCESS] Batch 166 completed (~9 unique leads)
+2025-06-13 15:51:07,027 - INFO - [SUCCESS] Batch 167 completed (~3 unique leads)
+2025-06-13 15:51:07,344 - INFO - [SUCCESS] Batch 168 completed (~2 unique leads)
+2025-06-13 15:51:07,650 - INFO - Progress: 168/667 batches (25.2%) - 1029 leads
+2025-06-13 15:51:07,650 - INFO - Processing batches 169-180...
+2025-06-13 15:51:31,179 - INFO - Filtered out 7 duplicates from batch
+2025-06-13 15:51:31,385 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 15:51:32,305 - INFO - Filtered out 7 duplicates from batch
+2025-06-13 15:51:32,715 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 15:51:32,919 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 15:51:32,921 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:51:32,922 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:51:33,227 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 15:51:33,300 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:51:33,335 - INFO - Filtered out 15 duplicates from batch
+2025-06-13 15:51:33,819 - INFO - Filtered out 7 duplicates from batch
+2025-06-13 15:51:33,878 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:51:33,879 - WARNING - [FAILURE] Batch 169 produced insufficient data
+2025-06-13 15:51:34,190 - INFO - [SUCCESS] Batch 170 completed (~7 unique leads)
+2025-06-13 15:51:34,505 - INFO - [SUCCESS] Batch 171 completed (~0 unique leads)
+2025-06-13 15:51:34,821 - INFO - [SUCCESS] Batch 172 completed (~2 unique leads)
+2025-06-13 15:51:35,129 - INFO - [SUCCESS] Batch 173 completed (~7 unique leads)
+2025-06-13 15:51:35,432 - INFO - [SUCCESS] Batch 174 completed (~1 unique leads)
+2025-06-13 15:51:35,740 - INFO - [SUCCESS] Batch 175 completed (~7 unique leads)
+2025-06-13 15:51:36,055 - INFO - [SUCCESS] Batch 176 completed (~3 unique leads)
+2025-06-13 15:51:36,372 - INFO - [SUCCESS] Batch 177 completed (~4 unique leads)
+2025-06-13 15:51:36,682 - INFO - [SUCCESS] Batch 178 completed (~4 unique leads)
+2025-06-13 15:51:36,990 - INFO - [SUCCESS] Batch 179 completed (~3 unique leads)
+2025-06-13 15:51:37,294 - INFO - [SUCCESS] Batch 180 completed (~1 unique leads)
+2025-06-13 15:51:37,602 - INFO - Progress: 179/667 batches (26.8%) - 1068 leads
+2025-06-13 15:51:37,603 - INFO - Processing batches 181-192...
+2025-06-13 15:52:00,260 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:52:01,184 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 15:52:01,199 - INFO - Filtered out 5 duplicates from batch
+2025-06-13 15:52:01,219 - INFO - Filtered out 4 duplicates from batch
+2025-06-13 15:52:01,290 - INFO - Filtered out 4 duplicates from batch
+2025-06-13 15:52:01,869 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 15:52:02,380 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 15:52:03,178 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:52:03,537 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:52:03,539 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 15:52:04,048 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 15:52:06,612 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:52:06,613 - INFO - [SUCCESS] Batch 181 completed (~0 unique leads)
+2025-06-13 15:52:06,927 - INFO - [SUCCESS] Batch 182 completed (~0 unique leads)
+2025-06-13 15:52:07,236 - INFO - [SUCCESS] Batch 183 completed (~2 unique leads)
+2025-06-13 15:52:07,546 - INFO - [SUCCESS] Batch 184 completed (~4 unique leads)
+2025-06-13 15:52:07,857 - INFO - [SUCCESS] Batch 185 completed (~3 unique leads)
+2025-06-13 15:52:08,160 - INFO - [SUCCESS] Batch 186 completed (~10 unique leads)
+2025-06-13 15:52:08,467 - INFO - [SUCCESS] Batch 187 completed (~2 unique leads)
+2025-06-13 15:52:08,780 - INFO - [SUCCESS] Batch 188 completed (~9 unique leads)
+2025-06-13 15:52:09,095 - INFO - [SUCCESS] Batch 189 completed (~3 unique leads)
+2025-06-13 15:52:09,402 - INFO - [SUCCESS] Batch 190 completed (~1 unique leads)
+2025-06-13 15:52:09,706 - INFO - [SUCCESS] Batch 191 completed (~10 unique leads)
+2025-06-13 15:52:10,016 - INFO - [SUCCESS] Batch 192 completed (~4 unique leads)
+2025-06-13 15:52:10,320 - INFO - Progress: 191/667 batches (28.6%) - 1116 leads
+2025-06-13 15:52:10,321 - INFO - Processing batches 193-204...
+2025-06-13 15:52:32,476 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:52:33,029 - INFO - Filtered out 8 duplicates from batch
+2025-06-13 15:52:33,746 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 15:52:34,054 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 15:52:35,472 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:52:35,895 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 15:52:36,511 - INFO - Filtered out 5 duplicates from batch
+2025-06-13 15:52:36,514 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 15:52:36,817 - INFO - Filtered out 6 duplicates from batch
+2025-06-13 15:52:37,025 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 15:52:37,156 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:52:37,417 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:52:37,419 - INFO - [SUCCESS] Batch 193 completed (~5 unique leads)
+2025-06-13 15:52:37,734 - INFO - [SUCCESS] Batch 194 completed (~3 unique leads)
+2025-06-13 15:52:38,051 - INFO - [SUCCESS] Batch 195 completed (~5 unique leads)
+2025-06-13 15:52:38,366 - INFO - [SUCCESS] Batch 196 completed (~9 unique leads)
+2025-06-13 15:52:38,675 - INFO - [SUCCESS] Batch 197 completed (~1 unique leads)
+2025-06-13 15:52:38,981 - INFO - [SUCCESS] Batch 198 completed (~4 unique leads)
+2025-06-13 15:52:39,292 - INFO - [SUCCESS] Batch 199 completed (~2 unique leads)
+2025-06-13 15:52:39,600 - INFO - [SUCCESS] Batch 200 completed (~2 unique leads)
+2025-06-13 15:52:39,904 - INFO - [SUCCESS] Batch 201 completed (~8 unique leads)
+2025-06-13 15:52:40,213 - INFO - [SUCCESS] Batch 202 completed (~6 unique leads)
+2025-06-13 15:52:40,517 - INFO - [SUCCESS] Batch 203 completed (~3 unique leads)
+2025-06-13 15:52:40,823 - INFO - [SUCCESS] Batch 204 completed (~4 unique leads)
+2025-06-13 15:52:41,125 - INFO - Progress: 203/667 batches (30.4%) - 1168 leads
+2025-06-13 15:52:41,127 - INFO - Processing batches 205-216...
+2025-06-13 15:53:03,956 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:53:04,878 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 15:53:04,881 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:53:05,079 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 15:53:05,082 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:53:06,384 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 15:53:06,718 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 15:53:06,922 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 15:53:07,176 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:53:07,311 - INFO - Filtered out 7 duplicates from batch
+2025-06-13 15:53:07,401 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 15:53:07,433 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 15:53:07,436 - INFO - [SUCCESS] Batch 205 completed (~3 unique leads)
+2025-06-13 15:53:07,748 - INFO - [SUCCESS] Batch 206 completed (~2 unique leads)
+2025-06-13 15:53:08,065 - INFO - [SUCCESS] Batch 207 completed (~2 unique leads)
+2025-06-13 15:53:08,368 - INFO - [SUCCESS] Batch 208 completed (~0 unique leads)
+2025-06-13 15:53:08,679 - INFO - [SUCCESS] Batch 209 completed (~3 unique leads)
+2025-06-13 15:53:08,995 - INFO - [SUCCESS] Batch 210 completed (~3 unique leads)
+2025-06-13 15:53:09,306 - INFO - [SUCCESS] Batch 211 completed (~2 unique leads)
+2025-06-13 15:53:09,609 - INFO - [SUCCESS] Batch 212 completed (~7 unique leads)
+2025-06-13 15:53:09,912 - INFO - [SUCCESS] Batch 213 completed (~1 unique leads)
+2025-06-13 15:53:10,228 - INFO - [SUCCESS] Batch 214 completed (~3 unique leads)
+2025-06-13 15:53:10,540 - INFO - [SUCCESS] Batch 215 completed (~0 unique leads)
+2025-06-13 15:53:10,851 - INFO - [SUCCESS] Batch 216 completed (~1 unique leads)
+2025-06-13 15:53:11,156 - INFO - Progress: 215/667 batches (32.2%) - 1195 leads
+2025-06-13 15:53:11,157 - INFO - Processing batches 217-228...
+2025-06-13 15:54:07,869 - INFO - Filtered out 7 duplicates from batch
+2025-06-13 15:54:30,380 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 15:54:31,812 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 15:54:32,789 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 15:54:32,799 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 15:54:33,042 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 15:54:33,348 - INFO - Filtered out 15 duplicates from batch
+2025-06-13 15:54:33,861 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:54:34,272 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 15:54:34,373 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 15:54:34,885 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:54:35,779 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:54:35,781 - INFO - [SUCCESS] Batch 217 completed (~4 unique leads)
+2025-06-13 15:54:36,093 - INFO - [SUCCESS] Batch 218 completed (~7 unique leads)
+2025-06-13 15:54:36,406 - INFO - [SUCCESS] Batch 219 completed (~0 unique leads)
+2025-06-13 15:54:36,723 - INFO - [SUCCESS] Batch 220 completed (~4 unique leads)
+2025-06-13 15:54:37,046 - INFO - [SUCCESS] Batch 221 completed (~5 unique leads)
+2025-06-13 15:54:37,353 - WARNING - [FAILURE] Batch 222 produced insufficient data
+2025-06-13 15:54:37,663 - INFO - [SUCCESS] Batch 223 completed (~2 unique leads)
+2025-06-13 15:54:37,974 - INFO - [SUCCESS] Batch 224 completed (~1 unique leads)
+2025-06-13 15:54:38,280 - INFO - [SUCCESS] Batch 225 completed (~2 unique leads)
+2025-06-13 15:54:38,596 - INFO - [SUCCESS] Batch 226 completed (~5 unique leads)
+2025-06-13 15:54:38,914 - INFO - [SUCCESS] Batch 227 completed (~4 unique leads)
+2025-06-13 15:54:39,218 - INFO - [SUCCESS] Batch 228 completed (~5 unique leads)
+2025-06-13 15:54:39,528 - INFO - Progress: 226/667 batches (33.9%) - 1234 leads
+2025-06-13 15:54:39,529 - INFO - Processing batches 229-240...
+2025-06-13 15:55:02,226 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 15:55:02,280 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 15:55:02,839 - INFO - Filtered out 7 duplicates from batch
+2025-06-13 15:55:02,854 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:55:03,454 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 15:55:04,184 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 15:55:04,787 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:55:04,992 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:55:05,030 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 15:55:05,501 - INFO - Filtered out 8 duplicates from batch
+2025-06-13 15:55:05,571 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 15:55:05,582 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:55:05,584 - INFO - [SUCCESS] Batch 229 completed (~4 unique leads)
+2025-06-13 15:55:05,900 - INFO - [SUCCESS] Batch 230 completed (~4 unique leads)
+2025-06-13 15:55:06,210 - INFO - [SUCCESS] Batch 231 completed (~0 unique leads)
+2025-06-13 15:55:06,520 - INFO - [SUCCESS] Batch 232 completed (~3 unique leads)
+2025-06-13 15:55:06,831 - INFO - [SUCCESS] Batch 233 completed (~1 unique leads)
+2025-06-13 15:55:07,148 - INFO - [SUCCESS] Batch 234 completed (~7 unique leads)
+2025-06-13 15:55:07,456 - INFO - [SUCCESS] Batch 235 completed (~3 unique leads)
+2025-06-13 15:55:07,764 - INFO - [SUCCESS] Batch 236 completed (~2 unique leads)
+2025-06-13 15:55:08,068 - INFO - [SUCCESS] Batch 237 completed (~2 unique leads)
+2025-06-13 15:55:08,372 - INFO - [SUCCESS] Batch 238 completed (~6 unique leads)
+2025-06-13 15:55:08,675 - INFO - [SUCCESS] Batch 239 completed (~1 unique leads)
+2025-06-13 15:55:08,987 - INFO - [SUCCESS] Batch 240 completed (~2 unique leads)
+2025-06-13 15:55:09,302 - INFO - Progress: 238/667 batches (35.7%) - 1269 leads
+2025-06-13 15:55:09,305 - INFO - Processing batches 241-252...
+2025-06-13 15:55:31,410 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 15:55:32,043 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:55:33,314 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:55:33,565 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 15:55:33,614 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 15:55:33,867 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 15:55:34,073 - INFO - Filtered out 15 duplicates from batch
+2025-06-13 15:55:34,075 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:55:35,099 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:55:35,102 - INFO - Filtered out 15 duplicates from batch
+2025-06-13 15:55:35,404 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 15:55:35,524 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:55:35,526 - INFO - [SUCCESS] Batch 241 completed (~3 unique leads)
+2025-06-13 15:55:35,835 - INFO - [SUCCESS] Batch 242 completed (~5 unique leads)
+2025-06-13 15:55:36,151 - WARNING - [FAILURE] Batch 243 produced insufficient data
+2025-06-13 15:55:36,459 - INFO - [SUCCESS] Batch 244 completed (~4 unique leads)
+2025-06-13 15:55:36,769 - INFO - [SUCCESS] Batch 245 completed (~2 unique leads)
+2025-06-13 15:55:37,082 - WARNING - [FAILURE] Batch 246 produced insufficient data
+2025-06-13 15:55:37,386 - INFO - [SUCCESS] Batch 247 completed (~1 unique leads)
+2025-06-13 15:55:37,705 - INFO - [SUCCESS] Batch 248 completed (~1 unique leads)
+2025-06-13 15:55:38,016 - INFO - [SUCCESS] Batch 249 completed (~3 unique leads)
+2025-06-13 15:55:38,333 - INFO - [SUCCESS] Batch 250 completed (~3 unique leads)
+2025-06-13 15:55:38,642 - INFO - [SUCCESS] Batch 251 completed (~0 unique leads)
+2025-06-13 15:55:38,953 - INFO - [SUCCESS] Batch 252 completed (~4 unique leads)
+2025-06-13 15:55:39,268 - INFO - Progress: 248/667 batches (37.2%) - 1295 leads
+2025-06-13 15:55:39,270 - INFO - Processing batches 253-264...
+2025-06-13 15:56:02,449 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:56:02,569 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 15:56:03,157 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 15:56:03,358 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:56:03,381 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:56:03,665 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:56:04,021 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 15:56:04,280 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 15:56:04,586 - INFO - Filtered out 15 duplicates from batch
+2025-06-13 15:56:04,997 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:56:05,791 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 15:56:06,056 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 15:56:06,062 - INFO - [SUCCESS] Batch 253 completed (~3 unique leads)
+2025-06-13 15:56:06,376 - INFO - [SUCCESS] Batch 254 completed (~2 unique leads)
+2025-06-13 15:56:06,684 - INFO - [SUCCESS] Batch 255 completed (~4 unique leads)
+2025-06-13 15:56:07,021 - INFO - [SUCCESS] Batch 256 completed (~0 unique leads)
+2025-06-13 15:56:07,328 - INFO - [SUCCESS] Batch 257 completed (~4 unique leads)
+2025-06-13 15:56:07,637 - INFO - [SUCCESS] Batch 258 completed (~3 unique leads)
+2025-06-13 15:56:07,949 - WARNING - [FAILURE] Batch 259 produced insufficient data
+2025-06-13 15:56:08,261 - INFO - [SUCCESS] Batch 260 completed (~5 unique leads)
+2025-06-13 15:56:08,569 - INFO - [SUCCESS] Batch 261 completed (~0 unique leads)
+2025-06-13 15:56:08,878 - INFO - [SUCCESS] Batch 262 completed (~4 unique leads)
+2025-06-13 15:56:09,185 - INFO - [SUCCESS] Batch 263 completed (~1 unique leads)
+2025-06-13 15:56:09,501 - INFO - [SUCCESS] Batch 264 completed (~5 unique leads)
+2025-06-13 15:56:09,807 - INFO - Progress: 259/667 batches (38.8%) - 1326 leads
+2025-06-13 15:56:09,809 - INFO - Processing batches 265-276...
+2025-06-13 15:56:32,648 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 15:56:32,953 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:56:33,466 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 15:56:33,669 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:56:34,386 - INFO - Filtered out 6 duplicates from batch
+2025-06-13 15:56:34,389 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:56:34,524 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:56:34,897 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 15:56:35,206 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 15:56:35,488 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 15:56:36,030 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 15:56:36,077 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:56:36,081 - INFO - [SUCCESS] Batch 265 completed (~1 unique leads)
+2025-06-13 15:56:36,391 - INFO - [SUCCESS] Batch 266 completed (~4 unique leads)
+2025-06-13 15:56:36,701 - INFO - [SUCCESS] Batch 267 completed (~3 unique leads)
+2025-06-13 15:56:37,012 - INFO - [SUCCESS] Batch 268 completed (~3 unique leads)
+2025-06-13 15:56:37,325 - INFO - [SUCCESS] Batch 269 completed (~8 unique leads)
+2025-06-13 15:56:37,641 - INFO - [SUCCESS] Batch 270 completed (~1 unique leads)
+2025-06-13 15:56:37,950 - INFO - [SUCCESS] Batch 271 completed (~0 unique leads)
+2025-06-13 15:56:38,267 - INFO - [SUCCESS] Batch 272 completed (~1 unique leads)
+2025-06-13 15:56:38,571 - INFO - [SUCCESS] Batch 273 completed (~2 unique leads)
+2025-06-13 15:56:38,873 - INFO - [SUCCESS] Batch 274 completed (~3 unique leads)
+2025-06-13 15:56:39,176 - INFO - [SUCCESS] Batch 275 completed (~2 unique leads)
+2025-06-13 15:56:39,483 - INFO - [SUCCESS] Batch 276 completed (~4 unique leads)
+2025-06-13 15:56:39,792 - INFO - Progress: 271/667 batches (40.6%) - 1358 leads
+2025-06-13 15:56:39,794 - INFO - Processing batches 277-288...
+2025-06-13 15:57:01,726 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:57:03,263 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 15:57:03,356 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:57:03,435 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:57:03,569 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 15:57:04,037 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:57:04,081 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 15:57:04,388 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 15:57:04,431 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:57:05,413 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:57:05,505 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 15:57:06,849 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 15:57:06,853 - INFO - [SUCCESS] Batch 277 completed (~3 unique leads)
+2025-06-13 15:57:07,168 - INFO - [SUCCESS] Batch 278 completed (~1 unique leads)
+2025-06-13 15:57:07,479 - INFO - [SUCCESS] Batch 279 completed (~4 unique leads)
+2025-06-13 15:57:07,786 - INFO - [SUCCESS] Batch 280 completed (~0 unique leads)
+2025-06-13 15:57:08,102 - INFO - [SUCCESS] Batch 281 completed (~2 unique leads)
+2025-06-13 15:57:08,410 - INFO - [SUCCESS] Batch 282 completed (~4 unique leads)
+2025-06-13 15:57:08,720 - INFO - [SUCCESS] Batch 283 completed (~1 unique leads)
+2025-06-13 15:57:09,028 - INFO - [SUCCESS] Batch 284 completed (~3 unique leads)
+2025-06-13 15:57:09,334 - INFO - [SUCCESS] Batch 285 completed (~2 unique leads)
+2025-06-13 15:57:09,637 - INFO - [SUCCESS] Batch 286 completed (~3 unique leads)
+2025-06-13 15:57:09,940 - INFO - [SUCCESS] Batch 287 completed (~0 unique leads)
+2025-06-13 15:57:10,244 - INFO - [SUCCESS] Batch 288 completed (~4 unique leads)
+2025-06-13 15:57:10,553 - INFO - Progress: 283/667 batches (42.4%) - 1385 leads
+2025-06-13 15:57:10,554 - INFO - Processing batches 289-300...
+2025-06-13 15:58:11,819 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:58:12,024 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 15:58:12,382 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:58:12,612 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 15:58:12,974 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 15:58:13,919 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:58:14,943 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 15:58:15,562 - INFO - Filtered out 5 duplicates from batch
+2025-06-13 15:58:15,584 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:58:15,864 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:58:15,869 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 15:58:16,274 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 15:58:16,276 - INFO - [SUCCESS] Batch 289 completed (~3 unique leads)
+2025-06-13 15:58:16,588 - INFO - [SUCCESS] Batch 290 completed (~0 unique leads)
+2025-06-13 15:58:16,896 - INFO - [SUCCESS] Batch 291 completed (~3 unique leads)
+2025-06-13 15:58:17,211 - INFO - [SUCCESS] Batch 292 completed (~0 unique leads)
+2025-06-13 15:58:17,525 - INFO - [SUCCESS] Batch 293 completed (~4 unique leads)
+2025-06-13 15:58:17,835 - INFO - [SUCCESS] Batch 294 completed (~9 unique leads)
+2025-06-13 15:58:18,151 - INFO - [SUCCESS] Batch 295 completed (~1 unique leads)
+2025-06-13 15:58:18,465 - INFO - [SUCCESS] Batch 296 completed (~4 unique leads)
+2025-06-13 15:58:18,774 - INFO - [SUCCESS] Batch 297 completed (~1 unique leads)
+2025-06-13 15:58:19,090 - INFO - [SUCCESS] Batch 298 completed (~5 unique leads)
+2025-06-13 15:58:19,399 - INFO - [SUCCESS] Batch 299 completed (~0 unique leads)
+2025-06-13 15:58:19,709 - INFO - [SUCCESS] Batch 300 completed (~4 unique leads)
+2025-06-13 15:58:20,024 - INFO - Progress: 295/667 batches (44.2%) - 1419 leads
+2025-06-13 15:58:20,025 - INFO - Processing batches 301-312...
+2025-06-13 15:58:42,693 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 15:58:43,647 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:58:43,923 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 15:58:44,015 - INFO - Filtered out 6 duplicates from batch
+2025-06-13 15:58:44,331 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 15:58:44,381 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 15:58:44,693 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:58:44,807 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 15:58:45,047 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 15:58:45,091 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:58:45,561 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 15:58:46,278 - INFO - Filtered out 15 duplicates from batch
+2025-06-13 15:58:46,281 - INFO - [SUCCESS] Batch 301 completed (~0 unique leads)
+2025-06-13 15:58:46,584 - INFO - [SUCCESS] Batch 302 completed (~4 unique leads)
+2025-06-13 15:58:46,887 - INFO - [SUCCESS] Batch 303 completed (~2 unique leads)
+2025-06-13 15:58:47,204 - INFO - [SUCCESS] Batch 304 completed (~0 unique leads)
+2025-06-13 15:58:47,514 - WARNING - [FAILURE] Batch 305 produced insufficient data
+2025-06-13 15:58:47,822 - INFO - [SUCCESS] Batch 306 completed (~4 unique leads)
+2025-06-13 15:58:48,134 - INFO - [SUCCESS] Batch 307 completed (~3 unique leads)
+2025-06-13 15:58:48,444 - INFO - [SUCCESS] Batch 308 completed (~8 unique leads)
+2025-06-13 15:58:48,752 - INFO - [SUCCESS] Batch 309 completed (~5 unique leads)
+2025-06-13 15:58:49,060 - INFO - [SUCCESS] Batch 310 completed (~1 unique leads)
+2025-06-13 15:58:49,376 - INFO - [SUCCESS] Batch 311 completed (~1 unique leads)
+2025-06-13 15:58:49,691 - INFO - [SUCCESS] Batch 312 completed (~2 unique leads)
+2025-06-13 15:58:50,002 - INFO - Progress: 306/667 batches (45.9%) - 1449 leads
+2025-06-13 15:58:50,004 - INFO - Processing batches 313-324...
+2025-06-13 15:59:13,209 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 15:59:13,821 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:59:14,364 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 15:59:14,414 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:59:15,050 - INFO - Filtered out 8 duplicates from batch
+2025-06-13 15:59:15,665 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 15:59:15,666 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 15:59:15,690 - INFO - Filtered out 8 duplicates from batch
+2025-06-13 15:59:15,758 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 15:59:15,994 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:59:16,791 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 15:59:17,061 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 15:59:17,063 - INFO - [SUCCESS] Batch 313 completed (~0 unique leads)
+2025-06-13 15:59:17,367 - INFO - [SUCCESS] Batch 314 completed (~1 unique leads)
+2025-06-13 15:59:17,682 - INFO - [SUCCESS] Batch 315 completed (~2 unique leads)
+2025-06-13 15:59:17,996 - INFO - [SUCCESS] Batch 316 completed (~4 unique leads)
+2025-06-13 15:59:18,298 - INFO - [SUCCESS] Batch 317 completed (~3 unique leads)
+2025-06-13 15:59:18,612 - INFO - [SUCCESS] Batch 318 completed (~3 unique leads)
+2025-06-13 15:59:18,920 - INFO - [SUCCESS] Batch 319 completed (~0 unique leads)
+2025-06-13 15:59:19,252 - INFO - [SUCCESS] Batch 320 completed (~1 unique leads)
+2025-06-13 15:59:19,569 - INFO - [SUCCESS] Batch 321 completed (~6 unique leads)
+2025-06-13 15:59:19,876 - INFO - [SUCCESS] Batch 322 completed (~6 unique leads)
+2025-06-13 15:59:20,183 - INFO - [SUCCESS] Batch 323 completed (~4 unique leads)
+2025-06-13 15:59:20,490 - INFO - [SUCCESS] Batch 324 completed (~2 unique leads)
+2025-06-13 15:59:20,804 - INFO - Progress: 318/667 batches (47.7%) - 1481 leads
+2025-06-13 15:59:20,806 - INFO - Processing batches 325-336...
+2025-06-13 15:59:44,031 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 15:59:44,646 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 15:59:44,980 - INFO - Filtered out 8 duplicates from batch
+2025-06-13 15:59:45,363 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 15:59:45,365 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 15:59:45,773 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:59:46,385 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 15:59:46,450 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 15:59:46,501 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 15:59:46,511 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 15:59:46,676 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:59:47,176 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 15:59:47,178 - INFO - [SUCCESS] Batch 325 completed (~1 unique leads)
+2025-06-13 15:59:47,485 - INFO - [SUCCESS] Batch 326 completed (~0 unique leads)
+2025-06-13 15:59:47,794 - INFO - [SUCCESS] Batch 327 completed (~1 unique leads)
+2025-06-13 15:59:48,104 - INFO - [SUCCESS] Batch 328 completed (~4 unique leads)
+2025-06-13 15:59:48,411 - INFO - [SUCCESS] Batch 329 completed (~0 unique leads)
+2025-06-13 15:59:48,727 - INFO - [SUCCESS] Batch 330 completed (~5 unique leads)
+2025-06-13 15:59:49,033 - INFO - [SUCCESS] Batch 331 completed (~5 unique leads)
+2025-06-13 15:59:49,343 - INFO - [SUCCESS] Batch 332 completed (~6 unique leads)
+2025-06-13 15:59:49,653 - INFO - [SUCCESS] Batch 333 completed (~5 unique leads)
+2025-06-13 15:59:49,958 - INFO - [SUCCESS] Batch 334 completed (~4 unique leads)
+2025-06-13 15:59:50,273 - INFO - [SUCCESS] Batch 335 completed (~4 unique leads)
+2025-06-13 15:59:50,582 - INFO - [SUCCESS] Batch 336 completed (~0 unique leads)
+2025-06-13 15:59:50,897 - INFO - Progress: 330/667 batches (49.5%) - 1516 leads
+2025-06-13 15:59:50,899 - INFO - Processing batches 337-348...
+2025-06-13 16:00:13,421 - INFO - Filtered out 7 duplicates from batch
+2025-06-13 16:00:13,437 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 16:00:15,058 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 16:00:15,144 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 16:00:15,467 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 16:00:15,830 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 16:00:15,930 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 16:00:16,187 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 16:00:16,206 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 16:00:16,222 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 16:00:16,901 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 16:00:17,510 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 16:00:17,512 - INFO - [SUCCESS] Batch 337 completed (~1 unique leads)
+2025-06-13 16:00:17,823 - INFO - [SUCCESS] Batch 338 completed (~4 unique leads)
+2025-06-13 16:00:18,132 - INFO - [SUCCESS] Batch 339 completed (~0 unique leads)
+2025-06-13 16:00:18,439 - INFO - [SUCCESS] Batch 340 completed (~7 unique leads)
+2025-06-13 16:00:18,753 - INFO - [SUCCESS] Batch 341 completed (~3 unique leads)
+2025-06-13 16:00:19,070 - INFO - [SUCCESS] Batch 342 completed (~0 unique leads)
+2025-06-13 16:00:19,387 - INFO - [SUCCESS] Batch 343 completed (~5 unique leads)
+2025-06-13 16:00:19,694 - INFO - [SUCCESS] Batch 344 completed (~2 unique leads)
+2025-06-13 16:00:19,997 - INFO - [SUCCESS] Batch 345 completed (~1 unique leads)
+2025-06-13 16:00:20,303 - INFO - [SUCCESS] Batch 346 completed (~1 unique leads)
+2025-06-13 16:00:20,619 - INFO - [SUCCESS] Batch 347 completed (~4 unique leads)
+2025-06-13 16:00:20,927 - INFO - [SUCCESS] Batch 348 completed (~2 unique leads)
+2025-06-13 16:00:21,243 - INFO - Progress: 342/667 batches (51.3%) - 1546 leads
+2025-06-13 16:00:21,245 - INFO - Processing batches 349-360...
+2025-06-13 16:00:43,628 - INFO - Filtered out 15 duplicates from batch
+2025-06-13 16:00:44,658 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 16:00:44,661 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 16:00:45,606 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 16:00:45,619 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 16:00:45,646 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 16:00:46,084 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 16:00:46,494 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 16:00:47,315 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 16:00:47,662 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 16:00:47,683 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 16:00:47,940 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 16:00:47,942 - INFO - [SUCCESS] Batch 349 completed (~1 unique leads)
+2025-06-13 16:00:48,248 - INFO - [SUCCESS] Batch 350 completed (~1 unique leads)
+2025-06-13 16:00:48,552 - INFO - [SUCCESS] Batch 351 completed (~2 unique leads)
+2025-06-13 16:00:48,861 - INFO - [SUCCESS] Batch 352 completed (~4 unique leads)
+2025-06-13 16:00:49,168 - INFO - [SUCCESS] Batch 353 completed (~1 unique leads)
+2025-06-13 16:00:49,478 - INFO - [SUCCESS] Batch 354 completed (~2 unique leads)
+2025-06-13 16:00:49,786 - INFO - [SUCCESS] Batch 355 completed (~4 unique leads)
+2025-06-13 16:00:50,092 - INFO - [SUCCESS] Batch 356 completed (~5 unique leads)
+2025-06-13 16:00:50,403 - INFO - [SUCCESS] Batch 357 completed (~0 unique leads)
+2025-06-13 16:00:50,712 - WARNING - [FAILURE] Batch 358 produced insufficient data
+2025-06-13 16:00:51,020 - INFO - [SUCCESS] Batch 359 completed (~1 unique leads)
+2025-06-13 16:00:51,330 - INFO - [SUCCESS] Batch 360 completed (~2 unique leads)
+2025-06-13 16:00:51,643 - INFO - Progress: 353/667 batches (52.9%) - 1569 leads
+2025-06-13 16:00:51,646 - INFO - Processing batches 361-372...
+2025-06-13 16:01:14,759 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 16:01:14,766 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 16:01:15,371 - INFO - Filtered out 7 duplicates from batch
+2025-06-13 16:01:16,088 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 16:01:16,394 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 16:01:16,804 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 16:01:16,888 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 16:01:16,990 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 16:01:17,157 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 16:01:17,369 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 16:01:18,547 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 16:01:18,751 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 16:01:18,753 - INFO - [SUCCESS] Batch 361 completed (~0 unique leads)
+2025-06-13 16:01:19,061 - INFO - [SUCCESS] Batch 362 completed (~3 unique leads)
+2025-06-13 16:01:19,370 - INFO - [SUCCESS] Batch 363 completed (~2 unique leads)
+2025-06-13 16:01:19,687 - INFO - [SUCCESS] Batch 364 completed (~4 unique leads)
+2025-06-13 16:01:19,994 - INFO - [SUCCESS] Batch 365 completed (~5 unique leads)
+2025-06-13 16:01:20,302 - INFO - [SUCCESS] Batch 366 completed (~3 unique leads)
+2025-06-13 16:01:20,605 - INFO - [SUCCESS] Batch 367 completed (~1 unique leads)
+2025-06-13 16:01:20,919 - INFO - [SUCCESS] Batch 368 completed (~1 unique leads)
+2025-06-13 16:01:21,232 - INFO - [SUCCESS] Batch 369 completed (~1 unique leads)
+2025-06-13 16:01:21,546 - INFO - [SUCCESS] Batch 370 completed (~2 unique leads)
+2025-06-13 16:01:21,857 - INFO - [SUCCESS] Batch 371 completed (~0 unique leads)
+2025-06-13 16:01:22,167 - INFO - [SUCCESS] Batch 372 completed (~7 unique leads)
+2025-06-13 16:01:22,481 - INFO - Progress: 365/667 batches (54.7%) - 1598 leads
+2025-06-13 16:01:22,482 - INFO - Processing batches 373-384...
+2025-06-13 16:01:45,787 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 16:01:45,790 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 16:01:46,192 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 16:01:46,814 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 16:01:46,887 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 16:01:47,319 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 16:01:47,788 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 16:01:48,128 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 16:01:48,140 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 16:01:48,651 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 16:01:48,855 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 16:01:49,575 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 16:01:49,578 - INFO - [SUCCESS] Batch 373 completed (~0 unique leads)
+2025-06-13 16:01:49,890 - INFO - [SUCCESS] Batch 374 completed (~3 unique leads)
+2025-06-13 16:01:50,197 - INFO - [SUCCESS] Batch 375 completed (~3 unique leads)
+2025-06-13 16:01:50,505 - INFO - [SUCCESS] Batch 376 completed (~3 unique leads)
+2025-06-13 16:01:50,821 - INFO - [SUCCESS] Batch 377 completed (~0 unique leads)
+2025-06-13 16:01:51,138 - INFO - [SUCCESS] Batch 378 completed (~4 unique leads)
+2025-06-13 16:01:51,445 - INFO - [SUCCESS] Batch 379 completed (~3 unique leads)
+2025-06-13 16:01:51,755 - INFO - [SUCCESS] Batch 380 completed (~3 unique leads)
+2025-06-13 16:01:52,070 - INFO - [SUCCESS] Batch 381 completed (~3 unique leads)
+2025-06-13 16:01:52,378 - INFO - [SUCCESS] Batch 382 completed (~2 unique leads)
+2025-06-13 16:01:52,693 - INFO - [SUCCESS] Batch 383 completed (~1 unique leads)
+2025-06-13 16:01:53,000 - INFO - [SUCCESS] Batch 384 completed (~1 unique leads)
+2025-06-13 16:01:53,315 - INFO - Progress: 377/667 batches (56.5%) - 1624 leads
+2025-06-13 16:01:53,317 - INFO - Processing batches 385-396...
+2025-06-13 16:02:15,798 - INFO - Filtered out 6 duplicates from batch
+2025-06-13 16:02:15,911 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 16:02:16,916 - INFO - Filtered out 15 duplicates from batch
+2025-06-13 16:02:17,370 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 16:02:17,461 - INFO - Filtered out 8 duplicates from batch
+2025-06-13 16:02:17,736 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 16:02:17,937 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 16:02:18,624 - INFO - Filtered out 8 duplicates from batch
+2025-06-13 16:02:19,168 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 16:02:19,268 - INFO - Filtered out 15 duplicates from batch
+2025-06-13 16:02:19,780 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 16:02:19,875 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 16:02:19,877 - INFO - [SUCCESS] Batch 385 completed (~2 unique leads)
+2025-06-13 16:02:20,187 - INFO - [SUCCESS] Batch 386 completed (~8 unique leads)
+2025-06-13 16:02:20,509 - INFO - [SUCCESS] Batch 387 completed (~0 unique leads)
+2025-06-13 16:02:20,820 - INFO - [SUCCESS] Batch 388 completed (~6 unique leads)
+2025-06-13 16:02:21,125 - INFO - [SUCCESS] Batch 389 completed (~0 unique leads)
+2025-06-13 16:02:21,435 - INFO - [SUCCESS] Batch 390 completed (~0 unique leads)
+2025-06-13 16:02:21,749 - WARNING - [FAILURE] Batch 391 produced insufficient data
+2025-06-13 16:02:22,057 - WARNING - [FAILURE] Batch 392 produced insufficient data
+2025-06-13 16:02:22,377 - INFO - [SUCCESS] Batch 393 completed (~3 unique leads)
+2025-06-13 16:02:22,687 - INFO - [SUCCESS] Batch 394 completed (~5 unique leads)
+2025-06-13 16:02:22,993 - INFO - [SUCCESS] Batch 395 completed (~1 unique leads)
+2025-06-13 16:02:23,306 - INFO - [SUCCESS] Batch 396 completed (~6 unique leads)
+2025-06-13 16:02:23,614 - INFO - Progress: 387/667 batches (58.0%) - 1655 leads
+2025-06-13 16:02:23,616 - INFO - Processing batches 397-408...
+2025-06-13 16:02:47,018 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 16:02:48,056 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 16:02:48,351 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 16:02:48,353 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 16:02:48,554 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 16:02:48,556 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 16:02:48,558 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 16:02:48,760 - INFO - Filtered out 15 duplicates from batch
+2025-06-13 16:02:48,852 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 16:02:49,374 - INFO - Filtered out 15 duplicates from batch
+2025-06-13 16:02:49,376 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 16:02:51,421 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 16:02:51,423 - INFO - [SUCCESS] Batch 397 completed (~1 unique leads)
+2025-06-13 16:02:51,732 - WARNING - [FAILURE] Batch 398 produced insufficient data
+2025-06-13 16:02:52,048 - INFO - [SUCCESS] Batch 399 completed (~2 unique leads)
+2025-06-13 16:02:52,357 - INFO - [SUCCESS] Batch 400 completed (~0 unique leads)
+2025-06-13 16:02:52,674 - INFO - [SUCCESS] Batch 401 completed (~0 unique leads)
+2025-06-13 16:02:52,986 - INFO - [SUCCESS] Batch 402 completed (~1 unique leads)
+2025-06-13 16:02:53,296 - INFO - [SUCCESS] Batch 403 completed (~2 unique leads)
+2025-06-13 16:02:53,612 - INFO - [SUCCESS] Batch 404 completed (~5 unique leads)
+2025-06-13 16:02:53,920 - INFO - [SUCCESS] Batch 405 completed (~1 unique leads)
+2025-06-13 16:02:54,234 - INFO - [SUCCESS] Batch 406 completed (~0 unique leads)
+2025-06-13 16:02:54,541 - INFO - [SUCCESS] Batch 407 completed (~1 unique leads)
+2025-06-13 16:02:54,850 - WARNING - [FAILURE] Batch 408 produced insufficient data
+2025-06-13 16:02:55,163 - INFO - Progress: 397/667 batches (59.5%) - 1668 leads
+2025-06-13 16:02:55,166 - INFO - Processing batches 409-420...
+2025-06-13 16:03:16,718 - INFO - Filtered out 15 duplicates from batch
+2025-06-13 16:03:17,292 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 16:03:17,393 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 16:03:18,290 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 16:03:18,314 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 16:03:18,341 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 16:03:18,551 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 16:03:19,514 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 16:03:20,190 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 16:03:20,400 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 16:03:20,779 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 16:03:21,426 - INFO - Filtered out 15 duplicates from batch
+2025-06-13 16:03:21,428 - INFO - [SUCCESS] Batch 409 completed (~5 unique leads)
+2025-06-13 16:03:21,736 - INFO - [SUCCESS] Batch 410 completed (~1 unique leads)
+2025-06-13 16:03:22,046 - INFO - [SUCCESS] Batch 411 completed (~1 unique leads)
+2025-06-13 16:03:22,352 - INFO - [SUCCESS] Batch 412 completed (~5 unique leads)
+2025-06-13 16:03:22,656 - INFO - [SUCCESS] Batch 413 completed (~3 unique leads)
+2025-06-13 16:03:22,969 - WARNING - [FAILURE] Batch 414 produced insufficient data
+2025-06-13 16:03:23,284 - INFO - [SUCCESS] Batch 415 completed (~3 unique leads)
+2025-06-13 16:03:23,590 - INFO - [SUCCESS] Batch 416 completed (~5 unique leads)
+2025-06-13 16:03:23,892 - WARNING - [FAILURE] Batch 417 produced insufficient data
+2025-06-13 16:03:24,199 - INFO - [SUCCESS] Batch 418 completed (~2 unique leads)
+2025-06-13 16:03:24,504 - INFO - [SUCCESS] Batch 419 completed (~2 unique leads)
+2025-06-13 16:03:24,812 - INFO - [SUCCESS] Batch 420 completed (~5 unique leads)
+2025-06-13 16:03:25,128 - INFO - Progress: 407/667 batches (61.0%) - 1700 leads
+2025-06-13 16:03:25,129 - INFO - Processing batches 421-432...
+2025-06-13 16:11:19,942 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 16:11:19,967 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 16:11:20,043 - INFO - Filtered out 7 duplicates from batch
+2025-06-13 16:11:20,077 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 16:11:20,559 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 16:11:21,476 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 16:11:21,888 - INFO - Filtered out 3 duplicates from batch
+2025-06-13 16:11:21,893 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 16:11:22,500 - INFO - Filtered out 6 duplicates from batch
+2025-06-13 16:11:22,545 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 16:11:22,708 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 16:11:24,145 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 16:11:24,150 - INFO - [SUCCESS] Batch 421 completed (~2 unique leads)
+2025-06-13 16:11:24,467 - INFO - [SUCCESS] Batch 422 completed (~7 unique leads)
+2025-06-13 16:11:24,783 - INFO - [SUCCESS] Batch 423 completed (~11 unique leads)
+2025-06-13 16:11:25,093 - INFO - [SUCCESS] Batch 424 completed (~2 unique leads)
+2025-06-13 16:11:25,402 - INFO - [SUCCESS] Batch 425 completed (~8 unique leads)
+2025-06-13 16:11:25,711 - INFO - [SUCCESS] Batch 426 completed (~4 unique leads)
+2025-06-13 16:11:26,019 - INFO - [SUCCESS] Batch 427 completed (~1 unique leads)
+2025-06-13 16:11:26,335 - INFO - [SUCCESS] Batch 428 completed (~4 unique leads)
+2025-06-13 16:11:26,643 - INFO - [SUCCESS] Batch 429 completed (~0 unique leads)
+2025-06-13 16:11:26,958 - INFO - [SUCCESS] Batch 430 completed (~1 unique leads)
+2025-06-13 16:11:27,272 - INFO - [SUCCESS] Batch 431 completed (~2 unique leads)
+2025-06-13 16:11:27,581 - INFO - [SUCCESS] Batch 432 completed (~0 unique leads)
+2025-06-13 16:11:27,886 - INFO - Progress: 419/667 batches (62.8%) - 1742 leads
+2025-06-13 16:11:27,887 - INFO - Processing batches 433-444...
+2025-06-13 16:11:51,275 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 16:11:51,343 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 16:11:52,093 - INFO - Filtered out 15 duplicates from batch
+2025-06-13 16:11:52,709 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 16:11:52,711 - INFO - Filtered out 15 duplicates from batch
+2025-06-13 16:11:53,328 - INFO - Filtered out 9 duplicates from batch
+2025-06-13 16:11:53,396 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 16:11:53,733 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 16:11:53,740 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 16:11:53,748 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 16:11:54,243 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 16:11:54,350 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 16:11:54,351 - INFO - [SUCCESS] Batch 433 completed (~1 unique leads)
+2025-06-13 16:11:54,654 - WARNING - [FAILURE] Batch 434 produced insufficient data
+2025-06-13 16:11:54,969 - INFO - [SUCCESS] Batch 435 completed (~1 unique leads)
+2025-06-13 16:11:55,278 - INFO - [SUCCESS] Batch 436 completed (~2 unique leads)
+2025-06-13 16:11:55,584 - INFO - [SUCCESS] Batch 437 completed (~5 unique leads)
+2025-06-13 16:11:55,898 - INFO - [SUCCESS] Batch 438 completed (~1 unique leads)
+2025-06-13 16:11:56,209 - INFO - [SUCCESS] Batch 439 completed (~1 unique leads)
+2025-06-13 16:11:56,526 - INFO - [SUCCESS] Batch 440 completed (~0 unique leads)
+2025-06-13 16:11:56,828 - WARNING - [FAILURE] Batch 441 produced insufficient data
+2025-06-13 16:11:57,131 - INFO - [SUCCESS] Batch 442 completed (~1 unique leads)
+2025-06-13 16:11:57,440 - INFO - [SUCCESS] Batch 443 completed (~1 unique leads)
+2025-06-13 16:11:57,744 - INFO - [SUCCESS] Batch 444 completed (~0 unique leads)
+2025-06-13 16:11:58,053 - INFO - Progress: 429/667 batches (64.3%) - 1755 leads
+2025-06-13 16:11:58,055 - INFO - Processing batches 445-456...
+2025-06-13 16:12:20,971 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 16:12:21,381 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 16:12:21,587 - INFO - Filtered out 14 duplicates from batch
+2025-06-13 16:12:21,894 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 16:12:22,048 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 16:12:22,610 - INFO - Filtered out 10 duplicates from batch
+2025-06-13 16:12:22,916 - INFO - Filtered out 11 duplicates from batch
+2025-06-13 16:12:22,918 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 16:12:23,423 - INFO - Filtered out 15 duplicates from batch
+2025-06-13 16:12:23,630 - INFO - Filtered out 13 duplicates from batch
+2025-06-13 16:12:23,712 - INFO - Filtered out 12 duplicates from batch
+2025-06-13 16:12:24,862 - INFO - Filtered out 15 duplicates from batch
+2025-06-13 16:12:24,864 - INFO - [SUCCESS] Batch 445 completed (~2 unique leads)
+2025-06-13 16:12:25,167 - WARNING - [FAILURE] Batch 446 produced insufficient data
+2025-06-13 16:12:25,476 - INFO - [SUCCESS] Batch 447 completed (~1 unique leads)
+2025-06-13 16:12:25,792 - WARNING - [FAILURE] Batch 448 produced insufficient data
+2025-06-13 16:12:26,101 - INFO - [SUCCESS] Batch 449 completed (~3 unique leads)
+2025-06-13 16:12:26,409 - INFO - [SUCCESS] Batch 450 completed (~3 unique leads)
+2025-06-13 16:12:26,719 - INFO - [SUCCESS] Batch 451 completed (~4 unique leads)
+2025-06-13 16:12:27,024 - INFO - [SUCCESS] Batch 452 completed (~2 unique leads)
+2025-06-13 16:12:27,342 - INFO - [SUCCESS] Batch 453 completed (~0 unique leads)
+2025-06-13 16:12:27,651 - INFO - [SUCCESS] Batch 454 completed (~1 unique leads)
+2025-06-13 16:12:27,962 - INFO - [SUCCESS] Batch 455 completed (~0 unique leads)
+2025-06-13 16:12:28,269 - INFO - [SUCCESS] Batch 456 completed (~1 unique leads)
+2025-06-13 16:12:28,577 - INFO - Progress: 439/667 batches (65.8%) - 1772 leads
+2025-06-13 16:12:28,578 - INFO - Processing batches 457-468...

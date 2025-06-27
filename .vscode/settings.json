@@ -1,0 +1,11 @@
+{
+    "deno.enable": true,
+    "workbench.colorTheme": "Palenight (Mild Contrast)",
+    "css.lint.unknownAtRules": "ignore",
+    "tailwindCSS.includeLanguages": {
+      "plaintext": "html"
+    },
+    "editor.quickSuggestions": {
+      "strings": true
+    }
+}
