@@ -3,7 +3,10 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Database } from "@/types/supabase";
-import { logger } from "@/utils/logger";
+import logger from '@/utils/logger';
+import { cookies } from 'next/headers';
+import { type z } from 'zod';
+import { AuthSchema, EmailSchema, PasswordSchema } from '@/lib/schemas';
 
 type ActionResult = {
   error?: string;

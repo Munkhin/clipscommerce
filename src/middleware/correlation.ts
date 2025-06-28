@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
-import { logger, setCorrelationContext, LogContext } from '../utils/logger';
+import logger from '../utils/logger';
 
 // Correlation ID header names
 export const CORRELATION_ID_HEADER = 'x-correlation-id';
@@ -40,9 +40,6 @@ const extractCorrelationContext = (request: NextRequest): LogContext => {
 export function correlationMiddleware(request: NextRequest): NextResponse {
   const startTime = Date.now();
   const context = extractCorrelationContext(request);
-  
-  // Set correlation context for the request
-  setCorrelationContext(context);
   
   // Log the incoming request
   logger.info('HTTP Request Started', {
@@ -94,9 +91,6 @@ export const expressCorrelationMiddleware = (req: any, res: any, next: any) => {
     method: req.method,
     url: req.url,
   };
-  
-  // Set correlation context
-  setCorrelationContext(context);
   
   // Add to request object for later use
   req.correlationContext = context;
@@ -156,8 +150,6 @@ export const withCorrelationContext = <T extends any[]>(
       requestId: generateCorrelationId(),
     };
     
-    setCorrelationContext(context);
-    
     try {
       return await fn(...args);
     } catch (error) {
@@ -174,7 +166,6 @@ export const withApiCorrelationContext = (handler: any) => {
     
     // Set up correlation context
     const context = extractCorrelationContext(req);
-    setCorrelationContext(context);
     
     // Add to request object
     req.correlationContext = context;

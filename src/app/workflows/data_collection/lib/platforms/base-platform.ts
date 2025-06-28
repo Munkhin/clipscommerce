@@ -1,9 +1,9 @@
 import { IAuthTokenManager } from '../auth.types';
 import { ApiConfig, RateLimit } from './types';
-import { ApiError, RateLimitError } from '../../utils/errors';
+import { ApiError, RateLimitError } from '../utils/errors';
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import logger from '../../../../utils/logger';
-import { Post, Analytics } from '../../../../types/platform';
+import logger from '@/utils/logger';
+import { Post, Analytics } from '@/types';
 
 export abstract class BasePlatformClient {
   protected readonly client: AxiosInstance;

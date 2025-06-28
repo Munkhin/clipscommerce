@@ -151,7 +151,8 @@ export class ReportsAnalysisService {
       xAxis: 'date',
       yAxis: 'engagement',
     };
-    const chartSvg = options.includeCharts ? await ChartGenerator.createChart(chart, 'svg') : '';
+    const chartGenerator = new ChartGenerator();
+    const chartSvg = options.includeCharts ? await chartGenerator.generateChart(chart, 'svg') : '';
     // 4. Generate report
     const generator = new ReportGenerator();
     const report = await generator.generateReport(

@@ -19,7 +19,7 @@ interface RouteParams {
 // GET - Get specific scheduled post
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
     
     // Verify authentication
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -55,7 +55,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 // PATCH - Update scheduled post
 export async function PATCH(request: NextRequest, { params }: RouteParams) {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
     
     // Verify authentication
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -81,10 +81,10 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
 
     // Validate status transitions
     if (validatedData.status) {
-      const validTransitions = getValidStatusTransitions(currentPost.status);
+      const validTransitions = getValidStatusTransitions((currentPost as any).status);
       if (!validTransitions.includes(validatedData.status)) {
         return NextResponse.json({ 
-          error: `Cannot transition from ${currentPost.status} to ${validatedData.status}` 
+          error: `Cannot transition from ${(currentPost as any).status} to ${validatedData.status}` 
         }, { status: 400 });
       }
     }
@@ -94,7 +94,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       const postTime = new Date(validatedData.post_time);
       const now = new Date();
       
-      if (postTime <= now && currentPost.status === 'scheduled') {
+      if (postTime <= now && (currentPost as any).status === 'scheduled') {
         return NextResponse.json({ 
           error: 'Post time must be in the future for scheduled posts' 
         }, { status: 400 });
@@ -143,7 +143,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     // Update metadata
     if (validatedData.additional_settings) {
       updateData.metadata = {
-        ...currentPost.metadata,
+        ...(currentPost as any).metadata,
         additional_settings: validatedData.additional_settings,
       };
     }
@@ -184,7 +184,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
 // DELETE - Delete/cancel scheduled post
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
     
     // Verify authentication
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -207,7 +207,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     }
 
     // Check if post can be deleted
-    if (currentPost.status === 'posted') {
+    if ((currentPost as any).status === 'posted') {
       return NextResponse.json({ 
         error: 'Cannot delete a post that has already been posted' 
       }, { status: 400 });

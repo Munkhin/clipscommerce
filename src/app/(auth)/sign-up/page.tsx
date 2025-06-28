@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useFormStatus } from "react-dom";
-import { useEffect, useState, useActionState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 function SubmitButton({ 
@@ -32,7 +32,7 @@ function SubmitButton({
 export default function SignUpPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [state, formAction] = useActionState(signUpAction, null);
+  const [state, setState] = useState<{ success?: boolean; error?: string } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   
   // Get message and type from URL search params
@@ -50,7 +50,8 @@ export default function SignUpPage() {
     setIsLoading(true);
     try {
       const formData = new FormData(event.currentTarget);
-      await formAction(formData);
+      const result = await signUpAction(null, formData);
+      setState(result);
     } finally {
       setIsLoading(false);
     }

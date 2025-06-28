@@ -3,7 +3,7 @@
  * This file serves as documentation and can be removed in production
  */
 
-import { logger, setCorrelationContext, runWithContext, LogContext } from './logger';
+import logger from './logger';
 
 // Example 1: Basic logging with different levels
 export function basicLoggingExamples() {
@@ -84,13 +84,6 @@ export function httpLoggingExample() {
 // Example 6: Using correlation context
 export function correlationContextExample() {
   // Set correlation context for the entire request
-  setCorrelationContext({
-    correlationId: 'req-123',
-    userId: 'user-456',
-    sessionId: 'sess-789',
-  });
-
-  // All subsequent logs will include this context
   logger.info('Processing user request');
   logger.debug('Validating input data');
   logger.info('Request completed successfully');
@@ -98,7 +91,7 @@ export function correlationContextExample() {
 
 // Example 7: Running code with specific context
 export async function contextScopedExample() {
-  await runWithContext(
+  await logger.runWithContext(
     {
       correlationId: 'batch-001',
       batchId: 'import-users-2024',

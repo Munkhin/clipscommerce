@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { User } from '@supabase/supabase-js';
-import { logger } from '@/utils/logger';
+import logger from '@/utils/logger';
 
 export interface OwnershipGuardOptions {
   table: string;

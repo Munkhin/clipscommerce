@@ -126,7 +126,7 @@ export async function middleware(request: NextRequest) {
       .eq('id', session.user.id)
       .single();
 
-    const tier = profile?.subscription_tier || 'lite';
+    const tier = (profile as any)?.subscription_tier || 'lite';
     
     // Only team tier users can access team dashboard
     if (tier !== 'team') {
@@ -151,7 +151,7 @@ export async function middleware(request: NextRequest) {
       .eq('id', session.user.id)
       .single();
 
-    const tier = profile?.subscription_tier || 'lite';
+    const tier = (profile as any)?.subscription_tier || 'lite';
     
     if (tier === 'team') {
       const url = new URL('/team-dashboard', request.url);

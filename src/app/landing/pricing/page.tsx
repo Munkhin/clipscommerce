@@ -17,7 +17,8 @@ interface PricingTier {
   features: string[];
   isPopular?: boolean;
   ctaText: string;
-  stripePriceId?: string;
+  stripeMonthlyPriceId?: string;
+  stripeYearlyPriceId?: string;
 }
 
 interface Feature {
@@ -106,7 +107,8 @@ export default function PricingPage() {
         'Basic analytics (no e-commerce)'
       ],
       ctaText: 'Select Plan',
-      stripePriceId: process.env.NEXT_PUBLIC_STRIPE_LITE_LINK
+      stripeMonthlyPriceId: process.env.NEXT_PUBLIC_STRIPE_LITE_MONTHLY_LINK,
+      stripeYearlyPriceId: process.env.NEXT_PUBLIC_STRIPE_LITE_YEARLY_LINK,
     },
     {
       id: 'pro',
@@ -124,7 +126,8 @@ export default function PricingPage() {
       ],
       isPopular: true,
       ctaText: 'Get Started',
-      stripePriceId: process.env.NEXT_PUBLIC_STRIPE_PRO_LINK
+      stripeMonthlyPriceId: process.env.NEXT_PUBLIC_STRIPE_PRO_MONTHLY_LINK,
+      stripeYearlyPriceId: process.env.NEXT_PUBLIC_STRIPE_PRO_YEARLY_LINK,
     },
     {
       id: 'team',
@@ -141,7 +144,8 @@ export default function PricingPage() {
         'Priority support'
       ],
       ctaText: 'Select Plan',
-      stripePriceId: process.env.NEXT_PUBLIC_STRIPE_TEAM_LINK
+      stripeMonthlyPriceId: process.env.NEXT_PUBLIC_STRIPE_TEAM_MONTHLY_LINK,
+      stripeYearlyPriceId: process.env.NEXT_PUBLIC_STRIPE_TEAM_YEARLY_LINK,
     }
   ];
 
@@ -258,6 +262,16 @@ export default function PricingPage() {
   };
 
   const recommendedPlan = getRecommendedPlan();
+
+  const handleCtaClick = (tier: PricingTier) => {
+    const priceId = billingCycle === 'monthly' ? tier.stripeMonthlyPriceId : tier.stripeYearlyPriceId;
+    
+    if (priceId) {
+      window.location.href = priceId;
+    } else {
+      window.location.href = '/dashboard';
+    }
+  };
 
   return (
     <div className="bg-[#0A0A0A] min-h-screen text-lightning-DEFAULT pt-16">
@@ -396,14 +410,7 @@ export default function PricingPage() {
                     <motion.button
                       whileHover={{ scale: 1.03 }}
                       whileTap={{ scale: 0.97 }}
-                      onClick={() => {
-                        // Redirect to Stripe for paid plans, dashboard for free plans
-                        if (tier.stripePriceId) {
-                          window.location.href = `/api/checkout?price_id=${tier.stripePriceId}`;
-                        } else {
-                          window.location.href = '/dashboard';
-                        }
-                      }}
+                      onClick={() => handleCtaClick(tier)}
                       className={`w-full py-3 rounded-xl font-medium transition-all cursor-pointer ${tier.isPopular
                         ? 'bg-gradient-to-r from-[#8D5AFF] to-[#5afcc0] text-white hover:shadow-lg hover:shadow-[#8D5AFF]/20'
                         : 'bg-[#8D5AFF] text-white hover:bg-[#8D5AFF]/90'}`}

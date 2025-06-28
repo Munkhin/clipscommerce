@@ -29,7 +29,7 @@ const updatePostSchema = z.object({
 // POST - Schedule a new post
 export async function POST(request: NextRequest) {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
     
     // Verify authentication
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -147,7 +147,7 @@ export async function POST(request: NextRequest) {
 // GET - List scheduled posts
 export async function GET(request: NextRequest) {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
     
     // Verify authentication
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -223,7 +223,7 @@ export async function GET(request: NextRequest) {
 
 // Helper functions
 async function checkPostingLimits(userId: string, platform: string) {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   try {
     // Get user's subscription/plan limits

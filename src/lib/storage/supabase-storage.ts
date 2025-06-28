@@ -1,5 +1,6 @@
+import { createClient as createServerClient } from '@/lib/supabase/server';
 import { createClient } from '@/lib/supabase/client';
-import { createServerClient } from '@/lib/supabase/server';
+import { StorageError } from '@supabase/storage-js';
 import crypto from 'crypto';
 import { v4 as uuidv4 } from 'uuid';
 

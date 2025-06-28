@@ -32,7 +32,6 @@ export default function PricingSection({ onGetStarted, navigate }: PricingSectio
         'Basic analytics (no e-commerce)',
       ],
       highlighted: false,
-      stripeLinkEnv: 'NEXT_PUBLIC_STRIPE_LITE_LINK',
     },
     {
       name: 'Pro',
@@ -48,7 +47,6 @@ export default function PricingSection({ onGetStarted, navigate }: PricingSectio
         'Advanced analytics & reporting',
       ],
       highlighted: true,
-      stripeLinkEnv: 'NEXT_PUBLIC_STRIPE_PRO_LINK',
     },
     {
       name: 'Team',
@@ -64,7 +62,6 @@ export default function PricingSection({ onGetStarted, navigate }: PricingSectio
         'Priority support',
       ],
       highlighted: false,
-      stripeLinkEnv: 'NEXT_PUBLIC_STRIPE_TEAM_LINK',
     }
   ];
 
@@ -97,11 +94,8 @@ export default function PricingSection({ onGetStarted, navigate }: PricingSectio
 
   const handlePlanClick = (plan: any) => {
     // Redirect to Stripe for paid plans, dashboard for free plans
-    if (plan.stripePriceId) {
-      nav(`/api/checkout?price_id=${plan.stripePriceId}`);
-    } else {
-      nav('/dashboard');
-    }
+    const link = getButtonLink(plan);
+    nav(link);
   };
 
   return (

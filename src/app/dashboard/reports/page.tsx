@@ -4,9 +4,12 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { DatePickerWithRange } from '@/components/ui/date-picker-with-range';
+import DatePickerWithRange from '@/components/ui/date-picker-with-range';
 import { ReportsAnalysisService } from '@/app/workflows/reports/ReportsAnalysisService';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { MainNav } from '@/components/dashboard/main-nav';
+import { Search } from '@/components/dashboard/search';
+import { UserNav } from '@/components/dashboard/user-nav';
 
 export default function ReportsPage() {
   const [platform, setPlatform] = useState('tiktok');

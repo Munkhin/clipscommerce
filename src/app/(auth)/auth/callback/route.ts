@@ -15,7 +15,7 @@ export async function GET(request: Request) {
       new URL(
         `/sign-in?error=${encodeURIComponent(errorDescription || 'Authentication failed')}&type=error`,
         requestUrl.origin
-      )
+      ).toString()
     );
   }
 
@@ -31,7 +31,7 @@ export async function GET(request: Request) {
           new URL(
             `/sign-in?error=${encodeURIComponent('Failed to authenticate. Please try signing in again.')}&type=error`,
             requestUrl.origin
-          )
+          ).toString()
         );
       }
 
@@ -42,7 +42,7 @@ export async function GET(request: Request) {
           new URL(
             `/dashboard?message=${encodeURIComponent('Email confirmed successfully!')}&type=success`,
             requestUrl.origin
-          )
+          ).toString()
         );
       }
     } catch (e) {
@@ -50,11 +50,11 @@ export async function GET(request: Request) {
         new URL(
           `/sign-in?error=${encodeURIComponent('An unexpected error occurred. Please try again.')}&type=error`,
           requestUrl.origin
-        )
+        ).toString()
       );
     }
   }
 
   // Default redirect
-  return NextResponse.redirect(new URL(redirectTo, requestUrl.origin));
+  return NextResponse.redirect(new URL(redirectTo, requestUrl.origin).toString());
 }

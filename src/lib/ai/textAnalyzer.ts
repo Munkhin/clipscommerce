@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import type { ChatCompletionMessageParam } from './openai-chat-types';
-import { Platform } from '@/types/platform';
+import { Platform } from '../app/workflows/deliverables/types/deliverables_types';
 
 // Import new utility modules
 import { withRetry as resilienceWithRetry, CircuitBreaker } from '../utils/resilience';

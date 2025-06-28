@@ -1,11 +1,11 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
-import { TikTokClient } from '../../../../workflows/data_collection/lib/platforms/TikTokClient';
-import { SupabaseAuthTokenManager } from '../../../../workflows/data_collection/lib/auth';
-import { ApiConfig } from '../../../../workflows/data_collection/lib/platforms/types';
-import { Platform } from '../../../../workflows/deliverables/types/deliverables_types';
+import { TikTokClient } from '@/app/workflows/data_collection/lib/platforms/TikTokClient';
+import { SupabaseAuthTokenManager } from '@/app/workflows/data_collection/lib/auth';
+import { ApiConfig } from '@/app/workflows/data_collection/lib/platforms/types';
+import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
 import { authGuard, createSecureErrorResponse } from '@/lib/security/auth-guard';
-import { logger } from '@/utils/logger';
+import logger from '@/utils/logger';
 
 export async function GET(request: NextRequest) {
   // This is a cron endpoint - verify it's being called by authorized cron service
@@ -89,7 +89,7 @@ export async function GET(request: NextRequest) {
         console.error(`Failed to post video for user ${post.user_id}:`, postError);
         await supabase
           .from('autopost_schedule')
-          .update({ status: 'failed', error_message: postError.message })
+          .update({ status: 'failed', error_message: (postError as Error).message })
           .eq('id', post.id);
       }
     }
@@ -97,6 +97,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ message: 'Cron job executed successfully', posts: scheduledPosts });
   } catch (error) {
     console.error('Error in cron job:', error);
-    return NextResponse.json({ message: 'Error in cron job', error: error.message }, { status: 500 });
+    return NextResponse.json({ message: 'Error in cron job', error: (error as Error).message }, { status: 500 });
   }
 }

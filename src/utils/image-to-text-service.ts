@@ -3,7 +3,7 @@
  */
 
 import fetch from 'node-fetch';
-import { logger } from './logger';
+import logger from './logger';
 
 interface Config {
   enableImageToText: boolean;
