@@ -77,6 +77,13 @@ export async function GET(request: NextRequest) {
       return NextResponse.redirect(new URL('/oauth-error?error=token_exchange_failed', request.url));
     }
   } catch (error) {
+    // Log the error for debugging (without exposing sensitive details)
+    console.error('TikTok OAuth callback error:', {
+      error: error instanceof Error ? error.message : 'Unknown error',
+      code: code ? 'present' : 'missing',
+      state: state ? 'present' : 'missing'
+    });
+    
     // Avoid redirecting with potentially sensitive error details from internal exceptions.
     return NextResponse.redirect(new URL('/oauth-error?error=internal_server_error', request.url));
   }

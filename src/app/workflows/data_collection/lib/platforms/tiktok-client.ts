@@ -89,12 +89,84 @@ export class TikTokClient extends BasePlatformClient {
   }
 
   async uploadContent(content: any): Promise<Post> {
-    // TODO: Implement uploadContent for TikTok
-    return {} as Post;
+    this.log('debug', `[TikTokClient] Uploading content`);
+    
+    try {
+      // TikTok API upload process
+      const response = await this.request<any>({
+        url: '/video/upload/',
+        method: 'POST',
+        data: {
+          video_url: content.videoUrl,
+          text: content.description,
+          privacy_level: content.privacy || 'PUBLIC_TO_EVERYONE',
+          disable_duet: content.disable_duet || false,
+          disable_comment: content.disable_comment || false,
+          disable_stitch: content.disable_stitch || false,
+          brand_content_toggle: content.brand_content || false
+        }
+      });
+
+      const responseData = response.data;
+
+      if (responseData.error && responseData.error.code !== 'ok' && responseData.error.code !== 0) {
+        this.log('error', `[TikTokClient] API error in uploadContent: ${responseData.error.message}`, responseData.error);
+        throw new ApiError(responseData.error.message, responseData.error.code, responseData.error);
+      }
+
+      const post: Post = {
+        id: responseData.data?.publish_id || responseData.publish_id || 'unknown',
+        title: content.description ? content.description.substring(0, 100) : 'TikTok Video',
+        content: content.description || '',
+        createdAt: new Date(),
+        author: {
+          id: 'current_user',
+          name: 'Current User'
+        }
+      };
+
+      this.log('debug', `[TikTokClient] Successfully uploaded content with ID: ${post.id}`);
+      return post;
+    } catch (error) {
+      this.log('error', `[TikTokClient] Failed to upload content`, { error });
+      throw error;
+    }
   }
 
   async getAnalytics(postId: string): Promise<Analytics> {
-    // TODO: Implement getAnalytics for TikTok
-    return {} as Analytics;
+    this.log('debug', `[TikTokClient] Fetching analytics for post: ${postId}`);
+    
+    try {
+      const response = await this.request<any>({
+        url: `/video/data/`,
+        method: 'GET',
+        params: {
+          fields: 'id,create_time,cover_image_url,share_url,video_description,duration,height,width,title,embed_html,embed_link,like_count,comment_count,share_count,view_count',
+          video_ids: postId
+        }
+      });
+
+      const responseData = response.data;
+
+      if (responseData.error && responseData.error.code !== 'ok' && responseData.error.code !== 0) {
+        this.log('error', `[TikTokClient] API error in getAnalytics: ${responseData.error.message}`, responseData.error);
+        throw new ApiError(responseData.error.message, responseData.error.code, responseData.error);
+      }
+
+      const videoData = responseData.data?.videos?.[0] || {};
+      const analytics: Analytics = {
+        views: videoData.view_count || 0,
+        likes: videoData.like_count || 0,
+        comments: videoData.comment_count || 0,
+        shares: videoData.share_count || 0
+      };
+
+      this.log('debug', `[TikTokClient] Successfully fetched analytics for post ${postId}`, analytics);
+      return analytics;
+    } catch (error) {
+      this.log('error', `[TikTokClient] Failed to fetch analytics for post ${postId}`, { error });
+      // Return default analytics instead of throwing error
+      return { views: 0, likes: 0, comments: 0, shares: 0 };
+    }
   }
 }

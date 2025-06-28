@@ -5,26 +5,32 @@
 
 import { NextRequest } from 'next/server';
 import { realtimeService } from '@/app/workflows/autoposting/RealtimeService';
-import { rateLimit } from '@/lib/rate-limit';
+import { authGuard } from '@/lib/security/auth-guard';
+import { createClient } from '@/lib/supabase/server';
 
 // In a real implementation, you would use a WebSocket library like ws or socket.io
 // For now, we'll create a Server-Sent Events (SSE) endpoint as an alternative
 
 export async function GET(request: NextRequest) {
   try {
-    // Rate limiting
-    const rateLimitResult = await rateLimit('websocket-connect');
-    if (!rateLimitResult.success) {
-      return new Response('Too many connection attempts', { status: 429 });
+    // Apply security guard for authenticated WebSocket connections
+    const guardResult = await authGuard(request, {
+      requireAuth: true,
+      requireCsrf: false, // WebSocket connections don't typically use CSRF
+      rateLimit: {
+        identifier: 'websocket-connect',
+        requests: 5,
+        window: '1m'
+      }
+    });
+
+    if (!guardResult.success) {
+      return guardResult.response!;
     }
 
-    // Get user info from headers (in production, validate JWT token)
-    const userId = request.headers.get('x-user-id');
-    const teamId = request.headers.get('x-team-id');
-
-    if (!userId) {
-      return new Response('Authentication required', { status: 401 });
-    }
+    const { user, profile } = guardResult.context!;
+    const userId = user!.id;
+    const teamId = profile?.team_id;
 
     // Create Server-Sent Events response
     const encoder = new TextEncoder();
@@ -118,19 +124,24 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    // Rate limiting
-    const rateLimitResult = await rateLimit('websocket-action');
-    if (!rateLimitResult.success) {
-      return new Response('Too many requests', { status: 429 });
+    // Apply security guard for WebSocket actions
+    const guardResult = await authGuard(request, {
+      requireAuth: true,
+      requireCsrf: true,
+      rateLimit: {
+        identifier: 'websocket-action',
+        requests: 20,
+        window: '1m'
+      }
+    });
+
+    if (!guardResult.success) {
+      return guardResult.response!;
     }
 
-    const body = await request.json();
+    const { user, body } = guardResult.context!;
     const { action, connectionId, data } = body;
-
-    const userId = request.headers.get('x-user-id');
-    if (!userId) {
-      return new Response('Authentication required', { status: 401 });
-    }
+    const userId = user!.id;
 
     switch (action) {
       case 'subscribe': {

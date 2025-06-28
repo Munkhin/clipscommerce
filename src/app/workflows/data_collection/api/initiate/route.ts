@@ -1,6 +1,7 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { ScannerService } from '../../functions/ScannerService';
 import { ScanOptions } from '../../functions/types';
+import { authGuard, createValidator, validators } from '@/lib/security/auth-guard';
 
 // Initialize a single instance of the scanner service
 const scannerService = new ScannerService();
@@ -11,16 +12,40 @@ scannerService.initializePlatforms([
   // Add other platforms as needed
 ]);
 
-export async function POST(request: Request) {
+const inputValidator = createValidator({
+  userId: [validators.required, validators.string],
+  options: [(value: any) => !value || typeof value === 'object']
+});
+
+export async function POST(request: NextRequest) {
+  // Apply security guard with authentication, authorization, and input validation
+  const guardResult = await authGuard(request, {
+    requireAuth: true,
+    requireCsrf: true,
+    rateLimit: {
+      identifier: 'data-collection-initiate',
+      requests: 5,
+      window: '1m'
+    },
+    validateInput: inputValidator
+  });
+
+  if (!guardResult.success) {
+    return guardResult.response!;
+  }
+
+  const { user, body } = guardResult.context!;
+  const { userId, options } = body;
+  
+  // Ensure user can only initiate scans for themselves
+  if (userId !== user!.id) {
+    return NextResponse.json(
+      { error: 'Can only initiate scans for your own account' },
+      { status: 403 }
+    );
+  }
+
   try {
-    const { userId, options } = await request.json();
-    
-    if (!userId) {
-      return NextResponse.json(
-        { error: 'User ID is required' },
-        { status: 400 }
-      );
-    }
 
     const scanOptions: ScanOptions = {
       platforms: options?.platforms || ['TIKTOK' as any],

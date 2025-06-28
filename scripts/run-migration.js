@@ -11,10 +11,10 @@ async function runMigration() {
     }
 
     // Load environment variables
-    require('dotenv').config({ path: path.resolve(__dirname, '../.env.example') });
+    require('dotenv').config({ path: path.resolve(__dirname, '../.env.local') });
     
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const supabaseKey = process.env.NEXT_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
     
     if (!supabaseUrl || !supabaseKey) {
       throw new Error('Missing Supabase environment variables');
@@ -22,12 +22,18 @@ async function runMigration() {
     
     const supabase = createClient(supabaseUrl, supabaseKey);
     
-    // Read the function creation file
-    const functionMigrationPath = path.join(__dirname, '..', 'prisma', 'migrations', '20240627_add_exec_sql_function.sql');
-    const functionSql = fs.readFileSync(functionMigrationPath, 'utf8');
+    // Create exec_sql function if it doesn't exist
+    const functionSQL = `
+      CREATE OR REPLACE FUNCTION exec_sql(sql text)
+      RETURNS void AS $$
+      BEGIN
+        EXECUTE sql;
+      END;
+      $$ LANGUAGE plpgsql SECURITY DEFINER;
+    `;
 
     console.log('Creating exec_sql function...');
-    const { error: functionError } = await supabase.rpc('exec_sql', { sql: functionSql });
+    const { error: functionError } = await supabase.rpc('exec_sql', { sql: functionSQL });
     if (functionError) {
         // If the function already exists, we can ignore the error and continue.
         if (functionError.code !== '42723') {

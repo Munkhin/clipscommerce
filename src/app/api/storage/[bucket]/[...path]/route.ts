@@ -23,6 +23,12 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     const { bucket, path } = params;
     const filePath = path.join('/');
 
+    // Verify file ownership before deletion
+    const fileRecord = await serverStorageService.getFileMetadata(bucket, filePath);
+    if (fileRecord && fileRecord.user_id !== user.id) {
+      return NextResponse.json({ error: 'Access denied' }, { status: 403 });
+    }
+
     await serverStorageService.deleteFile(bucket, filePath, user.id);
 
     return NextResponse.json({ 
@@ -68,6 +74,12 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // Verify file ownership for private files
+    const fileRecord = await serverStorageService.getFileMetadata(bucket, filePath);
+    if (fileRecord && fileRecord.user_id !== user.id) {
+      return NextResponse.json({ error: 'Access denied' }, { status: 403 });
     }
 
     // Generate signed URL for private access

@@ -184,9 +184,9 @@ export const autopost = async (
   // Fire-and-forget background processing; the AutoPostingScheduler already
   // handles retries, monitoring, and error reporting internally.
   // We do NOT await to keep API latency low.
-  /* eslint-disable @typescript-eslint/no-floating-promises */
+   
   scheduler.processQueue();
-  /* eslint-enable @typescript-eslint/no-floating-promises */
+   
 
   return { id };
 }; 

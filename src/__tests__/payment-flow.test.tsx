@@ -355,6 +355,24 @@ describe('Payment Flow Tests', () => {
         expect(screen.getByText('Navigation failed, but plan selection recorded.')).toBeInTheDocument();
       });
     });
+
+    it('should display an error message when payment is declined', async () => {
+      mockWindowOpen.mockImplementation((url) => {
+        if (url.includes('stripe.com')) {
+          // Simulate a failed payment by redirecting to a failure URL
+          window.location.href = '/payment-failed';
+        }
+      });
+
+      render(<SubscriptionComponent navigate={mockNavigateWindowOpen} stripeLinks={mockStripeLinks} />);
+      
+      const proButton = screen.getAllByText('Select Plan')[1];
+      await user.click(proButton);
+
+      await waitFor(() => {
+        expect(mockLocationHref).toHaveBeenCalledWith('/payment-failed');
+      });
+    });
   });
 
   describe('PaymentSuccessPage Component', () => {

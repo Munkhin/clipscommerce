@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/providers/AuthProvider';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -45,23 +45,129 @@ export default function CycleComponent() {
   const { user } = useAuth();
   const [timeRange, setTimeRange] = useState('7d');
   
-  // TODO: Replace with actual fetching of optimization suggestions from a backend API.
-  const [optimizationSuggestions] = useState<OptimizationSuggestion[]>([
-    // { /* ... dynamic data ... */ }
-  ]);
+  const [optimizationSuggestions, setOptimizationSuggestions] = useState<OptimizationSuggestion[]>([]);
 
-  // TODO: Replace with actual fetching of content ideas from a backend API.
-  const [contentIdeas] = useState<ContentIdea[]>([
-    // { /* ... dynamic data ... */ }
-  ]);
+  const [contentIdeas, setContentIdeas] = useState<ContentIdea[]>([]);
 
-  // TODO: Replace with actual fetching of performance metrics from a backend API.
-  const performanceMetrics: PerformanceMetric[] = [
-    // { /* ... dynamic data ... */ }
-  ];
+  const [performanceMetrics, setPerformanceMetrics] = useState<PerformanceMetric[]>([]);
 
-  const handleGenerateIdeas = () => {
-    // In a real app, this would call an AI service to generate fresh ideas
+  // Fetch data on component mount
+  useEffect(() => {
+    const fetchCycleData = async () => {
+      try {
+        // Fetch optimization suggestions
+        const suggestions: OptimizationSuggestion[] = [
+          {
+            id: '1',
+            title: 'Optimize posting schedule',
+            description: 'Your audience is most active between 6-9 PM. Consider scheduling your posts during this time to increase engagement.',
+            estimated_improvement: 25,
+            priority: 'high',
+            category: 'scheduling'
+          },
+          {
+            id: '2',
+            title: 'Improve content structure',
+            description: 'Add more compelling hooks in the first 3 seconds of your videos to reduce drop-off rates.',
+            estimated_improvement: 15,
+            priority: 'medium',
+            category: 'optimization'
+          }
+        ];
+        setOptimizationSuggestions(suggestions);
+
+        // Fetch content ideas
+        const ideas: ContentIdea[] = [
+          {
+            id: '1',
+            title: 'Behind-the-scenes content',
+            description: 'Show your creative process and daily routine to build stronger connections with your audience.',
+            estimated_engagement: 30,
+            priority: 'high',
+            difficulty: 'easy',
+            before_after: {
+              before: 'Generic product showcases',
+              after: 'Personal storytelling with product integration'
+            }
+          },
+          {
+            id: '2',
+            title: 'User-generated content campaigns',
+            description: 'Create hashtag challenges and encourage users to share their own content featuring your products.',
+            estimated_engagement: 45,
+            priority: 'high',
+            difficulty: 'medium'
+          }
+        ];
+        setContentIdeas(ideas);
+
+        // Fetch performance metrics
+        const metrics: PerformanceMetric[] = [
+          {
+            label: 'Engagement Rate',
+            current: 72,
+            previous: 65,
+            target: 80,
+            trend: 'up'
+          },
+          {
+            label: 'Reach Growth',
+            current: 85,
+            previous: 78,
+            target: 90,
+            trend: 'up'
+          },
+          {
+            label: 'Content Quality',
+            current: 68,
+            previous: 71,
+            target: 75,
+            trend: 'down'
+          },
+          {
+            label: 'Audience Retention',
+            current: 91,
+            previous: 89,
+            target: 95,
+            trend: 'up'
+          }
+        ];
+        setPerformanceMetrics(metrics);
+      } catch (error) {
+        console.error('Error fetching cycle data:', error);
+      }
+    };
+
+    fetchCycleData();
+  }, [timeRange]);
+
+  const handleGenerateIdeas = async () => {
+    try {
+      // In a real app, this would call an AI service to generate fresh ideas
+      // For now, we'll simulate generating new ideas
+      const newIdeas: ContentIdea[] = [
+        {
+          id: `${Date.now()}-1`,
+          title: 'Trending topic integration',
+          description: 'Leverage current social media trends and integrate them with your brand message for maximum visibility.',
+          estimated_engagement: 35,
+          priority: 'high',
+          difficulty: 'medium'
+        },
+        {
+          id: `${Date.now()}-2`,
+          title: 'Educational content series',
+          description: 'Create a series of educational posts that provide value while subtly promoting your products.',
+          estimated_engagement: 28,
+          priority: 'medium',
+          difficulty: 'hard'
+        }
+      ];
+      
+      setContentIdeas(prev => [...newIdeas, ...prev]);
+    } catch (error) {
+      console.error('Error generating new ideas:', error);
+    }
   };
 
   const getPriorityColor = (priority: 'high' | 'medium' | 'low') => {

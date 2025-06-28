@@ -26,6 +26,9 @@ import {
   AlertTriangle,
   Loader2
 } from 'lucide-react';
+import { LoadingSpinner, CardSkeleton } from '@/components/ui/loading-states';
+import { FirstTimeEmpty, NoDataEmpty } from '@/components/ui/empty-states';
+import { ApiError, UploadError } from '@/components/ui/error-states';
 
 // Types
 export interface BrandVoice {
@@ -140,6 +143,23 @@ export const ContentAutomationModule: React.FC = () => {
     optimizeForPlatform: true,
     autoPost: false
   });
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isFirstTime, setIsFirstTime] = useState(false);
+
+  // Simulate initial loading
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsInitialLoading(false);
+      // Check if user has used this feature before
+      const hasUsedAutomation = localStorage.getItem('hasUsedContentAutomation');
+      if (!hasUsedAutomation) {
+        setIsFirstTime(true);
+      }
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handlePlatformToggle = (platform: string) => {
     setSelectedPlatforms(prev =>
@@ -178,10 +198,19 @@ export const ContentAutomationModule: React.FC = () => {
       return;
     }
 
+    // Mark as used
+    localStorage.setItem('hasUsedContentAutomation', 'true');
+    setIsFirstTime(false);
+
     toast({
       title: "Starting automation",
       description: `Processing ${uploadedFiles.length} videos with your settings`,
     });
+  };
+
+  const handleGetStarted = () => {
+    setIsFirstTime(false);
+    localStorage.setItem('hasUsedContentAutomation', 'true');
   };
 
   const handleJobAction = (jobId: string, action: 'pause' | 'resume' | 'cancel') => {
@@ -190,6 +219,116 @@ export const ContentAutomationModule: React.FC = () => {
       description: `Automation job has been ${action}d`,
     });
   };
+
+  // Show loading state
+  if (isInitialLoading) {
+    return (
+      <Card className="w-full">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="flex items-center gap-2">
+                <Zap className="h-5 w-5 text-blue-500" />
+                Content Automation
+              </CardTitle>
+              <CardDescription>
+                Bulk video processing with brand voice specification and AI-powered optimization
+              </CardDescription>
+            </div>
+            <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+              AI-Powered
+            </Badge>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <CardSkeleton count={3} showAvatar={false} />
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // Show error state
+  if (hasError) {
+    return (
+      <Card className="w-full">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="flex items-center gap-2">
+                <Zap className="h-5 w-5 text-blue-500" />
+                Content Automation
+              </CardTitle>
+              <CardDescription>
+                Bulk video processing with brand voice specification and AI-powered optimization
+              </CardDescription>
+            </div>
+            <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+              AI-Powered
+            </Badge>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <ApiError
+            title="Failed to Load Content Automation"
+            description={errorMessage || "Unable to load the content automation module. Please try again."}
+            onRetry={() => {
+              setHasError(false);
+              setIsInitialLoading(true);
+              setTimeout(() => setIsInitialLoading(false), 1000);
+            }}
+          />
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // Show first-time empty state
+  if (isFirstTime) {
+    return (
+      <Card className="w-full">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="flex items-center gap-2">
+                <Zap className="h-5 w-5 text-blue-500" />
+                Content Automation
+              </CardTitle>
+              <CardDescription>
+                Bulk video processing with brand voice specification and AI-powered optimization
+              </CardDescription>
+            </div>
+            <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+              AI-Powered
+            </Badge>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <FirstTimeEmpty
+            title="Welcome to Content Automation!"
+            description="Streamline your video processing with AI-powered bulk optimization across multiple platforms."
+            onGetStarted={handleGetStarted}
+            steps={[
+              {
+                icon: <Upload className="h-5 w-5 text-primary" />,
+                title: "Upload Videos",
+                description: "Bulk upload your video content"
+              },
+              {
+                icon: <Settings className="h-5 w-5 text-primary" />,
+                title: "Configure Settings",
+                description: "Set your brand voice and automation preferences"
+              },
+              {
+                icon: <Zap className="h-5 w-5 text-primary" />,
+                title: "Automate Processing",
+                description: "Let AI handle descriptions, hashtags, and optimization"
+              }
+            ]}
+          />
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card className="w-full">
@@ -441,7 +580,15 @@ export const ContentAutomationModule: React.FC = () => {
           <TabsContent value="active-jobs" className="space-y-6">
             <div className="space-y-4">
               <h3 className="text-lg font-semibold">Active Automation Jobs</h3>
-              {mockActiveJobs.map((job) => (
+              {mockActiveJobs.length === 0 ? (
+                <NoDataEmpty
+                  title="No active automation jobs"
+                  description="Your automation jobs will appear here once you start processing videos."
+                  type="reports"
+                  onRefresh={() => window.location.reload()}
+                />
+              ) : (
+                mockActiveJobs.map((job) => (
                 <Card key={job.id} className="p-4">
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
@@ -506,7 +653,8 @@ export const ContentAutomationModule: React.FC = () => {
                     </div>
                   </div>
                 </Card>
-              ))}
+                ))
+              )}
             </div>
           </TabsContent>
         </Tabs>

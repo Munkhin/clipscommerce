@@ -1,8 +1,33 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { authGuard, createValidator, validators } from '@/lib/security/auth-guard';
+
+const inputValidator = createValidator({
+  name: [validators.required, validators.string, validators.enum(['CLS', 'FCP', 'FID', 'INP', 'LCP', 'TTFB'])],
+  value: [validators.required, validators.number],
+  rating: [validators.required, validators.string, validators.enum(['good', 'needs-improvement', 'poor'])],
+  delta: [validators.required, validators.number],
+  id: [validators.required, validators.string]
+});
 
 export async function POST(request: NextRequest) {
+  // Apply security guard with rate limiting and input validation (no auth required for web vitals)
+  const guardResult = await authGuard(request, {
+    requireAuth: false,
+    requireCsrf: false,
+    rateLimit: {
+      identifier: 'web-vitals',
+      requests: 50,
+      window: '1m'
+    },
+    validateInput: inputValidator
+  });
+
+  if (!guardResult.success) {
+    return guardResult.response!;
+  }
+
   try {
-    const metric = await request.json();
+    const metric = guardResult.context!.body;
     
     // Log metrics in development
     if (process.env.NODE_ENV === 'development') {

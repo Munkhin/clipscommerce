@@ -1,11 +1,26 @@
 import { createClient } from '@supabase/supabase-js';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { TikTokClient } from '../../../../workflows/data_collection/lib/platforms/TikTokClient';
 import { SupabaseAuthTokenManager } from '../../../../workflows/data_collection/lib/auth';
 import { ApiConfig } from '../../../../workflows/data_collection/lib/platforms/types';
 import { Platform } from '../../../../workflows/deliverables/types/deliverables_types';
+import { authGuard, createSecureErrorResponse } from '@/lib/security/auth-guard';
+import { logger } from '@/utils/logger';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  // This is a cron endpoint - verify it's being called by authorized cron service
+  const cronSecret = request.headers.get('x-cron-secret');
+  const expectedSecret = process.env.CRON_SECRET;
+  
+  if (!expectedSecret || cronSecret !== expectedSecret) {
+    logger.warn('Unauthorized cron access attempt', {
+      path: request.nextUrl.pathname,
+      hasSecret: !!cronSecret,
+      ip: request.headers.get('x-forwarded-for') || 'unknown'
+    });
+    return createSecureErrorResponse('Unauthorized', 401);
+  }
+  
   try {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;

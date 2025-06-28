@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import GlassCard from '@/components/ui/GlassCard';
 import { PlusCircle, Edit3, PlayCircle, Trash2, GripVertical, AlertTriangle, Zap, Upload, Sparkles, TrendingUp } from 'lucide-react';
@@ -29,6 +29,9 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { Progress } from '@/components/ui/progress';
 import { CircularScore } from '@/components/ui/circular-score';
+import { VideoProcessingSkeleton, LoadingSpinner, ProcessingIndicator } from '@/components/ui/loading-states';
+import { NoVideosEmpty } from '@/components/ui/empty-states';
+import { UploadError, ApiError, ProcessingError } from '@/components/ui/error-states';
 
 interface Video {
   id: string;
@@ -135,9 +138,13 @@ function SortableVideoCard({ video }: SortableVideoCardProps) {
         )}
         
         {video.error && (
-          <div className="text-xs text-red-400 bg-red-500/10 p-2 rounded border border-red-500/20">
-            Error: {video.error}
-          </div>
+          <UploadError
+            fileName={video.title}
+            errorType="processing"
+            onRetry={() => handleRetryVideo(video.id)}
+            onRemove={() => handleRemoveVideo(video.id)}
+            className="mt-2"
+          />
         )}
         
         {video.result && (
@@ -176,6 +183,9 @@ export default function AccelerateComponent() {
   const [columns] = useState<Column[]>(initialColumns);
   const [activeVideo, setActiveVideo] = useState<Video | null>(null);
   const [dragOverColumn, setDragOverColumn] = useState<string | null>(null);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const sensors = useSensors(
@@ -184,6 +194,14 @@ export default function AccelerateComponent() {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
+
+  // Simulate initial loading
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsInitialLoading(false);
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleAddVideos = () => {
     fileInputRef.current?.click();
@@ -236,6 +254,11 @@ export default function AccelerateComponent() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ caption }),
       });
+      
+      if (!res.ok) {
+        throw new Error(`API request failed with status ${res.status}`);
+      }
+      
       const data = await res.json();
       
       setVideos(prev => prev.map(v =>
@@ -252,6 +275,7 @@ export default function AccelerateComponent() {
           : v
       ));
     } catch (err: any) {
+      console.error('Video processing error:', err);
       setVideos(prev => prev.map(v =>
         v.id === videoId
           ? {
@@ -339,6 +363,65 @@ export default function AccelerateComponent() {
       }
     }
   };
+
+  // Handle retries
+  const handleRetry = () => {
+    setHasError(false);
+    setErrorMessage('');
+    setIsInitialLoading(true);
+    // Simulate retry
+    setTimeout(() => setIsInitialLoading(false), 1000);
+  };
+
+  const handleRemoveVideo = (videoId: string) => {
+    setVideos(prev => prev.filter(v => v.id !== videoId));
+  };
+
+  const handleRetryVideo = (videoId: string) => {
+    const video = videos.find(v => v.id === videoId);
+    if (video) {
+      setVideos(prev => prev.map(v =>
+        v.id === videoId
+          ? { ...v, loading: true, error: undefined, status: 'Processing', columnId: 'processing' }
+          : v
+      ));
+      // Simulate re-processing
+      setTimeout(() => {
+        processVideo(videoId, new File([''], video.title));
+      }, 1000);
+    }
+  };
+
+  // Show loading state
+  if (isInitialLoading) {
+    return (
+      <div className="min-h-screen" style={{
+        background: 'linear-gradient(135deg, #0a0b0f 0%, #111318 50%, #1a1d25 100%)'
+      }}>
+        <div className="max-w-7xl mx-auto px-6 py-8">
+          <VideoProcessingSkeleton />
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (hasError) {
+    return (
+      <div className="min-h-screen" style={{
+        background: 'linear-gradient(135deg, #0a0b0f 0%, #111318 50%, #1a1d25 100%)'
+      }}>
+        <div className="max-w-7xl mx-auto px-6 py-8">
+          <ApiError
+            title="Failed to Load Accelerate"
+            description={errorMessage || "Unable to load the video processing interface. Please try again."}
+            onRetry={handleRetry}
+            onGoBack={() => window.history.back()}
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen" style={{
@@ -445,14 +528,23 @@ export default function AccelerateComponent() {
         <div className="space-y-6 animate-slideUp">
           <h2 className="text-3xl font-bold text-center text-white">Video Workflow</h2>
           
-          <DndContext 
-            sensors={sensors} 
-            collisionDetection={closestCenter} 
-            onDragStart={handleDragStart} 
-            onDragEnd={handleDragEnd}
-            onDragOver={handleDragOver}
-          >
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-6">
+          {/* Show empty state when no videos */}
+          {videos.length === 0 && (
+            <NoVideosEmpty
+              onUpload={handleAddVideos}
+              className="bg-gray-900/50 backdrop-blur-sm border border-gray-700 rounded-lg"
+            />
+          )}
+          
+          {videos.length > 0 && (
+            <DndContext 
+              sensors={sensors} 
+              collisionDetection={closestCenter} 
+              onDragStart={handleDragStart} 
+              onDragEnd={handleDragEnd}
+              onDragOver={handleDragOver}
+            >
+              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-6">
               {columns.map((column) => {
                 const IconComponent = column.icon;
                 const videoCount = getVideosByColumn(column.id).length;
@@ -488,14 +580,23 @@ export default function AccelerateComponent() {
                       </SortableContext>
                       
                       {getVideosByColumn(column.id).length === 0 && (
-                        <div className="text-center text-gray-500 py-16">
+                        <div className="text-center text-gray-500 py-8">
                           <div className="space-y-3">
-                            <div className="mx-auto w-16 h-16 rounded-full bg-gray-800 flex items-center justify-center">
-                              <IconComponent className="h-8 w-8 text-gray-600" />
+                            <div className="mx-auto w-12 h-12 rounded-full bg-gray-800/50 flex items-center justify-center">
+                              <IconComponent className="h-6 w-6 text-gray-600" />
                             </div>
                             <p className="text-sm">No videos in this stage</p>
                             {isDropTarget && (
                               <p className="text-violet-400 text-xs animate-pulse">Drop video here</p>
+                            )}
+                            {column.id === 'todo' && videos.length === 0 && (
+                              <button 
+                                onClick={handleAddVideos}
+                                className="text-xs text-violet-400 hover:text-violet-300 underline"
+                                aria-label="Upload your first video"
+                              >
+                                Upload your first video
+                              </button>
                             )}
                           </div>
                         </div>
@@ -504,17 +605,18 @@ export default function AccelerateComponent() {
                   </GlassCard>
                 );
               })}
-            </div>
+              </div>
 
-            <DragOverlay>
-              {activeVideo ? (
-                <div className="enhanced-card p-4 rotate-3 scale-105 shadow-2xl opacity-90">
-                  <h4 className="font-semibold text-white text-sm">{activeVideo.title}</h4>
-                  <div className="w-full h-20 bg-gray-800 rounded mt-2" />
-                </div>
-              ) : null}
-            </DragOverlay>
-          </DndContext>
+              <DragOverlay>
+                {activeVideo ? (
+                  <div className="enhanced-card p-4 rotate-3 scale-105 shadow-2xl opacity-90">
+                    <h4 className="font-semibold text-white text-sm">{activeVideo.title}</h4>
+                    <div className="w-full h-20 bg-gray-800 rounded mt-2" />
+                  </div>
+                ) : null}
+              </DragOverlay>
+            </DndContext>
+          )}
         </div>
       </div>
     </div>

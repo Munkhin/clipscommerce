@@ -1,220 +1,155 @@
-# Comprehensive Codebase Analysis & Parallel Development Plan
+### **Launch Readiness Plan**
 
-## Critical Issues Identified
+This document outlines the critical tasks required to prepare the ClipsCommerce application for a stable, reliable, and successful launch. Each section provides context and specific, actionable instructions for development teams.
 
-### 🚨 **IMMEDIATE BUILD BLOCKERS (FIXED)**
-1. ✅ **Duplicate exports** in `src/utils/logger.ts` - Fixed
-2. ✅ **Missing dependencies** - Installed `pino`, `pino-pretty`, `postcss-import`, `framer-motion`, `lucide-react`
-3. ✅ **Missing .env.example** - Created with comprehensive configuration
+---
 
-### 📊 **COMPREHENSIVE ISSUE ANALYSIS**
+### **Development Stages & Workflow**
 
-**Build & Environment Issues:**
-- Duplicate export statements causing webpack failures
-- Missing critical dependencies (`pino`, `postcss-import`)
-- Deleted environment configuration file
-- 5 extraneous packages in node_modules
+To manage interdependencies and ensure efficient progress, the work should be executed in the following phases. Do not proceed to a new phase until the blocking tasks from the previous one are complete.
 
-**Code Quality Issues:**
-- 500+ ESLint warnings and errors
-- Heavy use of `any` types (200+ instances)
-- React hooks missing dependencies (30+ occurrences)
-- Unused imports and variables throughout codebase
-- Control characters in regex patterns
-- Unescaped HTML entities
+**Phase 1: Foundational Cleanup & Key Decisions (COMPLETED)**
+*Goal: Establish a stable foundation and make critical architectural decisions.*
+- [x] **Phase 1 Priority 1:** Eliminate Redundant Files (4.2)
+- [x] **Phase 1 Priority 2:** Consolidate Database Strategy (2.1) & Unify Database Setup (2.2)
+- [x] **Phase 1 DevOps:** Validate Production Configuration (5.1)
+- [x] **Phase 1 Frontend:** Full UI/UX Audit (3.2) & Remove All Placeholders (3.4)
+- [x] **Phase 1 Testing:** Address Existing Failures (1.1)
 
-**Missing Implementations:**
-- Team dashboard core modules (ContentAutomationModule, BulkVideoProcessor)
-- Platform client TODO items (YouTube upload, TikTok comments)
-- AI improvement pipeline components
-- Content ideation and feedback modules
-- Proper error boundaries and validation
+**Phase 2: Core Feature Implementation (COMPLETED)**
+*Goal: Develop and integrate the core features of the application.*
+- [x] **(Backend)** Implement Core Feature Logic (2.3)
+- [x] **(Backend)** Secure All Endpoints (2.4)
+- [x] **(Frontend)** Implement Roadmap Features (3.1) & Application States (3.3)
+- [x] **(Code Quality)** Resolve All Code Tags (4.1) & Refactor Complex Components (4.3)
 
-## 🎯 **PARALLEL DEVELOPMENT GROUPS**
+**Phase 3: Integration, Stabilization & Final Testing (IN PROGRESS)**
+*Goal: Merge all features, stabilize the application, and finalize tests.*
+- [ ] **(Testing)** Stabilize Payment Flow Tests (1.2) - **PARTIALLY BLOCKED:** Unable to add new tests due to tooling issues. Existing tests will be run.
+- [ ] **(Testing)** Finalize E2E Test Suite (1.3) - **UNBLOCKED**
+- [ ] **(DevOps)** Document Deployment Process (5.2) & Configure Production Environment (5.3) - **UNBLOCKED**
+- [ ] **(Code Quality)** Enforce Code Standards (4.4) - Run linters and type checkers
 
-### **GROUP 1: Build & Environment** ⏱️ *1-2 days* | **CRITICAL**
-**Status:** ✅ Primary issues fixed
-**Context:** Foundation for all other development
-**Remaining Tasks:**
-- Test build across different environments
-- Optimize webpack configuration
-- Clean up extraneous packages
-- Validate all environment variables
+**Phase 4: Launch Readiness (UPCOMING)**
+*Goal: Final verification and deployment.*
+- [ ] **(Testing)** Execute Full Regression (1.4) - CODE FREEZE - Final test suite run
+- [ ] **(Deployment)** Production Deployment - After all tests pass.
 
-**Instructions:**
-```powershell
-# Verify build works
-npm run build
-npm run dev
+---
 
-# Clean up dependencies
-npm prune
-npm audit fix
+### **1. Testing & Bug Fixes**
 
-# Test environment setup
-cp .env.example .env.local
-# Fill in actual values and test
-```
-
-### **GROUP 2: Platform Client Architecture** ⏱️ *3-5 days* | **HIGH PRIORITY**
-**Context:** Three platform clients (TikTok, Instagram, YouTube) need standardization
-**Missing:** BasePlatformClient abstract class, unified error handling
+**Context:** A robust testing foundation is essential to prevent regressions and ensure a quality user experience. The project has a history of test failures, particularly in critical areas like the payment flow. The E2E (end-to-end) suite serves as the final quality gate and must be comprehensive and stable.
 
 **Instructions:**
-1. Create `src/app/workflows/data_collection/lib/platforms/base-platform.ts`
-2. Define abstract methods: `fetchPosts`, `uploadContent`, `getAnalytics`
-3. Refactor existing clients to extend base class
-4. Implement missing methods:
-   - `YouTubeClient.uploadVideo()`
-   - `TikTokClient.getVideoComments()`
-5. Add comprehensive retry/rate limiting
-6. Create platform client integration tests
+- [x] **Address Existing Failures:**
+  - Analyze `test-failure-summary.md` and the corresponding screenshots/logs to understand the root cause of each documented failure.
+  - Prioritize and fix the bugs that led to these test failures.
 
-**Key Files to Modify:**
-- `src/app/workflows/data_collection/lib/platforms/youtube-client.ts`
-- `src/app/workflows/data_collection/lib/platforms/tiktok-client.ts`
-- `src/app/workflows/data_collection/lib/platforms/instagram.ts`
+- [ ] **Stabilize Payment Flow Tests:**
+  - Review `src/__tests__/payment-flow.test.tsx` and `src/__tests__/payment-flow-simple.test.tsx`.
+  - **NOTE:** Unable to add new tests for declined payments, retries, subscription changes, and coupon codes due to tooling issues. Existing tests will be run as part of the full regression.
 
-### **GROUP 3: Team Dashboard Core Modules** ⏱️ *5-7 days* | **CRITICAL**
-**Context:** Core business value - enterprise-scale automation missing
-**Current State:** Basic dashboard exists, core automation modules missing
+- [ ] **Finalize E2E Test Suite:**
+  - Audit the entire `e2e/` directory. Ensure that tests cover the most critical user journeys: user registration/login, dashboard interaction, creating and managing clips, and account settings.
+  - Validate the Playwright configuration in `playwright.simple.config.ts` to ensure it runs efficiently and reliably against the production-like environment.
 
-**Instructions:**
-Create these new modules in `src/components/team-dashboard/modules/`:
+- [ ] **Execute Full Regression:**
+  - Run the entire test suite, including all Jest unit/integration tests (`npm test`) and the full Playwright E2E suite (`npx playwright test`).
+  - Debug and resolve any and all failures until the entire suite passes with 100% reliability. No failing tests are acceptable for launch.
 
-1. **ContentAutomationModule.tsx**
-   - Bulk video processing interface
-   - Brand voice specification system
-   - Automated description/hashtag generation
+---
 
-2. **BulkVideoProcessor.tsx**
-   - Handle thousands of videos simultaneously
-   - Progress tracking and queue management
-   - Error handling for scale operations
+### **2. Backend & Database**
 
-3. **AutoPostingScheduler.tsx**
-   - AI-powered optimal timing algorithms
-   - Per-client posting preferences
-   - Cross-platform scheduling management
-
-4. **FeedbackModule.tsx**
-   - Automated client report generation
-   - Email automation for thousands of clients
-   - Tone variation based on client video tone
-
-5. **ContentIdeationModule.tsx**
-   - Automated content suggestion system
-   - Trend analysis and competitor insights
-   - Report generation and delivery
-
-**Integration Requirements:**
-- Connect with existing dashboard layout
-- Use existing state management patterns
-- Maintain accessibility standards
-- Follow existing error handling patterns
-
-### **GROUP 4: Database & Infrastructure** ⏱️ *2-3 days* | **HIGH PRIORITY**
-**Context:** Multiple migration files, unclear database state
-**Issues:** Setup scripts don't work reliably, RLS policies may not be applied
+**Context:** The backend has architectural ambiguities, including the use of both Prisma and a custom Supabase client, which can lead to data inconsistencies and maintenance overhead. Database setup scripts are fragmented, and new features (AI, Autoposting) have defined schemas but may lack complete backend logic.
 
 **Instructions:**
-1. Audit current database vs migration files:
-   ```sql
-   SELECT table_name FROM information_schema.tables WHERE table_schema = 'public';
-   ```
-2. Create reliable setup script in `scripts/setup-database-production.js`
-3. Consolidate and apply migrations in correct order:
-   - `20231027100000_add_usage_and_profiles_columns.sql`
-   - `20250106000001_ai_improvement_tables.sql`
-   - `20250627000000_comprehensive_rls_policies.sql`
-   - `20250627000001_create_storage_buckets.sql`
-4. Verify RLS policies work for all user roles
-5. Test database operations end-to-end
+- [x] **Consolidate Database Strategy:**
+  - Analyze all database interactions in the codebase, mapping out where `prisma/` is used versus where `supabase/` is used.
+  - Make an architectural decision to unify on a **single** database client.
+  - Refactor all data access logic to use the chosen client, removing the other to create a single source of truth for database operations.
 
-### **GROUP 5: Code Quality & Type Safety** ⏱️ *3-4 days* | **HIGH PRIORITY**
-**Context:** 500+ lint warnings blocking production readiness
-**Major Issues:** `any` types, React hooks, unused code
+- [x] **Unify Database Setup:**
+  - Review the three setup scripts: `scripts/setup-database-final.js`, `scripts/setup-database-simple.js`, and `scripts/setup-database.js`.
+  - Consolidate them into a **single, idempotent script** that can be run safely in any environment (local, staging, production) to initialize or migrate the database.
 
-**Instructions:**
-1. **TypeScript Fixes:**
-   - Replace `any` types with proper interfaces
-   - Fix 200+ type safety issues
-   - Add proper type definitions
+- [x] **Implement Core Feature Logic:**
+  - Examine the database schemas defined in `supabase/migrations/`.
+  - Implement the necessary backend services and API endpoints to power the features that rely on these tables.
 
-2. **React Hooks Fixes:**
-   - Fix dependency arrays in 30+ useEffect/useCallback hooks
-   - Add missing dependencies or remove unnecessary ones
+- [x] **Secure All Endpoints:**
+  - Audit every API route and server-side function.
+  - Ensure that every endpoint that mutates data or exposes sensitive information is protected by robust authentication and authorization.
 
-3. **ESLint Cleanup:**
-   - Remove unused imports and variables
-   - Fix regex patterns with control characters
-   - Escape HTML entities properly
-   - Remove duplicate exports
+---
 
-4. **Create Type Definitions:**
-   ```typescript
-   // src/types/platform.ts - proper types instead of any
-   // src/types/analytics.ts - structured analytics types  
-   // src/types/automation.ts - automation workflow types
-   ```
+### **3. Frontend & UI/UX**
 
-**Success Criteria:** `npm run lint` passes with 0 errors
-
-### **GROUP 6: AI/ML Pipeline Implementation** ⏱️ *5-7 days* | **MEDIUM PRIORITY**
-**Context:** AI improvement pipeline partially implemented
-**Missing:** Complete training workflows, A/B testing, model management
+**Context:** A polished, intuitive, and consistent user interface is critical for user adoption and retention. The UI has known gaps documented in the project's roadmaps, and it must gracefully handle all possible states (loading, error, empty data) to feel professional.
 
 **Instructions:**
-1. Complete training data collection and validation
-2. Implement model training session management
-3. Build A/B testing framework with Bayesian statistics
-4. Add model deployment and versioning system
-5. Create monitoring and performance tracking
+- [x] **Implement Roadmap Features:**
+  - Thoroughly review `00.workflow/roadmaps/ui_ux_improvements_roadmap.md`.
+  - Create a concrete task list from the roadmap items and implement the missing UI components and features.
 
-**Key Components:**
-- `src/app/workflows/AI_improvement/` - Complete implementation
-- Database tables: `model_training_sessions`, `trained_models`, `ab_experiments`
-- CLI tools: `train-ai-models.ts`, `manage-models.ts`
+- [x] **Conduct Full UI/UX Audit:**
+  - Manally navigate through the entire application on various screen sizes (desktop, tablet, mobile).
+  - Identify and fix all inconsistencies in styling (buttons, forms, fonts), spacing, and layout. Ensure the application is fully responsive and usable on all target devices.
 
-### **GROUP 7: Testing & Monitoring** ⏱️ *3-4 days* | **MEDIUM PRIORITY**
-**Context:** Comprehensive testing needed for production readiness
+- [x] **Implement Application States:**
+  - For every page and component that fetches data, implement clear loading indicators (e.g., skeletons, spinners).
+  - Implement user-friendly error messages for when API calls or server actions fail. Use the `error.tsx` boundary for unhandled exceptions.
+  - Design and implement elegant "empty states" for pages or lists that do not yet have any data.
+
+- [x] **Remove All Placeholders:**
+  - Perform a global search for `TODO`, `FIXME`, and placeholder text like "Lorem Ipsum".
+  - Replace all placeholders with final, production-ready content, components, and functionality.
+
+---
+
+### **4. Code Quality & Refactoring**
+
+**Context:** The codebase shows signs of technical debt, including duplicate files, dead code, and overly complex components. Addressing this now will improve maintainability, reduce bugs, and make future development faster and safer.
 
 **Instructions:**
-1. Fix failing tests and add missing coverage
-2. Create integration tests for platform clients
-3. Add performance monitoring and alerting
-4. Complete API documentation
-5. Set up CI/CD pipeline improvements
+- [x] **Resolve All Code Tags:**
+  - Use your IDE's search functionality to find every instance of `// TODO:` and `// FIXME:`.
+  - For each tag, either implement the required change or remove the comment if it is no longer relevant.
 
-### **GROUP 8: Advanced Features & Polish** ⏱️ *4-6 days* | **LOW PRIORITY**
-**Context:** Enhancement features for competitive advantage
+- [x] **Eliminate Redundant Files:**
+  - **`tiktok-query`:** Compare `tiktok-query.js` and `tiktok-query.ts`. The TypeScript file (`.ts`) should be the source of truth. Safely delete the JavaScript file (`.js`) and update any imports to point to the `.ts` version.
+  - **`middleware`:** Next.js uses the `middleware.ts` file in the **root** directory. Consolidate any logic from `src/middleware.ts` into the root `middleware.ts` and delete the one in `src/`.
+
+- [x] **Refactor Complex Components:**
+  - Identify the largest and most complex components in the `src/` directory.
+  - Break them down into smaller, more manageable, single-purpose components to improve readability, testability, and reusability.
+
+- [ ] **Enforce Code Standards:**
+  - Run the project's linter (`npm run lint`) and TypeScript compiler (`npm run typecheck` or `tsc --noEmit`).
+  - Fix **every single error and warning** reported by these tools. A clean bill of health is required for launch.
+
+---
+
+### **5. DevOps & Deployment**
+
+**Context:** The project has configurations for production deployment, but they must be rigorously validated to ensure a smooth, secure, and scalable launch. A clearly documented deployment process is critical for consistency and reducing human error.
 
 **Instructions:**
-1. Complete autoposting workflow implementations
-2. Add advanced analytics and reporting
-3. Implement real-time features
-4. Performance optimizations and caching
-5. Advanced security features
+- [x] **Validate Production Configuration:**
+  - Scrutinize `Dockerfile`, `docker-compose.prod.yml`, and `nginx.prod.conf`.
+  - Ensure the Dockerfile uses multi-stage builds for a minimal production image.
+  - Verify that Nginx is configured with appropriate security headers, caching policies, and routing rules.
+  - Build and run the production environment locally (`docker-compose -f docker-compose.prod.yml up`) to confirm it works as expected.
 
-## 🚀 **LAUNCH STRATEGY**
+- [ ] **Document Deployment Process:**
+  - Create a new markdown file named `DEPLOYMENT.md`.
+  - Write a clear, step-by-step guide for deploying the application to production. This must include building the image, pushing it to a container registry, and running it on the production server.
 
-### **Critical Path for ASAP Launch:**
-1. **Day 1:** GROUP 1 ✅ (Complete - build system working)
-2. **Day 2-4:** GROUP 3 + GROUP 4 (parallel - core business value)
-3. **Day 5-7:** GROUP 2 + GROUP 5 (parallel - platform stability)
-4. **Week 2:** GROUP 6, 7, 8 (enhancement features)
+- [ ] **Configure Production Environment:**
+  - Review `.env.example` to ensure all required environment variables for production are documented.
+  - Implement a secure method for managing production secrets (e.g., Doppler, HashiCorp Vault, or cloud provider's secret manager). Do not commit secrets to the repository.
 
-### **Immediate Next Steps:**
-1. ✅ Build system fixed and working
-2. 🔄 Start GROUP 3 (team dashboard modules) - highest business impact
-3. 🔄 Start GROUP 4 (database setup) - can work in parallel
-4. 📋 Assign GROUP 2 (platform clients) - moderate complexity
-5. 📋 Queue GROUP 5 (code quality) - can be done incrementally
-
-### **Success Metrics:**
-- All groups have zero blocking dependencies between them
-- Each group has clear deliverables and success criteria
-- Critical path focuses on core business value (team dashboard automation)
-- Code quality improvements happen in parallel with feature development
-
-This comprehensive analysis provides a clear roadmap for launching ASAP while maintaining code quality and ensuring all critical features are implemented for enterprise-scale social media automation.
+- [ ] **Implement Logging & Monitoring:**
+  - Integrate a production-grade logging service (e.g., Sentry, Datadog, Logtail) to capture errors and application logs.
+  - Create a basic health check endpoint (e.g., `/api/health`) that the production infrastructure can use to verify that the application is running and healthy.

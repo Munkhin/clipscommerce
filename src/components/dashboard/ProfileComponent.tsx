@@ -12,10 +12,10 @@ import { Loader2, CheckCircle2, User, Shield, CircleUserRound } from 'lucide-rea
 
 export default function ProfileComponent() {
   const { user } = useAuth();
-  const [fullName, setFullName] = useState(''); // TODO: In a real app, fetch from user profile
-  const [username, setUsername] = useState(''); // TODO: In a real app, fetch from user profile
-  const [bio, setBio] = useState(''); // TODO: In a real app, fetch from user profile
-  const [website, setWebsite] = useState(''); // TODO: In a real app, fetch from user profile
+  const [fullName, setFullName] = useState('');
+  const [username, setUsername] = useState('');
+  const [bio, setBio] = useState('');
+  const [website, setWebsite] = useState('');
   const [email, setEmail] = useState(user?.email || '');
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -27,16 +27,26 @@ export default function ProfileComponent() {
   // Initialize connection status to prevent hydration mismatch
   const [connectionStatus, setConnectionStatus] = useState<Record<string, { connected: boolean; buttonText: string }>>({});
 
-  // Set user data and random connection status after hydration
+  // Set user data and connection status after hydration
   useEffect(() => {
-    // TODO: Replace with actual API call to fetch user profile data
-    if (user) {
-      // Simulate fetching user data
-      setFullName(user.user_metadata?.full_name || 'John Doe');
-      setUsername(user.user_metadata?.username || 'johndoe');
-      setBio(user.user_metadata?.bio || 'Content creator and social media enthusiast');
-      setWebsite(user.user_metadata?.website || 'https://example.com');
-    }
+    const fetchUserProfile = async () => {
+      if (user) {
+        try {
+          // Use existing user metadata or set defaults
+          setFullName(user.user_metadata?.full_name || user.user_metadata?.name || '');
+          setUsername(user.user_metadata?.username || user.email?.split('@')[0] || '');
+          setBio(user.user_metadata?.bio || '');
+          setWebsite(user.user_metadata?.website || '');
+        } catch (error) {
+          console.error('Error fetching user profile:', error);
+          // Set fallback values
+          setFullName(user.user_metadata?.name || '');
+          setUsername(user.email?.split('@')[0] || '');
+        }
+      }
+    };
+    
+    fetchUserProfile();
 
     const platforms = ['Instagram', 'Twitter', 'Facebook', 'LinkedIn', 'TikTok'];
     const status: Record<string, { connected: boolean; buttonText: string }> = {};
@@ -66,8 +76,21 @@ export default function ProfileComponent() {
     setSuccessMessage(null);
 
     try {
-      // In a real implementation, this would update the user's profile in Supabase
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Update user metadata in Supabase Auth
+      const { createClient } = await import('@/lib/supabase/client');
+      const supabase = createClient();
+      
+      const { error } = await supabase.auth.updateUser({
+        data: {
+          full_name: fullName,
+          username: username,
+          bio: bio,
+          website: website
+        }
+      });
+
+      if (error) throw error;
+      
       setSuccessMessage('Profile updated successfully');
     } catch (err: any) {
       setError(err.message || 'An error occurred while updating your profile');
@@ -82,13 +105,25 @@ export default function ProfileComponent() {
       return;
     }
 
+    if (newPassword.length < 6) {
+      setError('Password must be at least 6 characters long');
+      return;
+    }
+
     setIsUpdating(true);
     setError(null);
     setSuccessMessage(null);
 
     try {
-      // In a real implementation, this would update the user's password in Supabase
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const { createClient } = await import('@/lib/supabase/client');
+      const supabase = createClient();
+      
+      const { error } = await supabase.auth.updateUser({
+        password: newPassword
+      });
+
+      if (error) throw error;
+      
       setSuccessMessage('Password updated successfully');
       setCurrentPassword('');
       setNewPassword('');
