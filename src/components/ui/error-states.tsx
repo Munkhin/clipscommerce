@@ -380,7 +380,7 @@ export function ErrorBoundaryFallback({ error, resetError, className }: ErrorBou
         <div className="space-y-2">
           <h2 className="text-xl font-semibold text-foreground">Something went wrong</h2>
           <p className="text-sm text-muted-foreground">
-            We encountered an unexpected error. Don't worry, our team has been notified.
+            description: 'We encountered an unexpected error. Don&apos;t worry, our team has been notified.'
           </p>
           {error && process.env.NODE_ENV === 'development' && (
             <details className="text-left mt-4 p-3 bg-muted rounded text-xs">

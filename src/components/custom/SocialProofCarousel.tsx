@@ -104,7 +104,7 @@ export function SocialProofCarousel() {
               </div>
             </div>
           </div>
-          <p className="text-lg italic">"{currentTestimonial.content}"</p>
+          <p className="text-lg italic">&quot;{currentTestimonial.content}&quot;</p>
           <div className="flex justify-center gap-2 mt-6">
             {testimonials.map((_, i) => (
               <button

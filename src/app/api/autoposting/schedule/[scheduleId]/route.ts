@@ -81,10 +81,17 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
 
     // Validate status transitions
     if (validatedData.status) {
-      const validTransitions = getValidStatusTransitions((currentPost as any).status);
+      let currentStatus = undefined;
+      if (currentPost && typeof currentPost === 'object' && 'status' in currentPost) {
+        currentStatus = (currentPost as { status: string }).status;
+      }
+      if (!currentStatus) {
+        return NextResponse.json({ error: 'Current post status not found' }, { status: 400 });
+      }
+      const validTransitions = getValidStatusTransitions(currentStatus);
       if (!validTransitions.includes(validatedData.status)) {
         return NextResponse.json({ 
-          error: `Cannot transition from ${(currentPost as any).status} to ${validatedData.status}` 
+          error: `Cannot transition from ${currentStatus} to ${validatedData.status}` 
         }, { status: 400 });
       }
     }
@@ -94,7 +101,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       const postTime = new Date(validatedData.post_time);
       const now = new Date();
       
-      if (postTime <= now && (currentPost as any).status === 'scheduled') {
+      if (postTime <= now && currentPost && typeof currentPost === 'object' && 'status' in currentPost && (currentPost as any).status === 'scheduled') {
         return NextResponse.json({ 
           error: 'Post time must be in the future for scheduled posts' 
         }, { status: 400 });
@@ -113,7 +120,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     }
 
     // Prepare update data
-    const updateData: any = {};
+    const updateData: Record<string, unknown> = {};
     
     if (validatedData.content !== undefined) {
       updateData.content = validatedData.content;
@@ -143,7 +150,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     // Update metadata
     if (validatedData.additional_settings) {
       updateData.metadata = {
-        ...(currentPost as any).metadata,
+        ...(currentPost && typeof currentPost === 'object' && 'metadata' in currentPost ? (currentPost as { metadata: Record<string, unknown> }).metadata : {}),
         additional_settings: validatedData.additional_settings,
       };
     }
@@ -207,7 +214,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     }
 
     // Check if post can be deleted
-    if ((currentPost as any).status === 'posted') {
+    if (currentPost && typeof currentPost === 'object' && 'status' in currentPost && (currentPost as any).status === 'posted') {
       return NextResponse.json({ 
         error: 'Cannot delete a post that has already been posted' 
       }, { status: 400 });
@@ -258,7 +265,7 @@ async function validateMediaUrls(urls: string[]) {
   const validationResults = await Promise.all(
     urls.map(async (url) => {
       try {
-        const response = await fetch(url, { method: 'HEAD', timeout: 5000 } as any);
+        const response = await fetch(url, { method: 'HEAD', timeout: 5000 } as RequestInit);
         return {
           url,
           valid: response.ok,

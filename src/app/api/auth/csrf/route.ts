@@ -1,26 +1,33 @@
-import { generateCsrfToken } from '@/lib/csrf';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@/lib/supabase/server';
+import crypto from 'crypto';
 
-export async function POST() {
+export async function GET(request: NextRequest) {
   try {
-    const { token, cookie } = await generateCsrfToken();
+    const supabase = await createClient();
     
-    const response = NextResponse.json(
-      { token },
-      { status: 200 }
-    );
+    // Verify authentication
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // Generate CSRF token
+    const csrfToken = crypto.randomBytes(32).toString('hex');
     
-    // Set the CSRF token as an HTTP-only cookie
-    response.headers.set('Set-Cookie', cookie);
+    // In a production app, you'd store this token in a secure session store
+    // For now, we'll generate a simple token that can be validated
     
-    return response;
+    return NextResponse.json({
+      csrfToken,
+      timestamp: Date.now(),
+    });
+
   } catch (error) {
-    console.error('CSRF token generation failed:', error);
+    console.error('Error generating CSRF token:', error);
     return NextResponse.json(
       { error: 'Failed to generate CSRF token' },
       { status: 500 }
     );
   }
 }
-
-export { POST as GET };

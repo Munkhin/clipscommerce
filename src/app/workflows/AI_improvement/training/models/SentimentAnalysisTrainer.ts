@@ -559,7 +559,7 @@ export class SentimentAnalysisTrainer extends EventEmitter {
     const confusionMatrix = this.calculateConfusionMatrix(predictions, classes);
     
     let totalCorrect = 0;
-    let totalPredictions = predictions.length;
+    const totalPredictions = predictions.length;
     
     predictions.forEach(pred => {
       if (pred.predicted === pred.actual) totalCorrect++;

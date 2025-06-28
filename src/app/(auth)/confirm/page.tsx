@@ -41,9 +41,9 @@ export default function ConfirmEmailPage() {
         setTimeout(() => {
           router.push(`/dashboard?message=${encodeURIComponent('Email verified successfully!')}&type=success`);
         }, 3000);
-      } catch (error: any) {
+      } catch (error: unknown) {
         setStatus("error");
-        setMessage(error.message || "An error occurred while verifying your email.");
+        setMessage((error as Error).message || "An error occurred while verifying your email.");
       }
     };
 

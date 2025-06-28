@@ -250,7 +250,7 @@ export async function POST(request: NextRequest) {
 }
 
 // Helper functions
-function calculateEngagementMetrics(postData: any) {
+function calculateEngagementMetrics(postData: { likes?: number; comments?: number; shares?: number; views?: number; saves?: number }) {
   const { likes = 0, comments = 0, shares = 0, views = 0, saves = 0 } = postData;
   
   // Calculate engagement rate
@@ -292,7 +292,7 @@ function calculateEngagementMetrics(postData: any) {
   };
 }
 
-async function calculatePostAnalytics(posts: any[]) {
+async function calculatePostAnalytics(posts: { likes?: number; comments?: number; views?: number; engagement_rate?: number; engagement_score?: number; platform: string; id: string; posted_at: string }[]) {
   if (posts.length === 0) {
     return {
       total_posts: 0,
@@ -334,7 +334,7 @@ async function calculatePostAnalytics(posts: any[]) {
     acc[platform].total_likes += post.likes || 0;
     acc[platform].total_views += post.views || 0;
     return acc;
-  }, {} as Record<string, any>);
+  }, {} as Record<string, { count: number; avg_engagement: number; total_likes: number; total_views: number }>);
 
   // Calculate averages for platform breakdown
   Object.keys(platformBreakdown).forEach(platform => {

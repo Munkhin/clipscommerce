@@ -33,7 +33,7 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="bg-black text-white relative overflow-y-auto">
+    <div className="bg-black text-white relative">
       {/* Enhanced Grid Background */}
       <div className="fixed inset-0 -z-10 bg-black">
         <div className="absolute inset-0 [background-image:linear-gradient(to_right,rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.1)_1px,transparent_1px)] [background-size:60px_60px]"></div>

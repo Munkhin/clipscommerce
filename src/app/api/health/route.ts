@@ -11,12 +11,12 @@ interface HealthStatus {
     database: {
       status: 'healthy' | 'unhealthy';
       response_time?: number;
-      details?: any;
+      details?: Record<string, unknown>;
     };
     redis: {
       status: 'healthy' | 'unhealthy';
       response_time?: number;
-      details?: any;
+      details?: Record<string, unknown>;
     };
     api: {
       status: 'healthy' | 'unhealthy';
@@ -31,7 +31,7 @@ interface HealthStatus {
   };
 }
 
-async function checkDatabase(): Promise<{ status: 'healthy' | 'unhealthy'; response_time?: number; details?: any }> {
+async function checkDatabase(): Promise<{ status: 'healthy' | 'unhealthy'; response_time?: number; details?: Record<string, unknown> }> {
   const startTime = Date.now();
   
   try {
@@ -71,7 +71,7 @@ async function checkDatabase(): Promise<{ status: 'healthy' | 'unhealthy'; respo
   }
 }
 
-async function checkRedis(): Promise<{ status: 'healthy' | 'unhealthy'; response_time?: number; details?: any }> {
+async function checkRedis(): Promise<{ status: 'healthy' | 'unhealthy'; response_time?: number; details?: Record<string, unknown> }> {
   const startTime = Date.now();
   
   try {

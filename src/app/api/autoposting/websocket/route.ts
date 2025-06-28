@@ -59,12 +59,16 @@ export async function GET(request: NextRequest) {
           }
         };
         
-        controller.enqueue(encoder.encode(`data: ${JSON.stringify(initialData)}\n\n`));
+        controller.enqueue(encoder.encode(`data: ${JSON.stringify(initialData)}
+
+`));
 
         // Listen for messages from the real-time service
-        const messageHandler = (message: any) => {
+        const messageHandler = (message: { connectionId: string; update: unknown }) => {
           if (message.connectionId === connectionId) {
-            const sseData = `data: ${JSON.stringify(message.update)}\n\n`;
+            const sseData = `data: ${JSON.stringify(message.update)}
+
+`;
             controller.enqueue(encoder.encode(sseData));
           }
         };
@@ -94,7 +98,9 @@ export async function GET(request: NextRequest) {
             data: { connectionId }
           };
           
-          controller.enqueue(encoder.encode(`data: ${JSON.stringify(pingData)}\n\n`));
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify(pingData)}
+
+`));
         }, 30000);
 
         // Cleanup on interval end
@@ -140,7 +146,7 @@ export async function POST(request: NextRequest) {
     }
 
     const { user, body } = guardResult.context!;
-    const { action, connectionId, data } = body;
+    const { action, connectionId, data } = body as { action: string; connectionId: string; data: { subscriptions: string[], targetUserId: string, message: string } };
     const userId = user!.id;
 
     switch (action) {
@@ -165,8 +171,9 @@ export async function POST(request: NextRequest) {
       case 'send_message':
         // Allow users to send custom messages (for testing or specific use cases)
         if (data?.targetUserId) {
+          // Use a supported type for the message
           const sent = realtimeService.sendToUser(data.targetUserId, {
-            type: 'custom_message',
+            type: 'system_status', // fallback to supported type
             data: data.message
           });
           

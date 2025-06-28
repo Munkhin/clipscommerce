@@ -98,8 +98,8 @@ async function assessTrainingDataQuality(userId: string, platforms: string[]) {
   let totalPosts = 0;
   let validPosts = 0;
   let averageEngagement = 0;
-  let issues: string[] = [];
-  let recommendations: string[] = [];
+  const issues: string[] = [];
+  const recommendations: string[] = [];
 
   for (const platform of platforms) {
     // Get posts for this platform
@@ -114,7 +114,14 @@ async function assessTrainingDataQuality(userId: string, platforms: string[]) {
       continue;
     }
 
-    const platformPosts = (posts as any[]) || [];
+    // Type guard to ensure posts is an array of the expected shape
+    let platformPosts: { caption: string; likes: number; comments: number; engagement_rate: number }[] = [];
+    if (Array.isArray(posts)) {
+      platformPosts = (posts as unknown[]).filter((p): p is { caption: string; likes: number; comments: number; engagement_rate: number } =>
+        typeof p === 'object' && p !== null &&
+        'caption' in p && 'likes' in p && 'comments' in p && 'engagement_rate' in p
+      );
+    }
     totalPosts += platformPosts.length;
 
     // Assess data quality

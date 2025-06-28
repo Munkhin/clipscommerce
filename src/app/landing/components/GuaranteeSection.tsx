@@ -28,12 +28,12 @@ export default function GuaranteeSection({ onGetStarted }: GuaranteeSectionProps
           </div>
 
           <h2 className="text-3xl md:text-4xl font-bold text-lightning-DEFAULT mb-6">
-            We Pay Your Next Month If Sales Don't Rise
+            We Pay Your Next Month If Sales Don&apos;t Rise
           </h2>
           
           <p className="text-xl text-lightning-dim/80 mb-10 max-w-3xl mx-auto leading-relaxed">
-            If you don't see a measurable increase in product sales within 14 days of implementing our system, 
-            we'll give you the next month completely free. No questions asked.
+            If you don&apos;t see a measurable increase in product sales within 14 days of implementing our system, 
+            we&apos;ll give you the next month completely free. No questions asked.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">

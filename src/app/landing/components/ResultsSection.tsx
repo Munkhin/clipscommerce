@@ -73,7 +73,7 @@ export default function ResultsSection() {
           transition={{ duration: 0.5, delay: 0.5 }}
         >
           <p className="text-lg text-lightning-dim/80">
-            <span className="font-semibold text-lightning-DEFAULT">These aren't just vanity metrics.</span> Our platform focuses exclusively on revenue-generating actions and sales conversion.
+            <span className="font-semibold text-lightning-DEFAULT">These aren&apos;t just vanity metrics.</span> Our platform focuses exclusively on revenue-generating actions and sales conversion.
           </p>
           <p className="text-lg text-lightning-dim/80 mt-4">
             Why settle for likes when you could be generating actual income?

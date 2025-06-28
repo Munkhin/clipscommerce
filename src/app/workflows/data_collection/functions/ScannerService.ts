@@ -379,7 +379,7 @@ export class ScannerService {
       const { platform, accessToken, userId } = p;
 
       // Create a default ApiConfig
-      let defaultConfig: ApiConfig = {
+      const defaultConfig: ApiConfig = {
         baseUrl: '', // Will be set per platform
         version: '', // Will be set per platform
         rateLimit: { requests: 10, perSeconds: 1 }, // Default placeholder

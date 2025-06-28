@@ -58,6 +58,53 @@ export const ReportMetricsSchema = z.object({
 });
 export type ReportMetrics = z.infer<typeof ReportMetricsSchema>;
 
+// E-commerce Data Types for Historical Performance Analysis
+export const ECommerceDataSchema = z.object({
+  // Sales Metrics
+  totalRevenue: z.number().nonnegative().optional(),
+  conversionRate: z.number().min(0).max(1).optional(), // 0-1 representing percentage
+  averageOrderValue: z.number().nonnegative().optional(),
+  totalOrders: z.number().int().nonnegative().optional(),
+  productViews: z.number().int().nonnegative().optional(),
+  cartAdditions: z.number().int().nonnegative().optional(),
+  
+  // Attribution & Traffic
+  trafficFromSocial: z.number().int().nonnegative().optional(),
+  attributedRevenue: z.number().nonnegative().optional(), // Revenue attributed to social media
+  customerAcquisitionCost: z.number().nonnegative().optional(),
+  returnOnAdSpend: z.number().optional(), // Can be negative
+  
+  // Customer Behavior
+  repeatCustomerRate: z.number().min(0).max(1).optional(),
+  avgSessionDuration: z.number().nonnegative().optional(), // in seconds
+  bounceRate: z.number().min(0).max(1).optional(),
+  
+  // Product Performance
+  topSellingProducts: z.array(z.object({
+    productId: z.string(),
+    productName: z.string(),
+    revenue: z.number().nonnegative(),
+    units: z.number().int().nonnegative(),
+  })).optional(),
+  
+  // Campaign Data
+  campaignData: z.object({
+    impressions: z.number().int().nonnegative().optional(),
+    clicks: z.number().int().nonnegative().optional(),
+    spend: z.number().nonnegative().optional(),
+    ctr: z.number().min(0).max(1).optional(), // Click-through rate
+  }).optional(),
+  
+  // Time Period
+  timeRange: TimeRangeSchema.optional(),
+  
+  // Metadata
+  currency: z.string().default('USD'),
+  dataSource: z.string().optional(), // e.g., 'shopify', 'woocommerce', 'stripe'
+});
+
+export type ECommerceData = z.infer<typeof ECommerceDataSchema>;
+
 // Training data collection specific types
 export const PostMetricsDataSchema = z.object({
   likes: z.number().int().nonnegative(),

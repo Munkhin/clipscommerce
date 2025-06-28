@@ -11,7 +11,7 @@ export default function ApiDocsComingSoon() {
           API Documentation <span className="text-[#8D5AFF]">Coming Soon</span>
         </h1>
         <p className="text-lg text-white/70 max-w-2xl">
-          We're working hard to document every endpoint and example for developers. Sign up for our newsletter or check back soon for the full API reference.
+          We&apos;re working hard to document every endpoint and example for developers. Sign up for our newsletter or check back soon for the full API reference.
         </p>
       </div>
     </div>

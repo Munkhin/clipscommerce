@@ -128,7 +128,7 @@ export class InstagramService {
         return null;
       }
 
-      let existingUser = await this.userRepository.findByPlatformUserId(userNode.id);
+      const existingUser = await this.userRepository.findByPlatformUserId(userNode.id);
       if (existingUser) {
         const updateDto = transformApiUserToUpdateDto(userNode);
         const updatedUser = await this.userRepository.update(existingUser.id, updateDto);

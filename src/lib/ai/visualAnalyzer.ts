@@ -414,7 +414,7 @@ export class VisualAnalyzer {
       const faceCount = this.config.enableFaceDetection ? 0 : 0; // Placeholder
       
       // Determine dominant content type
-      let dominant: VisualAnalysisResult['composition']['dominant'] = 'other';
+      const dominant: VisualAnalysisResult['composition']['dominant'] = 'other';
       
       // Calculate complexity (based on variance of pixel values)
       // Higher variance = more complex image

@@ -108,8 +108,8 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
               Get in Touch
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Have questions about our platform? We'd love to hear from you. 
-              Send us a message and we'll respond as soon as possible.
+              Have questions about our platform? We&apos;d love to hear from you. 
+              Send us a message and we&apos;ll respond as soon as possible.
             </p>
           </div>
         )}
@@ -122,7 +122,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                 Contact Us
               </CardTitle>
               <CardDescription>
-                Fill out the form below and we'll get back to you within 24 hours.
+                Fill out the form below and we&apos;ll get back to you within 24 hours.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -130,7 +130,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                 <Alert className="mb-6 border-green-200 bg-green-50">
                   <CheckCircle className="h-4 w-4 text-green-600" />
                   <AlertDescription className="text-green-800">
-                    Thank you for your message! We'll get back to you soon.
+                    Thank you for your message! We&apos;ll get back to you soon.
                   </AlertDescription>
                 </Alert>
               )}
@@ -281,4 +281,4 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
       </div>
     </section>
   );
-}; 
+};

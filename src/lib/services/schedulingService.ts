@@ -71,7 +71,7 @@ export class SchedulingService {
       
       // Handle different schedule types
       switch (type) {
-        case 'optimal':
+        case 'optimal': {
           // For each platform in the rule, get optimal times
           for (const platform of platforms) {
             const optimalTimes = await this.getOptimalTimes(platform, ruleTz);
@@ -86,8 +86,8 @@ export class SchedulingService {
             });
           }
           break;
-          
-        case 'specific':
+        }  
+        case 'specific': {
           // For specific times on specific days
           const startDate = new Date();
           const endDate = new Date();
@@ -118,8 +118,8 @@ export class SchedulingService {
             currentDate.setDate(currentDate.getDate() + 1);
           }
           break;
-          
-        case 'interval':
+        }  
+        case 'interval': {
           // For regular intervals (e.g., every 3 hours)
           const intervalHours = parseInt(times?.[0] || '3', 10);
           const startTime = new Date();
@@ -141,7 +141,7 @@ export class SchedulingService {
             currentTime = new Date(currentTime.getTime() + intervalHours * 60 * 60 * 1000);
           }
           break;
-          
+        }  
         case 'recurring':
           // For recurring schedules (e.g., every Monday at 9 AM)
           // Similar to 'specific' but with recurring logic

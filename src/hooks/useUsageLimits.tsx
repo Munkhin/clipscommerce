@@ -74,7 +74,7 @@ export function useUsageLimits(subscriptionTier: string = 'lite') {
       const tier = SUBSCRIPTION_TIERS[subscriptionTier];
       throw new Error(
         `Usage limit reached for ${feature}. ` +
-        `You've used all ${tier?.limits[feature]} allowed uses for this month. ` +
+        `You&apos;ve used all ${tier?.limits[feature]} allowed uses for this month. ` +
         `${canUse.resetDate ? `Resets on ${canUse.resetDate.toLocaleDateString()}.` : ''} ` +
         'Upgrade your plan for unlimited usage.'
       );

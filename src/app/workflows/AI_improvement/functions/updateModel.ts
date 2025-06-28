@@ -1,7 +1,7 @@
 ﻿import { featureStore } from './feedbackLoop';
 
 // Placeholder for a simple regression model
-let modelParams = { weight: 1, bias: 0 };
+const modelParams = { weight: 1, bias: 0 };
 
 export function updateModel(): void {
   // Simulate training: fit a linear model engagementRate = weight * likeRatio + bias

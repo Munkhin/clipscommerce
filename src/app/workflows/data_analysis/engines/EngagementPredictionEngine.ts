@@ -143,7 +143,7 @@ export class EngagementPredictionEngine {
   private analyzeContentFeatures(features: Record<string, any>, platform: Platform) {
     let qualityScore = 0.5;
     let engagementScore = 0.5;
-    let timingScore = 0.5;
+    const timingScore = 0.5;
     let overallScore = 0.5;
 
     // Analyze video length

@@ -69,7 +69,7 @@ export function ExitIntentPopup() {
                 <Zap className="w-8 h-8 text-dominator-magenta" />
               </div>
               
-              <h3 className="text-2xl font-bold mb-2">Wait! Don't Go Empty Handed</h3>
+              <h3 className="text-2xl font-bold mb-2">Wait! Don&apos;t Go Empty Handed</h3>
               <p className="text-dominator-light/80 mb-6">
                 Get our <span className="font-bold text-dominator-magenta">FREE 100 Viral Hook Templates</span> when you sign up today.
               </p>

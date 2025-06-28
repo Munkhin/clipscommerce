@@ -185,7 +185,7 @@ export default function ResultsPage() {
                 {/* Testimonial content */}
                 <div className="p-6">
                   <div className="mb-4">
-                    <p className="text-white/80 italic mb-6">"{testimonial.content}"</p>
+                    <p className="text-white/80 italic mb-6">&quot;{testimonial.content}&quot;</p>
                     <div className="flex items-center">
                       <div className="w-10 h-10 bg-[#8D5AFF]/20 rounded-full flex items-center justify-center mr-3">
                         {testimonial.imageSrc ? (

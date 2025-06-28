@@ -61,7 +61,7 @@ export default function PaymentSuccessPage() {
           transition={{ delay: 0.4 }}
           className="text-white/70 mb-6"
         >
-          Thank you for your subscription. You're being redirected to your dashboard.
+          Thank you for your subscription. You&apos;re being redirected to your dashboard.
         </motion.p>
 
         {isRedirecting ? (

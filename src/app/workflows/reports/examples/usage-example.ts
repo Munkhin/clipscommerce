@@ -177,7 +177,7 @@ async function optimizationWorkflowExample() {
   const agent = await quickSetup(supabase);
 
   // Original content idea
-  let request: PredictionRequest = {
+  const request: PredictionRequest = {
     userId: 'user-123',
     platform: 'tiktok',
     contentMetadata: {
@@ -190,7 +190,7 @@ async function optimizationWorkflowExample() {
   };
 
   console.log('Original Content Analysis:');
-  let prediction = await agent.predictEngagement(request);
+  const prediction = await agent.predictEngagement(request);
   console.log(`Engagement Rate: ${(prediction.predictedMetrics.engagementRate * 100).toFixed(2)}%`);
   console.log(`Viral Probability: ${(prediction.viralProbability.score * 100).toFixed(2)}%`);
 

@@ -25,9 +25,9 @@ export class EngagementPredictionController {
     this.logger.log(`Received POST /predict request for platform: ${createPredictionDto.platform}`);
     try {
       return await this.predictionService.predict(createPredictionDto);
-    } catch (error: any) {
-      this.logger.error(`Error in /predict endpoint: ${error?.message || error}`, error?.stack);
-      if (error?.message?.includes('Agent is not available')) {
+    } catch (error: unknown) {
+      this.logger.error(`Error in /predict endpoint: ${(error as Error)?.message || error}`, (error as Error)?.stack);
+      if ((error as Error)?.message?.includes('Agent is not available')) {
         throw new HttpException(
           {
             status: HttpStatus.SERVICE_UNAVAILABLE,
@@ -74,8 +74,8 @@ export class EngagementPredictionController {
     try {
       const status = await this.predictionService.getAgentStatus();
       return status;
-    } catch (error: any) {
-        this.logger.error(`Error in /status endpoint: ${error?.message || error}`, error?.stack);
+    } catch (error: unknown) {
+        this.logger.error(`Error in /status endpoint: ${(error as Error)?.message || error}`, (error as Error)?.stack);
         throw new HttpException(
             {
                 status: HttpStatus.INTERNAL_SERVER_ERROR,
@@ -85,4 +85,4 @@ export class EngagementPredictionController {
         );
     }
   }
-} 
+}

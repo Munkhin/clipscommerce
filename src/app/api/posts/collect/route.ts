@@ -207,13 +207,13 @@ function calculateEstimatedCompletion(platforms: string[]): string {
   return completionTime.toISOString();
 }
 
-async function storeCollectionJob(job: any) {
+async function storeCollectionJob(job: Record<string, unknown>) {
   // Store in database or job queue
   // For now, we'll store in memory or use a simple table
   console.log('Storing collection job:', job);
 }
 
-async function startPostCollection(job: any) {
+async function startPostCollection(job: { collection_id: string; platforms: string[]; user_id: string; date_range: { start_date?: string; end_date?: string }; include_metrics: boolean }) {
   const supabase = createClient();
 
   try {
@@ -267,7 +267,7 @@ async function startPostCollection(job: any) {
 async function updateCollectionStatus(
   collectionId: string, 
   status: string, 
-  progress?: number, 
+  progress?: number | null, 
   message?: string,
   currentPlatform?: string
 ) {
@@ -278,7 +278,7 @@ async function updateCollectionStatus(
 async function collectPlatformPosts(
   userId: string, 
   platform: string, 
-  dateRange?: any,
+  dateRange?: { start_date?: string; end_date?: string },
   includeMetrics: boolean = true
 ) {
   // This would integrate with the existing data collection services
@@ -313,7 +313,7 @@ async function collectPlatformPosts(
   return mockPosts;
 }
 
-async function storePosts(posts: any[]) {
+async function storePosts(posts: Record<string, unknown>[]) {
   const supabase = createClient();
 
   try {

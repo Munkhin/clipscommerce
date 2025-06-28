@@ -59,15 +59,7 @@ const initialColumns: Column[] = [
   { id: 'ready', title: 'Ready to Post', icon: TrendingUp, color: 'from-emerald-500 to-green-600' },
 ];
 
-// TODO: Replace with actual fetching of user's videos from a database/API.
-// This initial state should be empty or load from a user-specific source.
-const initialVideos: Video[] = [
-  // { id: 'vid1', title: 'Amazing Product Demo.mp4', status: 'To Do', columnId: 'todo' },
-  // { id: 'vid2', title: 'How To Use Our New Feature.mov', status: 'To Do', columnId: 'todo' },
-  // { id: 'vid3', title: 'Client Testimonial Short.mp4', status: 'Processing', columnId: 'processing', loading: true },
-  // { id: 'vid4', title: 'Weekly Update - Ep 5.avi', status: 'Review', columnId: 'review' },
-  // { id: 'vid5', title: 'Grand Launch Announcement.mp4', status: 'Ready', columnId: 'ready' },
-];
+const initialVideos: Video[] = [];
 
 interface SortableVideoCardProps {
   video: Video;
@@ -179,6 +171,7 @@ function SortableVideoCard({ video }: SortableVideoCardProps) {
 }
 
 export default function AccelerateComponent() {
+  const { user } = useAuth();
   const [videos, setVideos] = useState<Video[]>(initialVideos);
   const [columns] = useState<Column[]>(initialColumns);
   const [activeVideo, setActiveVideo] = useState<Video | null>(null);
@@ -195,13 +188,50 @@ export default function AccelerateComponent() {
     })
   );
 
-  // Simulate initial loading
+  // Load user videos
   React.useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsInitialLoading(false);
-    }, 1500);
-    return () => clearTimeout(timer);
-  }, []);
+    async function loadUserVideos() {
+      if (!user?.id) {
+        setIsInitialLoading(false);
+        return;
+      }
+
+      try {
+        const { UserVideoService } = await import('@/services/userVideoService');
+        const videoService = new UserVideoService();
+        
+        const result = await videoService.getUserVideos(user.id);
+        
+        if (result.success && result.data) {
+          // Convert UserVideo to Video format
+          const convertedVideos: Video[] = result.data.map(userVideo => ({
+            id: userVideo.id,
+            title: userVideo.title,
+            thumbnailUrl: userVideo.thumbnailUrl,
+            status: userVideo.status,
+            columnId: userVideo.columnId,
+            result: userVideo.result,
+            error: userVideo.error,
+            loading: userVideo.loading,
+            uploadProgress: userVideo.uploadProgress
+          }));
+          
+          setVideos(convertedVideos);
+        } else {
+          setHasError(true);
+          setErrorMessage(result.error || 'Failed to load videos');
+        }
+      } catch (error) {
+        console.error('Error loading user videos:', error);
+        setHasError(true);
+        setErrorMessage('Failed to load videos');
+      } finally {
+        setIsInitialLoading(false);
+      }
+    }
+
+    loadUserVideos();
+  }, [user?.id]);
 
   const handleAddVideos = () => {
     fileInputRef.current?.click();
@@ -209,38 +239,99 @@ export default function AccelerateComponent() {
 
   const handleFileSelected = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
-    if (files && files.length > 0) {
-      const newVideos: Video[] = Array.from(files).map((file, index) => ({
-        id: `new-vid-${Date.now()}-${index}`,
+    if (!files || files.length === 0 || !user?.id) return;
+
+    try {
+      const { UserVideoService } = await import('@/services/userVideoService');
+      const videoService = new UserVideoService();
+
+      // Create temporary video entries to show in UI
+      const tempVideos: Video[] = Array.from(files).map((file, index) => ({
+        id: `temp-${Date.now()}-${index}`,
         title: file.name,
-        status: 'Processing',
-        columnId: 'processing',
+        status: 'uploading',
+        columnId: 'todo',
         thumbnailUrl: '',
         loading: true,
         uploadProgress: 0,
       }));
-      
-      setVideos(prevVideos => [...newVideos, ...prevVideos]);
-      
-      // Simulate upload progress
-      newVideos.forEach((video, idx) => {
+
+      setVideos(prevVideos => [...tempVideos, ...prevVideos]);
+
+      // Upload each file
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const tempVideo = tempVideos[i];
+
+        // Simulate upload progress
         let progress = 0;
-        const uploadInterval = setInterval(() => {
-          progress += Math.random() * 20;
-          if (progress >= 100) {
-            progress = 100;
-            clearInterval(uploadInterval);
-            // Start processing after upload
-            setTimeout(() => {
-              processVideo(video.id, files[idx]);
-            }, 500);
-          }
+        const progressInterval = setInterval(() => {
+          progress += Math.random() * 15 + 5;
+          if (progress >= 95) progress = 95; // Stop at 95% until upload completes
+          
           setVideos(prev => prev.map(v =>
-            v.id === video.id ? { ...v, uploadProgress: Math.round(progress) } : v
+            v.id === tempVideo.id ? { ...v, uploadProgress: Math.round(progress) } : v
           ));
         }, 200);
-      });
+
+        try {
+          const result = await videoService.uploadVideo(user.id, {
+            file,
+            title: file.name,
+          });
+
+          clearInterval(progressInterval);
+
+          if (result.success && result.videoId) {
+            // Replace temp video with actual video
+            setVideos(prev => prev.map(v =>
+              v.id === tempVideo.id ? {
+                ...v,
+                id: result.videoId!,
+                status: 'processing',
+                columnId: 'processing',
+                uploadProgress: 100,
+                loading: true
+              } : v
+            ));
+
+            // Remove upload progress after a short delay
+            setTimeout(() => {
+              setVideos(prev => prev.map(v =>
+                v.id === result.videoId ? { ...v, uploadProgress: undefined } : v
+              ));
+            }, 1000);
+          } else {
+            // Handle upload error
+            setVideos(prev => prev.map(v =>
+              v.id === tempVideo.id ? {
+                ...v,
+                status: 'error',
+                error: result.error || 'Upload failed',
+                loading: false,
+                uploadProgress: undefined
+              } : v
+            ));
+          }
+        } catch (error) {
+          clearInterval(progressInterval);
+          console.error('Upload error:', error);
+          
+          setVideos(prev => prev.map(v =>
+            v.id === tempVideo.id ? {
+              ...v,
+              status: 'error',
+              error: 'Upload failed',
+              loading: false,
+              uploadProgress: undefined
+            } : v
+          ));
+        }
+      }
+    } catch (error) {
+      console.error('File upload error:', error);
     }
+
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -348,7 +439,7 @@ export default function AccelerateComponent() {
               columnVideos.findIndex(v => v.id === over.id)
             );
             
-            let updatedVideos: Video[] = [];
+            const updatedVideos: Video[] = [];
             columns.forEach(col => {
               if (col.id === oldColumnId) {
                 updatedVideos.push(...reorderedColumnVideos);
@@ -373,22 +464,60 @@ export default function AccelerateComponent() {
     setTimeout(() => setIsInitialLoading(false), 1000);
   };
 
-  const handleRemoveVideo = (videoId: string) => {
-    setVideos(prev => prev.filter(v => v.id !== videoId));
+  const handleRemoveVideo = async (videoId: string) => {
+    if (!user?.id) return;
+
+    try {
+      const { UserVideoService } = await import('@/services/userVideoService');
+      const videoService = new UserVideoService();
+      
+      const result = await videoService.deleteVideo(videoId, user.id);
+      
+      if (result.success) {
+        setVideos(prev => prev.filter(v => v.id !== videoId));
+      } else {
+        console.error('Failed to delete video:', result.error);
+        // Still remove from UI if backend deletion fails
+        setVideos(prev => prev.filter(v => v.id !== videoId));
+      }
+    } catch (error) {
+      console.error('Error removing video:', error);
+      // Remove from UI anyway to prevent stuck state
+      setVideos(prev => prev.filter(v => v.id !== videoId));
+    }
   };
 
-  const handleRetryVideo = (videoId: string) => {
-    const video = videos.find(v => v.id === videoId);
-    if (video) {
+  const handleRetryVideo = async (videoId: string) => {
+    if (!user?.id) return;
+
+    try {
+      const { UserVideoService } = await import('@/services/userVideoService');
+      const videoService = new UserVideoService();
+      
+      // Update UI immediately
       setVideos(prev => prev.map(v =>
         v.id === videoId
-          ? { ...v, loading: true, error: undefined, status: 'Processing', columnId: 'processing' }
+          ? { ...v, loading: true, error: undefined, status: 'processing', columnId: 'processing' }
           : v
       ));
-      // Simulate re-processing
-      setTimeout(() => {
-        processVideo(videoId, new File([''], video.title));
-      }, 1000);
+
+      const result = await videoService.retryVideoProcessing(videoId);
+      
+      if (!result.success) {
+        // Revert UI state if retry failed
+        setVideos(prev => prev.map(v =>
+          v.id === videoId
+            ? { ...v, loading: false, error: result.error || 'Retry failed', status: 'error', columnId: 'todo' }
+            : v
+        ));
+      }
+    } catch (error) {
+      console.error('Error retrying video:', error);
+      setVideos(prev => prev.map(v =>
+        v.id === videoId
+          ? { ...v, loading: false, error: 'Retry failed', status: 'error', columnId: 'todo' }
+          : v
+      ));
     }
   };
 

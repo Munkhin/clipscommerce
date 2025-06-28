@@ -139,7 +139,7 @@ export default function SolutionsPage() {
             </h1>
             <p className="text-xl text-white/80 mb-8">
               AI-powered content strategies tailored for your business model. 
-              Whether you're selling products or growing your brand, we have the perfect solution.
+              Whether you&apos;re selling products or growing your brand, we have the perfect solution.
             </p>
             
             {/* Enhanced Stats */}
@@ -280,7 +280,7 @@ export default function SolutionsPage() {
                     <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
                   ))}
                 </div>
-                <p className="text-white/80 mb-6 italic">"{testimonial.content}"</p>
+                <p className="text-white/80 mb-6 italic">&quot;{testimonial.content}&quot;</p>
                 <div className="flex items-center justify-between">
                   <div>
                     <h4 className="font-semibold text-white">{testimonial.name}</h4>
@@ -360,4 +360,4 @@ export default function SolutionsPage() {
       <Footer />
     </div>
   );
-} 
+}

@@ -86,7 +86,7 @@ export class InstagramClient extends BasePlatformClient {
       const media = await mediaResponse.json() as InstagramMedia;
       
       // Then get the insights
-      let insightMetrics = ['engagement', 'impressions', 'reach', 'saved'];
+      const insightMetrics = ['engagement', 'impressions', 'reach', 'saved'];
       if (mediaProductType === 'STORY') {
         insightMetrics.push('story_replies', 'story_exits');
       } else {

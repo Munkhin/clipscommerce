@@ -44,8 +44,8 @@ export class EngagementPredictionService implements OnModuleInit {
       this.logger.log(
         `EngagementPredictionAgent initialized. RMSE: ${evaluation.engagementModel.rmse.toFixed(4)}, Accuracy: ${evaluation.viralModel.accuracy.toFixed(4)}`,
       );
-    } catch (error: any) {
-      this.logger.error('Failed to initialize EngagementPredictionAgent', error?.stack);
+    } catch (error: unknown) {
+      this.logger.error('Failed to initialize EngagementPredictionAgent', (error as Error)?.stack);
       // Depending on requirements, might throw error to prevent app start or run in a degraded mode.
     }
   }
@@ -78,8 +78,8 @@ export class EngagementPredictionService implements OnModuleInit {
       const predictionResult: EngagementPrediction = await this.agent.predictEngagement(request);
       this.logger.log(`Prediction successful for platform: ${createPredictionDto.platform}`);
       return this.mapToResponseDto(predictionResult);
-    } catch (error: any) {
-      this.logger.error(`Error during prediction: ${error?.message}`, error?.stack);
+    } catch (error: unknown) {
+      this.logger.error(`Error during prediction: ${(error as Error)?.message}`, (error as Error)?.stack);
       throw error; // Re-throw to be handled by NestJS exception filters
     }
   }
@@ -131,4 +131,4 @@ export class EngagementPredictionService implements OnModuleInit {
         modelPerformance: performance,
     };
   }
-} 
+}

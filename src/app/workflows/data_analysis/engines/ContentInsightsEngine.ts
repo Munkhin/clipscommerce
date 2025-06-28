@@ -1,112 +1,355 @@
-// Placeholder for ContentInsightsEngine
-import { BaseAnalysisRequest, VideoOptimizationAnalysisData, AnalysisResult } from '../types';
-
-import { DetailedPlatformMetrics, AudienceDemographics, PeakEngagementTime, ContentFormatPerformance } from '../types'; // Added new types
+import { BaseAnalysisRequest, VideoOptimizationAnalysisData, AnalysisResult, DetailedPlatformMetrics } from '../types/analysis_types';
+import { ContentInsightsService } from '@/services/contentInsightsService';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 export class ContentInsightsEngine {
-  constructor() {}
+  private contentInsightsService: ContentInsightsService;
+  private supabase;
+
+  constructor() {
+    this.contentInsightsService = new ContentInsightsService();
+    this.supabase = createClientComponentClient();
+  }
 
   async getTopPerformingContentInsights(
     request: BaseAnalysisRequest
   ): Promise<AnalysisResult<Pick<VideoOptimizationAnalysisData, 'topPerformingVideoCaptions' | 'trendingHashtags'>>> {
+    const startTime = Date.now();
     console.log(`ContentInsightsEngine: Analyzing content for userId: ${request.userId}`);
-    // TODO (PRIORITY 1 - Core Engine): Implement actual logic for getTopPerformingContentInsights.
-    // 1. Integrate with Platform Clients (e.g., TikTokClient, InstagramClient, YouTubeClient) to fetch the user's top N videos 
-    //    from the last X days/weeks (configurable or based on request.timeRange if applicable).
-    //    - Consider metrics for 'top-performing': views, engagement rate, likes, comments.
-    //    - Handle cases where a user has no videos or insufficient data on a platform.
-    // 2. Analyze Captions: For the fetched top videos, extract their captions.
-    //    - Potentially use EnhancedTextAnalyzer or similar NLP tools to identify common keywords, topics, sentiment, or successful patterns in these captions.
-    //    - Store or return representative examples of top-performing captions.
-    // 3. Identify Trending/Effective Hashtags:
-    //    - Aggregate hashtags used in the user's top-performing content.
-    //    - (Optional/Advanced) If platform APIs support it, query for currently trending hashtags relevant to the user's niche/topic.
-    //    - Analyze the performance of posts associated with specific hashtags to determine their effectiveness for this user.
-    //    - Return a list of suggested/trending hashtags with potential rank or estimated reach if available.
-    // 4. Error Handling: Implement robust error handling for API calls, data processing, and cases with no/insufficient data.
-    //    - Return `success: false` and an appropriate `error` object in `AnalysisResult` on failure.
-    // 5. Remove Placeholder: Once implemented, remove the 'Using placeholder data' warning from metadata.
 
-    const placeholderData: Pick<VideoOptimizationAnalysisData, 'topPerformingVideoCaptions' | 'trendingHashtags'> = {
-      topPerformingVideoCaptions: [
-        'Check out this amazing new product! #new #awesome',
-        'Tutorial: How to do X in 5 easy steps! #tutorial #howto',
-      ],
-      trendingHashtags: [
-        { tag: '#viral', rank: 1, estimatedReach: 1000000 },
-        { tag: '#fyp', rank: 2, estimatedReach: 800000 },
-      ],
-    };
+    try {
+      // Get user's niche for better hashtag recommendations
+      const userNiche = await this.getUserNiche(request.userId);
 
-    return {
-      success: true,
-      data: placeholderData,
-      metadata: {
-        generatedAt: new Date(),
-        source: 'ContentInsightsEngine',
-        warnings: ['Using placeholder data'],
-        correlationId: request.correlationId,
-      },
-    };
+      // Analyze user's content for top-performing captions and hashtag insights
+      const userContentAnalysis = await this.contentInsightsService.analyzeUserContent(
+        request.userId,
+        request.platform,
+        request.timeRange,
+        50 // Analyze top 50 pieces of content
+      );
+
+      // Get trending hashtags relevant to the user's niche
+      const trendingHashtags = await this.contentInsightsService.getTrendingHashtags(
+        request.platform,
+        userNiche,
+        20
+      );
+
+      // Combine user's best performing hashtags with trending ones
+      const combinedHashtags = this.combineHashtagRecommendations(
+        userContentAnalysis.hashtagPerformance,
+        trendingHashtags
+      );
+
+      // Store insights for future reference
+      await this.storeContentInsights(request.userId, request.platform, {
+        captions: userContentAnalysis.topCaptions,
+        hashtags: combinedHashtags,
+        contentPatterns: userContentAnalysis.contentPatterns
+      });
+
+      const processingTime = Date.now() - startTime;
+
+      return {
+        success: true,
+        data: {
+          topPerformingVideoCaptions: userContentAnalysis.topCaptions,
+          trendingHashtags: combinedHashtags
+        },
+        metadata: {
+          generatedAt: new Date(),
+          source: 'ContentInsightsEngine',
+          correlationId: request.correlationId,
+          processingTime,
+          cacheStatus: 'miss',
+          warnings: userContentAnalysis.topCaptions.length === 0 ? ['No content data available for analysis'] : undefined
+        },
+      };
+
+    } catch (error) {
+      console.error('ContentInsightsEngine analysis failed:', error);
+      const processingTime = Date.now() - startTime;
+
+      return {
+        success: false,
+        error: {
+          message: 'Content insights analysis failed',
+          code: 'CONTENT_INSIGHTS_ERROR',
+          details: error instanceof Error ? error.message : 'Unknown error'
+        },
+        metadata: {
+          generatedAt: new Date(),
+          source: 'ContentInsightsEngine',
+          correlationId: request.correlationId,
+          processingTime,
+          warnings: ['Analysis failed - check data availability and platform connectivity']
+        },
+      };
+    }
   }
 
   async getDetailedPlatformAnalytics(
     request: BaseAnalysisRequest
   ): Promise<AnalysisResult<DetailedPlatformMetrics>> {
+    const startTime = Date.now();
     console.log(`ContentInsightsEngine: Fetching detailed platform analytics for userId: ${request.userId}, platform: ${request.platform}`);
-    // TODO (PRIORITY 1 - Core Engine): Implement actual logic for getDetailedPlatformAnalytics.
-    // 1. Integrate with Platform Clients to fetch detailed analytics data.
-    //    - Audience Demographics: Age, gender, location (top countries/cities).
-    //    - Peak Engagement Times: Days and hours when the user's audience is most active.
-    //    - Content Format Performance: Metrics for different post types (Reels, Stories, static posts, etc.).
-    // 2. Process and structure the data according to the DetailedPlatformMetrics schema.
-    // 3. Handle API errors, data unavailability, and platform-specific nuances.
 
-    // Mock data for now
-    const mockAudienceDemographics: AudienceDemographics = {
-      ageGroups: { '18-24': 0.35, '25-34': 0.40, '35-44': 0.15 },
-      genderDistribution: { 'female': 0.6, 'male': 0.38, 'other': 0.02 },
-      topCountries: { 'US': 0.7, 'CA': 0.1, 'UK': 0.05 },
-    };
+    try {
+      // Check for cached analytics first
+      const cachedAnalytics = await this.getCachedPlatformAnalytics(
+        request.userId,
+        request.platform,
+        60 // 1 hour cache
+      );
 
-    const mockPeakEngagementTimes: PeakEngagementTime[] = [
-      { dayOfWeek: 'Friday', hourOfDay: 18, engagementScore: 1200 },
-      { dayOfWeek: 'Saturday', hourOfDay: 15, engagementScore: 1500 },
-      { dayOfWeek: 'Wednesday', hourOfDay: 12, engagementScore: 950 },
-    ];
+      if (cachedAnalytics) {
+        return {
+          success: true,
+          data: cachedAnalytics,
+          metadata: {
+            generatedAt: new Date(),
+            source: 'ContentInsightsEngine.getDetailedPlatformAnalytics',
+            correlationId: request.correlationId,
+            processingTime: Date.now() - startTime,
+            cacheStatus: 'hit',
+            warnings: ['Using cached analytics data']
+          }
+        };
+      }
 
-    const mockContentFormatPerformance: ContentFormatPerformance[] = [
-      {
-        formatName: 'Reels',
-        averageViews: 15000,
-        averageLikes: 1200,
-        averageEngagementRate: 0.08,
-        totalPosts: 20,
-      },
-      {
-        formatName: 'Static Image Post',
-        averageViews: 5000,
-        averageLikes: 400,
-        averageEngagementRate: 0.075,
-        totalPosts: 50,
-      },
-    ];
+      // Fetch fresh detailed analytics
+      const platformAnalytics = await this.contentInsightsService.getDetailedPlatformAnalytics(
+        request.userId,
+        request.platform,
+        request.timeRange
+      );
 
-    const placeholderData: DetailedPlatformMetrics = {
-      audienceDemographics: mockAudienceDemographics,
-      peakEngagementTimes: mockPeakEngagementTimes,
-      contentFormatPerformance: mockContentFormatPerformance,
-    };
+      // Store analytics for caching
+      await this.storePlatformAnalytics(request.userId, request.platform, platformAnalytics);
 
-    return {
-      success: true,
-      data: placeholderData,
-      metadata: {
-        generatedAt: new Date(),
-        source: 'ContentInsightsEngine.getDetailedPlatformAnalytics',
-        warnings: ['Using placeholder data for detailed analytics'],
-        correlationId: request.correlationId,
-      },
-    };
+      const processingTime = Date.now() - startTime;
+
+      return {
+        success: true,
+        data: platformAnalytics,
+        metadata: {
+          generatedAt: new Date(),
+          source: 'ContentInsightsEngine.getDetailedPlatformAnalytics',
+          correlationId: request.correlationId,
+          processingTime,
+          cacheStatus: 'miss'
+        },
+      };
+
+    } catch (error) {
+      console.error('Platform analytics analysis failed:', error);
+      const processingTime = Date.now() - startTime;
+
+      return {
+        success: false,
+        error: {
+          message: 'Platform analytics analysis failed',
+          code: 'PLATFORM_ANALYTICS_ERROR',
+          details: error instanceof Error ? error.message : 'Unknown error'
+        },
+        metadata: {
+          generatedAt: new Date(),
+          source: 'ContentInsightsEngine.getDetailedPlatformAnalytics',
+          correlationId: request.correlationId,
+          processingTime,
+          warnings: ['Analytics failed - check platform API connectivity']
+        },
+      };
+    }
+  }
+
+  async getContentRecommendations(
+    userId: string,
+    platform: string,
+    contentType?: string,
+    limit: number = 10
+  ): Promise<AnalysisResult<{ captions: string[]; hashtags: any[]; patterns: any[] }>> {
+    try {
+      const baseRequest: BaseAnalysisRequest = {
+        userId,
+        platform: platform as any,
+        timeRange: {
+          start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(), // Last 30 days
+          end: new Date().toISOString()
+        }
+      };
+
+      const insights = await this.getTopPerformingContentInsights(baseRequest);
+      
+      if (insights.success && insights.data) {
+        // Filter and enhance recommendations based on content type
+        const recommendations = {
+          captions: insights.data.topPerformingVideoCaptions.slice(0, limit),
+          hashtags: insights.data.trendingHashtags
+            .filter(tag => tag.estimatedReach && tag.estimatedReach > 10000)
+            .slice(0, limit),
+          patterns: [] // Content patterns from analysis
+        };
+
+        return {
+          success: true,
+          data: recommendations,
+          metadata: {
+            generatedAt: new Date(),
+            source: 'ContentInsightsEngine'
+          }
+        };
+      }
+
+      return insights as any;
+
+    } catch (error) {
+      return {
+        success: false,
+        error: {
+          message: 'Failed to get content recommendations',
+          code: 'CONTENT_RECOMMENDATIONS_ERROR',
+          details: error instanceof Error ? error.message : 'Unknown error'
+        },
+        metadata: {
+          generatedAt: new Date(),
+          source: 'ContentInsightsEngine'
+        }
+      };
+    }
+  }
+
+  private async getUserNiche(userId: string): Promise<string | undefined> {
+    try {
+      const { data: profile, error } = await this.supabase
+        .from('user_profiles')
+        .select('niche, industry, content_category')
+        .eq('user_id', userId)
+        .single();
+
+      if (error) {
+        console.warn('Could not fetch user niche:', error);
+        return undefined;
+      }
+
+      return profile?.niche || profile?.industry || profile?.content_category;
+    } catch (error) {
+      console.warn('Error fetching user niche:', error);
+      return undefined;
+    }
+  }
+
+  private combineHashtagRecommendations(
+    userHashtags: any[],
+    trendingHashtags: any[]
+  ): any[] {
+    // Create a map to avoid duplicates and merge performance data
+    const hashtagMap = new Map();
+
+    // Add user's best performing hashtags
+    userHashtags.slice(0, 10).forEach((hashtag, index) => {
+      hashtagMap.set(hashtag.hashtag, {
+        tag: hashtag.hashtag,
+        rank: index + 1,
+        estimatedReach: hashtag.estimatedReach,
+        userPerformance: hashtag.averageEngagement,
+        source: 'user_content'
+      });
+    });
+
+    // Add trending hashtags (if not already present)
+    trendingHashtags.forEach((hashtag, index) => {
+      if (!hashtagMap.has(hashtag.tag)) {
+        hashtagMap.set(hashtag.tag, {
+          tag: hashtag.tag,
+          rank: hashtagMap.size + 1,
+          estimatedReach: hashtag.estimatedReach,
+          source: 'trending'
+        });
+      } else {
+        // Update existing with trending data
+        const existing = hashtagMap.get(hashtag.tag);
+        existing.estimatedReach = Math.max(existing.estimatedReach, hashtag.estimatedReach);
+        existing.trendingRank = hashtag.rank;
+      }
+    });
+
+    // Convert back to array and sort by combined performance
+    return Array.from(hashtagMap.values())
+      .sort((a, b) => {
+        // Prioritize hashtags with both user performance and trending status
+        const scoreA = (a.userPerformance || 0) * 100 + (a.estimatedReach / 10000);
+        const scoreB = (b.userPerformance || 0) * 100 + (b.estimatedReach / 10000);
+        return scoreB - scoreA;
+      })
+      .slice(0, 15);
+  }
+
+  private async storeContentInsights(
+    userId: string,
+    platform: string,
+    insights: any
+  ): Promise<void> {
+    try {
+      await this.supabase
+        .from('content_insights_analyses')
+        .insert({
+          user_id: userId,
+          platform,
+          insights_data: insights,
+          analyzed_at: new Date().toISOString()
+        });
+    } catch (error) {
+      console.warn('Failed to store content insights:', error);
+    }
+  }
+
+  private async storePlatformAnalytics(
+    userId: string,
+    platform: string,
+    analytics: DetailedPlatformMetrics
+  ): Promise<void> {
+    try {
+      await this.supabase
+        .from('platform_analytics_cache')
+        .insert({
+          user_id: userId,
+          platform,
+          analytics_data: analytics,
+          cached_at: new Date().toISOString()
+        });
+    } catch (error) {
+      console.warn('Failed to store platform analytics:', error);
+    }
+  }
+
+  private async getCachedPlatformAnalytics(
+    userId: string,
+    platform: string,
+    maxAgeMinutes: number
+  ): Promise<DetailedPlatformMetrics | null> {
+    try {
+      const cutoffTime = new Date(Date.now() - maxAgeMinutes * 60 * 1000).toISOString();
+
+      const { data, error } = await this.supabase
+        .from('platform_analytics_cache')
+        .select('analytics_data')
+        .eq('user_id', userId)
+        .eq('platform', platform)
+        .gte('cached_at', cutoffTime)
+        .order('cached_at', { ascending: false })
+        .limit(1)
+        .single();
+
+      if (error || !data) {
+        return null;
+      }
+
+      return data.analytics_data;
+    } catch (error) {
+      console.warn('Error retrieving cached analytics:', error);
+      return null;
+    }
   }
 }

@@ -66,7 +66,7 @@ export function SubscriptionPromptPopup({
                   Upgrade to Continue
                 </h2>
                 <p className="text-muted-foreground">
-                  You've reached your free usage limit for {featureName}. Upgrade to unlock unlimited access to all features.
+                  You&apos;ve reached your free usage limit for {featureName}. Upgrade to unlock unlimited access to all features.
                 </p>
               </div>
               

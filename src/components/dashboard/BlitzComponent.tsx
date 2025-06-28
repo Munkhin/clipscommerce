@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/providers/AuthProvider';
 import GlassCard from '@/components/ui/GlassCard';
 import { Button } from '@/components/ui/button';
@@ -12,29 +12,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { format, addDays, startOfWeek, isSameDay } from 'date-fns';
-import { Calendar as CalendarIcon, Clock, Instagram, Twitter, Facebook, Linkedin, Loader2, CheckCircle2, Video, Image, Type, Star, GripVertical, Sparkles, TrendingUp, Zap } from 'lucide-react';
+import { Calendar as CalendarIcon, Clock, Instagram, Twitter, Facebook, Linkedin, Loader2, CheckCircle2, Video, Image, Type, Star, GripVertical, Sparkles, TrendingUp, Zap, AlertCircle, Wifi, WifiOff } from 'lucide-react';
+import { schedulingApiService, type ScheduledPost, type CalendarPost } from '@/services/schedulingApiService';
+import { realtimeService, type RealtimeUpdate } from '@/services/realtimeService';
 
-type ScheduledPost = {
-  id: string;
-  content: string;
-  platform: string;
-  scheduledDate: Date;
-  scheduledTime: string;
-  status: 'scheduled' | 'posted' | 'failed';
-  type: 'video' | 'image' | 'carousel' | 'text';
-  thumbnail?: string;
-  isOptimalTime?: boolean;
-};
-
-type CalendarPost = {
-  id: string;
-  content: string;
-  type: 'video' | 'image' | 'carousel' | 'text';
-  platform: string;
-  time: string;
-  status: 'scheduled' | 'posted' | 'failed';
-  isOptimalTime?: boolean;
-};
+// Types imported from schedulingApiService
 
 export default function BlitzComponent() {
   const { user } = useAuth();
@@ -49,38 +31,112 @@ export default function BlitzComponent() {
   const [scheduledPosts, setScheduledPosts] = useState<ScheduledPost[]>([]);
   const [viewMode, setViewMode] = useState<'week' | 'month'>('week');
   const [currentWeek, setCurrentWeek] = useState(new Date());
+  const [isLoadingPosts, setIsLoadingPosts] = useState(false);
+  const [isLoadingOptimalTimes, setIsLoadingOptimalTimes] = useState(false);
+  const [connectionStatus, setConnectionStatus] = useState<'connected' | 'connecting' | 'disconnected'>('disconnected');
   
-  // TODO: Replace with actual fetching of scheduled posts and calendar data from a database/API.
-  // Mock calendar posts data
+  // Real calendar posts data from API
   const [calendarPosts, setCalendarPosts] = useState<{ [key: string]: CalendarPost[] }>({});
   
-  // Optimal posting times by platform
-  // TODO: Consider dynamically generating these optimal times based on user's historical data via AI analysis.
-  const optimalTimes = {
+  // AI-driven optimal posting times by platform
+  const [optimalTimes, setOptimalTimes] = useState<Record<string, string[]>>({
     instagram: ['09:00', '15:00', '18:00'],
     tiktok: ['14:00', '18:00', '21:00'],
     twitter: ['09:00', '12:00', '15:00'],
     facebook: ['13:00', '15:00', '18:00'],
     linkedin: ['08:00', '12:00', '17:00'],
-  };
+  });
 
-  // Polling for post status updates
+  // Real-time WebSocket connection for post status updates
   useEffect(() => {
-    // TODO: Replace with real-time updates from a backend or websocket for post status.
-    const interval = setInterval(async () => {
-      setScheduledPosts(prevPosts => prevPosts.map(post => {
-        // This is a simulation. In a real app, you'd fetch actual status from backend.
-        if (post.status === 'scheduled') {
-          // Simulate posting after some time
-          if (Date.now() - Number(post.id) > 5000) { // Example: post 'completes' after 5 seconds
-            return { ...post, status: 'posted' };
-          }
-        }
-        return post;
-      }));
-    }, 2000);
-    return () => clearInterval(interval);
+    const connectRealtime = async () => {
+      try {
+        setConnectionStatus('connecting');
+        await realtimeService.connect();
+        setConnectionStatus('connected');
+        
+        // Subscribe to post status updates
+        await realtimeService.subscribeToUpdates([
+          'post_scheduled',
+          'post_published', 
+          'post_failed',
+          'queue_update'
+        ]);
+      } catch (error) {
+        console.error('Failed to connect to real-time service:', error);
+        setConnectionStatus('disconnected');
+      }
+    };
+
+    connectRealtime();
+
+    // Subscribe to real-time updates
+    const unsubscribe = realtimeService.subscribe((update: RealtimeUpdate) => {
+      if (update.type === 'post_status_update' && update.data.postId) {
+        setScheduledPosts(prevPosts => 
+          prevPosts.map(post => 
+            post.id === update.data.postId 
+              ? { ...post, status: update.data.status || post.status }
+              : post
+          )
+        );
+      }
+    });
+
+    return () => {
+      unsubscribe();
+      realtimeService.disconnect();
+    };
   }, []);
+
+  // Load initial data
+  useEffect(() => {
+    loadScheduledPosts();
+    loadOptimalTimes();
+    loadCalendarPosts();
+  }, []);
+
+  const loadScheduledPosts = useCallback(async () => {
+    try {
+      setIsLoadingPosts(true);
+      const posts = await schedulingApiService.getScheduledPosts({ limit: 20 });
+      setScheduledPosts(posts);
+    } catch (error) {
+      console.error('Error loading scheduled posts:', error);
+      setError('Failed to load scheduled posts');
+    } finally {
+      setIsLoadingPosts(false);
+    }
+  }, []);
+
+  const loadOptimalTimes = useCallback(async () => {
+    try {
+      setIsLoadingOptimalTimes(true);
+      const times = await schedulingApiService.getOptimalTimes();
+      setOptimalTimes(times);
+    } catch (error) {
+      console.error('Error loading optimal times:', error);
+      // Keep default times if API fails
+    } finally {
+      setIsLoadingOptimalTimes(false);
+    }
+  }, []);
+
+  const loadCalendarPosts = useCallback(async () => {
+    try {
+      const startDate = startOfWeek(currentWeek, { weekStartsOn: 1 });
+      const endDate = addDays(startDate, 6);
+      const posts = await schedulingApiService.getCalendarPosts(startDate, endDate);
+      setCalendarPosts(posts);
+    } catch (error) {
+      console.error('Error loading calendar posts:', error);
+    }
+  }, [currentWeek]);
+
+  // Reload calendar when week changes
+  useEffect(() => {
+    loadCalendarPosts();
+  }, [loadCalendarPosts]);
 
   const platformIcons = {
     instagram: Instagram,
@@ -105,23 +161,39 @@ export default function BlitzComponent() {
     setSuccessMessage(null);
     
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      const newPost: ScheduledPost = {
-        id: Date.now().toString(),
-        content,
+      // Create post time from selected date and time
+      const [hours, minutes] = selectedTime.split(':').map(Number);
+      const postDateTime = new Date(selectedDate);
+      postDateTime.setHours(hours, minutes, 0, 0);
+
+      // Check if post time is in the future
+      if (postDateTime <= new Date()) {
+        setError('Post time must be in the future');
+        return;
+      }
+
+      const postData = {
         platform: selectedPlatform,
-        scheduledDate: selectedDate,
-        scheduledTime: selectedTime,
-        status: 'scheduled',
-        type: selectedPostType,
-        isOptimalTime: optimalTimes[selectedPlatform as keyof typeof optimalTimes]?.includes(selectedTime) || false
+        content,
+        media_urls: [], // Would be populated with actual media URLs
+        post_time: postDateTime.toISOString(),
+        hashtags: [],
+        additional_settings: {
+          content_type: selectedPostType,
+          is_optimal_time: optimalTimes[selectedPlatform]?.includes(selectedTime) || false,
+        },
       };
       
+      const newPost = await schedulingApiService.schedulePost(postData);
       setScheduledPosts(prev => [newPost, ...prev]);
-      setSuccessMessage('Post scheduled successfully');
+      setSuccessMessage('Post scheduled successfully!');
       setContent('');
+      
+      // Reload calendar to show new post
+      loadCalendarPosts();
+      
     } catch (err: any) {
+      console.error('Error scheduling post:', err);
       setError(err.message || 'An error occurred while scheduling the post');
     } finally {
       setIsScheduling(false);
@@ -174,7 +246,27 @@ export default function BlitzComponent() {
         
         {/* Enhanced Header */}
         <div className="text-center space-y-4 animate-fadeIn">
-          <h1 className="text-5xl md:text-6xl font-bold tracking-tight gradient-text">Blitz</h1>
+          <div className="flex items-center justify-center gap-4">
+            <h1 className="text-5xl md:text-6xl font-bold tracking-tight gradient-text">Blitz</h1>
+            <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-gray-800/50">
+              {connectionStatus === 'connected' ? (
+                <>
+                  <Wifi className="h-4 w-4 text-emerald-400" />
+                  <span className="text-xs text-emerald-400">Live</span>
+                </>
+              ) : connectionStatus === 'connecting' ? (
+                <>
+                  <Loader2 className="h-4 w-4 text-yellow-400 animate-spin" />
+                  <span className="text-xs text-yellow-400">Connecting</span>
+                </>
+              ) : (
+                <>
+                  <WifiOff className="h-4 w-4 text-red-400" />
+                  <span className="text-xs text-red-400">Offline</span>
+                </>
+              )}
+            </div>
+          </div>
           <p className="text-xl text-gray-400 max-w-3xl mx-auto">
             Schedule and autopost your content at optimal times with AI-powered timing intelligence
           </p>
@@ -208,6 +300,12 @@ export default function BlitzComponent() {
                 >
                   Month
                 </Button>
+                {(isLoadingPosts || isLoadingOptimalTimes) && (
+                  <div className="flex items-center gap-2 text-violet-400">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span className="text-sm">Loading...</span>
+                  </div>
+                )}
               </div>
             </div>
           </div>

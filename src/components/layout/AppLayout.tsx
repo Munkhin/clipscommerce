@@ -22,7 +22,7 @@ export function AppLayout({ children }: AppLayoutProps) {
         <Sidebar isTeamDashboard={isTeamDashboardRoute} />
       )}
       <div className="flex-1 flex flex-col">
-        <Header isDashboard={isDashboardRoute} isTeamDashboard={isTeamDashboardRoute} />
+        {pathname !== '/' && <Header isDashboard={isDashboardRoute} isTeamDashboard={isTeamDashboardRoute} />}
         <main className="flex-1 overflow-auto">
           {children}
         </main>

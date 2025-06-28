@@ -41,48 +41,21 @@ export default function CompetitorTacticsPage() {
     setLoading(true);
     setError(null);
     try {
-      // TODO: Replace with actual API call to fetch competitor data based on user's niche.
-      // The API should return data similar to the mockCompetitors structure,
-      // including real, dynamically generated content URLs for top performers.
-      await new Promise((res) => setTimeout(res, 2000)); 
+      const competitorService = new (await import('@/services/competitorAnalysisService')).CompetitorAnalysisService();
       
-      const dynamicCompetitors: CompetitorData[] = [
-        // This array should be populated by the API call, not hardcoded.
-        // Example structure for reference:
-        {
-          id: "1",
-          name: "Dynamic TechGuru Pro",
-          handle: "@dynamic_techguru",
-          followers: "1.5M",
-          engagement: "9.0%",
-          avgViews: "150K",
-          topContent: [
-            { 
-              id: "dyn1", 
-              title: "Dynamically Generated Tech Trend Analysis", 
-              views: "3.0M", 
-              engagement: "15.0%",
-              url: "https://www.example.com/dynamic-tech-video-1", // This URL should be dynamic
-              platform: "tiktok"
-            },
-            { 
-              id: "dyn2", 
-              title: "Future of AI in 2024", 
-              views: "2.5M", 
-              engagement: "13.5%",
-              url: "https://www.example.com/dynamic-ai-video-2", // This URL should be dynamic
-              platform: "youtube"
-            }
-          ],
-          tactics: ["Dynamic posting schedules", "AI-driven content generation", "Hyper-targeted audience engagement"],
-          hooks: ["The future of [niche] is here...", "This [tool/strategy] will revolutionize your [area]"]
-        },
-        // ... more dynamically generated competitors
-      ];
+      const result = await competitorService.getTopCompetitors({
+        limit: 5,
+        platform: 'all'
+      });
       
-      setCompetitors(dynamicCompetitors);
+      if (result.success && result.data) {
+        setCompetitors(result.data);
+      } else {
+        setError(result.error || "Failed to load competitor data. Please try again.");
+      }
     } catch (err: unknown) {
-      setError("Failed to load competitor data dynamically. Please check your niche settings.");
+      setError("Failed to load competitor data. Please check your connection and try again.");
+      console.error('Error loading competitors:', err);
     } finally {
       setLoading(false);
     }
@@ -239,7 +212,7 @@ export default function CompetitorTacticsPage() {
                   <div className="space-y-2">
                     {competitor.hooks.map((hook, index) => (
                       <div key={index} className="group relative p-3 bg-purple-500/10 rounded-lg border border-purple-500/20 text-sm text-gray-300 hover:border-purple-500/30 transition-colors">
-                        <span>"{hook}"</span>
+                        <span>&quot;{hook}&quot;</span>
                         <Button 
                           size="sm" 
                           variant="ghost" 
@@ -306,19 +279,19 @@ export default function CompetitorTacticsPage() {
                 <ul className="space-y-3 text-sm text-gray-300">
                   <li className="flex items-start gap-2">
                     <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
-                    <span>"How I [achieved result] in [timeframe]"</span>
+                    <span>&quot;How I [achieved result] in [timeframe]&quot;</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
-                    <span>"[Number] things that will change your [area]"</span>
+                    <span>&quot;[Number] things that will change your [area]&quot;</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
-                    <span>"I tested [number] [things] so you don't have to"</span>
+                    <span>&quot;I tested [number] [things] so you don&apos;t have to&quot;</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
-                    <span>"The [secret/mistake] they don't want you to know"</span>
+                    <span>&quot;The [secret/mistake] they don&apos;t want you to know&quot;</span>
                   </li>
                 </ul>
               </GlassCard>

@@ -60,14 +60,13 @@ import { AutopostScheduler } from '@/components/dashboard/autopost/AutopostSched
 export default function DashboardPage() {
   const { user } = useAuth();
   const [greeting, setGreeting] = useState('Hello');
-  const [analytics, setAnalytics] = useState<any>(null);
+  const [analytics, setAnalytics] = useState<Awaited<ReturnType<ReportsAnalysisService['getReport']>>['data']>(null);
   const [loading, setLoading] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [animationStage, setAnimationStage] = useState(0);
   const [realtimeData, setRealtimeData] = useState({
-    // TODO: These values should be fetched dynamically from a real-time data source.
     revenue: 0,
     revenueGrowth: 0,
     orders: 0,
@@ -78,7 +77,7 @@ export default function DashboardPage() {
     visitorsGrowth: 0
   });
 
-  const subscriptionTier = (user as any)?.user_metadata?.subscription_tier || 'lite';
+  const subscriptionTier = user?.user_metadata?.subscription_tier || 'lite';
   const { hasFeatureAccess, tier } = useUsageLimits(subscriptionTier);
   
   const {
@@ -118,9 +117,9 @@ export default function DashboardPage() {
         console.error('Error fetching initial real-time data:', error);
       } else {
         const initialData = data.reduce((acc, metric) => {
-          acc[metric.metric_name] = metric.value;
+          acc[metric.metric_name as keyof typeof acc] = metric.value;
           return acc;
-        }, {} as any);
+        }, {} as { revenue: number; revenueGrowth: number; orders: number; ordersGrowth: number; conversion: number; conversionGrowth: number; visitors: number; visitorsGrowth: number });
         setRealtimeData(initialData);
       }
     }
@@ -132,7 +131,7 @@ export default function DashboardPage() {
       .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'realtime_metrics' }, (payload) => {
         setRealtimeData((prev) => ({
           ...prev,
-          [payload.new.metric_name]: payload.new.value,
+          [payload.new.metric_name as keyof typeof prev]: payload.new.value,
         }));
       })
       .subscribe();
@@ -162,7 +161,7 @@ export default function DashboardPage() {
         if (result.success) {
           setAnalytics(result.data);
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error('Analytics error:', err);
       } finally {
         setLoading(false);

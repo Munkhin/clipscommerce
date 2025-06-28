@@ -75,7 +75,7 @@ export default function TestimonialsSection() {
                 </div>
                 
                 {/* Quote */}
-                <p className="text-lightning-dim/90 mb-6 italic">"{testimonial.quote}"</p>
+                <p className="text-lightning-dim/90 mb-6 italic">&quot;{testimonial.quote}&quot;</p>
                 
                 {/* Author */}
                 <div className="flex items-center mt-6">

@@ -41,7 +41,7 @@ export default function ComingSoonPage() {
             transition={{ delay: 0.4 }}
             className="text-xl text-white/70 mb-12"
           >
-            We're working hard to bring you this feature. It will be available soon!
+            We&apos;re working hard to bring you this feature. It will be available soon!
           </motion.p>
           
           <motion.div

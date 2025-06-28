@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
+import { createClient } from '@/lib/supabase/server';
 import { AuthTokenManagerService } from '../../../../workflows/data_collection/lib/auth-token-manager.service';
 import { Platform } from '../../../../workflows/deliverables/types/deliverables_types';
 import { PlatformClientIdentifier } from '../../../../workflows/data_collection/lib/auth.types';
@@ -65,14 +66,56 @@ export async function GET(request: NextRequest) {
     );
 
     if (credentials && credentials.accessToken) {
-      // Successful authentication.
-      // TODO: Set up a user session (e.g., using cookies or a session store).
-      // Redirect to a success page, like a user dashboard.
-      const successUrl = new URL('/dashboard?platform=tiktok&status=success', request.url);
-      if (credentials.openId) {
-        successUrl.searchParams.set('tiktok_user_id', credentials.openId);
+      // Successful authentication - set up secure user session
+      const supabase = await createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (!user) {
+        console.error('TikTok OAuth callback: No authenticated user found in session');
+        return NextResponse.redirect(new URL('/oauth-error?error=session_required', request.url));
       }
-      return NextResponse.redirect(successUrl);
+
+      try {
+        // Store social credentials in database for the authenticated user
+        const { error: credentialsError } = await supabase
+          .from('user_social_credentials')
+          .upsert(
+            {
+              user_id: user.id,
+              platform: 'tiktok',
+              access_token: credentials.accessToken,
+              refresh_token: credentials.refreshToken,
+              expires_at: credentials.expiresAt ? new Date(credentials.expiresAt * 1000).toISOString() : null,
+              platform_user_id: credentials.openId,
+              updated_at: new Date().toISOString(),
+            },
+            { onConflict: 'user_id,platform' }
+          );
+
+        if (credentialsError) {
+          console.error('Error saving TikTok credentials to database:', credentialsError);
+          return NextResponse.redirect(new URL('/oauth-error?error=credentials_save_failed', request.url));
+        }
+
+        // Set secure session cookie with OAuth success flag
+        const cookieStore = await cookies();
+        cookieStore.set('oauth_success', 'tiktok', {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax',
+          path: '/',
+          maxAge: 300, // 5 minutes - just for UI feedback
+        });
+
+        console.log(`TikTok OAuth successful for user ${user.id}, openId: ${credentials.openId}`);
+        
+        // Redirect to dashboard with success status
+        const successUrl = new URL('/dashboard?platform=tiktok&status=success', request.url);
+        return NextResponse.redirect(successUrl);
+      } catch (dbError) {
+        console.error('Database error during TikTok OAuth callback:', dbError);
+        return NextResponse.redirect(new URL('/oauth-error?error=database_error', request.url));
+      }
     } else {
       return NextResponse.redirect(new URL('/oauth-error?error=token_exchange_failed', request.url));
     }

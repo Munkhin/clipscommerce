@@ -65,7 +65,7 @@ export default function FinalCTASection({ onGetStarted }: FinalCTASectionProps) 
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            Don't get left behind. Start turning your content into cash today.
+            Don&apos;t get left behind. Start turning your content into cash today.
           </motion.p>
           
           <motion.div 

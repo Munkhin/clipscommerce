@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check token expiry
-    if (credentials.expires_at && new Date(credentials.expires_at) <= now) {
+    if (credentials && typeof credentials === 'object' && 'expires_at' in credentials && (credentials as any).expires_at && new Date((credentials as any).expires_at) <= now) {
       return NextResponse.json({ 
         error: `${validatedData.platform} credentials have expired. Please reconnect your account.` 
       }, { status: 400 });

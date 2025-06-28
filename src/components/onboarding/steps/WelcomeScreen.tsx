@@ -43,7 +43,7 @@ export function WelcomeScreen({ step, progress, onComplete }: WelcomeScreenProps
         </h1>
         
         <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-          Let's get you set up for viral content success. This quick setup will personalize your experience 
+          Let&apos;s get you set up for viral content success. This quick setup will personalize your experience 
           and help you start creating engaging content that drives results.
         </p>
 
@@ -71,7 +71,7 @@ export function WelcomeScreen({ step, progress, onComplete }: WelcomeScreenProps
       {/* What You'll Set Up */}
       <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-8 mb-8">
         <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-          What we'll set up together
+          What we&apos;ll set up together
         </h2>
         
         <div className="grid md:grid-cols-2 gap-6">
@@ -143,7 +143,7 @@ export function WelcomeScreen({ step, progress, onComplete }: WelcomeScreenProps
                 <span className="text-green-600 text-sm font-bold">✓</span>
               </div>
               <div>
-                <h3 className="font-semibold text-gray-900">You're Ready!</h3>
+                <h3 className="font-semibold text-gray-900">You&apos;re Ready!</h3>
                 <p className="text-gray-600 text-sm">Start creating viral content</p>
               </div>
             </div>
@@ -181,7 +181,7 @@ export function WelcomeScreen({ step, progress, onComplete }: WelcomeScreenProps
           onClick={() => onComplete()}
           className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
         >
-          <span>Let's Get Started</span>
+          <span>Let&apos;s Get Started</span>
           <ArrowRight className="ml-2 h-5 w-5" />
         </button>
         
@@ -191,4 +191,4 @@ export function WelcomeScreen({ step, progress, onComplete }: WelcomeScreenProps
       </div>
     </div>
   );
-} 
+}

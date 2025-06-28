@@ -12,7 +12,14 @@ export default function IdeatorPage() {
   const [image, setImage] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [results, setResults] = useState<any>(null);
+  const [results, setResults] = useState<{
+    hooks: string[];
+    script: string;
+    visuals: string[];
+    audio: string[];
+    hashtags: string[];
+    guidelines: string;
+  } | null>(null);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -49,15 +56,7 @@ export default function IdeatorPage() {
             "You won't believe what happens when you try this approach",
             `Why ${mainProduct} creators are switching to this strategy`
           ],
-          script: `Hook (0-3s): Start with an attention-grabbing statement about ${mainProduct}. 
-
-Problem (3-10s): Identify the pain point your audience faces with ${productKeywords}. 
-
-Solution (10-20s): Present your ${productKeywords} as the perfect solution. 
-
-Proof (20-30s): Show results, testimonials, or demonstrations. 
-
-Call-to-Action (30-45s): Tell viewers exactly what to do next.`,
+          script: `Hook (0-3s): Start with an attention-grabbing statement about ${mainProduct}. \n\nProblem (3-10s): Identify the pain point your audience faces with ${productKeywords}. \n\nSolution (10-20s): Present your ${productKeywords} as the perfect solution. \n\nProof (20-30s): Show results, testimonials, or demonstrations. \n\nCall-to-Action (30-45s): Tell viewers exactly what to do next.`,
           visuals: [
             `High-quality ${mainProduct} shots with dynamic lighting`,
             "Close-up details highlighting key features and benefits",
@@ -98,25 +97,7 @@ Call-to-Action (30-45s): Tell viewers exactly what to do next.`,
 
   const copyAllResults = () => {
     if (results) {
-      const allContent = `
-HOOKS:
-${results.hooks.map((hook: string, i: number) => `${i + 1}. ${hook}`).join('\n')}
-
-SCRIPT STRUCTURE:
-${results.script}
-
-VISUAL GUIDELINES:
-${results.visuals.map((v: string, i: number) => `• ${v}`).join('\n')}
-
-AUDIO SUGGESTIONS:
-${results.audio.map((a: string, i: number) => `• ${a}`).join('\n')}
-
-HASHTAGS:
-${results.hashtags.join(' ')}
-
-GUIDELINES:
-${results.guidelines}
-      `;
+      const allContent = `\nHooks:\n${results.hooks.map((hook: string, i: number) => `${i + 1}. ${hook}`).join('\n')}\n\nSCRIPT STRUCTURE:\n${results.script}\n\nVISUAL GUIDELINES:\n${results.visuals.map((v: string, i: number) => `• ${v}`).join('\n')}\n\nAUDIO SUGGESTIONS:\n${results.audio.map((a: string, i: number) => `• ${a}`).join('\n')}\n\nHASHTAGS:\n${results.hashtags.join(' ')}\n\nGUIDELINES:\n${results.guidelines}\n      `;
       copyToClipboard(allContent);
     }
   };
@@ -237,7 +218,7 @@ ${results.guidelines}
                     {results.hooks.map((hook: string, i: number) => (
                       <div key={i} className="group relative">
                         <div className="p-3 bg-gray-800/50 rounded-lg text-sm text-gray-300 border border-gray-700/50 group-hover:border-violet-500/30 transition-colors">
-                          "{hook}"
+                          &quot;{hook}&quot;
                         </div>
                         <Button 
                           size="sm" 
@@ -414,4 +395,4 @@ ${results.guidelines}
       </div>
     </div>
   );
-} 
+}

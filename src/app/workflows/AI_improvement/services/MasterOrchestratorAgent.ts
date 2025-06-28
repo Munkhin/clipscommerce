@@ -383,7 +383,7 @@ Respond with structured JSON containing specific actions for each sub-agent.`;
 
     // Prioritize A/B tests for low-performing areas or specific objectives
     const viralityObjective = this.activeObjectives.find(obj => obj.type === 'virality');
-    let abTestDirectives: Record<string, boolean> = {};
+    const abTestDirectives: Record<string, boolean> = {};
 
     if (this.systemMetrics.averageEngagementRate < 0.05) {
       decision.alertsAndNotifications.push("Low engagement detected, prioritizing engagement-focused A/B tests.");

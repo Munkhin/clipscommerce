@@ -93,7 +93,7 @@ export function ProfileSetup({ step, progress, onComplete, onPrevious }: Profile
         {/* Role Selection */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-4">
-            What's your role? *
+            What&apos;s your role? *
           </label>
           <div className="grid gap-4">
             {roles.map((role) => (
@@ -134,7 +134,7 @@ export function ProfileSetup({ step, progress, onComplete, onPrevious }: Profile
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-4">
             <Building className="inline h-4 w-4 mr-2" />
-            What's your company size? *
+            What&apos;s your company size? *
           </label>
           <div className="grid md:grid-cols-2 gap-4">
             {companySizes.map((size) => (
@@ -175,7 +175,7 @@ export function ProfileSetup({ step, progress, onComplete, onPrevious }: Profile
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-4">
             <Target className="inline h-4 w-4 mr-2" />
-            What's your primary goal? *
+            What&apos;s your primary goal? *
           </label>
           <div className="grid md:grid-cols-2 gap-4">
             {primaryGoals.map((goal) => (
@@ -219,7 +219,7 @@ export function ProfileSetup({ step, progress, onComplete, onPrevious }: Profile
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-4">
             <Star className="inline h-4 w-4 mr-2" />
-            What's your experience level? *
+            What&apos;s your experience level? *
           </label>
           <div className="grid gap-4">
             {experienceLevels.map((level) => (
@@ -298,4 +298,4 @@ export function ProfileSetup({ step, progress, onComplete, onPrevious }: Profile
       </form>
     </div>
   );
-} 
+}

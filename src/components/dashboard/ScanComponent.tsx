@@ -137,7 +137,7 @@ export default function ScanComponent() {
                 <CheckCircle className="h-4 w-4" />
                 <AlertTitle>Scan Completed</AlertTitle>
                 <AlertDescription>
-                  We've analyzed your niche and identified key opportunities.
+                  We&apos;ve analyzed your niche and identified key opportunities.
                 </AlertDescription>
               </Alert>
               

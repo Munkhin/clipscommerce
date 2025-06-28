@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
     const results = await Promise.allSettled(uploadPromises);
     
     const successful = results
-      .filter((result): result is PromiseFulfilledResult<any> => result.status === 'fulfilled')
+      .filter((result): result is PromiseFulfilledResult<{ path: string; url: string; size: number; mimeType: string; }> => result.status === 'fulfilled')
       .map(result => result.value);
     
     const failed = results

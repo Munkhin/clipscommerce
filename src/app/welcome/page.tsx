@@ -40,12 +40,12 @@ export default function WelcomePage() {
           
           <p className="text-xl text-gray-300 mb-8">
             {user ? `Hi ${user.email}! ` : ''}
-            Your account has been successfully created. You're all set to start your journey with us.
+            Your account has been successfully created. You&apos;re all set to start your journey with us.
           </p>
 
           {/* Next Steps */}
           <div className="bg-gray-800/50 rounded-lg p-6 mb-8">
-            <h2 className="text-xl font-semibold mb-4">What's Next?</h2>
+            <h2 className="text-xl font-semibold mb-4">What&apos;s Next?</h2>
             <div className="space-y-4 text-left">
               <div className="flex items-center gap-3">
                 <User className="w-5 h-5 text-[#8D5AFF]" />
@@ -91,4 +91,4 @@ export default function WelcomePage() {
       </div>
     </div>
   );
-} 
+}

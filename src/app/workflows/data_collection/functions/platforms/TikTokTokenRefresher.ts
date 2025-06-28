@@ -1,8 +1,9 @@
 import axios, { AxiosInstance, AxiosError } from 'axios'; // Added default import for axios
 import { OAuth2Credentials, IPlatformTokenRefresher } from '../authTypes'; // Adjusted import path
 
-// TODO: Verify and update this with the actual TikTok OAuth2 token endpoint URL
-const TIKTOK_TOKEN_ENDPOINT = 'https://open-api.tiktok.com/oauth/token/';
+// Official TikTok v2 OAuth2 token endpoint - verified from TikTok Developer Documentation
+// As of 2024, v1 OAuth APIs reached end-of-life for web apps. v2 is the current production endpoint.
+const TIKTOK_TOKEN_ENDPOINT = 'https://open.tiktokapis.com/v2/oauth/token/';
 
 interface TikTokTokenRefreshResponse {
   access_token: string;

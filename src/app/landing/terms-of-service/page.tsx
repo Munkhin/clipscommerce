@@ -11,7 +11,7 @@ export default function TermsOfServicePage() {
         <p className="mb-8 text-lg text-white/60">Effective Date: June 7, 2025</p>
 
         <section className="mb-8">
-          <p className="text-white/90 leading-relaxed">Welcome to ClipsCommerce! These Terms of Service ("ToS") govern your use of the ClipsCommerce website and services (collectively, the "Service"). By accessing or using the Service, you agree to be bound by these ToS. If you do not agree to these terms, please do not use the Service.</p>
+          <p className="text-white/90 leading-relaxed">Welcome to ClipsCommerce! These Terms of Service (&quot;ToS&quot;) govern your use of the ClipsCommerce website and services (collectively, the &quot;Service&quot;). By accessing or using the Service, you agree to be bound by these ToS. If you do not agree to these terms, please do not use the Service.</p>
         </section>
 
         <div className="space-y-8">
@@ -55,15 +55,15 @@ export default function TermsOfServicePage() {
           <section>
             <h2 className="text-2xl font-bold mb-4 text-[#8D5AFF]">5. Intellectual Property</h2>
             <ul className="space-y-3 text-white/90">
-              <li><span className="font-semibold text-white">ClipsCommerce's Intellectual Property:</span> All trademarks, logos, designs, and other intellectual property associated with the Service are owned by ClipsCommerce or its licensors. You may not use, copy, or distribute any of these without prior written permission.</li>
-              <li><span className="font-semibold text-white">User Responsibilities:</span> You agree not to infringe on ClipsCommerce's intellectual property rights or those of any third party while using the Service.</li>
+              <li><span className="font-semibold text-white">ClipsCommerce&apos;s Intellectual Property:</span> All trademarks, logos, designs, and other intellectual property associated with the Service are owned by ClipsCommerce or its licensors. You may not use, copy, or distribute any of these without prior written permission.</li>
+              <li><span className="font-semibold text-white">User Responsibilities:</span> You agree not to infringe on ClipsCommerce&apos;s intellectual property rights or those of any third party while using the Service.</li>
             </ul>
           </section>
 
           <section>
             <h2 className="text-2xl font-bold mb-4 text-[#8D5AFF]">6. Service Limitations</h2>
             <ul className="space-y-3 text-white/90 list-disc pl-6">
-              <li>The Service is provided "as is" and "as available." ClipsCommerce does not guarantee that the Service will be uninterrupted, error-free, or free from viruses or other harmful components.</li>
+              <li>The Service is provided &quot;as is&quot; and &quot;as available.&quot; ClipsCommerce does not guarantee that the Service will be uninterrupted, error-free, or free from viruses or other harmful components.</li>
               <li>ClipsCommerce may modify, suspend, or discontinue any part of the Service at any time without notice.</li>
               <li>While ClipsCommerce strives to provide accurate and up-to-date information, we do not warrant the accuracy, completeness, or reliability of any Content or features on the Platform.</li>
             </ul>
@@ -91,7 +91,7 @@ export default function TermsOfServicePage() {
 
           <section>
             <h2 className="text-2xl font-bold mb-4 text-[#8D5AFF]">9. Indemnification</h2>
-            <p className="text-white/90 mb-4">You agree to indemnify, defend, and hold harmless ClipsCommerce, its affiliates, and their respective officers, directors, employees, and agents from any claims, liabilities, damages, or expenses (including reasonable attorneys' fees) arising from:</p>
+            <p className="text-white/90 mb-4">You agree to indemnify, defend, and hold harmless ClipsCommerce, its affiliates, and their respective officers, directors, employees, and agents from any claims, liabilities, damages, or expenses (including reasonable attorneys&apos; fees) arising from:</p>
             <ul className="space-y-2 text-white/90 list-disc pl-6">
               <li>Your use of the Service.</li>
               <li>Your violation of these ToS.</li>

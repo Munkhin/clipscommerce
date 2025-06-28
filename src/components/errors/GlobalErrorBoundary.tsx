@@ -269,7 +269,7 @@ export class GlobalErrorBoundary extends Component<Props, State> {
                   Recovering...
                 </CardTitle>
                 <CardDescription>
-                  We're automatically fixing the issue. Please wait a moment.
+                  We&apos;re automatically fixing the issue. Please wait a moment.
                 </CardDescription>
               </CardHeader>
             </Card>

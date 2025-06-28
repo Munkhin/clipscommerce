@@ -51,6 +51,18 @@ jest.mock('next/navigation', () => ({
   useSearchParams: () => new URLSearchParams(),
 }));
 
+// Mock Supabase
+jest.mock('@supabase/auth-helpers-nextjs', () => ({
+  createClientComponentClient: jest.fn(),
+  createRouteHandlerClient: jest.fn(),
+  createServerComponentClient: jest.fn(),
+}));
+
+jest.mock('@supabase/ssr', () => ({
+  createBrowserClient: jest.fn(),
+  createServerClient: jest.fn(),
+}));
+
 // Add scrollIntoView mock
 Object.defineProperty(Element.prototype, 'scrollIntoView', {
   value: jest.fn(),
@@ -85,22 +97,27 @@ Object.defineProperty(window, 'getComputedStyle', {
   configurable: true,
 });
 
-// Mock location object properly
-delete window.location;
-window.location = {
-  href: 'http://localhost/',
-  origin: 'http://localhost',
-  protocol: 'http:',
-  host: 'localhost',
-  hostname: 'localhost',
-  port: '',
-  pathname: '/',
-  search: '',
-  hash: '',
-  reload: jest.fn(),
-  assign: jest.fn(),
-  replace: jest.fn(),
-};
+// Mock location object safely
+if (!window.location || typeof window.location === 'undefined') {
+  Object.defineProperty(window, 'location', {
+    value: {
+      href: 'http://localhost/',
+      origin: 'http://localhost',
+      protocol: 'http:',
+      host: 'localhost',
+      hostname: 'localhost',
+      port: '',
+      pathname: '/',
+      search: '',
+      hash: '',
+      reload: jest.fn(),
+      assign: jest.fn(),
+      replace: jest.fn(),
+    },
+    writable: true,
+    configurable: true,
+  });
+}
 
 // Original console methods
 const originalConsole = {
