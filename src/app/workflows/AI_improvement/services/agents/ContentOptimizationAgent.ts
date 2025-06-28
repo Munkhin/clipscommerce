@@ -1,6 +1,10 @@
 import { aiImprovementService } from '../AIImprovementService';
 import { ContentNiche } from '../../types/niche_types';
 import { Platform } from '../../../deliverables/types/deliverables_types';
+import { MetricsTracker } from '@/lib/utils/metrics';
+import { EnhancedCache } from '@/lib/utils/caching';
+import Redis from 'ioredis';
+import crypto from 'crypto';
 
 export interface ContentOptimizationTask {
   type: 'optimize_content' | 'update_optimization_models' | 'generate_variations';
@@ -13,30 +17,330 @@ export interface ContentOptimizationTask {
   parameters?: Record<string, any>;
 }
 
-// --- Contextual Bandit Integration (T4.1) ---
-type BanditArm = {
-  id: string;
-  context: Record<string, any>;
-  estimatedReward: number;
-  count: number;
-};
+// --- Production-Grade Contextual Bandit Implementation ---
+export interface BanditContext {
+  platform: Platform;
+  contentType: 'video' | 'image' | 'text';
+  audienceSegment: string;
+  timeOfDay: number;
+  dayOfWeek: number;
+  historicalEngagement: number;
+  contentLength: number;
+  hasHashtags: boolean;
+  hasThumbnail: boolean;
+  userId: string;
+}
 
-class EpsilonGreedyBandit {
-  private arms: BanditArm[] = [];
-  private epsilon: number;
-  constructor(epsilon = 0.1) { this.epsilon = epsilon; }
-  addArm(arm: BanditArm) { this.arms.push(arm); }
-  selectArm(context: Record<string, any>): BanditArm {
-    if (Math.random() < this.epsilon) {
-      return this.arms[Math.floor(Math.random() * this.arms.length)];
+export interface BanditArm {
+  id: string;
+  name: string;
+  parameters: Record<string, any>;
+  features: number[]; // Feature vector for contextual learning
+  createdAt: Date;
+  version: string;
+}
+
+export interface BanditReward {
+  armId: string;
+  context: BanditContext;
+  reward: number;
+  timestamp: Date;
+  metadata?: Record<string, any>;
+}
+
+export interface ModelWeights {
+  weights: number[];
+  confidence: number;
+  lastUpdated: Date;
+  trainingExamples: number;
+}
+
+/**
+ * Production-grade contextual bandit using Thompson Sampling
+ * with online linear regression for contextual feature learning
+ */
+export class ProductionContextualBandit {
+  private arms: Map<string, BanditArm> = new Map();
+  private modelWeights: Map<string, ModelWeights> = new Map();
+  private redis: Redis | null = null;
+  private cache: EnhancedCache<string, any>;
+  private metrics: MetricsTracker;
+  private readonly alpha: number; // Exploration parameter
+  private readonly lambda: number; // Regularization parameter
+  private readonly contextDimension: number;
+
+  constructor(
+    alpha = 1.0,
+    lambda = 1.0,
+    contextDimension = 20,
+    redisUrl?: string
+  ) {
+    this.alpha = alpha;
+    this.lambda = lambda;
+    this.contextDimension = contextDimension;
+    this.cache = new EnhancedCache({ namespace: 'bandit', ttl: 300000 }); // 5 min cache
+    this.metrics = new MetricsTracker();
+    
+    // Initialize Redis if URL provided
+    if (redisUrl || process.env.REDIS_URL) {
+      try {
+        this.redis = new Redis(redisUrl || process.env.REDIS_URL!);
+        console.log('✅ Contextual Bandit connected to Redis');
+      } catch (error) {
+        console.warn('⚠️ Failed to connect to Redis, using in-memory storage:', error);
+      }
     }
-    return this.arms.reduce((best, arm) => arm.estimatedReward > best.estimatedReward ? arm : best, this.arms[0]);
   }
-  updateReward(armId: string, reward: number) {
-    const arm = this.arms.find(a => a.id === armId);
-    if (arm) {
-      arm.count++;
-      arm.estimatedReward += (reward - arm.estimatedReward) / arm.count;
+
+  /**
+   * Add a new arm (content variation) to the bandit
+   */
+  async addArm(arm: BanditArm): Promise<void> {
+    this.arms.set(arm.id, arm);
+    
+    // Initialize model weights for this arm
+    this.modelWeights.set(arm.id, {
+      weights: new Array(this.contextDimension).fill(0),
+      confidence: 0.1,
+      lastUpdated: new Date(),
+      trainingExamples: 0
+    });
+
+    // Persist to Redis
+    if (this.redis) {
+      await this.redis.hset(
+        'bandit:arms',
+        arm.id,
+        JSON.stringify(arm)
+      );
+      await this.redis.hset(
+        'bandit:weights',
+        arm.id,
+        JSON.stringify(this.modelWeights.get(arm.id))
+      );
+    }
+  }
+
+  /**
+   * Select the best arm using Thompson Sampling with contextual features
+   */
+  async selectArm(context: BanditContext): Promise<string> {
+    return this.metrics.timeAsync('selectArm', async () => {
+      const contextVector = this.extractFeatures(context);
+      const cacheKey = `selection:${this.hashContext(context)}`;
+      
+      // Check cache for recent selection
+      const cached = this.cache.get(cacheKey);
+      if (cached && Math.random() > 0.1) { // 10% chance to bypass cache for exploration
+        this.metrics.increment('cacheHits');
+        return cached;
+      }
+
+      let bestArm = '';
+      let bestScore = -Infinity;
+
+      // Thompson Sampling: sample from posterior distribution
+      for (const [armId, weights] of this.modelWeights.entries()) {
+        const expectedReward = this.dotProduct(weights.weights, contextVector);
+        
+        // Sample from normal distribution with confidence-based variance
+        const variance = this.alpha * weights.confidence;
+        const sampledReward = this.sampleNormal(expectedReward, variance);
+        
+        if (sampledReward > bestScore) {
+          bestScore = sampledReward;
+          bestArm = armId;
+        }
+      }
+
+      // Fallback to random selection if no arms available
+      if (!bestArm && this.arms.size > 0) {
+        const armIds = Array.from(this.arms.keys());
+        bestArm = armIds[Math.floor(Math.random() * armIds.length)];
+      }
+
+      // Cache the selection
+      this.cache.set(cacheKey, bestArm, 60000); // 1 minute cache
+      this.metrics.increment('armSelections');
+      
+      return bestArm;
+    });
+  }
+
+  /**
+   * Update the bandit with reward feedback using online linear regression
+   */
+  async updateReward(reward: BanditReward): Promise<void> {
+    return this.metrics.timeAsync('updateReward', async () => {
+      const weights = this.modelWeights.get(reward.armId);
+      if (!weights) {
+        console.warn(`No weights found for arm ${reward.armId}`);
+        return;
+      }
+
+      const contextVector = this.extractFeatures(reward.context);
+      
+      // Online linear regression update (Ridge regression)
+      const prediction = this.dotProduct(weights.weights, contextVector);
+      const error = reward.reward - prediction;
+      
+      // Update weights using gradient descent
+      const learningRate = 1.0 / (weights.trainingExamples + this.lambda);
+      for (let i = 0; i < weights.weights.length; i++) {
+        weights.weights[i] += learningRate * error * contextVector[i];
+      }
+      
+      // Update confidence (decreases as we get more data)
+      weights.confidence = 1.0 / Math.sqrt(weights.trainingExamples + 1);
+      weights.trainingExamples++;
+      weights.lastUpdated = new Date();
+
+      // Persist updated weights
+      if (this.redis) {
+        await Promise.all([
+          this.redis.hset('bandit:weights', reward.armId, JSON.stringify(weights)),
+          this.redis.lpush('bandit:rewards', JSON.stringify(reward))
+        ]);
+      }
+
+      this.metrics.increment('rewardUpdates');
+      console.log(`Updated weights for arm ${reward.armId}, new confidence: ${weights.confidence.toFixed(3)}`);
+    });
+  }
+
+  /**
+   * Extract numerical features from context for machine learning
+   */
+  private extractFeatures(context: BanditContext): number[] {
+    const features: number[] = [];
+    
+    // Platform encoding (one-hot)
+    const platforms = ['TikTok', 'Instagram', 'YouTube', 'Facebook', 'Twitter', 'LinkedIn', 'Pinterest'];
+    platforms.forEach(platform => {
+      features.push(context.platform === platform ? 1 : 0);
+    });
+    
+    // Content type encoding
+    const contentTypes = ['video', 'image', 'text'];
+    contentTypes.forEach(type => {
+      features.push(context.contentType === type ? 1 : 0);
+    });
+    
+    // Numerical features (normalized)
+    features.push(
+      context.timeOfDay / 24.0,
+      context.dayOfWeek / 7.0,
+      Math.min(context.historicalEngagement / 1000.0, 1.0), // Cap at 1000
+      Math.min(context.contentLength / 500.0, 1.0), // Cap at 500 chars
+      context.hasHashtags ? 1 : 0,
+      context.hasThumbnail ? 1 : 0
+    );
+    
+    // Audience segment hash (simple encoding)
+    const segmentHash = this.hashString(context.audienceSegment) % 3;
+    features.push(segmentHash / 3.0);
+    
+    // Pad or truncate to fixed dimension
+    while (features.length < this.contextDimension) {
+      features.push(0);
+    }
+    return features.slice(0, this.contextDimension);
+  }
+
+  /**
+   * Calculate dot product of two vectors
+   */
+  private dotProduct(a: number[], b: number[]): number {
+    return a.reduce((sum, val, i) => sum + val * (b[i] || 0), 0);
+  }
+
+  /**
+   * Sample from normal distribution using Box-Muller transform
+   */
+  private sampleNormal(mean: number, variance: number): number {
+    const u1 = Math.random();
+    const u2 = Math.random();
+    const z0 = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+    return mean + Math.sqrt(variance) * z0;
+  }
+
+  /**
+   * Hash context for caching
+   */
+  private hashContext(context: BanditContext): string {
+    return crypto.createHash('md5').update(JSON.stringify(context)).digest('hex');
+  }
+
+  /**
+   * Simple string hash function
+   */
+  private hashString(str: string): number {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      const char = str.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash; // Convert to 32-bit integer
+    }
+    return Math.abs(hash);
+  }
+
+  /**
+   * Load existing arms and weights from Redis
+   */
+  async loadFromPersistence(): Promise<void> {
+    if (!this.redis) return;
+
+    try {
+      // Load arms
+      const arms = await this.redis.hgetall('bandit:arms');
+      for (const [armId, armData] of Object.entries(arms)) {
+        this.arms.set(armId, JSON.parse(armData));
+      }
+
+      // Load weights
+      const weights = await this.redis.hgetall('bandit:weights');
+      for (const [armId, weightData] of Object.entries(weights)) {
+        this.modelWeights.set(armId, JSON.parse(weightData));
+      }
+
+      console.log(`Loaded ${this.arms.size} arms and ${this.modelWeights.size} weight sets from Redis`);
+    } catch (error) {
+      console.error('Failed to load bandit data from Redis:', error);
+    }
+  }
+
+  /**
+   * Get bandit performance metrics
+   */
+  getMetrics() {
+    return {
+      ...this.metrics.getMetrics(),
+      armCount: this.arms.size,
+      totalTrainingExamples: Array.from(this.modelWeights.values())
+        .reduce((sum, weights) => sum + weights.trainingExamples, 0),
+      averageConfidence: Array.from(this.modelWeights.values())
+        .reduce((sum, weights) => sum + weights.confidence, 0) / this.modelWeights.size
+    };
+  }
+
+  /**
+   * Get arm performance summary
+   */
+  getArmPerformance(): Array<{armId: string, expectedReward: number, confidence: number, examples: number}> {
+    return Array.from(this.modelWeights.entries()).map(([armId, weights]) => ({
+      armId,
+      expectedReward: weights.weights.reduce((sum, w) => sum + Math.abs(w), 0) / weights.weights.length,
+      confidence: weights.confidence,
+      examples: weights.trainingExamples
+    }));
+  }
+
+  /**
+   * Close Redis connection
+   */
+  async shutdown(): Promise<void> {
+    if (this.redis) {
+      await this.redis.quit();
     }
   }
 }
@@ -56,12 +360,16 @@ export class ContentOptimizationAgent {
   private isActive: boolean = false;
   private currentTask: ContentOptimizationTask | null = null;
   private performanceScore: number = 0.8; // Initial performance score
-  private bandit: EpsilonGreedyBandit = new EpsilonGreedyBandit();
+  private bandit: ProductionContextualBandit;
+  private metrics: MetricsTracker;
+  private modelVersion: string;
+  private abTestConfig: Map<string, any> = new Map();
 
-  constructor() {
-    // Optionally initialize bandit arms from persisted variations
-    // (In production, load from DB)
-    this.bandit = new EpsilonGreedyBandit();
+  constructor(redisUrl?: string) {
+    this.bandit = new ProductionContextualBandit(1.0, 1.0, 20, redisUrl);
+    this.metrics = new MetricsTracker();
+    this.modelVersion = `v${Date.now()}`;
+    this.initializeDefaultArms();
   }
 
   /**
@@ -69,7 +377,8 @@ export class ContentOptimizationAgent {
    */
   async start(): Promise<void> {
     this.isActive = true;
-    console.log('🚀 Content Optimization Agent started');
+    await this.bandit.loadFromPersistence();
+    console.log('🚀 Content Optimization Agent started with production bandit');
   }
 
   /**
@@ -78,6 +387,7 @@ export class ContentOptimizationAgent {
   async stop(): Promise<void> {
     this.isActive = false;
     this.currentTask = null;
+    await this.bandit.shutdown();
     console.log('🛑 Content Optimization Agent stopped');
   }
 
@@ -121,29 +431,36 @@ export class ContentOptimizationAgent {
   }
 
   private async optimizeContent(task: ContentOptimizationTask): Promise<void> {
-    console.log('Optimizing content for task:', task);
-    if (!task.baseContent || !task.platform) {
+    return this.metrics.timeAsync('optimizeContent', async () => {
+      console.log('Optimizing content for task:', task);
+      if (!task.baseContent || !task.platform) {
         console.warn('optimizeContent task requires baseContent and platform.');
         return;
-    }
-    // Use bandit to select best variation if multiple
-    if (task.baseContent && task.focus?.includes('captions')) {
-      const variations = [{ id: 'v1', context: { platform: task.platform } }]; // Example
-      const selected = this.selectContentVariation(variations);
-      console.log(`[Bandit] Selected variation: ${selected}`);
-    }
-    // Call AIImprovementService for suggestions
-    const optimizationResult = await aiImprovementService.getContentOptimization({
-      caption: task.baseContent.caption,
-      hashtags: task.baseContent.hashtags,
-      platform: task.platform,
-      // userId and targetAudience would ideally come from the task or a broader context
-      userId: 'content_opt_agent_user', 
-      targetAudience: 'general',
+      }
+
+      // Create context for bandit selection
+      const context: BanditContext = this.createBanditContext(task);
+      
+      // Use production bandit to select best optimization strategy
+      const selectedArmId = await this.bandit.selectArm(context);
+      console.log(`[Production Bandit] Selected optimization strategy: ${selectedArmId}`);
+
+      // Call AIImprovementService with selected strategy
+      const optimizationResult = await aiImprovementService.getContentOptimization({
+        caption: task.baseContent.caption,
+        hashtags: task.baseContent.hashtags,
+        platform: task.platform,
+        userId: task.parameters?.userId || 'content_opt_agent_user',
+        targetAudience: task.parameters?.targetAudience || 'general',
+      });
+
+      console.log('Content optimization suggestions received:', optimizationResult.optimization.improvements);
+      
+      // Store the optimization for later reward feedback
+      this.storeOptimizationForReward(selectedArmId, context, task);
+      
+      this.performanceScore = Math.min(1, this.performanceScore + 0.05);
     });
-    console.log('Content optimization suggestions received:', optimizationResult.optimization.improvements);
-    // In a real scenario, these suggestions would be applied or stored.
-    this.performanceScore = Math.min(1, this.performanceScore + 0.05); // Simulate performance improvement
   }
 
   private async updateOptimizationModels(task: ContentOptimizationTask): Promise<void> {
@@ -196,51 +513,224 @@ export class ContentOptimizationAgent {
     return this.currentTask ? `${this.currentTask.type} for niche: ${this.currentTask.niche || 'N/A'}` : undefined;
   }
 
-  // T4.2: Persist reward signal (engagement) for online bandit training
-  private persistRewardSignal(armId: string, reward: number, context: Record<string, any>) {
-    // In production, persist to Redis/Postgres; here, just log
-    console.log(`[Bandit] Persisting reward: arm=${armId}, reward=${reward}, context=${JSON.stringify(context)}`);
-  }
-
-  // Example: call this after content is posted and engagement is measured
-  public recordContentReward(contentId: string, reward: number, context: Record<string, any>) {
-    this.bandit.updateReward(contentId, reward);
-    this.persistRewardSignal(contentId, reward, context);
-  }
-
-  // Use bandit to select next variation
-  public selectContentVariation(variations: { id: string, context: Record<string, any> }[]): string {
-    for (const v of variations) {
-      if (!this.bandit['arms'].find(a => a.id === v.id)) {
-        this.bandit.addArm({ ...v, estimatedReward: 0, count: 0 });
+  /**
+   * Initialize default optimization arms/strategies
+   */
+  private async initializeDefaultArms(): Promise<void> {
+    const defaultArms: BanditArm[] = [
+      {
+        id: 'aggressive_cta',
+        name: 'Aggressive Call-to-Action',
+        parameters: { ctaStrength: 'high', urgency: true },
+        features: [1, 0, 0, 0.8, 0.7],
+        createdAt: new Date(),
+        version: this.modelVersion
+      },
+      {
+        id: 'subtle_engagement',
+        name: 'Subtle Engagement',
+        parameters: { ctaStrength: 'low', emotional: true },
+        features: [0, 1, 0, 0.3, 0.9],
+        createdAt: new Date(),
+        version: this.modelVersion
+      },
+      {
+        id: 'hashtag_heavy',
+        name: 'Hashtag Heavy Strategy',
+        parameters: { hashtagCount: 'high', trending: true },
+        features: [0, 0, 1, 0.9, 0.4],
+        createdAt: new Date(),
+        version: this.modelVersion
+      },
+      {
+        id: 'minimal_clean',
+        name: 'Minimal Clean Approach',
+        parameters: { hashtagCount: 'low', clean: true },
+        features: [0, 0, 0, 0.1, 0.8],
+        createdAt: new Date(),
+        version: this.modelVersion
       }
+    ];
+
+    for (const arm of defaultArms) {
+      await this.bandit.addArm(arm);
     }
-    return this.bandit.selectArm(variations[0].context).id;
   }
 
-  // For testing: expose bandit state
-  public getBanditArms(): BanditArm[] { return this.bandit['arms']; }
-
-  // For testing: reset bandit state
-  public resetBandit(): void { this.bandit = new EpsilonGreedyBandit(); }
-
-  // For testing: simulate reward for a variation
-  public simulateReward(variationId: string, reward: number, context: Record<string, any>) {
-    this.recordContentReward(variationId, reward, context);
+  /**
+   * Create bandit context from task
+   */
+  private createBanditContext(task: ContentOptimizationTask): BanditContext {
+    const now = new Date();
+    return {
+      platform: task.platform || 'Instagram',
+      contentType: task.parameters?.contentType || 'text',
+      audienceSegment: task.parameters?.audienceSegment || 'general',
+      timeOfDay: now.getHours(),
+      dayOfWeek: now.getDay(),
+      historicalEngagement: task.parameters?.historicalEngagement || 0,
+      contentLength: task.baseContent?.caption?.length || 0,
+      hasHashtags: (task.baseContent?.hashtags?.length || 0) > 0,
+      hasThumbnail: !!task.parameters?.thumbnailUrl,
+      userId: task.parameters?.userId || 'anonymous'
+    };
   }
 
-  // For testing: get estimated reward for a variation
-  public getEstimatedReward(variationId: string): number | undefined {
-    const arm = this.bandit['arms'].find((a: BanditArm) => a.id === variationId);
-    return arm?.estimatedReward;
+  /**
+   * Store optimization for later reward feedback
+   */
+  private storeOptimizationForReward(
+    armId: string, 
+    context: BanditContext, 
+    task: ContentOptimizationTask
+  ): void {
+    // In a real system, this would be stored in a database with content ID
+    // for later reward tracking when engagement metrics are available
+    const optimizationRecord = {
+      armId,
+      context,
+      taskId: task.parameters?.taskId || crypto.randomUUID(),
+      timestamp: new Date(),
+      contentId: task.contentId
+    };
+    
+    console.log(`Stored optimization record for reward tracking:`, optimizationRecord);
   }
 
-  // For testing: get count for a variation
-  public getCount(variationId: string): number | undefined {
-    const arm = this.bandit['arms'].find((a: BanditArm) => a.id === variationId);
-    return arm?.count;
-  }
-}
+  /**
+   * Record content performance reward (call this when engagement data is available)
+   */
+  public async recordContentReward(
+    contentId: string, 
+    engagementMetrics: {
+      likes: number;
+      comments: number;
+      shares: number;
+      clickThroughRate: number;
+      reachRate: number;
+    },
+    context: BanditContext,
+    armId: string
+  ): Promise<void> {
+    // Calculate normalized reward (0-1 scale)
+    const reward = this.calculateNormalizedReward(engagementMetrics, context);
+    
+    const banditReward: BanditReward = {
+      armId,
+      context,
+      reward,
+      timestamp: new Date(),
+      metadata: {
+        contentId,
+        engagementMetrics,
+        modelVersion: this.modelVersion
+      }
+    };
 
-// TODO: Replace EpsilonGreedyBandit with Vowpal Wabbit or production-grade contextual bandit.
-// TODO: Replace in-memory reward persistence with Redis/Postgres for online learning. 
+    await this.bandit.updateReward(banditReward);
+    console.log(`Recorded reward ${reward.toFixed(3)} for arm ${armId} and content ${contentId}`);
+  }
+
+  /**
+   * Calculate normalized reward from engagement metrics
+   */
+  private calculateNormalizedReward(
+    metrics: any, 
+    context: BanditContext
+  ): number {
+    // Weighted combination of engagement metrics
+    const likeWeight = 0.3;
+    const commentWeight = 0.4;
+    const shareWeight = 0.2;
+    const ctrWeight = 0.1;
+    
+    // Normalize metrics to 0-1 scale (platform-specific)
+    const platformNorms = {
+      'TikTok': { likes: 100, comments: 20, shares: 10, ctr: 0.05 },
+      'Instagram': { likes: 50, comments: 10, shares: 5, ctr: 0.03 },
+      'YouTube': { likes: 20, comments: 5, shares: 2, ctr: 0.08 }
+    };
+    
+    const norms = platformNorms[context.platform as keyof typeof platformNorms] || platformNorms['Instagram'];
+    
+    const normalizedLikes = Math.min(metrics.likes / norms.likes, 1);
+    const normalizedComments = Math.min(metrics.comments / norms.comments, 1);
+    const normalizedShares = Math.min(metrics.shares / norms.shares, 1);
+    const normalizedCTR = Math.min(metrics.clickThroughRate / norms.ctr, 1);
+    
+    return likeWeight * normalizedLikes +
+           commentWeight * normalizedComments +
+           shareWeight * normalizedShares +
+           ctrWeight * normalizedCTR;
+  }
+
+  /**
+   * Get bandit performance metrics
+   */
+  public getBanditMetrics() {
+    return this.bandit.getMetrics();
+  }
+
+  /**
+   * Get arm performance summary
+   */
+  public getArmPerformance() {
+    return this.bandit.getArmPerformance();
+  }
+
+  /**
+   * Configure A/B test
+   */
+  public configureABTest(
+    testName: string, 
+    config: {
+      arms: string[];
+      trafficSplit: number[];
+      duration: number;
+      metrics: string[];
+    }
+  ): void {
+    this.abTestConfig.set(testName, {
+      ...config,
+      startTime: new Date(),
+      endTime: new Date(Date.now() + config.duration * 24 * 60 * 60 * 1000) // duration in days
+    });
+    console.log(`Configured A/B test: ${testName}`);
+  }
+
+  /**
+   * Get A/B test results
+   */
+  public getABTestResults(testName: string) {
+    const config = this.abTestConfig.get(testName);
+    if (!config) return null;
+    
+    const armPerformance = this.getArmPerformance();
+    const testArms = armPerformance.filter(arm => config.arms.includes(arm.armId));
+    
+    return {
+      testName,
+      config,
+      results: testArms,
+      isActive: new Date() < config.endTime,
+      winner: testArms.reduce((best, current) => 
+        current.expectedReward > best.expectedReward ? current : best
+      )
+    };
+  }
+
+  /**
+   * Deploy model version
+   */
+  public deployModelVersion(version: string): void {
+    this.modelVersion = version;
+    console.log(`Deployed model version: ${version}`);
+  }
+
+  /**
+   * Get current model version
+   */
+  public getModelVersion(): string {
+    return this.modelVersion;
+  }
+} 
