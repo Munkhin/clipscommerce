@@ -66,7 +66,10 @@ class StripeService {
 
       return await response.json();
     } catch (error) {
-      console.error('Error creating setup intent:', error);
+      // Log error in development only
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error creating setup intent:', error);
+      }
       throw error;
     }
   }
@@ -87,7 +90,10 @@ class StripeService {
       const data = await response.json();
       return data.payment_methods || [];
     } catch (error) {
-      console.error('Error fetching payment methods:', error);
+      // Log error in development only
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error fetching payment methods:', error);
+      }
       throw error;
     }
   }
@@ -110,7 +116,10 @@ class StripeService {
         throw new Error('Failed to delete payment method');
       }
     } catch (error) {
-      console.error('Error deleting payment method:', error);
+      // Log error in development only
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error deleting payment method:', error);
+      }
       throw error;
     }
   }
@@ -134,7 +143,10 @@ class StripeService {
         throw new Error('Failed to set default payment method');
       }
     } catch (error) {
-      console.error('Error setting default payment method:', error);
+      // Log error in development only
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error setting default payment method:', error);
+      }
       throw error;
     }
   }
@@ -161,7 +173,10 @@ class StripeService {
 
       return await response.json();
     } catch (error) {
-      console.error('Error fetching billing history:', error);
+      // Log error in development only
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error fetching billing history:', error);
+      }
       throw error;
     }
   }
@@ -184,7 +199,10 @@ class StripeService {
 
       return await response.json();
     } catch (error) {
-      console.error('Error fetching upcoming invoice:', error);
+      // Log error in development only
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error fetching upcoming invoice:', error);
+      }
       throw error;
     }
   }
@@ -209,7 +227,10 @@ class StripeService {
 
       return await response.json();
     } catch (error) {
-      console.error('Error creating customer portal session:', error);
+      // Log error in development only
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error creating customer portal session:', error);
+      }
       throw error;
     }
   }

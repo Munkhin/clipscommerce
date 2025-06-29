@@ -215,7 +215,7 @@ export class ProductionContextualBandit {
     const features: number[] = [];
     
     // Platform encoding (one-hot)
-    const platforms = ['TikTok', 'Instagram', 'YouTube', 'Facebook', 'Twitter', 'LinkedIn', 'Pinterest'];
+    const platforms = [Platform.TIKTOK, Platform.INSTAGRAM, Platform.FACEBOOK, Platform.YOUTUBE, 'Twitter', 'LinkedIn', 'Pinterest'];
     platforms.forEach(platform => {
       features.push(context.platform === platform ? 1 : 0);
     });
@@ -484,7 +484,7 @@ export class ContentOptimizationAgent {
     // Use bandit to select best variation if multiple
     if (task.baseContent) {
       const variations = [{ id: 'v1', context: { platform: task.platform } }]; // Example
-      const selected = this.selectContentVariation(variations);
+      const selected = await this.selectContentVariation(variations);
       console.log(`[Bandit] Selected variation: ${selected}`);
     }
     this.performanceScore = Math.min(1, this.performanceScore + 0.03);
@@ -563,7 +563,7 @@ export class ContentOptimizationAgent {
   private createBanditContext(task: ContentOptimizationTask): BanditContext {
     const now = new Date();
     return {
-      platform: task.platform || 'Instagram',
+      platform: task.platform || Platform.INSTAGRAM,
       contentType: task.parameters?.contentType || 'text',
       audienceSegment: task.parameters?.audienceSegment || 'general',
       timeOfDay: now.getHours(),
@@ -646,12 +646,12 @@ export class ContentOptimizationAgent {
     
     // Normalize metrics to 0-1 scale (platform-specific)
     const platformNorms = {
-      'TikTok': { likes: 100, comments: 20, shares: 10, ctr: 0.05 },
-      'Instagram': { likes: 50, comments: 10, shares: 5, ctr: 0.03 },
-      'YouTube': { likes: 20, comments: 5, shares: 2, ctr: 0.08 }
+      [Platform.TIKTOK]: { likes: 100, comments: 20, shares: 10, ctr: 0.05 },
+      [Platform.INSTAGRAM]: { likes: 50, comments: 10, shares: 5, ctr: 0.03 },
+      [Platform.YOUTUBE]: { likes: 20, comments: 5, shares: 2, ctr: 0.08 }
     };
     
-    const norms = platformNorms[context.platform as keyof typeof platformNorms] || platformNorms['Instagram'];
+    const norms = platformNorms[context.platform as keyof typeof platformNorms] || platformNorms[Platform.INSTAGRAM];
     
     const normalizedLikes = Math.min(metrics.likes / norms.likes, 1);
     const normalizedComments = Math.min(metrics.comments / norms.comments, 1);
@@ -732,5 +732,39 @@ export class ContentOptimizationAgent {
    */
   public getModelVersion(): string {
     return this.modelVersion;
+  }
+
+  /**
+   * Select best content variation using contextual bandit
+   */
+  private async selectContentVariation(variations: Array<{id: string, context: any}>): Promise<string> {
+    if (variations.length === 0) {
+      throw new Error('No variations provided for selection');
+    }
+    
+    if (variations.length === 1) {
+      return variations[0].id;
+    }
+    
+    // Create bandit context from the first variation (assuming similar context)
+    const context: BanditContext = {
+      platform: variations[0].context?.platform || Platform.INSTAGRAM,
+      contentType: 'text',
+      audienceSegment: 'general',
+      timeOfDay: new Date().getHours(),
+      dayOfWeek: new Date().getDay(),
+      historicalEngagement: 0,
+      contentLength: 100, // default
+      hasHashtags: false,
+      hasThumbnail: false,
+      userId: 'variation_selection'
+    };
+    
+    // Use bandit to select best arm (variation)
+    const selectedArmId = await this.bandit.selectArm(context);
+    
+    // Map arm ID back to variation ID if possible, otherwise return first variation
+    const selectedVariation = variations.find(v => v.id === selectedArmId) || variations[0];
+    return selectedVariation.id;
   }
 } 

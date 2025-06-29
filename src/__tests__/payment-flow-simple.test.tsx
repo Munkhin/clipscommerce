@@ -27,7 +27,7 @@ const MockPricingSection = () => {
     
     // Mock window.open for testing
     if (stripeLink) {
-      (window as any).mockStripeRedirect = stripeLink;
+      (window as { mockStripeRedirect?: string }).mockStripeRedirect = stripeLink;
     }
   };
 
@@ -75,11 +75,11 @@ describe('Payment Flow - Core Functionality', () => {
   beforeAll(() => {
     originalLocation = window.location;
     try {
-      delete (window as any).location;
+      delete (window as unknown as { location?: Location }).location;
     } catch (e) {
       console.warn("Could not delete window.location in payment-flow-simple.test.tsx, proceeding with assignment", e);
     }
-    (window as any).location = {
+    (window as unknown as { location: Location }).location = {
       _currentHref: 'http://localhost:3000/initial-mock-path',
       assign: jest.fn(),
       replace: jest.fn(),
@@ -104,15 +104,15 @@ describe('Payment Flow - Core Functionality', () => {
       valueOf: function() { return this; }
     };
     mockLocationHref.mockClear();
-    ((window as any).location.assign as jest.Mock).mockClear();
-    ((window as any).location.replace as jest.Mock).mockClear();
+    (window.location.assign as jest.Mock).mockClear();
+    (window.location.replace as jest.Mock).mockClear();
 
     // Mock for tracking Stripe redirects (if still used by MockPricingSection)
-    (window as any).mockStripeRedirect = null;
+    (window as { mockStripeRedirect?: string | null }).mockStripeRedirect = null;
   });
 
   afterAll(() => {
-    (window as any).location = originalLocation;
+    (window as unknown as { location: Location }).location = originalLocation;
   });
 
   beforeEach(() => {
@@ -138,15 +138,15 @@ describe('Payment Flow - Core Functionality', () => {
     });
     
     // Reset window.location.href via the setter to ensure spy is called if needed, and clear mocks
-    if (window.location && typeof (window.location as any)._currentHref === 'string') {
-      (window.location as any)._currentHref = 'http://localhost:3000/initial-mock-path';
+    if (window.location && typeof (window.location as { _currentHref?: string })._currentHref === 'string') {
+      (window.location as { _currentHref: string })._currentHref = 'http://localhost:3000/initial-mock-path';
     }
     mockLocationHref.mockClear();
-    ((window as any).location.assign as jest.Mock).mockClear();
-    ((window as any).location.replace as jest.Mock).mockClear();
+    (window.location.assign as jest.Mock).mockClear();
+    (window.location.replace as jest.Mock).mockClear();
 
     // Mock for tracking Stripe redirects (if still used by MockPricingSection)
-    (window as any).mockStripeRedirect = null;
+    (window as { mockStripeRedirect?: string | null }).mockStripeRedirect = null;
   });
 
   afterEach(() => {
@@ -183,7 +183,7 @@ describe('Payment Flow - Core Functionality', () => {
     const proButton = screen.getByText('Get Pro Plan');
     fireEvent.click(proButton);
     
-    expect((window as any).mockStripeRedirect).toBe('https://stripe.com/pro-yearly');
+    expect((window as { mockStripeRedirect?: string }).mockStripeRedirect).toBe('https://stripe.com/pro-yearly');
   });
 
   it('should use correct Stripe link for Pro monthly plan', () => {
@@ -196,7 +196,7 @@ describe('Payment Flow - Core Functionality', () => {
     const proButton = screen.getByText('Get Pro Plan');
     fireEvent.click(proButton);
     
-    expect((window as any).mockStripeRedirect).toBe('https://stripe.com/pro-monthly');
+    expect((window as { mockStripeRedirect?: string }).mockStripeRedirect).toBe('https://stripe.com/pro-monthly');
   });
 
   it('should use correct Stripe link for Team yearly plan and set redirect', () => {
@@ -205,7 +205,7 @@ describe('Payment Flow - Core Functionality', () => {
     const teamButton = screen.getByText('Get Team Plan');
     fireEvent.click(teamButton);
     
-    expect((window as any).mockStripeRedirect).toBe('https://stripe.com/team-yearly');
+    expect((window as { mockStripeRedirect?: string }).mockStripeRedirect).toBe('https://stripe.com/team-yearly');
     expect(localStorage.setItem).toHaveBeenCalledWith('post_payment_redirect', '/team-dashboard');
   });
 
@@ -219,7 +219,7 @@ describe('Payment Flow - Core Functionality', () => {
     const teamButton = screen.getByText('Get Team Plan');
     fireEvent.click(teamButton);
     
-    expect((window as any).mockStripeRedirect).toBe('https://stripe.com/team-monthly');
+    expect((window as { mockStripeRedirect?: string }).mockStripeRedirect).toBe('https://stripe.com/team-monthly');
     expect(localStorage.setItem).toHaveBeenCalledWith('post_payment_redirect', '/team-dashboard');
   });
 

@@ -11,10 +11,10 @@ jest.mock('@/components/ui/use-toast', () => ({
 describe('ContentAutomationModule', () => {
   let ContentAutomationModule: React.ComponentType;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     jest.clearAllMocks();
     // Import fresh for each test
-    const ComponentModule = require('../../../src/components/team-dashboard/modules/ContentAutomationModule');
+    const ComponentModule = await import('../../../src/components/team-dashboard/modules/ContentAutomationModule');
     ContentAutomationModule = ComponentModule.ContentAutomationModule;
   });
 

@@ -67,6 +67,6 @@ export interface InstagramApiResponse<T> {
   };
 }
 
-export interface InstagramApiMediaResponse extends InstagramApiResponse<InstagramApiMediaNode> {}
-export interface InstagramApiUserResponse extends InstagramApiResponse<InstagramApiUserNode> {}
+export type InstagramApiMediaResponse = InstagramApiResponse<InstagramApiMediaNode>;
+export type InstagramApiUserResponse = InstagramApiResponse<InstagramApiUserNode>;
 // Add more specific response types as needed

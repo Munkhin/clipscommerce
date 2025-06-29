@@ -3,6 +3,39 @@ import { AutoPostingScheduler } from '../../../workflows/autoposting/AutoPosting
 import { checkErrorHandlingHealth } from '../../../workflows/autoposting/ErrorHandling';
 import logger from '../../../../utils/logger';
 
+interface SchedulerMetrics {
+  totalProcessed: number;
+  successfulPosts: number;
+  failedPosts: number;
+  averageProcessingTime: number;
+  queueLength: number;
+  platformStats: Record<string, {
+    posts: number;
+    successes: number;
+    failures: number;
+  }>;
+}
+
+interface SchedulerHealthStatus {
+  status: 'healthy' | 'degraded' | 'unhealthy';
+  metrics: SchedulerMetrics;
+  lastProcessingTime: number;
+  queueHealth: string;
+  platformStatuses: Record<string, {
+    status: 'healthy' | 'degraded' | 'unhealthy';
+    failureRate: number;
+    consecutiveFailures: number;
+  }>;
+  errorRecoveryStatus: any;
+  deadLetterQueueSize: number;
+}
+
+interface ErrorHandlingHealthStatus {
+  status: 'healthy' | 'degraded' | 'unhealthy';
+  checks: Record<string, boolean>;
+  timestamp: string;
+}
+
 // Global scheduler instance (in a real application, this would be managed by a service container)
 let schedulerInstance: AutoPostingScheduler | null = null;
 
@@ -92,7 +125,7 @@ export async function GET(request: NextRequest) {
       try {
         const monitoringReport = scheduler['monitoring']?.getHealthReport();
         if (monitoringReport) {
-          healthReport['monitoring'] = monitoringReport;
+          (healthReport as Record<string, unknown>)['monitoring'] = monitoringReport;
         }
       } catch (error) {
         logger.warn('Failed to get monitoring report', {
@@ -152,7 +185,7 @@ export async function POST(request: NextRequest) {
           timestamp: new Date().toISOString()
         });
         
-      case 'retry_dead_letter_queue':
+      case 'retry_dead_letter_queue': {
         const contentId = body.contentId;
         if (!contentId) {
           return NextResponse.json(
@@ -168,14 +201,16 @@ export async function POST(request: NextRequest) {
           contentId,
           timestamp: new Date().toISOString()
         });
+      }
         
-      case 'get_dead_letter_queue':
+      case 'get_dead_letter_queue': {
         const deadLetterQueue = scheduler['errorRecovery']?.getDeadLetterQueue() || [];
         return NextResponse.json({
           deadLetterQueue,
           size: deadLetterQueue.length,
           timestamp: new Date().toISOString()
         });
+      }
         
       default:
         return NextResponse.json(
@@ -200,8 +235,8 @@ export async function POST(request: NextRequest) {
 }
 
 function determineOverallHealth(
-  schedulerHealth: any,
-  errorHandlingHealth: any
+  schedulerHealth: SchedulerHealthStatus,
+  errorHandlingHealth: ErrorHandlingHealthStatus
 ): 'healthy' | 'degraded' | 'unhealthy' {
   // If error handling system is unhealthy, overall is unhealthy
   if (errorHandlingHealth.status === 'unhealthy') {

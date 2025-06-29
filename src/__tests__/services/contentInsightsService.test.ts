@@ -1,4 +1,4 @@
-import { ContentInsightsService } from '../../services/contentInsightsService';
+import { ContentInsightsService } from '@/services/contentInsightsService';
 import {
   createMockSupabaseClient,
   cleanupMocks,

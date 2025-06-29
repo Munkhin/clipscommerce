@@ -2,6 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { FeedbackModule } from '@/components/team-dashboard/modules/FeedbackModule';
+import { useUser } from '@/hooks/useUser';
 
 // Mock the UI toast
 jest.mock('@/components/ui/use-toast', () => ({

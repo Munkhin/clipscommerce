@@ -7,9 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import DatePickerWithRange from '@/components/ui/date-picker-with-range';
 import { ReportsAnalysisService } from '@/app/workflows/reports/ReportsAnalysisService';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { MainNav } from '@/components/dashboard/main-nav';
-import { Search } from '@/components/dashboard/search';
-import { UserNav } from '@/components/dashboard/user-nav';
+import Header from '@/components/dashboard/Header';
 
 export default function ReportsPage() {
   const [platform, setPlatform] = useState('tiktok');
@@ -32,7 +30,7 @@ export default function ReportsPage() {
       const result = await reportsService.getFullReport(
         {
           userId: 'test-user-id', // Replace with actual user ID
-          platform,
+          platform: platform as "TikTok" | "Instagram" | "YouTube" | "Facebook" | "Twitter" | "LinkedIn",
           timeRange: {
             start: dateRange.from.toISOString(),
             end: dateRange.to.toISOString(),
@@ -41,6 +39,7 @@ export default function ReportsPage() {
         {
           format: 'html',
           includeCharts: true,
+          includeRawData: false,
         }
       );
       setReport(result);

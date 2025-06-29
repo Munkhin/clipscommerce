@@ -1,21 +1,21 @@
 export type Database = {
   public: {
     Tables: {
-      model_training_sessions: any;
-      trained_models: any;
-      training_data_quality: any;
-      ai_suggestions: any;
-      ab_experiments: any;
-      experiment_results: any;
-      user_posts: any;
-      profiles: any;
-      autopost_schedule: any;
-      user_social_credentials: any;
+      model_training_sessions: unknown;
+      trained_models: unknown;
+      training_data_quality: unknown;
+      ai_suggestions: unknown;
+      ab_experiments: unknown;
+      experiment_results: unknown;
+      user_posts: unknown;
+      profiles: unknown;
+      autopost_schedule: unknown;
+      user_social_credentials: unknown;
       // Add any other tables referenced in the codebase
     };
-    Views: {};
-    Functions: {};
-    Enums: {};
-    CompositeTypes: {};
+    Views: Record<string, never>;
+    Functions: Record<string, never>;
+    Enums: Record<string, never>;
+    CompositeTypes: Record<string, never>;
   };
 };

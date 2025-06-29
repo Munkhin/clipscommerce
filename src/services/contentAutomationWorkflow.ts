@@ -60,6 +60,7 @@ export class ContentAutomationWorkflow {
     queue: ContentAutomationRequest[],
     sink: ContentAutomationResult[],
   ): Promise<void> {
+    // eslint-disable-next-line no-constant-condition
     while (true) {
       const req = queue.shift();
       if (!req) break;

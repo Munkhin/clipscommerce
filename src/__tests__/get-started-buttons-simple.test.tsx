@@ -17,15 +17,15 @@ jest.mock('next/navigation', () => ({
 // Mock framer-motion to avoid animation issues in tests
 jest.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-    button: ({ children, ...props }: any) => <button {...props}>{children}</button>,
-    a: ({ children, ...props }: any) => <a {...props}>{children}</a>,
-    h1: ({ children, ...props }: any) => <h1 {...props}>{children}</h1>,
-    h2: ({ children, ...props }: any) => <h2 {...props}>{children}</h2>,
-    p: ({ children, ...props }: any) => <p {...props}>{children}</p>,
-    span: ({ children, ...props }: any) => <span {...props}>{children}</span>,
+    div: ({ children, ...props }: React.ComponentProps<'div'>) => <div {...props}>{children}</div>,
+    button: ({ children, ...props }: React.ComponentProps<'button'>) => <button {...props}>{children}</button>,
+    a: ({ children, ...props }: React.ComponentProps<'a'>) => <a {...props}>{children}</a>,
+    h1: ({ children, ...props }: React.ComponentProps<'h1'>) => <h1 {...props}>{children}</h1>,
+    h2: ({ children, ...props }: React.ComponentProps<'h2'>) => <h2 {...props}>{children}</h2>,
+    p: ({ children, ...props }: React.ComponentProps<'p'>) => <p {...props}>{children}</p>,
+    span: ({ children, ...props }: React.ComponentProps<'span'>) => <span {...props}>{children}</span>,
   },
-  AnimatePresence: ({ children }: any) => children,
+  AnimatePresence: ({ children }: { children: React.ReactNode }) => children,
   useAnimation: () => ({
     start: jest.fn(),
     set: jest.fn(),

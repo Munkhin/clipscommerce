@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import PricingCard from '../pricing-card';
-import { User } from '@supabase/supabase-js';
+import type { User } from '@supabase/supabase-js';
 
 // Mock Supabase client
 const mockInvoke = jest.fn();
@@ -16,7 +16,7 @@ jest.mock('@/lib/supabase/client', () => ({
 
 // Mock UI components
 jest.mock('../ui/button', () => ({
-  Button: ({ children, onClick, disabled, className, ...props }: any) => (
+  Button: ({ children, onClick, disabled, className, ...props }: React.ComponentProps<'button'>) => (
     <button onClick={onClick} disabled={disabled} className={className} {...props}>
       {children}
     </button>
@@ -24,22 +24,22 @@ jest.mock('../ui/button', () => ({
 }));
 
 jest.mock('../ui/card', () => ({
-  Card: ({ children, className, ...props }: any) => (
+  Card: ({ children, className, ...props }: React.ComponentProps<'div'>) => (
     <div className={className} {...props}>{children}</div>
   ),
-  CardContent: ({ children, className, ...props }: any) => (
+  CardContent: ({ children, className, ...props }: React.ComponentProps<'div'>) => (
     <div className={className} {...props}>{children}</div>
   ),
-  CardDescription: ({ children, className, ...props }: any) => (
+  CardDescription: ({ children, className, ...props }: React.ComponentProps<'div'>) => (
     <div className={className} {...props}>{children}</div>
   ),
-  CardFooter: ({ children, className, ...props }: any) => (
+  CardFooter: ({ children, className, ...props }: React.ComponentProps<'div'>) => (
     <div className={className} {...props}>{children}</div>
   ),
-  CardHeader: ({ children, className, ...props }: any) => (
+  CardHeader: ({ children, className, ...props }: React.ComponentProps<'div'>) => (
     <div className={className} {...props}>{children}</div>
   ),
-  CardTitle: ({ children, className, ...props }: any) => (
+  CardTitle: ({ children, className, ...props }: React.ComponentProps<'h2'>) => (
     <h2 className={className} {...props}>{children}</h2>
   ),
 }));

@@ -15,7 +15,7 @@ import { EnhancedCache } from '../utils/caching';
 
 // Custom error types for better error handling
 export class TextAnalyzerError extends Error {
-  constructor(message: string, public readonly code: string, public readonly details?: any) {
+  constructor(message: string, public readonly code: string, public readonly details?: unknown) {
     super(message);
     this.name = 'TextAnalyzerError';
     if (Error.captureStackTrace) {
@@ -25,7 +25,7 @@ export class TextAnalyzerError extends Error {
 }
 
 export class ApiError extends TextAnalyzerError {
-  constructor(message: string, public readonly statusCode?: number, details?: any) {
+  constructor(message: string, public readonly statusCode?: number, details?: unknown) {
     super(message, 'API_ERROR', details);
     this.name = 'ApiError';
   }
@@ -128,7 +128,7 @@ export type BatchResult<T> = {
  */
 export class EnhancedTextAnalyzer {
   private config: Required<TextAnalyzerConfig>;
-  private cache: EnhancedCache<string, any>;
+  private cache: EnhancedCache<string, unknown>;
   private metrics: MetricsTracker;
   private openAICircuitBreaker: CircuitBreaker;
   private summarizationBatcher: RequestBatcher<string, ContentSummaryResult>;
@@ -188,7 +188,7 @@ export class EnhancedTextAnalyzer {
     this.validateConfig(this.config);
     
     // Initialize cache
-    this.cache = new EnhancedCache<string, any>({
+    this.cache = new EnhancedCache<string, unknown>({
       namespace: 'text-analyzer',
       ttl: this.config.cacheTtlMs,
     });
@@ -457,7 +457,7 @@ export class EnhancedTextAnalyzer {
           failFast: false,
           isRetryable: (error) => {
             // Don't retry 4xx errors except for rate limiting (429)
-            const status = (error as any)?.status;
+            const status = (error as {status?: number})?.status;
             return !status || status === 429 || status >= 500;
           }
         }
@@ -481,13 +481,13 @@ export class EnhancedTextAnalyzer {
       };
     } catch (error) {
       // Enhance error reporting
-      if ((error as any).status === 429) {
+      if ((error as {status?: number}).status === 429) {
         throw new RateLimitError();
       }
       
       throw new ApiError(
         `OpenAI summarization failed: ${(error as Error).message}`, 
-        (error as any).status,
+        (error as {status?: number}).status,
         error
       );
     }
@@ -696,11 +696,11 @@ export class EnhancedTextAnalyzer {
   /**
    * Batch process texts for a given method (e.g., summarizeContent)
    */
-  public async batchProcess(texts: string[], method: keyof this = 'summarizeContent'): Promise<any[]> {
+  public async batchProcess(texts: string[], method: keyof this = 'summarizeContent'): Promise<unknown[]> {
     const methodName = String(method);
-    if (typeof (this as any)[methodName] !== 'function') {
+    if (typeof (this as Record<string, unknown>)[methodName] !== 'function') {
       throw new Error(`Method ${methodName} does not exist on EnhancedTextAnalyzer`);
     }
-    return Promise.all(texts.map(text => (this as any)[methodName](text)));
+    return Promise.all(texts.map(text => (this as Record<string, Function>)[methodName](text)));
   }
 }

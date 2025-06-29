@@ -44,7 +44,6 @@ export default function SecuritySettingsPage() {
   const handleVerify = async () => {
     if (!challengeId) return;
     const { error } = await supabase.auth.mfa.challengeAndVerify({
-      challengeId,
       factorId: challengeId,
       code: verificationCode,
     });

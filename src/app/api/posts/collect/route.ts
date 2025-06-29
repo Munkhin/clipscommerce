@@ -16,7 +16,7 @@ const collectPostsSchema = z.object({
 // POST - Start post collection process
 export async function POST(request: NextRequest) {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
     
     // Verify authentication
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -107,7 +107,7 @@ export async function POST(request: NextRequest) {
 // GET - Check collection status
 export async function GET(request: NextRequest) {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
     
     // Verify authentication
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -146,7 +146,7 @@ export async function GET(request: NextRequest) {
 }
 
 // Helper functions
-async function checkExistingCollection(userId: string, platforms: string[]) {
+async function checkExistingCollection(_userId: string, _platforms: string[]) {
   // Check for any in-progress collections for the same platforms
   // This would typically query a jobs table or similar
   
@@ -158,8 +158,16 @@ async function checkExistingCollection(userId: string, platforms: string[]) {
   };
 }
 
+interface SocialCredentials {
+  expires_at?: string | number;
+  access_token?: string;
+  refresh_token?: string;
+  platform_user_id?: string;
+  [key: string]: unknown;
+}
+
 async function verifyPlatformCredentials(userId: string, platforms: string[]) {
-  const supabase = createClient();
+  const supabase = await createClient();
   
   const credentialChecks = await Promise.all(
     platforms.map(async (platform) => {
@@ -168,14 +176,14 @@ async function verifyPlatformCredentials(userId: string, platforms: string[]) {
         .select('*')
         .eq('user_id', userId)
         .eq('platform', platform)
-        .single();
+        .single<SocialCredentials>();
 
       if (error || !credentials) {
         return { platform, valid: false, reason: 'No credentials found' };
       }
 
       // Check if credentials are expired
-      if (credentials.expires_at && new Date(credentials.expires_at) <= new Date()) {
+      if (credentials && credentials.expires_at && new Date(credentials.expires_at) <= new Date()) {
         return { platform, valid: false, reason: 'Credentials expired' };
       }
 
@@ -213,8 +221,7 @@ async function storeCollectionJob(job: Record<string, unknown>) {
   console.log('Storing collection job:', job);
 }
 
-async function startPostCollection(job: { collection_id: string; platforms: string[]; user_id: string; date_range: { start_date?: string; end_date?: string }; include_metrics: boolean }) {
-  const supabase = createClient();
+async function startPostCollection(job: { collection_id: string; platforms: string[]; user_id: string; date_range?: { start_date?: string; end_date?: string }; include_metrics: boolean }) {
 
   try {
     await updateCollectionStatus(job.collection_id, 'collecting', 10, 'Starting collection...');
@@ -269,7 +276,7 @@ async function updateCollectionStatus(
   status: string, 
   progress?: number | null, 
   message?: string,
-  currentPlatform?: string
+  _currentPlatform?: string
 ) {
   // Update collection status in database
   console.log(`Collection ${collectionId}: ${status} - ${progress}% - ${message}`);
@@ -278,8 +285,8 @@ async function updateCollectionStatus(
 async function collectPlatformPosts(
   userId: string, 
   platform: string, 
-  dateRange?: { start_date?: string; end_date?: string },
-  includeMetrics: boolean = true
+  _dateRange?: { start_date?: string; end_date?: string },
+  _includeMetrics: boolean = true
 ) {
   // This would integrate with the existing data collection services
   // For now, return mock data
@@ -314,7 +321,7 @@ async function collectPlatformPosts(
 }
 
 async function storePosts(posts: Record<string, unknown>[]) {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   try {
     // Insert posts in batches to avoid hitting limits
@@ -358,7 +365,7 @@ async function getCollectionStatus(collectionId: string, userId: string) {
   };
 }
 
-async function getRecentCollections(userId: string) {
+async function getRecentCollections(_userId: string) {
   // Get recent collections from database
   // For now, return mock data
   return [

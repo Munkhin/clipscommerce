@@ -1,4 +1,5 @@
 // Global test setup for React testing
+import 'openai/shims/node';
 require('@testing-library/jest-dom');
 const { TextEncoder, TextDecoder } = require('util');
 const nodeFetch = require('node-fetch');

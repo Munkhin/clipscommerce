@@ -47,6 +47,7 @@ export class ContentIdeationWorkflow {
   }
 
   private async worker(queue: IdeationRequest[], sink: IdeationResult[]): Promise<void> {
+    // eslint-disable-next-line no-constant-condition
     while (true) {
       const req = queue.shift();
       if (!req) break;

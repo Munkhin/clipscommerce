@@ -1,6 +1,7 @@
 import { EventEmitter } from 'events';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { Platform } from '../types/niche_types';
+import { PostMetrics } from '../../data_analysis/types/analysis_types';
 import { ModelTrainingPipeline, TrainingConfig, TrainingProgress, TrainingResult } from './ModelTrainingPipeline';
 import { TrainingDataCollectionService, DataCollectionConfig, DataQualityReport } from './DataCollectionService';
 

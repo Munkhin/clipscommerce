@@ -36,7 +36,7 @@ export const handleAsyncError = async <T>(
   }
 };
 
-export const withErrorHandling = <T extends (...args: any[]) => any>(
+export const withErrorHandling = <T extends (...args: unknown[]) => unknown>(
   fn: T,
   context?: {
     component?: string;

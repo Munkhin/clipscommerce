@@ -1,4 +1,4 @@
-import { CompetitorAnalysisService } from '../../services/competitorAnalysisService';
+import { CompetitorAnalysisService } from '@/services/competitorAnalysisService';
 import {
   createMockSupabaseClient,
   mockFetch,

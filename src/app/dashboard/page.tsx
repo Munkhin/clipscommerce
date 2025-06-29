@@ -60,7 +60,7 @@ import { AutopostScheduler } from '@/components/dashboard/autopost/AutopostSched
 export default function DashboardPage() {
   const { user } = useAuth();
   const [greeting, setGreeting] = useState('Hello');
-  const [analytics, setAnalytics] = useState<Awaited<ReturnType<ReportsAnalysisService['getReport']>>['data']>(null);
+  const [analytics, setAnalytics] = useState<Awaited<ReturnType<ReportsAnalysisService['getReport']>>['data']>(undefined);
   const [loading, setLoading] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);

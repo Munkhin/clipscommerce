@@ -322,7 +322,10 @@ export class AccessibilityAuditor {
             issues.push(issue);
           }
         } catch (error) {
-          console.warn(`Error checking rule ${ruleId}:`, error);
+          // Log error in development only
+          if (process.env.NODE_ENV === 'development') {
+            console.warn(`Error checking rule ${ruleId}:`, error);
+          }
         }
       }
     }
@@ -373,7 +376,10 @@ export class AccessibilityAuditor {
           fixedCount++;
         }
       } catch (error) {
-        console.warn(`Error applying fix for ${issue.rule}:`, error);
+        // Log error in development only
+        if (process.env.NODE_ENV === 'development') {
+          console.warn(`Error applying fix for ${issue.rule}:`, error);
+        }
       }
     }
 
@@ -561,7 +567,7 @@ export class AccessibilityAuditor {
     return recommendations;
   }
 
-  private generateFixCode(element: Element, rule: AccessibilityRule): string {
+  private generateFixCode(element: Element, _rule: AccessibilityRule): string {
     const tagName = element.tagName.toLowerCase();
     const attributes = Array.from(element.attributes)
       .map(attr => `${attr.name}="${attr.value}"`)
@@ -635,7 +641,7 @@ export class AccessibilityHelpers {
   /**
    * Announce content changes to screen readers
    */
-  static announceToScreenReader(message: string, priority: 'polite' | 'assertive' = 'polite'): void {
+  static announceToScreenReader(message: string, priority: 'polite' | 'assertive' = 'polite'): NodeJS.Timeout {
     const announcement = document.createElement('div');
     announcement.setAttribute('aria-live', priority);
     announcement.setAttribute('aria-atomic', 'true');
@@ -645,9 +651,11 @@ export class AccessibilityHelpers {
     document.body.appendChild(announcement);
     
     // Remove after announcement
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       document.body.removeChild(announcement);
     }, 1000);
+    
+    return timer;
   }
 
   /**

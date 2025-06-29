@@ -10,15 +10,15 @@ jest.mock('next/navigation', () => ({
 
 // Mock Next.js Link component
 jest.mock('next/link', () => {
-  return function MockedLink({ children, href, ...props }: any) {
+  return function MockedLink({ children, href, ...props }: React.ComponentProps<'a'>) {
     return <a href={href} {...props}>{children}</a>;
   };
 });
 
 // Mock Next.js Image component
 jest.mock('next/image', () => {
-  return function MockedImage(props: any) {
-    return <img {...props} />;
+  return function MockedImage(props: React.ComponentProps<'img'>) {
+    return <img {...props} alt={props.alt || ''} />;
   };
 });
 

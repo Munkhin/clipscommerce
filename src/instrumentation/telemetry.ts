@@ -140,7 +140,7 @@ class TelemetryManager {
         );
         break;
 
-      case 'otlp':
+      case 'otlp': {
         const otlpExporter = new OTLPTraceExporter({
           url: this.config.otlpEndpoint,
           headers: {},
@@ -153,6 +153,7 @@ class TelemetryManager {
           })
         );
         break;
+      }
 
       case 'multi':
         // Console for development visibility

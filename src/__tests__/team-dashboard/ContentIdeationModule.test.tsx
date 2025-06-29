@@ -2,6 +2,8 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ContentIdeationModule } from '@/components/team-dashboard/modules/ContentIdeationModule';
+import { useAuth } from '@/hooks/useAuth';
+import { useUser } from '@/hooks/useUser';
 
 // Mock the UI toast
 jest.mock('@/components/ui/use-toast', () => ({

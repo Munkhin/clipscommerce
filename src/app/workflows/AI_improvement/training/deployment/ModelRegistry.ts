@@ -390,7 +390,10 @@ export class ModelRegistry extends EventEmitter {
       this.emit('modelRetired', { modelId, reason });
 
     } catch (error) {
-      this.emit('retirementError', { modelId, error: error.message });
+      this.emit('retirementError', { 
+        modelId, 
+        error: error instanceof Error ? error.message : String(error) 
+      });
       throw error;
     }
   }
@@ -398,10 +401,18 @@ export class ModelRegistry extends EventEmitter {
   async recordPrediction(modelId: string): Promise<void> {
     try {
       // Increment prediction count
+      const { data: currentModel, error: fetchError } = await this.supabase
+        .from('trained_models')
+        .select('prediction_count')
+        .eq('id', modelId)
+        .single();
+
+      if (fetchError) throw fetchError;
+
       const { error } = await this.supabase
         .from('trained_models')
         .update({
-          prediction_count: this.supabase.sql`prediction_count + 1`,
+          prediction_count: (currentModel?.prediction_count || 0) + 1,
           last_used: new Date().toISOString(),
           updated_at: new Date().toISOString()
         })
@@ -420,7 +431,10 @@ export class ModelRegistry extends EventEmitter {
 
     } catch (error) {
       // Don't throw error for prediction recording failures
-      this.emit('predictionRecordingError', { modelId, error: error.message });
+      this.emit('predictionRecordingError', { 
+        modelId, 
+        error: error instanceof Error ? error.message : String(error) 
+      });
     }
   }
 

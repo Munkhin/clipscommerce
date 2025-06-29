@@ -2,15 +2,11 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { AutoPostingScheduler } from '@/components/team-dashboard/modules/AutoPostingScheduler';
-
-// Mock the UI toast
-jest.mock('@/components/ui/use-toast', () => ({
-  toast: jest.fn(),
-}));
+import { toast } from '@/components/ui/use-toast';
 
 // Mock the Calendar component
 jest.mock('@/components/ui/calendar', () => ({
-  Calendar: ({ onSelect, selected }: any) => (
+  Calendar: ({ onSelect, selected }: { onSelect: (date: Date) => void; selected?: Date }) => (
     <div data-testid="calendar">
       <button onClick={() => onSelect(new Date('2024-01-15'))}>
         Select Date

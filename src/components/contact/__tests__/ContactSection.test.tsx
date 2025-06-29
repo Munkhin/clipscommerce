@@ -5,36 +5,36 @@ import { ContactSection } from '../ContactSection';
 
 // Mock the UI components
 jest.mock('@/components/ui/button', () => ({
-  Button: ({ children, ...props }: any) => <button {...props}>{children}</button>
+  Button: ({ children, ...props }: React.ComponentProps<'button'>) => <button {...props}>{children}</button>
 }));
 
 jest.mock('@/components/ui/input', () => ({
-  Input: (props: any) => <input {...props} />
+  Input: (props: React.ComponentProps<'input'>) => <input {...props} />
 }));
 
 jest.mock('@/components/ui/textarea', () => ({
-  Textarea: (props: any) => <textarea {...props} />
+  Textarea: (props: React.ComponentProps<'textarea'>) => <textarea {...props} />
 }));
 
 jest.mock('@/components/ui/card', () => ({
-  Card: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-  CardContent: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-  CardDescription: ({ children, ...props }: any) => <p {...props}>{children}</p>,
-  CardHeader: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-  CardTitle: ({ children, ...props }: any) => <h3 {...props}>{children}</h3>
+  Card: ({ children, ...props }: React.ComponentProps<'div'>) => <div {...props}>{children}</div>,
+  CardContent: ({ children, ...props }: React.ComponentProps<'div'>) => <div {...props}>{children}</div>,
+  CardDescription: ({ children, ...props }: React.ComponentProps<'p'>) => <p {...props}>{children}</p>,
+  CardHeader: ({ children, ...props }: React.ComponentProps<'div'>) => <div {...props}>{children}</div>,
+  CardTitle: ({ children, ...props }: React.ComponentProps<'h3'>) => <h3 {...props}>{children}</h3>
 }));
 
 jest.mock('@/components/ui/alert', () => ({
-  Alert: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-  AlertDescription: ({ children, ...props }: any) => <div {...props}>{children}</div>
+  Alert: ({ children, ...props }: React.ComponentProps<'div'>) => <div {...props}>{children}</div>,
+  AlertDescription: ({ children, ...props }: React.ComponentProps<'div'>) => <div {...props}>{children}</div>
 }));
 
 // Mock Lucide React icons
 jest.mock('lucide-react', () => ({
-  Mail: (props: any) => <svg {...props} data-testid="Mail-icon" />,
-  MessageSquare: (props: any) => <svg {...props} data-testid="MessageSquare-icon" />,
-  Send: (props: any) => <svg {...props} data-testid="Send-icon" />,
-  CheckCircle: (props: any) => <svg {...props} data-testid="CheckCircle-icon" />
+  Mail: (props: React.ComponentProps<'svg'>) => <svg {...props} data-testid="Mail-icon" />,
+  MessageSquare: (props: React.ComponentProps<'svg'>) => <svg {...props} data-testid="MessageSquare-icon" />,
+  Send: (props: React.ComponentProps<'svg'>) => <svg {...props} data-testid="Send-icon" />,
+  CheckCircle: (props: React.ComponentProps<'svg'>) => <svg {...props} data-testid="CheckCircle-icon" />
 }));
 
 describe('ContactSection', () => {

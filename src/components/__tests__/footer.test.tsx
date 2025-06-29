@@ -5,7 +5,7 @@ import Footer from '../footer';
 
 // Mock Next.js Link component
 jest.mock('next/link', () => {
-  return function MockLink({ children, href, ...props }: any) {
+  return function MockLink({ children, href, ...props }: React.ComponentProps<'a'>) {
     return (
       <a href={href} {...props}>
         {children}
@@ -205,7 +205,7 @@ describe('Footer Component', () => {
       const originalDate = Date;
       
       // Test with a different year
-      global.Date = jest.fn(() => ({ getFullYear: () => 2025 })) as any;
+      global.Date = jest.fn(() => ({ getFullYear: () => 2025 })) as typeof Date;
       global.Date.now = originalDate.now;
       
       const { unmount } = render(<Footer />);

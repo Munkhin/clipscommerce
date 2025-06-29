@@ -50,37 +50,46 @@ export async function GET(request: NextRequest) {
 
     const platformUsernames: PlatformUsername[] = [];
 
-    // Process each connected platform
-    for (const credential of credentials || []) {
-      try {
-        const username = await fetchUsernameForPlatform(
-          credential.platform,
-          credential.access_token,
-          credential.platform_user_id
-        );
+    interface Credential {
+  platform: string;
+  access_token: string;
+  platform_user_id?: string;
+  updated_at: string;
+}
 
-        platformUsernames.push({
-          platform: credential.platform,
-          username: username.username,
-          displayName: username.displayName,
-          profileImage: username.profileImage,
-          isConnected: true,
-          connectedAt: credential.updated_at
-        });
-      } catch (error) {
-        logger.warn(`Failed to fetch username for ${credential.platform}`, {
-          platform: credential.platform,
-          userId: user!.id,
-          error: error instanceof Error ? error.message : 'Unknown error'
-        });
+// Process each connected platform
+    for (const credential of credentials as unknown as Credential[] || []) {
+      if (credential && credential.platform) {
+        try {
+          const username = await fetchUsernameForPlatform(
+            credential.platform,
+            credential.access_token,
+            credential.platform_user_id
+          );
 
-        // Still include the platform as connected but with limited info
-        platformUsernames.push({
-          platform: credential.platform,
-          username: `Connected ${credential.platform}`,
-          isConnected: true,
-          connectedAt: credential.updated_at
-        });
+          platformUsernames.push({
+            platform: credential.platform,
+            username: username.username,
+            displayName: username.displayName,
+            profileImage: username.profileImage,
+            isConnected: true,
+            connectedAt: credential.updated_at
+          });
+        } catch (error) {
+          logger.warn(`Failed to fetch username for ${credential.platform}`, {
+            platform: credential.platform,
+            userId: user!.id,
+            error: error instanceof Error ? error.message : 'Unknown error'
+          });
+
+          // Still include the platform as connected but with limited info
+          platformUsernames.push({
+            platform: credential.platform,
+            username: `Connected ${credential.platform}`,
+            isConnected: true,
+            connectedAt: credential.updated_at
+          });
+        }
       }
     }
 

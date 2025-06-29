@@ -120,12 +120,9 @@ describe('competitorTactics service', () => {
         ]
       };
 
-      jest.doMock('../competitorTactics', () => ({
-        getCompetitorTactics: jest.fn().mockResolvedValue(mockTrendingTactics)
-      }));
+      (getCompetitorTactics as jest.Mock).mockResolvedValue(mockTrendingTactics);
 
-      const { getCompetitorTactics: mockedService } = require('../competitorTactics');
-      const result = await mockedService(request);
+      const result = await getCompetitorTactics(request);
 
       expect(result.emergingTrends).toBeInstanceOf(Array);
       expect(result.successfulFormats).toBeInstanceOf(Array);
@@ -165,12 +162,9 @@ describe('competitorTactics service', () => {
         }
       };
 
-      jest.doMock('../competitorTactics', () => ({
-        getCompetitorTactics: jest.fn().mockResolvedValue(mockRecommendations)
-      }));
+      (getCompetitorTactics as jest.Mock).mockResolvedValue(mockRecommendations);
 
-      const { getCompetitorTactics: mockedService } = require('../competitorTactics');
-      const result = await mockedService(request);
+      const result = await getCompetitorTactics(request);
 
       expect(result.immediateActions).toBeInstanceOf(Array);
       expect(result.longTermStrategies).toBeInstanceOf(Array);
@@ -211,12 +205,9 @@ describe('competitorTactics service', () => {
         }
       };
 
-      jest.doMock('../competitorTactics', () => ({
-        getCompetitorTactics: jest.fn().mockResolvedValue(mockBenchmarking)
-      }));
+      (getCompetitorTactics as jest.Mock).mockResolvedValue(mockBenchmarking);
 
-      const { getCompetitorTactics: mockedService } = require('../competitorTactics');
-      const result = await mockedService(request);
+      const result = await getCompetitorTactics(request);
 
       expect(result.performanceComparison).toBeDefined();
       expect(result.contentQualityMetrics).toBeDefined();
@@ -259,12 +250,9 @@ describe('competitorTactics service', () => {
         ]
       };
 
-      jest.doMock('../competitorTactics', () => ({
-        getCompetitorTactics: jest.fn().mockResolvedValue(mockContentAnalysis)
-      }));
+      (getCompetitorTactics as jest.Mock).mockResolvedValue(mockContentAnalysis);
 
-      const { getCompetitorTactics: mockedService } = require('../competitorTactics');
-      const result = await mockedService(request);
+      const result = await getCompetitorTactics(request);
 
       expect(result.topicDistribution).toBeDefined();
       expect(result.contentPillars).toBeInstanceOf(Array);
@@ -284,13 +272,9 @@ describe('competitorTactics service', () => {
       const mockError = new Error('Competitor not found');
       mockError.name = 'CompetitorNotFoundError';
 
-      jest.doMock('../competitorTactics', () => ({
-        getCompetitorTactics: jest.fn().mockRejectedValue(mockError)
-      }));
+      (getCompetitorTactics as jest.Mock).mockRejectedValue(mockError);
 
-      const { getCompetitorTactics: mockedService } = require('../competitorTactics');
-
-      await expect(mockedService(request)).rejects.toThrow('Competitor not found');
+      await expect(getCompetitorTactics(request)).rejects.toThrow('Competitor not found');
     });
 
     it('should handle API rate limiting gracefully', async () => {
@@ -302,13 +286,9 @@ describe('competitorTactics service', () => {
       const rateLimitError = new Error('Rate limit exceeded');
       rateLimitError.name = 'RateLimitError';
 
-      jest.doMock('../competitorTactics', () => ({
-        getCompetitorTactics: jest.fn().mockRejectedValue(rateLimitError)
-      }));
+      (getCompetitorTactics as jest.Mock).mockRejectedValue(rateLimitError);
 
-      const { getCompetitorTactics: mockedService } = require('../competitorTactics');
-
-      await expect(mockedService(request)).rejects.toThrow('Rate limit exceeded');
+      await expect(getCompetitorTactics(request)).rejects.toThrow('Rate limit exceeded');
     });
 
     it('should handle network connectivity issues', async () => {
@@ -324,7 +304,7 @@ describe('competitorTactics service', () => {
         getCompetitorTactics: jest.fn().mockRejectedValue(networkError)
       }));
 
-      const { getCompetitorTactics: mockedService } = require('../competitorTactics');
+      import { getCompetitorTactics } from '../competitorTactics';
 
       await expect(mockedService(request)).rejects.toThrow('Network request failed');
     });
@@ -349,7 +329,7 @@ describe('competitorTactics service', () => {
         getCompetitorTactics: jest.fn().mockResolvedValue(mockInsufficientData)
       }));
 
-      const { getCompetitorTactics: mockedService } = require('../competitorTactics');
+      import { getCompetitorTactics } from '../competitorTactics';
       const result = await mockedService(request);
 
       expect(result.error).toBe('Insufficient data');
@@ -381,7 +361,7 @@ describe('competitorTactics service', () => {
         getCompetitorTactics: jest.fn().mockResolvedValue(mockPrivateAccount)
       }));
 
-      const { getCompetitorTactics: mockedService } = require('../competitorTactics');
+      import { getCompetitorTactics } from '../competitorTactics';
       const result = await mockedService(request);
 
       expect(result.error).toBe('Private account');
@@ -425,7 +405,7 @@ describe('competitorTactics service', () => {
         getCompetitorTactics: jest.fn().mockResolvedValue(mockMultiPlatformAnalysis)
       }));
 
-      const { getCompetitorTactics: mockedService } = require('../competitorTactics');
+      import { getCompetitorTactics } from '../competitorTactics';
       const result = await mockedService(request);
 
       expect(result.platformComparison).toBeDefined();
@@ -499,7 +479,7 @@ describe('competitorTactics service', () => {
         getCompetitorTactics: jest.fn().mockResolvedValue(mockPatternAnalysis)
       }));
 
-      const { getCompetitorTactics: mockedService } = require('../competitorTactics');
+      import { getCompetitorTactics } from '../competitorTactics';
       const result = await mockedService(request);
 
       expect(result.contentPatterns).toBeDefined();
@@ -587,7 +567,7 @@ describe('competitorTactics service', () => {
         getCompetitorTactics: jest.fn().mockResolvedValue(mockMultiComparison)
       }));
 
-      const { getCompetitorTactics: mockedService } = require('../competitorTactics');
+      import { getCompetitorTactics } from '../competitorTactics';
       const result = await mockedService(request);
 
       expect(result.competitorRankings).toBeDefined();
@@ -693,7 +673,7 @@ describe('competitorTactics service', () => {
         getCompetitorTactics: jest.fn().mockResolvedValue(mockTrendingAnalysis)
       }));
 
-      const { getCompetitorTactics: mockedService } = require('../competitorTactics');
+      import { getCompetitorTactics } from '../competitorTactics';
       const result = await mockedService(request);
 
       expect(result.trendingOpportunities).toBeDefined();
@@ -743,7 +723,7 @@ describe('competitorTactics service', () => {
           .mockResolvedValueOnce(mockResults[2])
       }));
 
-      const { getCompetitorTactics: mockedService } = require('../competitorTactics');
+      import { getCompetitorTactics } from '../competitorTactics';
 
       const startTime = Date.now();
       const results = await Promise.all(
@@ -806,7 +786,7 @@ describe('competitorTactics service', () => {
         getCompetitorTactics: jest.fn().mockResolvedValue(mockLargeDatasetResult)
       }));
 
-      const { getCompetitorTactics: mockedService } = require('../competitorTactics');
+      import { getCompetitorTactics } from '../competitorTactics';
 
       const startTime = Date.now();
       const result = await mockedService(request);
@@ -889,7 +869,7 @@ describe('competitorTactics service', () => {
         getCompetitorTactics: jest.fn().mockResolvedValue(mockMemoryIntensiveResult)
       }));
 
-      const { getCompetitorTactics: mockedService } = require('../competitorTactics');
+      import { getCompetitorTactics } from '../competitorTactics';
 
       const result = await mockedService(request);
 

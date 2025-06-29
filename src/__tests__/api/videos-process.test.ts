@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { GET, POST } from '../../app/api/videos/process/route';
+import { POST } from '@/app/api/videos/process/route';
 import {
   createMockRequest,
   createMockSupabaseClient,
@@ -23,13 +23,14 @@ jest.mock('next/headers', () => ({
   cookies: jest.fn()
 }));
 
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+
 describe('/api/videos/process API Route', () => {
   let mockSupabaseClient: any;
 
   beforeEach(() => {
     mockSupabaseClient = createMockSupabaseClient();
-    const { createRouteHandlerClient } = require('@supabase/auth-helpers-nextjs');
-    createRouteHandlerClient.mockReturnValue(mockSupabaseClient);
+    (createRouteHandlerClient as jest.Mock).mockReturnValue(mockSupabaseClient);
   });
 
   afterEach(() => {

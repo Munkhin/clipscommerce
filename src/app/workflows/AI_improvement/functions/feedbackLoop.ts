@@ -1,4 +1,4 @@
-﻿import { PostMetrics } from '@/app/workflows/data_collection/functions/types';
+﻿import { PostMetrics } from '../../data_collection/functions/types';
 import { Platform } from '../../deliverables/types/deliverables_types';
 import { 
   AnalysisResult, 
@@ -6,7 +6,7 @@ import {
   CompetitorAnalysis,
   VideoOptimizationAnalysisData,
   AIImprovementAnalysisData 
-} from '@/app/workflows/data_analysis/types/analysis_types';
+} from '../../data_analysis/types/analysis_types';
 
 // Enhanced feature store with real data integration
 export interface FeatureStore {

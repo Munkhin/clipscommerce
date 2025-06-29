@@ -14,7 +14,7 @@ describe('BulkVideoProcessor', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     // Import fresh for each test
-    const ComponentModule = require('../../../src/components/team-dashboard/modules/BulkVideoProcessor');
+    import { BulkVideoProcessor } from '@/components/team-dashboard/modules/BulkVideoProcessor';
     BulkVideoProcessor = ComponentModule.BulkVideoProcessor;
   });
 

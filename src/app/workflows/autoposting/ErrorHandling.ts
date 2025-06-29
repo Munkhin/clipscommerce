@@ -61,6 +61,7 @@ export async function withExponentialBackoff<T>(
     ...context
   });
 
+  // eslint-disable-next-line no-constant-condition
   while (true) {
     try {
       const startTime = Date.now();
@@ -481,4 +482,4 @@ export function checkErrorHandlingHealth(): {
     checks,
     timestamp: new Date().toISOString()
   };
-} 
+}

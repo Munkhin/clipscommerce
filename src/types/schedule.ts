@@ -6,7 +6,7 @@ export interface PostContent {
   hashtags: string[];
   mentions: string[];
   links: string[];
-  customFields: Record<string, any>;
+  customFields: Record<string, unknown>;
 }
 
 export type PostStatusType = 'draft' | 'scheduled' | 'published' | 'failed' | 'pending' | 'processing';
@@ -81,7 +81,7 @@ export interface QueueItem {
   retryCount: number;
   lastAttempt?: Date;
   error?: string;
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
   createdAt: Date;
   updatedAt: Date;
 }

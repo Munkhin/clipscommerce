@@ -2,7 +2,7 @@ import { NextResponse, NextRequest } from 'next/server';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import Stripe from 'stripe';
-import { URL } from 'url';
+// import { URL } from 'url'; // Remove this line, use the global URL instead
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
       // Redirect to sign in if not authenticated
       const signInUrl = new URL('/auth/signin', request.url);
       signInUrl.searchParams.set('redirectedFrom', request.url);
-      return NextResponse.redirect(signInUrl);
+      return NextResponse.redirect(signInUrl.toString());
     }
 
     // Create a new Checkout Session

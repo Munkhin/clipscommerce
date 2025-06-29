@@ -200,7 +200,7 @@ export class UsageLimitMiddleware {
     monthly_limit: number | null;
     remaining: number | null;
     reset_date: string;
-    usage_by_operation: any[];
+    usage_by_operation: Array<{operation_type: string; count: number; cost_units: number}>;
   } | null> {
     try {
       const supabase = await createClient();

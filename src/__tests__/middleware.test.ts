@@ -19,7 +19,7 @@ jest.mock('next/server', () => {
         response.status = 307;
         return response;
       }),
-      json: jest.fn((data: any, options: any) => {
+      json: jest.fn((data: unknown, options?: ResponseInit) => {
         const response = actual.NextResponse.json(data, options);
         return response;
       }),
@@ -39,7 +39,7 @@ jest.mock('../../src/lib/supabase/middleware', () => ({
 
 describe('Middleware', () => {
   let mockRequest: Partial<NextRequest>;
-  let mockSupabaseClient: any;
+  let mockSupabaseClient: ReturnType<typeof mockCreateClient>;
 
   beforeEach(() => {
     jest.clearAllMocks();

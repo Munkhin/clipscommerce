@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, jest } from '@jest/globals';
 import { Platform } from '../../deliverables/types/deliverables_types';
 import { AIImprovementService } from '../services/AIImprovementService';
-import { PostMetrics } from '@/app/workflows/data_collection/functions/types';
+import { PostMetrics } from '../../data_collection/functions/types';
 import { featureStore } from '../functions/feedbackLoop';
 
 // Mock the feedback loop

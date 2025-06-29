@@ -2,20 +2,16 @@
 
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { Database } from "@/types/supabase";
 import logger from '@/utils/logger';
-import { cookies } from 'next/headers';
-import { type z } from 'zod';
-import { AuthSchema, EmailSchema, PasswordSchema } from '@/lib/schemas';
 
 type ActionResult = {
   error?: string;
   success?: boolean;
   message?: string;
-  data?: any;
+  data?: unknown;
 };
 
-export const signUpAction = async (prevState: any, formData: FormData): Promise<ActionResult> => {
+export const signUpAction = async (prevState: unknown, formData: FormData): Promise<ActionResult> => {
   const email = formData.get("email")?.toString();
   const password = formData.get("password")?.toString();
   const fullName = formData.get("full_name")?.toString() || '';
@@ -72,7 +68,7 @@ export const signUpAction = async (prevState: any, formData: FormData): Promise<
       message: 'Check your email for the confirmation link.',
       data: authData 
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     logger.error('Signup error', error as Error, {
       email,
       hasFullName: Boolean(fullName),
@@ -81,7 +77,7 @@ export const signUpAction = async (prevState: any, formData: FormData): Promise<
   }
 };
 
-export const signInAction = async (prevState: any, formData: FormData): Promise<ActionResult> => {
+export const signInAction = async (prevState: unknown, formData: FormData): Promise<ActionResult> => {
   const email = formData.get("email")?.toString();
   const password = formData.get("password")?.toString();
 
@@ -102,12 +98,12 @@ export const signInAction = async (prevState: any, formData: FormData): Promise<
     }
 
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     return { error: error.message || "An error occurred during sign in" };
   }
 };
 
-export const forgotPasswordAction = async (prevState: any, formData: FormData): Promise<ActionResult> => {
+export const forgotPasswordAction = async (prevState: unknown, formData: FormData): Promise<ActionResult> => {
   const email = formData.get("email")?.toString();
 
   if (!email) {
@@ -126,12 +122,12 @@ export const forgotPasswordAction = async (prevState: any, formData: FormData): 
     }
 
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     return { error: error.message || "An error occurred" };
   }
 };
 
-export const resetPasswordAction = async (prevState: any, formData: FormData): Promise<ActionResult> => {
+export const resetPasswordAction = async (prevState: unknown, formData: FormData): Promise<ActionResult> => {
   const password = formData.get("password")?.toString() || '';
   const confirmPassword = formData.get("confirmPassword")?.toString() || '';
   const token = formData.get("token")?.toString();
@@ -175,7 +171,7 @@ export const resetPasswordAction = async (prevState: any, formData: FormData): P
     }
 
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error resetting password:", error);
     return { 
       error: error.message || "An error occurred while resetting your password. Please try again." 
@@ -192,7 +188,7 @@ export const signOutAction = async (): Promise<ActionResult> => {
       return { error: error.message };
     }
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     return { error: error.message || "An error occurred during sign out" };
   }
 };

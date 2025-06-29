@@ -18,14 +18,18 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '10');
     const startingAfter = searchParams.get('starting_after');
 
+    interface Profile {
+  stripe_customer_id: string;
+}
+
     // Get user's Stripe customer ID
     const { data: profile } = await supabase
-      .from('user_profiles')
+      .from('profiles')
       .select('stripe_customer_id')
       .eq('id', user.id)
-      .single();
+      .single<Profile>();
 
-    if (!profile?.stripe_customer_id) {
+    if (!profile || !profile.stripe_customer_id) {
       return NextResponse.json({
         invoices: [],
         has_more: false,

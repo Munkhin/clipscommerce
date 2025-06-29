@@ -1,4 +1,5 @@
-import { UserVideoService } from '../../services/userVideoService';
+import 'openai/shims/node';
+import { UserVideoService } from '@/services/userVideoService';
 import {
   createMockSupabaseClient,
   createMockFile,
@@ -6,12 +7,13 @@ import {
   cleanupMocks,
   mockVideoData,
   MOCK_USER_ID,
-  MOCK_VIDEO_ID
+  MOCK_VIDEO_ID,
 } from '../utils/test-helpers';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 // Mock Supabase client
 jest.mock('@supabase/auth-helpers-nextjs', () => ({
-  createClientComponentClient: jest.fn()
+  createClientComponentClient: jest.fn(),
 }));
 
 describe('UserVideoService', () => {
@@ -20,9 +22,10 @@ describe('UserVideoService', () => {
 
   beforeEach(() => {
     mockSupabaseClient = createMockSupabaseClient();
-    const { createClientComponentClient } = require('@supabase/auth-helpers-nextjs');
-    createClientComponentClient.mockReturnValue(mockSupabaseClient);
-    
+    (createClientComponentClient as jest.Mock).mockReturnValue(
+      mockSupabaseClient
+    );
+
     service = new UserVideoService();
   });
 

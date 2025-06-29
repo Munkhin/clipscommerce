@@ -15,3 +15,5 @@ export interface Analytics {
   comments: number;
   shares: number;
 }
+
+export type Platform = 'instagram' | 'facebook' | 'twitter' | 'tiktok' | 'linkedin' | 'youtube';

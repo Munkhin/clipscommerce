@@ -1,5 +1,5 @@
 import { Platform } from '../../deliverables/types/deliverables_types';
-import { PostMetrics } from '@/app/workflows/data_collection/functions/types';
+import { PostMetrics } from '../../data_collection/functions/types';
 import { Beta } from 'jstat'; // Use jstat for Beta distribution (if not available, mock below)
 
 export { Platform }; // Re-export Platform
@@ -315,7 +315,7 @@ export class ExperimentManager {
         conversion_event: conversionEvent,
         metadata: {
           platform: data.platform,
-          publishedAt: data.publishedAt,
+          publishedAt: data.timestamp,
           engagement: data.metrics
         },
         recorded_at: new Date().toISOString()
@@ -613,11 +613,11 @@ export class ExperimentManager {
 
   private getMetricValue(data: PostMetrics, metric: Experiment['targetMetric']): number {
     switch (metric) {
-      case 'engagementRate': return data.metrics.engagementRate;
-      case 'likes': return data.metrics.likes;
-      case 'comments': return data.metrics.comments;
-      case 'shares': return data.metrics.shares;
-      case 'views': return data.metrics.views;
+      case 'engagementRate': return data.engagementRate;
+      case 'likes': return data.likes;
+      case 'comments': return data.comments;
+      case 'shares': return data.shares;
+      case 'views': return data.views;
       default: return 0;
     }
   }
@@ -851,4 +851,49 @@ function shortenCaption(caption: string): string {
 
 function expandCaption(caption: string): string {
   return caption + ' Check out more content like this and don\'t forget to follow for daily updates! What do you think about this? Let me know in the comments below! 👇';
+}
+
+// Exported standalone functions for use without ExperimentManager class
+let experimentManagerInstance: ExperimentManager | null = null;
+
+function getExperimentManagerInstance(supabase: SupabaseClient): ExperimentManager {
+  if (!experimentManagerInstance) {
+    experimentManagerInstance = new ExperimentManager(supabase);
+  }
+  return experimentManagerInstance;
+}
+
+export async function createExperiment(experiment: Omit<Experiment, 'id' | 'createdAt' | 'updatedAt'>, supabase: SupabaseClient): Promise<Experiment> {
+  const manager = getExperimentManagerInstance(supabase);
+  return manager.createExperiment(experiment);
+}
+
+export async function updateExperiment(id: string, updates: Partial<Experiment>, supabase: SupabaseClient): Promise<Experiment | null> {
+  const manager = getExperimentManagerInstance(supabase);
+  return manager.updateExperiment(id, updates);
+}
+
+export async function getExperiment(id: string, supabase: SupabaseClient): Promise<Experiment | null> {
+  const manager = getExperimentManagerInstance(supabase);
+  return manager.getExperiment(id);
+}
+
+export async function listExperiments(filters: { platform?: Platform; status?: Experiment['status']; createdBy?: string; } | undefined, supabase: SupabaseClient): Promise<Experiment[]> {
+  const manager = getExperimentManagerInstance(supabase);
+  return manager.listExperiments(filters);
+}
+
+export function assignVariant(experiment: Experiment, userId: string): ExperimentVariant | null {
+  const manager = new ExperimentManager({} as SupabaseClient); // Temporary instance for static method
+  return manager.assignVariant(experiment, userId);
+}
+
+export async function recordExperimentData(experimentId: string, variantId: string, data: PostMetrics, supabase: SupabaseClient): Promise<boolean> {
+  const manager = getExperimentManagerInstance(supabase);
+  return manager.recordExperimentData(experimentId, variantId, data);
+}
+
+export async function analyzeExperiment(experimentId: string, supabase: SupabaseClient): Promise<ExperimentAnalysis | null> {
+  const manager = getExperimentManagerInstance(supabase);
+  return manager.analyzeExperiment(experimentId);
 }

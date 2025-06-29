@@ -39,33 +39,42 @@ export function structuredLoggingExamples() {
 
 // Example 3: Performance logging
 export async function performanceLoggingExample() {
-  logger.time('database-query');
+  const startTime = Date.now();
   
   // Simulate some work
   await new Promise(resolve => setTimeout(resolve, 100));
   
-  logger.timeEnd('database-query', 'User query completed');
+  const duration = Date.now() - startTime;
+  logger.info('User query completed', { duration });
 }
 
 // Example 4: Business metrics and audit logging
 export function businessLoggingExamples() {
   // Audit logging
-  logger.audit('user_profile_updated', 'user_profile', 'user123', {
+  logger.info('User profile updated', {
+    event: 'user_profile_updated',
+    resourceType: 'user_profile',
+    resourceId: 'user123',
     fieldsChanged: ['email', 'name'],
     previousEmail: 'old@example.com',
     newEmail: 'new@example.com',
   });
 
   // Security events
-  logger.security('failed_login_attempt', {
+  logger.warn('Failed login attempt', {
+    event: 'failed_login_attempt',
     email: 'attacker@example.com',
     ipAddress: '192.168.1.100',
     userAgent: 'curl/7.68.0',
     attemptCount: 5,
-  }, 'high');
+    severity: 'high'
+  });
 
   // Business metrics
-  logger.metric('user_registration_count', 1, 'count', {
+  logger.info('User registration', {
+    metric: 'user_registration_count',
+    value: 1,
+    type: 'count',
     source: 'web',
     plan: 'premium',
   });
@@ -74,7 +83,11 @@ export function businessLoggingExamples() {
 // Example 5: HTTP request logging
 export function httpLoggingExample() {
   // Log incoming HTTP requests
-  logger.request('POST', '/api/users', 201, 250, {
+  logger.info('HTTP request', {
+    method: 'POST',
+    path: '/api/users',
+    statusCode: 201,
+    duration: 250,
     bodySize: 1024,
     responseSize: 512,
     userAgent: 'Mozilla/5.0...',
@@ -91,23 +104,20 @@ export function correlationContextExample() {
 
 // Example 7: Running code with specific context
 export async function contextScopedExample() {
-  await logger.runWithContext(
-    {
-      correlationId: 'batch-001',
-      batchId: 'import-users-2024',
-      operation: 'bulk_import',
-    },
-    async () => {
-      logger.info('Starting bulk import');
-      
-      // All logs within this scope will include the context
-      for (let i = 0; i < 100; i++) {
-        logger.debug('Processing user', { userIndex: i });
-      }
-      
-      logger.info('Bulk import completed');
-    }
-  );
+  const context = {
+    correlationId: 'batch-001',
+    batchId: 'import-users-2024',
+    operation: 'bulk_import',
+  };
+  
+  logger.info('Starting bulk import', context);
+  
+  // All logs within this scope will include the context
+  for (let i = 0; i < 100; i++) {
+    logger.debug('Processing user', { ...context, userIndex: i });
+  }
+  
+  logger.info('Bulk import completed', context);
 }
 
 // Example 8: Child loggers with persistent context

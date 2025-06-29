@@ -507,6 +507,8 @@ export class AutoPostingScheduler {
       failureRate: number;
       consecutiveFailures: number;
     }>;
+    errorRecoveryStatus: any;
+    deadLetterQueueSize: number;
     timestamp: string;
   } {
     const queueHealth = this.monitoring.checkQueueHealth(this.queue);

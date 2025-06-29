@@ -8,13 +8,7 @@ interface TimeSeriesPoint {
   value: number;
 }
 
-interface TimeSeriesData {
-  points: TimeSeriesPoint[];
-  mean: number;
-  std: number;
-  min: number;
-  max: number;
-}
+// Removed unused interface TimeSeriesData
 
 interface OptimalTimeSlot {
   dayOfWeek: number; // 0-6, 0 is Sunday
@@ -49,7 +43,7 @@ export class EngagementPredictor {
     averagePredictionTimeMs: 0,
     totalPredictionTimeMs: 0
   };
-  private static cache = new Cache<string, any>({
+  private static cache = new Cache<string, EngagementMetrics | OptimalTimeSlot[] | ContentSimulation[]>({
     maxSize: 500,
     ttl: 24 * 60 * 60 * 1000, // 24 hours
   });
@@ -122,7 +116,7 @@ export class EngagementPredictor {
   static async predictEngagement(
     platform: Platform,
     content: string,
-    historicalData: any[],
+    historicalData: Array<{publishedAt?: string; engagementRate?: number}>,
     postTime?: Date,
     mediaUrls?: string[]
   ): Promise<EngagementMetrics> {
@@ -329,7 +323,7 @@ export class EngagementPredictor {
   static async predictOptimalPostingTimes(
     platform: Platform,
     contentType: string,
-    historicalData: any[],
+    historicalData: Array<{publishedAt?: string; engagementRate?: number}>,
     count: number = 5
   ): Promise<OptimalTimeSlot[]> {
     // Check cache first
@@ -337,7 +331,7 @@ export class EngagementPredictor {
     const cachedResult = this.cache.get(cacheKey);
     if (cachedResult) return cachedResult;
     
-    const startTime = performance.now();
+    const startTime = globalThis.performance?.now() ?? Date.now();
     
     // Create a 2D matrix of day/hour combinations with scores
     const timeSlots: OptimalTimeSlot[] = [];
@@ -424,7 +418,7 @@ export class EngagementPredictor {
       });
     
     // Update performance metrics
-    const elapsedTime = performance.now() - startTime;
+    const elapsedTime = (globalThis.performance?.now() ?? Date.now()) - startTime;
     this.performanceMetrics.totalPredictions++;
     this.performanceMetrics.totalPredictionTimeMs += elapsedTime;
     this.performanceMetrics.averagePredictionTimeMs = 
@@ -519,7 +513,7 @@ export class EngagementPredictor {
   static async simulateContentPerformance(
     platform: Platform,
     contentDrafts: string[],
-    historicalData: any[],
+    historicalData: Array<{publishedAt?: string; engagementRate?: number}>,
     mediaUrls?: string[]
   ): Promise<ContentSimulation[]> {
     // Check cache first
@@ -527,8 +521,7 @@ export class EngagementPredictor {
     const cachedResult = this.cache.get(cacheKey);
     if (cachedResult) return cachedResult;
     
-    const startTime = performance.now();
-    const simulations: ContentSimulation[] = [];
+    const startTime = globalThis.performance?.now() ?? Date.now();
     
     // Process each draft in parallel for efficiency
     const predictions = await Promise.all(contentDrafts.map(async (content, index) => {
@@ -561,7 +554,7 @@ export class EngagementPredictor {
     );
     
     // Update performance metrics
-    const elapsedTime = performance.now() - startTime;
+    const elapsedTime = (globalThis.performance?.now() ?? Date.now()) - startTime;
     this.performanceMetrics.totalPredictions++;
     this.performanceMetrics.totalPredictionTimeMs += elapsedTime;
     this.performanceMetrics.averagePredictionTimeMs = 
@@ -662,7 +655,7 @@ export class EngagementPredictor {
     };
   }
   
-  private static analyzeHistoricalData(historicalData: any[]): number {
+  private static analyzeHistoricalData(historicalData: Array<{publishedAt?: string; engagementRate?: number}>): number {
     if (historicalData.length === 0) return 1.0;
     
     const totalEngagement = historicalData.reduce((sum, post) => {

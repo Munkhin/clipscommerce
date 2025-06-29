@@ -67,7 +67,10 @@ export class UserVideoService {
         .order('uploaded_at', { ascending: false });
 
       if (error) {
-        console.error('Error fetching user videos:', error);
+        // Log error in development only
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Error fetching user videos:', error);
+        }
         return {
           success: false,
           error: 'Failed to fetch videos from database'
@@ -97,7 +100,10 @@ export class UserVideoService {
       };
 
     } catch (error) {
-      console.error('Error in getUserVideos:', error);
+      // Log error in development only
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error in getUserVideos:', error);
+      }
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error occurred'
@@ -139,7 +145,10 @@ export class UserVideoService {
         .upload(filename, file);
 
       if (uploadError) {
-        console.error('Storage upload error:', uploadError);
+        // Log error in development only
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Storage upload error:', uploadError);
+        }
         return {
           success: false,
           error: 'Failed to upload video file'
@@ -168,7 +177,10 @@ export class UserVideoService {
         .single();
 
       if (dbError) {
-        console.error('Database insert error:', dbError);
+        // Log error in development only
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Database insert error:', dbError);
+        }
         // Clean up uploaded file
         await this.supabase.storage.from('videos').remove([filename]);
         return {
@@ -186,7 +198,10 @@ export class UserVideoService {
       };
 
     } catch (error) {
-      console.error('Error in uploadVideo:', error);
+      // Log error in development only
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error in uploadVideo:', error);
+      }
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Upload failed'
@@ -196,7 +211,7 @@ export class UserVideoService {
 
   async updateVideoStatus(videoId: string, status: string, error?: string): Promise<void> {
     try {
-      const updateData: any = {
+      const updateData: Record<string, unknown> = {
         status,
         updated_at: new Date().toISOString()
       };
@@ -215,7 +230,10 @@ export class UserVideoService {
         .eq('id', videoId);
 
     } catch (error) {
-      console.error('Error updating video status:', error);
+      // Log error in development only
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error updating video status:', error);
+      }
     }
   }
 
@@ -250,7 +268,10 @@ export class UserVideoService {
         .remove([fullPath]);
 
       if (storageError) {
-        console.warn('Storage deletion warning:', storageError);
+        // Log warning in development only
+        if (process.env.NODE_ENV === 'development') {
+          console.warn('Storage deletion warning:', storageError);
+        }
         // Continue with database deletion even if storage fails
       }
 
@@ -268,7 +289,10 @@ export class UserVideoService {
         .eq('user_id', userId);
 
       if (dbError) {
-        console.error('Database deletion error:', dbError);
+        // Log error in development only
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Database deletion error:', dbError);
+        }
         return {
           success: false,
           error: 'Failed to delete video record'
@@ -278,7 +302,10 @@ export class UserVideoService {
       return { success: true };
 
     } catch (error) {
-      console.error('Error in deleteVideo:', error);
+      // Log error in development only
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error in deleteVideo:', error);
+      }
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Deletion failed'
@@ -300,7 +327,10 @@ export class UserVideoService {
       return { success: true };
 
     } catch (error) {
-      console.error('Error retrying video processing:', error);
+      // Log error in development only
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error retrying video processing:', error);
+      }
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Retry failed'
@@ -325,7 +355,10 @@ export class UserVideoService {
       }
 
     } catch (error) {
-      console.error('Error starting video processing:', error);
+      // Log error in development only
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error starting video processing:', error);
+      }
       await this.updateVideoStatus(videoId, 'error', 'Failed to start processing');
     }
   }
@@ -357,22 +390,22 @@ export class UserVideoService {
     return columnMap[status] || 'todo';
   }
 
-  private mapProcessingResults(results: any): UserVideo['result'] | undefined {
+  private mapProcessingResults(results: Record<string, unknown>): UserVideo['result'] | undefined {
     if (!results) return undefined;
 
     return {
       sentiment: results.sentiment_analysis ? {
-        score: results.sentiment_analysis.score || 0,
-        sentiment: results.sentiment_analysis.label || 'neutral'
+        score: (results.sentiment_analysis as any)?.score || 0,
+        sentiment: (results.sentiment_analysis as any)?.label || 'neutral'
       } : undefined,
       tone: results.tone_analysis ? {
-        tone: results.tone_analysis.tone || 'neutral',
-        confidence: results.tone_analysis.confidence || 0
+        tone: (results.tone_analysis as any)?.tone || 'neutral',
+        confidence: (results.tone_analysis as any)?.confidence || 0
       } : undefined,
-      hashtags: results.hashtag_recommendations || [],
-      optimizations: results.optimization_suggestions || [],
-      viralityScore: results.virality_score,
-      engagementPrediction: results.engagement_prediction
+      hashtags: (results.hashtag_recommendations as string[]) || [],
+      optimizations: (results.optimization_suggestions as string[]) || [],
+      viralityScore: results.virality_score as number | undefined,
+      engagementPrediction: results.engagement_prediction as number | undefined
     };
   }
 
@@ -386,7 +419,7 @@ export class UserVideoService {
         table: 'user_videos',
         filter: `user_id=eq.${userId}`
       }, (payload) => {
-        const video = this.mapDatabaseRecord(payload.new as any);
+        const video = this.mapDatabaseRecord(payload.new as Record<string, unknown>);
         callback(video);
       })
       .subscribe();
@@ -396,21 +429,21 @@ export class UserVideoService {
     };
   }
 
-  private mapDatabaseRecord(record: any): UserVideo {
+  private mapDatabaseRecord(record: Record<string, unknown>): UserVideo {
     return {
-      id: record.id,
-      title: record.title || record.filename,
-      thumbnailUrl: record.thumbnail_url,
-      status: this.mapDatabaseStatus(record.status),
-      columnId: this.getColumnId(record.status),
-      videoUrl: record.video_url,
-      fileSize: record.file_size,
-      duration: record.duration,
-      uploadedAt: record.uploaded_at,
-      processedAt: record.processed_at,
-      error: record.error_message,
+      id: String(record.id),
+      title: String(record.title || record.filename),
+      thumbnailUrl: record.thumbnail_url as string | undefined,
+      status: this.mapDatabaseStatus(String(record.status)),
+      columnId: this.getColumnId(String(record.status)),
+      videoUrl: record.video_url as string | undefined,
+      fileSize: record.file_size as number | undefined,
+      duration: record.duration as number | undefined,
+      uploadedAt: String(record.uploaded_at),
+      processedAt: record.processed_at as string | undefined,
+      error: record.error_message as string | undefined,
       loading: record.status === 'processing',
-      processingStage: record.processing_stage
+      processingStage: record.processing_stage as "content" | "hashtags" | "audio" | "optimization" | undefined
     };
   }
 }

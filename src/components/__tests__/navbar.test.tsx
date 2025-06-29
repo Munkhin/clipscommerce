@@ -1,6 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Navbar from '../navbar';
 
@@ -35,13 +34,13 @@ jest.mock('../user-profile', () => {
 
 // Mock Button component
 jest.mock('../ui/button', () => ({
-  Button: ({ children, ...props }: any) => (
+  Button: ({ children, ...props }: React.ComponentProps<'button'>) => (
     <button {...props}>{children}</button>
   ),
 }));
 
 describe('Navbar Component', () => {
-  const mockCreateClient = require('@/lib/supabase/client').createClient;
+  const mockCreateClient = jest.mocked(require('@/lib/supabase/client').createClient);
 
   beforeEach(() => {
     jest.clearAllMocks();

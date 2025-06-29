@@ -376,7 +376,7 @@ export class SupabaseStorageService {
     return data;
   }
 
-  private async getFileMetadata(bucket: BucketName, filePath: string): Promise<FileMetadata | null> {
+  async getFileMetadata(bucket: BucketName, filePath: string): Promise<FileMetadata | null> {
     const { data, error } = await this.supabase
       .from('file_metadata')
       .select('*')

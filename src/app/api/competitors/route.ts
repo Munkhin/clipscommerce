@@ -8,7 +8,7 @@ interface CompetitorContent {
   views: string;
   engagement: string;
   url: string;
-  platform: 'tiktok' | 'instagram' | 'youtube';
+  platform: string;
   thumbnail?: string;
   embedPreview?: string;
 }

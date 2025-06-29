@@ -25,7 +25,7 @@ const updatePostSchema = z.object({
 // GET - List user posts with filtering and pagination
 export async function GET(request: NextRequest) {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
     
     // Verify authentication
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -79,7 +79,7 @@ export async function GET(request: NextRequest) {
       query = query.lte('posted_at', validatedParams.date_to);
     }
 
-    if (validatedParams.min_engagement > 0) {
+    if (typeof validatedParams.min_engagement === 'number' && validatedParams.min_engagement > 0) {
       query = query.gte('engagement_rate', validatedParams.min_engagement);
     }
 
@@ -112,7 +112,7 @@ export async function GET(request: NextRequest) {
       countQuery = countQuery.lte('posted_at', validatedParams.date_to);
     }
 
-    if (validatedParams.min_engagement > 0) {
+    if (typeof validatedParams.min_engagement === 'number' && validatedParams.min_engagement > 0) {
       countQuery = countQuery.gte('engagement_rate', validatedParams.min_engagement);
     }
 
@@ -123,7 +123,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Calculate analytics
-    const analytics = await calculatePostAnalytics(posts || []);
+    const analytics = await calculatePostAnalytics((posts as unknown as Post[]) || []);
 
     return NextResponse.json({
       success: true,
@@ -162,7 +162,7 @@ export async function GET(request: NextRequest) {
 // POST - Create/sync new post
 export async function POST(request: NextRequest) {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
     
     // Verify authentication
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -292,7 +292,18 @@ function calculateEngagementMetrics(postData: { likes?: number; comments?: numbe
   };
 }
 
-async function calculatePostAnalytics(posts: { likes?: number; comments?: number; views?: number; engagement_rate?: number; engagement_score?: number; platform: string; id: string; posted_at: string }[]) {
+interface Post {
+  likes?: number;
+  comments?: number;
+  views?: number;
+  engagement_rate?: number;
+  engagement_score?: number;
+  platform: string;
+  id: string;
+  posted_at: string;
+}
+
+async function calculatePostAnalytics(posts: Post[]) {
   if (posts.length === 0) {
     return {
       total_posts: 0,

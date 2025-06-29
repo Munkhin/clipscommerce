@@ -1,5 +1,5 @@
 import { Platform } from '../../deliverables/types/deliverables_types';
-import { PostMetrics } from '@/app/workflows/data_collection/functions/types';
+import { PostMetrics } from '../../data_collection/functions/types';
 import { 
   AIImprovementFeedbackLoop,
   AISuggestion,

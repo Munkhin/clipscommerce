@@ -134,7 +134,7 @@ export class SentimentAnalyzer {
         return {
           ...result,
           source: 'openai',
-          processingTimeMs: 0
+          processingTimeMs: performance.now() - startTime,
         };
       } catch (error) {
         console.error('Error using OpenAI for sentiment:', error);
@@ -142,10 +142,11 @@ export class SentimentAnalyzer {
           if (this.config.costTrackingEnabled) {
             this.costTracking.localAnalysisCount++;
           }
+          this.cache.set(cacheKey, result);
           return {
             ...result,
             source: 'local',
-            processingTimeMs: 0
+            processingTimeMs: performance.now() - startTime,
           };
         }
         throw error;
@@ -154,10 +155,11 @@ export class SentimentAnalyzer {
       if (this.config.costTrackingEnabled) {
         this.costTracking.localAnalysisCount++;
       }
+      this.cache.set(cacheKey, result);
       return {
         ...result,
         source: 'local',
-        processingTimeMs: 0
+        processingTimeMs: performance.now() - startTime,
       };
     } else {
       throw new Error('No sentiment analysis model available');

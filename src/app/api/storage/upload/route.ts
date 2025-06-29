@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { serverStorageService, BucketName } from '@/lib/storage/supabase-storage';
+import { serverStorageService, BucketName, FileMetadata } from '@/lib/storage/supabase-storage';
 import { URL } from 'url';
 
 export async function POST(request: NextRequest) {
@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
     const results = await Promise.allSettled(uploadPromises);
     
     const successful = results
-      .filter((result): result is PromiseFulfilledResult<{ path: string; url: string; size: number; mimeType: string; }> => result.status === 'fulfilled')
+      .filter((result): result is PromiseFulfilledResult<{ path: string; url: string; metadata: FileMetadata; }> => result.status === 'fulfilled')
       .map(result => result.value);
     
     const failed = results

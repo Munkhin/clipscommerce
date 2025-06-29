@@ -14,7 +14,7 @@ export interface CacheConfig {
   retryDelay: number;
 }
 
-export interface CacheEntry<T = any> {
+export interface CacheEntry<T = unknown> {
   data: T;
   timestamp: number;
   ttl: number;
@@ -33,7 +33,7 @@ export interface CacheStats {
 export class RedisCache {
   private static instance: RedisCache;
   private config: CacheConfig;
-  private client: any; // Redis client
+  private client: unknown; // Redis client
   private isConnected = false;
   private stats: CacheStats = {
     hits: 0,
@@ -400,7 +400,7 @@ export class RedisCache {
   /**
    * Health check
    */
-  async healthCheck(): Promise<{ status: 'healthy' | 'unhealthy'; details: any }> {
+  async healthCheck(): Promise<{ status: 'healthy' | 'unhealthy'; details: Record<string, unknown> }> {
     try {
       if (!this.isConnected) {
         return {
@@ -488,7 +488,7 @@ export class CacheHelpers {
   static async cacheClientList(
     teamId: string,
     userId: string,
-    clients: any[],
+    clients: unknown[],
     ttl: number = 300 // 5 minutes
   ): Promise<void> {
     const key = `clients:${teamId}:${userId}`;
@@ -504,7 +504,7 @@ export class CacheHelpers {
   static async getCachedClientList(
     teamId: string,
     userId: string
-  ): Promise<any[] | null> {
+  ): Promise<unknown[] | null> {
     const key = `clients:${teamId}:${userId}`;
     return await this.cache.get(key);
   }
@@ -514,7 +514,7 @@ export class CacheHelpers {
    */
   static async cachePaymentHistory(
     teamId: string,
-    payments: any[],
+    payments: unknown[],
     ttl: number = 1800 // 30 minutes
   ): Promise<void> {
     const key = `payments:${teamId}`;
@@ -527,7 +527,7 @@ export class CacheHelpers {
   /**
    * Get cached payment history
    */
-  static async getCachedPaymentHistory(teamId: string): Promise<any[] | null> {
+  static async getCachedPaymentHistory(teamId: string): Promise<unknown[] | null> {
     const key = `payments:${teamId}`;
     return await this.cache.get(key);
   }
@@ -537,7 +537,7 @@ export class CacheHelpers {
    */
   static async cacheUserSession(
     userId: string,
-    sessionData: any,
+    sessionData: Record<string, unknown>,
     ttl: number = 3600 // 1 hour
   ): Promise<void> {
     const key = `session:${userId}`;
@@ -550,7 +550,7 @@ export class CacheHelpers {
   /**
    * Get cached user session
    */
-  static async getCachedUserSession(userId: string): Promise<any | null> {
+  static async getCachedUserSession(userId: string): Promise<Record<string, unknown> | null> {
     const key = `session:${userId}`;
     return await this.cache.get(key);
   }
@@ -575,7 +575,7 @@ export class CacheHelpers {
   static async cacheAnalytics(
     teamId: string,
     period: string,
-    data: any,
+    data: Record<string, unknown>,
     ttl: number = 900 // 15 minutes
   ): Promise<void> {
     const key = `analytics:${teamId}:${period}`;
@@ -591,7 +591,7 @@ export class CacheHelpers {
   static async getCachedAnalytics(
     teamId: string,
     period: string
-  ): Promise<any | null> {
+  ): Promise<Record<string, unknown> | null> {
     const key = `analytics:${teamId}:${period}`;
     return await this.cache.get(key);
   }

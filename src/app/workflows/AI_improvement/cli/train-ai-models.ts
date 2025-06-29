@@ -28,6 +28,8 @@ interface CLIOptions {
     viralityPrediction: boolean;
     abTesting: boolean;
   };
+  sessionId?: string;
+  command?: string;
 }
 
 function parseArguments(): CLIOptions {
@@ -61,7 +63,7 @@ function parseArguments(): CLIOptions {
       case '--min-engagement':
         options.minEngagementThreshold = parseInt(value);
         break;
-      case '--models':
+      case '--models': {
         const modelList = value.split(',').map(m => m.trim());
         options.models = {
           engagementPrediction: modelList.includes('engagement'),
@@ -71,6 +73,7 @@ function parseArguments(): CLIOptions {
           abTesting: modelList.includes('abtesting')
         };
         break;
+      }
       case '--session-id':
         options.sessionId = value;
         break;
@@ -222,7 +225,7 @@ async function main() {
     
     if (session.modelResults) {
       console.log(`   Models Trained: ${session.modelResults.size}`);
-      session.modelResults.forEach((result, modelName) => {
+      session.modelResults.forEach((result: any, modelName: string) => {
         console.log(`     - ${modelName}: ${result.version}`);
       });
     }

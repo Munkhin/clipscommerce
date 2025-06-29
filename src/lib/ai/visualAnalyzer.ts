@@ -278,11 +278,32 @@ export class VisualAnalyzer {
    */
   private async runAnalysisPipeline(image: tf.Tensor3D): Promise<Omit<VisualAnalysisResult, 'performance'>> {
     // Run all analysis steps in parallel for performance
-    const [objects, colors, composition] = await Promise.all([
+    const [objectsResult, colorsResult, compositionResult] = await Promise.allSettled([
       this.detectObjects(image),
       this.analyzeColors(image),
       this.analyzeComposition(image)
     ]);
+
+    const objects = objectsResult.status === 'fulfilled' ? objectsResult.value : [];
+    const colors = colorsResult.status === 'fulfilled' ? colorsResult.value : [];
+    const composition = compositionResult.status === 'fulfilled' ? compositionResult.value : {
+        hasText: false,
+        complexity: 0.5,
+        brightness: 0.5,
+        contrast: 0.5,
+        faceCount: 0,
+        dominant: 'other'
+      };
+
+    if (objectsResult.status === 'rejected') {
+        console.error("Error detecting objects:", objectsResult.reason);
+    }
+    if (colorsResult.status === 'rejected') {
+        console.error("Error analyzing colors:", colorsResult.reason);
+    }
+    if (compositionResult.status === 'rejected') {
+        console.error("Error analyzing composition:", compositionResult.reason);
+    }
     
     // Derive sentiment from objects, composition, and colors
     const sentiment = this.deriveSentiment(objects, composition, colors);

@@ -34,6 +34,19 @@ module.exports = [
         DOMStringList: 'readonly',
         URLSearchParams: 'readonly',
         Headers: 'readonly',
+        URL: 'readonly',
+        Response: 'readonly',
+        Request: 'readonly',
+        File: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly',
+        setInterval: 'readonly',
+        clearInterval: 'readonly',
+        fetch: 'readonly',
+        RequestInit: 'readonly',
+        TextEncoder: 'readonly',
+        TextDecoder: 'readonly',
+        ReadableStream: 'readonly',
       },
     },
     plugins: {
@@ -71,6 +84,12 @@ module.exports = [
     },
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
+    },
+  },
+  {
+    files: ['src/app/api/**/*.{js,jsx,ts,tsx}'],
+    rules: {
+      'no-console': 'off', // Allow console statements in API routes for server-side logging
     },
   },
   {

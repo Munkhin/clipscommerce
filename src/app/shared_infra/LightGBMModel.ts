@@ -352,11 +352,12 @@ export class LightGBMModel {
           gradients.push(pred - target);
           hessians.push(1.0);
           break;
-        case 'binary':
+        case 'binary': {
           const sigmoid = 1 / (1 + Math.exp(-pred));
           gradients.push(sigmoid - target);
           hessians.push(sigmoid * (1 - sigmoid));
           break;
+        }
         case 'multiclass':
           // Simplified multiclass - would need full softmax implementation
           gradients.push(pred - target);
@@ -430,13 +431,15 @@ export class LightGBMModel {
 
   private initializePredictions(targets: number[]): number[] {
     switch (this.config.objective) {
-      case 'regression':
+      case 'regression': {
         const mean = targets.reduce((sum, t) => sum + t, 0) / targets.length;
         return new Array(targets.length).fill(mean);
-      case 'binary':
+      }
+      case 'binary': {
         const posRate = targets.reduce((sum, t) => sum + t, 0) / targets.length;
         const logOdds = Math.log(posRate / (1 - posRate));
         return new Array(targets.length).fill(logOdds);
+      }
       case 'multiclass':
         return new Array(targets.length).fill(0);
       default:
@@ -475,10 +478,11 @@ export class LightGBMModel {
         case 'regression':
           loss += Math.pow(targets[i] - predictions[i], 2);
           break;
-        case 'binary':
+        case 'binary': {
           const sigmoid = 1 / (1 + Math.exp(-predictions[i]));
           loss += -(targets[i] * Math.log(sigmoid + 1e-15) + (1 - targets[i]) * Math.log(1 - sigmoid + 1e-15));
           break;
+        }
         case 'multiclass':
           loss += Math.pow(targets[i] - predictions[i], 2);
           break;

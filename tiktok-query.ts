@@ -73,6 +73,7 @@ async function main() {
   const tiktokClient = new TikTokClient(config, authManager, userId);
   
   // Main menu
+  // eslint-disable-next-line no-constant-condition
   while (true) {
     console.log('\nWhat would you like to do?');
     console.log('1. Get user info');

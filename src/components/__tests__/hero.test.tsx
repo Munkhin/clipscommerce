@@ -5,7 +5,7 @@ import Hero from '../hero';
 
 // Mock Next.js Link component
 jest.mock('next/link', () => {
-  return function MockLink({ children, href, ...props }: any) {
+  return function MockLink({ children, href, ...props }: React.ComponentProps<'a'>) {
     return (
       <a href={href} {...props}>
         {children}

@@ -302,7 +302,7 @@ export function generateHashtagRecommendations(
   const allHashtags = new Set([...trendingHashtags, ...historicalHashtags]);
   const recommendations: HashtagRecommendation[] = [];
 
-  for (const hashtag of allHashtags) {
+  for (const hashtag of Array.from(allHashtags)) {
     if (existingHashtags.includes(hashtag)) continue;
     
     const relevanceScore = calculateHashtagRelevance(hashtag, contentTopics);

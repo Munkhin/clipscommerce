@@ -45,7 +45,7 @@ describe('EngagementPredictionController', () => {
     jest.clearAllMocks();
     mockEngagementPredictionAgent.isReady.mockReturnValue(true); // Default to ready
 
-    const module: TestingModule = await Test.createTestingModule({
+    const testingModule: TestingModule = await Test.createTestingModule({
       imports: [ConfigModule.forRoot({ envFilePath: '.env.test', ignoreEnvFile: false })], // Load test env vars
       controllers: [EngagementPredictionController],
       providers: [
@@ -54,8 +54,8 @@ describe('EngagementPredictionController', () => {
       ],
     }).compile();
 
-    controller = module.get<EngagementPredictionController>(EngagementPredictionController);
-    service = module.get<EngagementPredictionService>(EngagementPredictionService);
+    controller = testingModule.get<EngagementPredictionController>(EngagementPredictionController);
+    service = testingModule.get<EngagementPredictionService>(EngagementPredictionService);
 
     // Ensure agent is initialized in the service for tests
     // This simulates the OnModuleInit lifecycle hook

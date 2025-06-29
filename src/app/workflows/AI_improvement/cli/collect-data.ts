@@ -2,7 +2,7 @@
 
 import { createClient } from '@supabase/supabase-js';
 import { Platform } from '../../data_analysis/types/analysis_types';
-import { TrainingDataCollectionService, DataCollectionConfig } from '../training/DataCollectionService';
+import { TrainingDataCollectionService } from '../training/DataCollectionService';
 
 interface CollectionOptions {
   userId: string;

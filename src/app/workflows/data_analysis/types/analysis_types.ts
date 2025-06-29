@@ -1,8 +1,18 @@
-import { Database, Tables } from '@/types/supabase';
+import { Database } from '../../../../types/supabase';
 import { z } from 'zod';
 
 // Alias for Supabase video table row (Kept from original)
-export type Video = Tables<'videos'>;
+// Using unknown since videos table structure is not defined in database types
+export type Video = {
+  id: string;
+  title?: string;
+  thumbnail?: string;
+  duration?: number;
+  isShort?: boolean;
+  channelTitle?: string;
+  tags?: string[];
+  [key: string]: any;
+};
 
 // --- Base Schemas for common parameters ---
 // Using z.string().datetime() for TimeRange as per original file's pattern
