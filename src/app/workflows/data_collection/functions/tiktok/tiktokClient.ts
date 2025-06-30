@@ -22,9 +22,9 @@ class TikTokApiClient {
     // Auth mechanism depends heavily on the specific TikTok API being used.
     // It could be an access token, API key + secret, etc.
     this.accessToken = accessToken || process.env.TIKTOK_ACCESS_TOKEN || ''; 
-    // You might also need process.env.TIKTOK_CLIENT_KEY, process.env.TIKTOK_CLIENT_SECRET
+    // You might also need process.env.TIKTOK_CLIENT_ID, process.env.TIKTOK_CLIENT_SECRET
 
-    if (!this.accessToken && !process.env.TIKTOK_CLIENT_KEY) {
+    if (!this.accessToken && !process.env.TIKTOK_CLIENT_ID) {
       console.warn('TikTok API credentials are not configured. API calls may fail.');
     }
 
@@ -45,7 +45,7 @@ class TikTokApiClient {
         config.headers.Authorization = `Bearer ${this.accessToken}`;
       }
       // Add other necessary parameters or headers based on API docs
-      // e.g., if (process.env.TIKTOK_CLIENT_KEY) config.params.client_key = process.env.TIKTOK_CLIENT_KEY;
+      // e.g., if (process.env.TIKTOK_CLIENT_ID) config.params.client_id = process.env.TIKTOK_CLIENT_ID;
       return config;
     });
 

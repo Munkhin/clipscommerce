@@ -17,7 +17,7 @@ type W3CBaggagePropagatorType = typeof import('@opentelemetry/core').W3CBaggageP
 type RegisterInstrumentationsType = typeof import('@opentelemetry/instrumentation').registerInstrumentations;
 type HttpInstrumentationType = typeof import('@opentelemetry/instrumentation-http').HttpInstrumentation;
 type ExpressInstrumentationType = typeof import('@opentelemetry/instrumentation-express').ExpressInstrumentation;
-type RedisInstrumentationType = typeof import('@opentelemetry/instrumentation-redis').RedisInstrumentation;
+type RedisInstrumentationType = any; // Optional Redis instrumentation
 type GetNodeAutoInstrumentationsType = typeof import('@opentelemetry/auto-instrumentations-node').getNodeAutoInstrumentations;
 type ContextType = typeof import('@opentelemetry/api').context;
 type TraceType = typeof import('@opentelemetry/api').trace;
@@ -52,62 +52,112 @@ let SpanKind: SpanKindType | Record<string, number> = {};
 let propagation: PropagationType | null = null;
 
 // Dynamic imports with fallbacks
-try {
-  const sdkNode = require('@opentelemetry/sdk-node');
-  NodeTracerProvider = sdkNode.NodeTracerProvider;
-  
-  const resources = require('@opentelemetry/resources');
-  Resource = resources.Resource;
-  
-  const semanticConventions = require('@opentelemetry/semantic-conventions');
-  SemanticResourceAttributes = semanticConventions.SemanticResourceAttributes || {};
-  
-  const sdkTraceNode = require('@opentelemetry/sdk-trace-node');
-  SimpleSpanProcessor = sdkTraceNode.SimpleSpanProcessor;
-  BatchSpanProcessor = sdkTraceNode.BatchSpanProcessor;
-  TraceIdRatioBasedSampler = sdkTraceNode.TraceIdRatioBasedSampler;
-  ParentBasedSampler = sdkTraceNode.ParentBasedSampler;
-  ConsoleSpanExporter = sdkTraceNode.ConsoleSpanExporter;
-  
-  const otlpExporter = require('@opentelemetry/exporter-otlp-http');
-  OTLPTraceExporter = otlpExporter.OTLPTraceExporter;
-  
-  const b3Propagator = require('@opentelemetry/propagator-b3');
-  B3Propagator = b3Propagator.B3Propagator;
-  B3InjectEncoding = b3Propagator.B3InjectEncoding || {};
-  
-  const jaegerPropagator = require('@opentelemetry/propagator-jaeger');
-  JaegerPropagator = jaegerPropagator.JaegerPropagator;
-  
-  const core = require('@opentelemetry/core');
-  CompositePropagator = core.CompositePropagator;
-  W3CTraceContextPropagator = core.W3CTraceContextPropagator;
-  W3CBaggagePropagator = core.W3CBaggagePropagator;
-  
-  const instrumentation = require('@opentelemetry/instrumentation');
-  registerInstrumentations = instrumentation.registerInstrumentations;
-  
-  const httpInstrumentation = require('@opentelemetry/instrumentation-http');
-  HttpInstrumentation = httpInstrumentation.HttpInstrumentation;
-  
-  const expressInstrumentation = require('@opentelemetry/instrumentation-express');
-  ExpressInstrumentation = expressInstrumentation.ExpressInstrumentation;
-  
-  const redisInstrumentation = require('@opentelemetry/instrumentation-redis');
-  RedisInstrumentation = redisInstrumentation.RedisInstrumentation;
-  
-  const autoInstrumentations = require('@opentelemetry/auto-instrumentations-node');
-  getNodeAutoInstrumentations = autoInstrumentations.getNodeAutoInstrumentations;
-  
-  const api = require('@opentelemetry/api');
-  context = api.context;
-  trace = api.trace;
-  SpanStatusCode = api.SpanStatusCode || {};
-  SpanKind = api.SpanKind || {};
-  propagation = api.propagation;
-} catch (error) {
-  console.warn('OpenTelemetry dependencies not available:', error.message);
-}
+(async () => {
+  try {
+    const sdkNode = await import('@opentelemetry/sdk-node');
+    NodeTracerProvider = sdkNode.NodeTracerProvider;
+    
+    const resources = await import('@opentelemetry/resources');
+    Resource = resources.Resource;
+    
+    const semanticConventions = await import('@opentelemetry/semantic-conventions');
+    SemanticResourceAttributes = semanticConventions.SemanticResourceAttributes || {};
+    
+    const sdkTraceNode = await import('@opentelemetry/sdk-trace-node');
+    SimpleSpanProcessor = sdkTraceNode.SimpleSpanProcessor;
+    BatchSpanProcessor = sdkTraceNode.BatchSpanProcessor;
+    TraceIdRatioBasedSampler = sdkTraceNode.TraceIdRatioBasedSampler;
+    ParentBasedSampler = sdkTraceNode.ParentBasedSampler;
+    ConsoleSpanExporter = sdkTraceNode.ConsoleSpanExporter;
+    
+    try {
+      const otlpExporter = await import('@opentelemetry/exporter-otlp-http');
+      OTLPTraceExporter = otlpExporter.OTLPTraceExporter;
+    } catch (error) {
+      console.warn('OTLP exporter not available:', (error as Error).message);
+      OTLPTraceExporter = null;
+    }
+    
+    try {
+      const b3Propagator = await import('@opentelemetry/propagator-b3');
+      B3Propagator = b3Propagator.B3Propagator;
+      B3InjectEncoding = b3Propagator.B3InjectEncoding || {};
+    } catch (error) {
+      console.warn('B3 propagator not available:', (error as Error).message);
+      B3Propagator = null;
+      B3InjectEncoding = {};
+    }
+    
+    try {
+      const jaegerPropagator = await import('@opentelemetry/propagator-jaeger');
+      JaegerPropagator = jaegerPropagator.JaegerPropagator;
+    } catch (error) {
+      console.warn('Jaeger propagator not available:', (error as Error).message);
+      JaegerPropagator = null;
+    }
+    
+    try {
+      const core = await import('@opentelemetry/core');
+      CompositePropagator = core.CompositePropagator;
+      W3CTraceContextPropagator = core.W3CTraceContextPropagator;
+      W3CBaggagePropagator = core.W3CBaggagePropagator;
+    } catch (error) {
+      console.warn('OpenTelemetry core modules not available:', (error as Error).message);
+      CompositePropagator = null;
+      W3CTraceContextPropagator = null;
+      W3CBaggagePropagator = null;
+    }
+    
+    try {
+      const instrumentation = await import('@opentelemetry/instrumentation');
+      registerInstrumentations = instrumentation.registerInstrumentations;
+    } catch (error) {
+      console.warn('OpenTelemetry instrumentation not available:', (error as Error).message);
+      registerInstrumentations = null;
+    }
+    
+    try {
+      const httpInstrumentation = await import('@opentelemetry/instrumentation-http');
+      HttpInstrumentation = httpInstrumentation.HttpInstrumentation;
+    } catch (error) {
+      console.warn('HTTP instrumentation not available:', (error as Error).message);
+      HttpInstrumentation = null;
+    }
+    
+    try {
+      const expressInstrumentation = await import('@opentelemetry/instrumentation-express');
+      ExpressInstrumentation = expressInstrumentation.ExpressInstrumentation;
+    } catch (error) {
+      console.warn('Express instrumentation not available:', (error as Error).message);
+      ExpressInstrumentation = null;
+    }
+    
+    try {
+      const redisInstrumentation = await import('@opentelemetry/instrumentation-redis');
+      RedisInstrumentation = redisInstrumentation.RedisInstrumentation;
+    } catch (error) {
+      console.warn('Redis instrumentation not available:', (error as Error).message);
+      RedisInstrumentation = null;
+    }
+    
+    try {
+      const autoInstrumentations = await import('@opentelemetry/auto-instrumentations-node');
+      getNodeAutoInstrumentations = autoInstrumentations.getNodeAutoInstrumentations;
+    } catch (error) {
+      console.warn('Auto instrumentations not available:', (error as Error).message);
+      getNodeAutoInstrumentations = null;
+    }
+    
+    const api = await import('@opentelemetry/api');
+    context = api.context;
+    trace = api.trace;
+    SpanStatusCode = api.SpanStatusCode || {};
+    SpanKind = api.SpanKind || {};
+    propagation = api.propagation;
+  } catch (error) {
+    console.warn('OpenTelemetry dependencies not available:', error.message);
+  }
+})();
 
 export interface TelemetryConfig {
   serviceName: string;
@@ -350,7 +400,7 @@ class TelemetryManager {
               enabled: true,
             },
             '@opentelemetry/instrumentation-redis': {
-              enabled: true,
+              enabled: false, // Redis instrumentation package not installed
             },
           })
         );
