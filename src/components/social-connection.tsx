@@ -1,6 +1,7 @@
 // src/components/social-connection.tsx
 'use client';
 
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -31,7 +32,13 @@ export function SocialConnection() {
       const response = await fetch('/api/social-credentials/usernames');
       if (response.ok) {
         const data = await response.json();
-        const formattedAccounts = data.map((acc: any) => ({
+        const formattedAccounts = data.map((acc: {
+          platform: string;
+          username?: string;
+          displayName?: string;
+          profileImage?: string;
+          connectedAt?: string;
+        }) => ({
           platform: acc.platform,
           username: acc.username || `Connected ${acc.platform}`,
           displayName: acc.displayName,
@@ -44,7 +51,7 @@ export function SocialConnection() {
         const fallbackResponse = await fetch('/api/social-credentials');
         if (fallbackResponse.ok) {
           const fallbackData = await fallbackResponse.json();
-          const formattedAccounts = fallbackData.map((acc: any) => ({
+          const formattedAccounts = fallbackData.map((acc: { platform: string }) => ({
             platform: acc.platform,
             username: `Connected ${acc.platform}`,
           }));
@@ -58,7 +65,7 @@ export function SocialConnection() {
         const fallbackResponse = await fetch('/api/social-credentials');
         if (fallbackResponse.ok) {
           const fallbackData = await fallbackResponse.json();
-          const formattedAccounts = fallbackData.map((acc: any) => ({
+          const formattedAccounts = fallbackData.map((acc: { platform: string }) => ({
             platform: acc.platform,
             username: `Connected ${acc.platform}`,
           }));
@@ -225,10 +232,12 @@ export function SocialConnection() {
               <li key={account.platform} className="flex items-center justify-between p-4 border rounded-lg">
                 <div className="flex items-center space-x-3">
                   {account.profileImage && (
-                    <img 
+                    <Image 
                       src={account.profileImage} 
                       alt={`${account.platform} profile`}
                       className="w-10 h-10 rounded-full object-cover"
+                      width={40}
+                      height={40}
                     />
                   )}
                   <div>

@@ -52,6 +52,63 @@ jest.mock('next/navigation', () => ({
   useSearchParams: () => new URLSearchParams(),
 }));
 
+// Mock Next.js server components
+jest.mock('next/server', () => {
+  class MockNextRequest {
+    constructor(url, init = {}) {
+      this.url = url;
+      this.method = init.method || 'GET';
+      this.headers = new Headers(init.headers || {});
+      this.nextUrl = {
+        pathname: new URL(url).pathname,
+        search: new URL(url).search,
+        href: url,
+        origin: new URL(url).origin,
+        protocol: new URL(url).protocol,
+        hostname: new URL(url).hostname,
+        port: new URL(url).port,
+        host: new URL(url).host,
+        searchParams: new URL(url).searchParams,
+        hash: new URL(url).hash,
+        clone: () => ({ ...this.nextUrl })
+      };
+      this._body = init.body;
+    }
+    
+    async json() {
+      return JSON.parse(this._body || '{}');
+    }
+    
+    async text() {
+      return this._body || '';
+    }
+  }
+  
+  return {
+    NextRequest: MockNextRequest,
+    NextResponse: {
+      next: jest.fn(() => ({
+        status: 200,
+        headers: new Headers(),
+        json: () => Promise.resolve({}),
+        text: () => Promise.resolve('')
+      })),
+      redirect: jest.fn((url) => ({
+        status: 307,
+        headers: new Headers({ location: url }),
+        json: () => Promise.resolve({}),
+        text: () => Promise.resolve('')
+      })),
+      json: jest.fn((data, options = {}) => ({
+        status: options.status || 200,
+        headers: new Headers(options.headers || {}),
+        json: () => Promise.resolve(data),
+        text: () => Promise.resolve(JSON.stringify(data))
+      }))
+    }
+  };
+});
+
 // Mock Supabase
 jest.mock('@supabase/auth-helpers-nextjs', () => ({
   createClientComponentClient: jest.fn(),

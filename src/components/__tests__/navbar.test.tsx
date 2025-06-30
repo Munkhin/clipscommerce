@@ -12,12 +12,14 @@ jest.mock('next/navigation', () => ({
 }));
 
 // Mock Supabase client
+const mockCreateClient = jest.fn(() => Promise.resolve({
+  auth: {
+    getUser: jest.fn(),
+  },
+}));
+
 jest.mock('@/lib/supabase/client', () => ({
-  createClient: jest.fn(() => Promise.resolve({
-    auth: {
-      getUser: jest.fn(),
-    },
-  })),
+  createClient: mockCreateClient,
 }));
 
 // Mock Auth Provider
@@ -40,7 +42,6 @@ jest.mock('../ui/button', () => ({
 }));
 
 describe('Navbar Component', () => {
-  const mockCreateClient = jest.mocked(require('@/lib/supabase/client').createClient);
 
   beforeEach(() => {
     jest.clearAllMocks();

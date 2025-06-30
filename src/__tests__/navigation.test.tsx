@@ -17,7 +17,8 @@ jest.mock('next/link', () => {
 
 // Mock Next.js Image component
 jest.mock('next/image', () => {
-  return function MockedImage(props: React.ComponentProps<'img'>) {
+  return function MockedImage(props: any) {
+    // eslint-disable-next-line @next/next/no-img-element
     return <img {...props} alt={props.alt || ''} />;
   };
 });

@@ -1,5 +1,5 @@
 import React from 'react';
-import { AlertTriangle, RefreshCw, Wifi, WifiOff, Bug, ExternalLink, Mail, ArrowLeft } from 'lucide-react';
+import { AlertTriangle, RefreshCw, WifiOff, Bug, ExternalLink, Mail, ArrowLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -17,7 +17,7 @@ interface BaseErrorProps {
 }
 
 interface ErrorMessageProps extends BaseErrorProps {
-  variant?: 'destructive' | 'warning' | 'info';
+  variant?: 'default' | 'destructive';
   icon?: React.ReactNode;
   onDismiss?: () => void;
 }
@@ -34,7 +34,7 @@ export function ErrorMessage({
   const defaultIcon = <AlertTriangle className="h-4 w-4" />;
   
   return (
-    <Alert variant={variant} className={cn('', className)} role="alert">
+    <Alert variant={variant} className={cn(className)} role="alert">
       {icon || defaultIcon}
       <AlertTitle>{title}</AlertTitle>
       {description && <AlertDescription>{description}</AlertDescription>}
@@ -380,7 +380,7 @@ export function ErrorBoundaryFallback({ error, resetError, className }: ErrorBou
         <div className="space-y-2">
           <h2 className="text-xl font-semibold text-foreground">Something went wrong</h2>
           <p className="text-sm text-muted-foreground">
-            description: 'We encountered an unexpected error. Don&apos;t worry, our team has been notified.'
+            We encountered an unexpected error. Don&apos;t worry, our team has been notified.
           </p>
           {error && process.env.NODE_ENV === 'development' && (
             <details className="text-left mt-4 p-3 bg-muted rounded text-xs">

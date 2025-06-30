@@ -660,6 +660,7 @@ export default function AccelerateComponent() {
           {/* Show empty state when no videos */}
           {videos.length === 0 && (
             <NoVideosEmpty
+              title="No videos uploaded yet"
               onUpload={handleAddVideos}
               className="bg-gray-900/50 backdrop-blur-sm border border-gray-700 rounded-lg"
             />

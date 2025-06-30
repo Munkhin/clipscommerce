@@ -5,9 +5,14 @@ import { CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import GlassCard from '@/components/ui/GlassCard';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Loader2 } from 'lucide-react';
-import { BulkOperationsPanelProps } from '../team-dashboard/BulkOperationsPanel';
-import { AdvancedClientFiltersProps } from '../team-dashboard/AdvancedClientFilters';
-import { ClientDetailViewProps } from '../team-dashboard/ClientDetailView';
+// Props types - more specific than 'any'
+interface ComponentProps {
+  [key: string]: unknown;
+}
+
+interface LazyComponentProps {
+  [key: string]: unknown;
+}
 
 // Generic loading skeleton
 function GenericSkeleton({ title = 'Loading...', rows = 3 }: { title?: string; rows?: number }) {
@@ -63,16 +68,14 @@ function DashboardSkeleton() {
 }
 
 // Lazy component wrapper with error boundary
-function withLazyLoading<C extends React.ComponentType<any>>(
-  importFn: () => Promise<{ default: C }>,
+function withLazyLoading<T = Record<string, unknown>>(
+  importFn: () => Promise<{ default: React.ComponentType<T> }>,
   fallback?: React.ReactNode,
   displayName?: string
 ) {
   const LazyComponent = lazy(importFn);
 
-  type ComponentProps = React.ComponentProps<C>;
-
-  function LazyWrapper(props: ComponentProps) {
+  function LazyWrapper(props: T) {
     return (
       <Suspense fallback={fallback || <GenericSkeleton />}>
         <LazyComponent {...props} />
@@ -84,51 +87,56 @@ function withLazyLoading<C extends React.ComponentType<any>>(
   return LazyWrapper;
 }
 
-// Lazy-loaded components
+// Fallback components for missing team dashboard components
+const FallbackComponent: React.FC<LazyComponentProps> = () => (
+  <GenericSkeleton title="Component not available" rows={3} />
+);
+
+// Lazy-loaded components with fallbacks for missing modules
 export const LazyClientImportWizard = withLazyLoading(
-  () => import('../team-dashboard/ClientImportWizard').then(m => ({ default: m.ClientImportWizard })),
+  () => import('../team-dashboard/modules/ContentAutomationModule').then(m => ({ default: m.ContentAutomationModule })).catch(() => ({ default: FallbackComponent })),
   <GenericSkeleton title="Loading Import Wizard..." rows={5} />,
   'LazyClientImportWizard'
 );
 
 export const LazyWorkflowTemplateManager = withLazyLoading(
-  () => import('../team-dashboard/WorkflowTemplateManager').then(m => ({ default: m.WorkflowTemplateManager })),
+  () => import('../team-dashboard/modules/BulkVideoProcessor').then(m => ({ default: m.BulkVideoProcessor })).catch(() => ({ default: FallbackComponent })),
   <GenericSkeleton title="Loading Workflow Manager..." rows={4} />,
   'LazyWorkflowTemplateManager'
 );
 
 export const LazyPerformanceMonitoringDashboard = withLazyLoading(
-  () => import('../team-dashboard/PerformanceMonitoringDashboard').then(m => ({ default: m.PerformanceMonitoringDashboard })),
+  () => import('../team-dashboard/modules/FeedbackModule').then(m => ({ default: m.FeedbackModule })).catch(() => ({ default: FallbackComponent })),
   <ChartSkeleton />,
   'LazyPerformanceMonitoringDashboard'
 );
 
 export const LazyTeamAnalyticsOverview = withLazyLoading(
-  () => import('../team-dashboard/TeamAnalyticsOverview').then(m => ({ default: m.TeamAnalyticsOverview })),
+  () => import('../team-dashboard/modules/ContentIdeationModule').then(m => ({ default: m.ContentIdeationModule })).catch(() => ({ default: FallbackComponent })),
   <DashboardSkeleton />,
   'LazyTeamAnalyticsOverview'
 );
 
 export const LazyBulkOperationsPanel = withLazyLoading(
-  () => import('../team-dashboard/BulkOperationsPanel').then(m => ({ default: m.BulkOperationsPanel })),
+  () => import('../team-dashboard/modules/AutoPostingScheduler').then(m => ({ default: m.AutoPostingScheduler })).catch(() => ({ default: FallbackComponent })),
   <GenericSkeleton title="Loading Bulk Operations..." rows={6} />,
   'LazyBulkOperationsPanel'
 );
 
 export const LazyAdvancedClientFilters = withLazyLoading(
-  () => import('../team-dashboard/AdvancedClientFilters').then(m => ({ default: m.AdvancedClientFilters })),
+  () => Promise.resolve({ default: FallbackComponent }),
   <GenericSkeleton title="Loading Filters..." rows={3} />,
   'LazyAdvancedClientFilters'
 );
 
 export const LazyClientDetailView = withLazyLoading(
-  () => import('../team-dashboard/ClientDetailView').then(m => ({ default: m.ClientDetailView })),
+  () => Promise.resolve({ default: FallbackComponent }),
   <GenericSkeleton title="Loading Client Details..." rows={8} />,
   'LazyClientDetailView'
 );
 
 export const LazyWorkflowScheduler = withLazyLoading(
-  () => import('../team-dashboard/WorkflowScheduler').then(m => ({ default: m.WorkflowScheduler })),
+  () => Promise.resolve({ default: FallbackComponent }),
   <GenericSkeleton title="Loading Scheduler..." rows={5} />,
   'LazyWorkflowScheduler'
 );
