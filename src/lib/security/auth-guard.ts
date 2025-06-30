@@ -9,6 +9,7 @@ import { User } from '@supabase/supabase-js';
 interface UserProfile {
   role?: string;
   subscription_tier?: 'lite' | 'pro' | 'team';
+  team_id?: string;
 }
 
 interface ValidationResult {
@@ -343,18 +344,19 @@ export const validators = {
   required: (value: unknown) => value !== null && value !== undefined && value !== '',
   string: (value: unknown) => typeof value === 'string',
   number: (value: unknown) => typeof value === 'number' && !isNaN(value as number),
-  email: (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
-  url: (value: string) => {
+  email: (value: unknown) => typeof value === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
+  url: (value: unknown) => {
     try {
+      if (typeof value !== 'string') return false;
       new URL(value);
       return true;
     } catch {
       return false;
     }
   },
-  minLength: (min: number) => (value: string) => value.length >= min,
-  maxLength: (max: number) => (value: string) => value.length <= max,
-  enum: (values: string[]) => (value: string) => values.includes(value)
+  minLength: (min: number) => (value: unknown) => typeof value === 'string' && value.length >= min,
+  maxLength: (max: number) => (value: unknown) => typeof value === 'string' && value.length <= max,
+  enum: (values: string[]) => (value: unknown) => typeof value === 'string' && values.includes(value)
 };
 
 /**

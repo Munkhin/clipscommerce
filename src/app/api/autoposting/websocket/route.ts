@@ -156,7 +156,7 @@ export async function POST(request: NextRequest) {
     }
 
     const { user, body } = guardResult.context!;
-    const { action, connectionId, data } = body as WebSocketActionRequestBody;
+    const { action, connectionId, data } = body as unknown as WebSocketActionRequestBody;
     const userId = user!.id;
 
     switch (action) {

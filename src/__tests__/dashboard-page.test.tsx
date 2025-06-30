@@ -1,6 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import * as screen from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import DashboardPage from '@/app/dashboard/page';
 import { useAuth } from '@/providers/AuthProvider';
 

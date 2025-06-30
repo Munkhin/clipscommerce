@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const metric = guardResult.context!.body as WebVitalsMetric;
+    const metric = guardResult.context!.body as unknown as WebVitalsMetric;
     
     // Log metrics in development
     if (process.env.NODE_ENV === 'development') {

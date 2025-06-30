@@ -7,7 +7,7 @@ interface PredictPerformanceRequestBody {
 }
 
 const inputValidator = createValidator({
-  likeRatio: [validators.required, validators.number, (value: number) => value >= 0 && value <= 1]
+  likeRatio: [validators.required, validators.number, (value: unknown) => typeof value === 'number' && value >= 0 && value <= 1]
 });
 
 export async function POST(req: NextRequest) {
@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
   }
 
   const { body } = guardResult.context!;
-  const { likeRatio } = body as PredictPerformanceRequestBody;
+  const { likeRatio } = body as unknown as PredictPerformanceRequestBody;
   const predictedEngagement = predictEngagement(likeRatio);
   return NextResponse.json({
     likeRatio,

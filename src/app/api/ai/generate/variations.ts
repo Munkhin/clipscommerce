@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
   }
 
   const { body } = guardResult.context!;
-  const { caption, hashtags, platform = 'tiktok', targetAudience = 'general' } = body as GenerateVariationsRequestBody;
+  const { caption, hashtags, platform = 'tiktok', targetAudience = 'general' } = body as unknown as GenerateVariationsRequestBody;
   
   const platformEnum = platform.toUpperCase() as Platform;
   const variations = suggestCaptionsAndHashtags({ 

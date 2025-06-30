@@ -97,7 +97,9 @@ export function createValidationMiddleware<T>(
             const formData = await req.formData();
             requestData = Object.fromEntries(formData.entries());
           } else {
-            requestData = await req.text();
+            // For text content, wrap it in an object
+            const textContent = await req.text();
+            requestData = { content: textContent };
           }
         } catch (error) {
           return createErrorResponse(400, 'Invalid request body', []);
