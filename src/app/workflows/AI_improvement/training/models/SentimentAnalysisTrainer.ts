@@ -635,11 +635,21 @@ export class SentimentAnalysisTrainer extends EventEmitter {
       .insert({
         model_name: 'sentiment_analysis',
         model_type: 'ensemble',
-        model_data: modelData,
-        performance_metrics: this.performance,
-        training_date: new Date().toISOString(),
         version: '1.0.0',
-        status: 'active'
+        description: 'Sentiment analysis model trained on user engagement data',
+        training_date: new Date().toISOString(),
+        training_data_size: this.trainingData.length,
+        performance_metrics: this.performance,
+        overall_score: this.performance.accuracy,
+        model_data: modelData,
+        model_size: JSON.stringify(modelData).length,
+        status: 'trained',
+        is_latest: true,
+        prediction_count: 0,
+        tags: ['sentiment', 'nlp', 'engagement'],
+        created_by: 'system',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
       });
 
     if (error) throw error;
@@ -722,7 +732,7 @@ export class SentimentAnalysisTrainer extends EventEmitter {
     const words = text.split(/\s+/);
     words.forEach(word => {
       const emotion = this.emotionalWords.get(word.toLowerCase());
-      if (emotion && emotions.hasOwnProperty(emotion)) {
+      if (emotion && Object.prototype.hasOwnProperty.call(emotions, emotion)) {
         emotions[emotion as keyof typeof emotions] += 0.2;
       }
     });

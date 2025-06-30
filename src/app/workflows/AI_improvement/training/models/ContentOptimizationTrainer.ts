@@ -842,11 +842,21 @@ export class ContentOptimizationTrainer extends EventEmitter {
       .insert({
         model_name: 'content_optimization',
         model_type: 'ensemble',
-        model_data: modelData,
-        performance_metrics: this.performance,
-        training_date: new Date().toISOString(),
         version: '1.0.0',
-        status: 'active'
+        description: 'Content optimization model for improving engagement',
+        training_date: new Date().toISOString(),
+        training_data_size: this.trainingData.length,
+        performance_metrics: this.performance,
+        overall_score: this.performance.accuracy,
+        model_data: modelData,
+        model_size: JSON.stringify(modelData).length,
+        status: 'trained',
+        is_latest: true,
+        prediction_count: 0,
+        tags: ['content', 'optimization', 'engagement'],
+        created_by: 'system',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
       });
 
     if (error) throw error;
