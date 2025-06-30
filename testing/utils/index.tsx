@@ -18,14 +18,14 @@ export interface TestUser {
 
 export interface MockSupabaseOptions {
   user?: TestUser | null;
-  session?: any;
-  error?: any;
+  session?: Record<string, unknown>;
+  error?: Error | null;
 }
 
 export interface ComponentTestOptions extends RenderOptions {
   user?: TestUser;
   theme?: 'light' | 'dark' | 'system';
-  router?: Partial<any>;
+  router?: Partial<Record<string, unknown>>;
   supabase?: MockSupabaseOptions;
 }
 
@@ -91,21 +91,21 @@ export async function testAccessibility(component: ReactElement) {
   
   // Check for basic accessibility attributes
   const buttons = container.querySelectorAll('button');
-  buttons.forEach(button => {
+  buttons.forEach((button: Element) => {
     if (!button.getAttribute('aria-label') && !button.textContent?.trim()) {
       console.warn('Button without accessible name found:', button);
     }
   });
 
   const images = container.querySelectorAll('img');
-  images.forEach(img => {
+  images.forEach((img: Element) => {
     if (!img.getAttribute('alt')) {
       console.warn('Image without alt text found:', img);
     }
   });
 
   const inputs = container.querySelectorAll('input');
-  inputs.forEach(input => {
+  inputs.forEach((input: Element) => {
     const hasLabel = input.getAttribute('aria-label') || 
                     input.getAttribute('aria-labelledby') ||
                     container.querySelector(`label[for="${input.id}"]`);
@@ -128,7 +128,7 @@ export async function testResponsive(
     { width: 1920, height: 1080, name: 'desktop' },
   ]
 ) {
-  const results: Record<string, any> = {};
+  const results: Record<string, { viewport: typeof viewport; container: HTMLElement; screenshot: string }> = {};
 
   for (const viewport of viewports) {
     // Mock window dimensions
@@ -342,7 +342,7 @@ export function createMockUser(overrides: Partial<TestUser> = {}): TestUser {
 /**
  * Generate mock pricing data
  */
-export function createMockPricingTier(overrides: any = {}) {
+export function createMockPricingTier(overrides: Record<string, unknown> = {}) {
   return {
     id: `tier-${Math.random().toString(36).substr(2, 9)}`,
     name: 'Test Plan',
@@ -359,7 +359,7 @@ export function createMockPricingTier(overrides: any = {}) {
 /**
  * Generate mock content data
  */
-export function createMockContent(overrides: any = {}) {
+export function createMockContent(overrides: Record<string, unknown> = {}) {
   return {
     id: `content-${Math.random().toString(36).substr(2, 9)}`,
     title: 'Test Content',
