@@ -1,13 +1,43 @@
 import { IAuthTokenManager } from '../auth.types';
-import { ApiConfig, ApiRateLimit } from './types';
+import { ApiConfig, ApiRateLimit, ApiResponse, Platform } from './types';
 import { ApiError, RateLimitError } from '../utils/errors';
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosHeaders } from 'axios';
 
 export type HeaderValue = string | string[] | number | boolean;
 
-export { ApiResponse } from './types';
-import logger from '@/utils/logger';
-import { Post, Analytics } from '@/types/platform';
+// Note: ApiResponse is available through direct import from './types'
+
+
+// Define basic types locally to avoid import issues
+interface Post {
+  id: string;
+  platform: string;
+  title?: string;
+  content?: string;
+  createdAt: string;
+  metrics?: {
+    views: number;
+    likes: number;
+    comments: number;
+    shares: number;
+  };
+}
+
+interface Analytics {
+  views: number;
+  likes: number;
+  comments: number;
+  shares: number;
+  engagementRate?: number;
+}
+
+// Simple logger interface
+const logger = {
+  info: (message: string, data?: any) => console.log(`[INFO] ${message}`, data || ''),
+  warn: (message: string, data?: any) => console.warn(`[WARN] ${message}`, data || ''),
+  error: (message: string, data?: any) => console.error(`[ERROR] ${message}`, data || ''),
+  debug: (message: string, data?: any) => console.debug(`[DEBUG] ${message}`, data || ''),
+};
 
 export abstract class BasePlatformClient {
   protected readonly client: AxiosInstance;
@@ -24,8 +54,10 @@ export abstract class BasePlatformClient {
     });
 
     this.client.interceptors.request.use(async (config) => {
+      // This will be overridden by platform-specific clients that know their platform
+      const platformId = (this as any).platform || Platform.TIKTOK; // Fallback to TikTok
       const credentials = await this.authTokenManager.getValidCredentials({
-        platform: 'tiktok' as any, // This should be passed from constructor
+        platform: platformId,
         userId: this.userId
       });
       if (credentials && credentials.strategy === 'oauth2') {
@@ -83,8 +115,9 @@ export abstract class BasePlatformClient {
       return response;
     } catch (error) {
       if (axios.isAxiosError(error)) {
+        const platformId = (this as any).platform || Platform.TIKTOK; // Fallback to TikTok
         throw new ApiError(
-          'API',
+          platformId,
           'REQUEST_FAILED',
           error.response?.statusText || 'Unknown API Error',
           error.response?.status || 500,
