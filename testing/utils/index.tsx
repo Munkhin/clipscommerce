@@ -322,6 +322,71 @@ export async function measureRenderPerformance(
 }
 
 // =============================================================================
+// SUPABASE MOCK HELPERS
+// =============================================================================
+
+/**
+ * Create a comprehensive Supabase query builder mock
+ */
+export function createSupabaseQueryMock(mockData: any, error: any = null) {
+  const baseMock = {
+    select: jest.fn(() => baseMock),
+    insert: jest.fn(() => baseMock),
+    update: jest.fn(() => baseMock),
+    delete: jest.fn(() => baseMock),
+    eq: jest.fn(() => baseMock),
+    gte: jest.fn(() => baseMock),
+    lte: jest.fn(() => baseMock),
+    order: jest.fn(() => baseMock),
+    limit: jest.fn(() => baseMock),
+    single: jest.fn(() => Promise.resolve({ data: mockData, error })),
+  };
+
+  // Make all methods return the base mock for chaining, except those that should resolve
+  Object.keys(baseMock).forEach(key => {
+    if (key !== 'single') {
+      (baseMock as any)[key] = jest.fn(() => {
+        // For the final operations, return a promise
+        if (key === 'order' || key === 'limit') {
+          return Promise.resolve({ data: Array.isArray(mockData) ? mockData : [mockData], error });
+        }
+        return baseMock;
+      });
+    }
+  });
+
+  return baseMock;
+}
+
+/**
+ * Create a Supabase storage mock
+ */
+export function createSupabaseStorageMock() {
+  return {
+    upload: jest.fn(() => Promise.resolve({ data: { path: 'test/path' }, error: null })),
+    getPublicUrl: jest.fn(() => ({ data: { publicUrl: 'https://example.com/file.jpg' } })),
+    remove: jest.fn(() => Promise.resolve({ error: null })),
+  };
+}
+
+/**
+ * Create a complete Supabase client mock
+ */
+export function createSupabaseClientMock(overrides: Record<string, any> = {}) {
+  return {
+    from: jest.fn((table: string) => createSupabaseQueryMock([], null)),
+    storage: {
+      from: jest.fn(() => createSupabaseStorageMock()),
+    },
+    auth: {
+      getUser: jest.fn(() => Promise.resolve({ data: { user: null }, error: null })),
+      getSession: jest.fn(() => Promise.resolve({ data: { session: null }, error: null })),
+    },
+    ...overrides,
+  };
+}
+
+// =============================================================================
 // MOCK DATA GENERATORS
 // =============================================================================
 
