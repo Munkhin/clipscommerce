@@ -39,8 +39,20 @@ export function useUsageLimits(subscriptionTier: string = 'lite') {
   /**
    * Check if user has access to a feature type
    */
-  const hasFeatureAccess = (feature: 'ecommerce' | 'analytics' | 'teamDashboard') => {
-    return usageLimitsService.hasFeatureAccess(subscriptionTier, feature);
+  const hasFeatureAccess = (feature: 'ecommerce' | 'analytics' | 'teamDashboard'): boolean => {
+    const tier = SUBSCRIPTION_TIERS[subscriptionTier];
+    if (!tier) return false;
+    
+    switch (feature) {
+      case 'ecommerce':
+        return tier.limits.ecommerceAccess;
+      case 'analytics':
+        return tier.limits.analyticsAccess !== undefined;
+      case 'teamDashboard':
+        return tier.limits.teamDashboard;
+      default:
+        return false;
+    }
   };
 
   /**
@@ -141,7 +153,7 @@ export function withUsageEnforcement<T extends object>(
         <div className="bg-gradient-to-r from-[#8D5AFF]/10 to-[#5afcc0]/10 border border-[#8D5AFF]/30 rounded-xl p-6 text-center">
           <h3 className="text-xl font-bold text-white mb-2">Usage Limit Reached</h3>
           <p className="text-neutral-400 mb-4">
-            You've reached your monthly limit for {feature.replace(/([A-Z])/g, ' $1').toLowerCase()}.
+            You&apos;ve reached your monthly limit for {feature.replace(/([A-Z])/g, ' $1').toLowerCase()}.
           </p>
           <p className="text-sm text-neutral-500 mb-4">
             Current plan: <span className="text-[#8D5AFF]">{tier?.name}</span>

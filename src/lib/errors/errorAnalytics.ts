@@ -126,7 +126,7 @@ class ErrorAnalyticsService {
     try {
       // Convert Sets to arrays for JSON serialization
       const patternsForStorage: Record<string, any> = {};
-      for (const [signature, pattern] of this.errorPatterns.entries()) {
+      for (const [signature, pattern] of Array.from(this.errorPatterns.entries())) {
         patternsForStorage[signature] = {
           ...pattern,
           affectedUsers: Array.from(pattern.affectedUsers),
@@ -171,7 +171,7 @@ class ErrorAnalyticsService {
     const baseline = {
       timestamp: new Date().toISOString(),
       memory: (performance as any).memory?.usedJSHeapSize,
-      loadTime: timing.loadEventEnd - timing.navigationStart,
+      loadTime: timing.loadEventEnd - timing.fetchStart,
       responseTime: timing.responseEnd - timing.requestStart
     };
 
@@ -195,7 +195,7 @@ class ErrorAnalyticsService {
     );
 
     // Clean up error patterns that haven't been seen recently
-    for (const [signature, pattern] of this.errorPatterns.entries()) {
+    for (const [signature, pattern] of Array.from(this.errorPatterns.entries())) {
       if (new Date(pattern.lastSeen) < oneDayAgo) {
         this.errorPatterns.delete(signature);
       }

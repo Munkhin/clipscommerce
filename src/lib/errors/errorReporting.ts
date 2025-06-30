@@ -213,6 +213,7 @@ class ErrorReportingService {
     
     const errorInfo: ErrorInfo = {
       errorId,
+      timestamp: new Date().toISOString(),
       category: context.category || ErrorCategory.UNKNOWN,
       severity: context.severity || ErrorSeverity.NORMAL,
       component: context.component,
@@ -244,7 +245,7 @@ class ErrorReportingService {
         }
 
         // Set additional context
-        scope.setContext('errorInfo', errorInfo);
+        scope.setContext('errorInfo', errorInfo as any);
         
         if (errorInfo.additionalContext) {
           scope.setContext('additional', errorInfo.additionalContext);

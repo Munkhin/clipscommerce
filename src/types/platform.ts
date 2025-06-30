@@ -17,3 +17,13 @@ export interface Analytics {
 }
 
 export type Platform = 'instagram' | 'facebook' | 'twitter' | 'tiktok' | 'linkedin' | 'youtube';
+
+export interface PlatformAuth {
+  platform: Platform;
+  accessToken: string;
+  refreshToken?: string;
+  expiresAt?: Date;
+  userId?: string;
+  username?: string;
+  scopes?: string[];
+}

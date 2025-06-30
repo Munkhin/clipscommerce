@@ -1,5 +1,6 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import * as screen from '@testing-library/react';
 import DashboardPage from '@/app/dashboard/page';
 import { useAuth } from '@/providers/AuthProvider';
 
@@ -9,8 +10,8 @@ jest.mock('@/providers/AuthProvider', () => ({
 }));
 
 // Mock the Supabase client
-jest.mock('@supabase/auth-helpers-nextjs', () => ({
-  createClientComponentClient: jest.fn(() => ({
+jest.mock('@/../supabase', () => ({
+  createClient: jest.fn(() => ({
     from: jest.fn(() => ({
       select: jest.fn(() => ({
         eq: jest.fn(() => Promise.resolve({ data: [], error: null })),
@@ -98,4 +99,4 @@ describe('DashboardPage', () => {
     // Check if progress is displayed
     expect(screen.getByTestId('progress')).toBeInTheDocument();
   });
-}); 
+});

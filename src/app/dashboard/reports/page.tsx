@@ -6,8 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import DatePickerWithRange from '@/components/ui/date-picker-with-range';
 import { ReportsAnalysisService } from '@/app/workflows/reports/ReportsAnalysisService';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import Header from '@/components/dashboard/Header';
+import { createClient } from '@/../supabase';
 
 export default function ReportsPage() {
   const [platform, setPlatform] = useState('tiktok');
@@ -25,7 +24,7 @@ export default function ReportsPage() {
     setLoading(true);
     setError(null);
     try {
-      const supabase = createClientComponentClient();
+      const supabase = createClient();
       const reportsService = new ReportsAnalysisService(supabase as any);
       const result = await reportsService.getFullReport(
         {

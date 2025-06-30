@@ -1,3 +1,44 @@
+// Content structure for different post types
+interface BaseContent {
+  caption?: string;
+  tags?: string[];
+  privacy?: 'public' | 'private' | 'unlisted';
+  userId?: string;
+  hashtags?: string[];
+  mediaUrl?: string;
+  videoUrl?: string;
+  imageUrl?: string;
+  duration?: number;
+  // YouTube specific
+  title?: string;
+  description?: string;
+  thumbnail?: string;
+  category?: string;
+  videoPath?: string;
+}
+
+interface VideoContent extends BaseContent {
+  type: 'video';
+  videoFile: File | Blob | string; // File object, Blob, or URL
+  thumbnailFile?: File | Blob | string;
+  duration?: number;
+}
+
+interface ImageContent extends BaseContent {
+  type: 'image';
+  imageFiles: (File | Blob | string)[];
+}
+
+interface TextContent extends BaseContent {
+  type: 'text';
+  text: string;
+}
+
+type PostContent = VideoContent | ImageContent | TextContent;
+
+// Platform-specific data structure
+type PlatformSpecificData = Record<string, unknown>;
+
 export interface ContentValidationResult {
   isValid: boolean;
   errors?: string[];
@@ -8,7 +49,7 @@ export interface PostScheduleResult {
   postId: string;
   scheduledTime: Date;
   estimatedPublishTime?: Date;
-  platformSpecificData?: any;
+  platformSpecificData?: PlatformSpecificData;
 }
 
 export interface PostStatusResult {
@@ -22,21 +63,26 @@ export interface PostStatusResult {
     comments?: number;
   };
   publishedAt?: Date;
+  platformSpecificData?: PlatformSpecificData;
 }
 
 export interface PlatformPoster {
   platform: string;
-  validateContent(content: any): Promise<ContentValidationResult>;
-  schedulePost(content: any, scheduleTime: Date): Promise<PostScheduleResult>;
+  validateContent(content: PostContent): Promise<ContentValidationResult>;
+  schedulePost(content: PostContent, scheduleTime: Date): Promise<PostScheduleResult>;
   getPostStatus(postId: string): Promise<PostStatusResult>;
   cancelScheduledPost?(postId: string): Promise<boolean>;
-  updateScheduledPost?(postId: string, content: any, newScheduleTime?: Date): Promise<boolean>;
+  updateScheduledPost?(postId: string, content: PostContent, newScheduleTime?: Date): Promise<boolean>;
   getBatchPostStatus?(postIds: string[]): Promise<Record<string, PostStatusResult>>;
 }
 
 export class TikTokPoster implements PlatformPoster {
   platform = 'tiktok';
-  private apiClient: any; // In production, use official TikTok API client
+  private apiClient: { 
+    uploadVideo: (params: { video: File | Blob; caption?: string; privacy?: string }) => Promise<{ id: string; status: string }>;
+    schedulePost: (params: { postId: string; scheduleTime: Date }) => Promise<{ success: boolean; scheduledId: string }>;
+    getPostStatus: (postId: string) => Promise<{ status: string; url?: string; metrics?: unknown }>;
+  }; // In production, use official TikTok API client
   private rateLimiter: Map<string, number> = new Map();
   
   constructor() {
@@ -47,9 +93,18 @@ export class TikTokPoster implements PlatformPoster {
   private initializeApiClient() {
     // In production, initialize with TikTok Business API credentials
     return {
-      clientId: process.env.TIKTOK_CLIENT_ID,
-      clientSecret: process.env.TIKTOK_CLIENT_SECRET,
-      accessToken: process.env.TIKTOK_ACCESS_TOKEN
+      uploadVideo: async (params: { video: File | Blob; caption?: string; privacy?: string }) => {
+        // Mock implementation - replace with actual TikTok API
+        return { id: `tiktok_${Date.now()}`, status: 'uploaded' };
+      },
+      schedulePost: async (params: { postId: string; scheduleTime: Date }) => {
+        // Mock implementation - replace with actual TikTok API
+        return { success: true, scheduledId: params.postId };
+      },
+      getPostStatus: async (postId: string) => {
+        // Mock implementation - replace with actual TikTok API
+        return { status: 'published', url: `https://tiktok.com/@user/video/${postId}` };
+      }
     };
   }
   
@@ -68,7 +123,7 @@ export class TikTokPoster implements PlatformPoster {
     return true;
   }
   
-  async validateContent(content: any): Promise<ContentValidationResult> {
+  async validateContent(content: PostContent): Promise<ContentValidationResult> {
     const errors: string[] = [];
     const warnings: string[] = [];
     
@@ -86,7 +141,7 @@ export class TikTokPoster implements PlatformPoster {
     if (content.videoUrl) {
       const supportedFormats = ['.mp4', '.mov', '.avi'];
       const hasValidFormat = supportedFormats.some(format => 
-        content.videoUrl.toLowerCase().includes(format)
+        content.videoUrl?.toLowerCase().includes(format)
       );
       if (!hasValidFormat) {
         errors.push('Video format must be MP4, MOV, or AVI');
@@ -119,7 +174,7 @@ export class TikTokPoster implements PlatformPoster {
     };
   }
   
-  async schedulePost(content: any, scheduleTime: Date): Promise<PostScheduleResult> {
+  async schedulePost(content: PostContent, scheduleTime: Date): Promise<PostScheduleResult> {
     // Validate content first
     const validation = await this.validateContent(content);
     if (!validation.isValid) {
@@ -253,7 +308,7 @@ export class TikTokPoster implements PlatformPoster {
     return parseInt(parts[1] || '0', 10);
   }
   
-  private async storeScheduledPost(postId: string, postData: any, scheduleTime: Date): Promise<void> {
+  private async storeScheduledPost(postId: string, postData: Record<string, any>, scheduleTime: Date): Promise<void> {
     // In production, store in database for tracking
     console.log(`Stored scheduled TikTok post: ${postId}`);
   }
@@ -266,7 +321,11 @@ export class TikTokPoster implements PlatformPoster {
 
 export class InstagramPoster implements PlatformPoster {
   platform = 'instagram';
-  private apiClient: any;
+  private apiClient: { 
+    uploadContent: (params: { content: PostContent }) => Promise<{ id: string; status: string }>;
+    schedulePost: (params: { postId: string; scheduleTime: Date }) => Promise<{ success: boolean; scheduledId: string }>;
+    getPostStatus: (postId: string) => Promise<{ status: string; url?: string; metrics?: unknown }>;
+  };
   private rateLimiter: Map<string, number[]> = new Map();
   
   constructor() {
@@ -275,9 +334,18 @@ export class InstagramPoster implements PlatformPoster {
   
   private initializeApiClient() {
     return {
-      clientId: process.env.INSTAGRAM_CLIENT_ID,
-      clientSecret: process.env.INSTAGRAM_CLIENT_SECRET,
-      accessToken: process.env.INSTAGRAM_ACCESS_TOKEN
+      uploadContent: async (params: { content: PostContent }) => {
+        // Mock implementation - replace with actual Instagram API
+        return { id: `instagram_${Date.now()}`, status: 'uploaded' };
+      },
+      schedulePost: async (params: { postId: string; scheduleTime: Date }) => {
+        // Mock implementation - replace with actual Instagram API
+        return { success: true, scheduledId: params.postId };
+      },
+      getPostStatus: async (postId: string) => {
+        // Mock implementation - replace with actual Instagram API
+        return { status: 'published', url: `https://instagram.com/p/${postId}` };
+      }
     };
   }
   
@@ -300,7 +368,7 @@ export class InstagramPoster implements PlatformPoster {
     return true;
   }
   
-  async validateContent(content: any): Promise<ContentValidationResult> {
+  async validateContent(content: PostContent): Promise<ContentValidationResult> {
     const errors: string[] = [];
     const warnings: string[] = [];
     
@@ -318,7 +386,7 @@ export class InstagramPoster implements PlatformPoster {
       const supportedFormats = ['.jpg', '.jpeg', '.png'];
       const url = content.imageUrl || content.mediaUrl;
       const hasValidFormat = supportedFormats.some(format => 
-        url.toLowerCase().includes(format)
+        url?.toLowerCase().includes(format)
       );
       if (!hasValidFormat) {
         errors.push('Image format must be JPG, JPEG, or PNG');
@@ -330,7 +398,7 @@ export class InstagramPoster implements PlatformPoster {
       const supportedFormats = ['.mp4', '.mov'];
       const url = content.videoUrl || content.mediaUrl;
       const hasValidFormat = supportedFormats.some(format => 
-        url.toLowerCase().includes(format)
+        url?.toLowerCase().includes(format)
       );
       if (!hasValidFormat) {
         errors.push('Video format must be MP4 or MOV');
@@ -364,7 +432,7 @@ export class InstagramPoster implements PlatformPoster {
     };
   }
   
-  async schedulePost(content: any, scheduleTime: Date): Promise<PostScheduleResult> {
+  async schedulePost(content: PostContent, scheduleTime: Date): Promise<PostScheduleResult> {
     const validation = await this.validateContent(content);
     if (!validation.isValid) {
       throw new Error(`Content validation failed: ${validation.errors?.join(', ')}`);
@@ -480,7 +548,7 @@ export class InstagramPoster implements PlatformPoster {
     return parseInt(parts[1] || '0', 10);
   }
   
-  private async storeScheduledPost(postId: string, postData: any, scheduleTime: Date): Promise<void> {
+  private async storeScheduledPost(postId: string, postData: Record<string, any>, scheduleTime: Date): Promise<void> {
     console.log(`Stored scheduled Instagram post: ${postId}`);
   }
   
@@ -491,7 +559,11 @@ export class InstagramPoster implements PlatformPoster {
 
 export class YouTubePoster implements PlatformPoster {
   platform = 'youtube';
-  private apiClient: any;
+  private apiClient: { 
+    uploadContent: (params: { content: PostContent }) => Promise<{ id: string; status: string }>;
+    schedulePost: (params: { postId: string; scheduleTime: Date }) => Promise<{ success: boolean; scheduledId: string }>;
+    getPostStatus: (postId: string) => Promise<{ status: string; url?: string; metrics?: unknown }>;
+  };
   private rateLimiter: Map<string, number[]> = new Map();
   
   constructor() {
@@ -500,10 +572,18 @@ export class YouTubePoster implements PlatformPoster {
   
   private initializeApiClient() {
     return {
-      clientId: process.env.YOUTUBE_CLIENT_ID,
-      clientSecret: process.env.YOUTUBE_CLIENT_SECRET,
-      apiKey: process.env.YOUTUBE_API_KEY,
-      accessToken: process.env.YOUTUBE_ACCESS_TOKEN
+      uploadContent: async (params: { content: PostContent }) => {
+        // Mock implementation - replace with actual YouTube API
+        return { id: `youtube_${Date.now()}`, status: 'uploaded' };
+      },
+      schedulePost: async (params: { postId: string; scheduleTime: Date }) => {
+        // Mock implementation - replace with actual YouTube API
+        return { success: true, scheduledId: params.postId };
+      },
+      getPostStatus: async (postId: string) => {
+        // Mock implementation - replace with actual YouTube API
+        return { status: 'published', url: `https://youtube.com/watch?v=${postId}` };
+      }
     };
   }
   
@@ -525,7 +605,7 @@ export class YouTubePoster implements PlatformPoster {
     return true;
   }
   
-  async validateContent(content: any): Promise<ContentValidationResult> {
+  async validateContent(content: PostContent): Promise<ContentValidationResult> {
     const errors: string[] = [];
     const warnings: string[] = [];
     
@@ -591,7 +671,7 @@ export class YouTubePoster implements PlatformPoster {
     };
   }
   
-  async schedulePost(content: any, scheduleTime: Date): Promise<PostScheduleResult> {
+  async schedulePost(content: PostContent, scheduleTime: Date): Promise<PostScheduleResult> {
     const validation = await this.validateContent(content);
     if (!validation.isValid) {
       throw new Error(`Content validation failed: ${validation.errors?.join(', ')}`);
@@ -718,7 +798,7 @@ export class YouTubePoster implements PlatformPoster {
     return parseInt(parts[1] || '0', 10);
   }
   
-  private async storeScheduledPost(postId: string, postData: any, scheduleTime: Date): Promise<void> {
+  private async storeScheduledPost(postId: string, postData: Record<string, any>, scheduleTime: Date): Promise<void> {
     console.log(`Stored scheduled YouTube post: ${postId}`);
   }
   

@@ -1,5 +1,24 @@
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { TrendingHashtag, DetailedPlatformMetrics, VideoOptimizationAnalysisData } from '@/app/workflows/data_analysis/types/analysis_types';
+import { createClient } from '@/../supabase';
+import { TrendingHashtag, DetailedPlatformMetrics } from '@/app/workflows/data_analysis/types/analysis_types';
+
+// Interface for content data from database
+type DayOfWeekCapitalized = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
+interface ContentData {
+  id: string;
+  user_id: string;
+  caption?: string;
+  view_count?: number;
+  like_count?: number;
+  comment_count?: number;
+  share_count?: number;
+  uploaded_at: string;
+  duration?: number;
+  video_processing_results?: {
+    caption_analysis?: unknown;
+    hashtag_analysis?: unknown;
+    engagement_metrics?: unknown;
+  };
+}
 
 export interface UserContentAnalysis {
   topCaptions: string[];
@@ -61,7 +80,7 @@ export class ContentInsightsService {
   private supabase;
 
   constructor() {
-    this.supabase = createClientComponentClient();
+    this.supabase = createClient();
   }
 
   async analyzeUserContent(
@@ -146,7 +165,7 @@ export class ContentInsightsService {
           topCities: analyticsData.audienceDemographics.topCities
         },
         peakEngagementTimes: analyticsData.engagementTimes.peakTimes.map(peak => ({
-          dayOfWeek: peak.day as any,
+          dayOfWeek: (peak.day.charAt(0).toUpperCase() + peak.day.slice(1)) as DayOfWeekCapitalized,
           hourOfDay: peak.hour,
           engagementScore: peak.score
         })),
@@ -169,10 +188,10 @@ export class ContentInsightsService {
 
   private async fetchUserContent(
     userId: string,
-    platform: string,
+    _platform: string,
     timeRange: { start: string; end: string },
     limit: number
-  ): Promise<any[]> {
+  ): Promise<ContentData[]> {
     try {
       const { data, error } = await this.supabase
         .from('user_videos')
@@ -202,7 +221,7 @@ export class ContentInsightsService {
     }
   }
 
-  private extractTopPerformingCaptions(content: any[]): string[] {
+  private extractTopPerformingCaptions(content: ContentData[]): string[] {
     if (content.length === 0) return [];
 
     // Sort content by engagement and extract captions
@@ -214,12 +233,13 @@ export class ContentInsightsService {
         return engagementB - engagementA;
       })
       .slice(0, 10)
-      .map(item => item.caption);
+      .map(item => item.caption)
+      .filter((caption): caption is string => typeof caption === 'string');
 
     return topContent;
   }
 
-  private async analyzeHashtagPerformance(content: any[]): Promise<HashtagPerformanceData[]> {
+  private async analyzeHashtagPerformance(content: ContentData[]): Promise<HashtagPerformanceData[]> {
     const hashtagMap = new Map<string, {
       count: number;
       totalViews: number;
@@ -283,7 +303,7 @@ export class ContentInsightsService {
     return matches ? matches.map(tag => tag.toLowerCase()) : [];
   }
 
-  private identifyContentPatterns(content: any[]): ContentPattern[] {
+  private identifyContentPatterns(content: ContentData[]): ContentPattern[] {
     const patterns = new Map<string, { frequency: number; performances: number[]; examples: string[] }>();
 
     content.forEach(item => {
@@ -334,7 +354,7 @@ export class ContentInsightsService {
     return patterns;
   }
 
-  private calculateContentPerformance(content: any): number {
+  private calculateContentPerformance(content: ContentData): number {
     const views = content.view_count || 0;
     const likes = content.like_count || 0;
     const comments = content.comment_count || 0;
@@ -344,7 +364,7 @@ export class ContentInsightsService {
     return views + (likes * 2) + (comments * 3) + (shares * 4);
   }
 
-  private calculateEngagementMetrics(content: any[]): ContentEngagementMetrics {
+  private calculateEngagementMetrics(content: ContentData[]): ContentEngagementMetrics {
     if (content.length === 0) {
       return {
         averageViews: 0,
@@ -399,7 +419,7 @@ export class ContentInsightsService {
     };
   }
 
-  private identifyContentFormat(content: any): string {
+  private identifyContentFormat(content: ContentData): string {
     // Simplified format identification based on available data
     const duration = content.duration || 0;
     
@@ -409,7 +429,7 @@ export class ContentInsightsService {
     return 'Long Video';
   }
 
-  private async fetchTrendingHashtagsFromAPI(platform: string, niche?: string, limit: number = 20): Promise<{ tag: string; usage: number }[]> {
+  private async fetchTrendingHashtagsFromAPI(_platform: string, niche?: string, limit: number = 20): Promise<{ tag: string; usage: number }[]> {
     // Mock implementation - in reality, this would call platform APIs
     const baseTags = [
       '#viral', '#fyp', '#trending', '#love', '#instagood', '#photooftheday',
@@ -437,15 +457,17 @@ export class ContentInsightsService {
     }));
   }
 
-  private async calculateHashtagReach(hashtags: { tag: string; usage: number }[], platform: string): Promise<{ tag: string; estimatedReach: number }[]> {
+  private async calculateHashtagReach(hashtags: { tag: string; usage: number }[], _platform: string): Promise<{ tag: string; estimatedReach: number }[]> {
+    // Platform parameter reserved for future platform-specific calculations
     return hashtags.map(hashtag => ({
       tag: hashtag.tag,
       estimatedReach: Math.floor(hashtag.usage * (0.1 + Math.random() * 0.3)) // 10-40% of usage as reach
     }));
   }
 
-  private async fetchPlatformAnalytics(userId: string, platform: string, timeRange: { start: string; end: string }): Promise<PlatformAnalyticsData> {
+  private async fetchPlatformAnalytics(_userId: string, _platform: string, _timeRange: { start: string; end: string }): Promise<PlatformAnalyticsData> {
     // Mock implementation - would integrate with platform analytics APIs
+    // Parameters reserved for future API integration
     return {
       audienceDemographics: {
         ageGroups: { '18-24': 0.35, '25-34': 0.40, '35-44': 0.15, '45-54': 0.08, '55+': 0.02 },
@@ -533,7 +555,8 @@ export class ContentInsightsService {
     };
   }
 
-  private getDefaultTrendingHashtags(platform: string): TrendingHashtag[] {
+  private getDefaultTrendingHashtags(_platform: string): TrendingHashtag[] {
+    // Platform parameter reserved for platform-specific defaults
     return [
       { tag: '#viral', rank: 1, estimatedReach: 1000000 },
       { tag: '#trending', rank: 2, estimatedReach: 800000 },

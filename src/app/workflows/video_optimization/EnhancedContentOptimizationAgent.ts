@@ -126,9 +126,10 @@ export class EnhancedContentOptimizationAgent {
         case 'generate_variations':
           result = await this.generateVariations(task);
           break;
-        default:
+        default: {
           const exhaustiveCheck: never = task.type;
           throw new Error(`Unknown task type: ${exhaustiveCheck}`);
+        }
       }
 
       // Track performance

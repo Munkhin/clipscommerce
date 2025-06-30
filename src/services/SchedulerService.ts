@@ -1,5 +1,4 @@
 import { Post } from '../types/schedule';
-import { Platform } from '../app/workflows/deliverables/types/deliverables_types';
 import logger from '../utils/logger';
 
 // Defining ScheduleOptions locally based on its usage
@@ -9,7 +8,7 @@ interface ScheduleOptions {
   timezone?: string;
   maxQueueSize?: number;
   maxConcurrentTasks?: number;
-  logger?: any;
+  logger?: typeof logger;
 }
 
 export class SchedulerService {
@@ -37,11 +36,11 @@ export class SchedulerService {
       // 3. Queue it for publishing at the scheduled time
       
       logger.info('Scheduling post', {
-        postId: post.id || 'new',
+        postId: 'new',
         platforms: post.platforms,
         scheduledTime: post.scheduledTime.toISOString(),
         contentLength: post.content?.text?.length || 0,
-        hasMedia: Boolean(post.content?.media?.length),
+        hasMedia: Boolean(post.content?.mediaUrls?.length),
       });
       
       // Simulate API call delay
@@ -50,7 +49,7 @@ export class SchedulerService {
       return true;
     } catch (error) {
       logger.error('Failed to schedule post', error as Error, {
-        postId: post.id || 'new',
+        postId: 'new',
         platforms: post.platforms,
         scheduledTime: post.scheduledTime.toISOString(),
       });
@@ -71,8 +70,8 @@ export class SchedulerService {
       logger.info('Publishing post', {
         postId: post.id,
         platform: post.platforms[0],
-        contentPreview: post.content.text.substring(0, 50) + '...',
-        hasMedia: Boolean(post.content?.media?.length),
+        contentPreview: post.content?.text?.substring(0, 50) + '...',
+        hasMedia: Boolean(post.content?.mediaUrls?.length),
       });
       
       // Simulate API call delay
@@ -95,6 +94,7 @@ export class SchedulerService {
     try {
       // In a real implementation, this would fetch from your database
       // For now, return an empty array
+      logger.info('Fetching scheduled posts', { platform });
       return [];
     } catch (error) {
       logger.error('Failed to fetch scheduled posts', error as Error, {
@@ -135,6 +135,7 @@ export class SchedulerService {
     error?: string;
   }> {
     // In a real implementation, this would check the post status in your database
+    logger.debug('Getting post status', { postId });
     return {
       status: 'scheduled',
       scheduledTime: new Date(),
@@ -158,7 +159,7 @@ export class SchedulerService {
    * @param options - Scheduling options like run time, retry policy.
    * @returns A unique task ID.
    */
-  async scheduleTask(taskType: string, payload: any, options?: { runAt?: Date; cron?: string; }): Promise<string> {
+  async scheduleTask(taskType: string, payload: Record<string, unknown>, options?: { runAt?: Date; cron?: string; }): Promise<string> {
     const taskId = `task-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     logger.info('Scheduling task', {
       taskId,
@@ -172,21 +173,21 @@ export class SchedulerService {
   /**
    * Schedules a task to run once at a specific time.
    */
-  async scheduleOnce(taskType: string, payload: any, runAt: Date): Promise<string> {
+  async scheduleOnce(taskType: string, payload: Record<string, unknown>, runAt: Date): Promise<string> {
     return this.scheduleTask(taskType, payload, { runAt });
   }
 
   /**
    * Schedules a task to run on a recurring basis using cron syntax.
    */
-  async scheduleCronTask(taskType: string, payload: any, cronSchedule: string): Promise<string> {
+  async scheduleCronTask(taskType: string, payload: Record<string, unknown>, cronSchedule: string): Promise<string> {
     return this.scheduleTask(taskType, payload, { cron: cronSchedule });
   }
 
   /**
    * Schedules a task to run on a recurring basis.
    */
-  async scheduleRecurringTask(taskType: string, payload: any, intervalMs: number): Promise<string> {
+  async scheduleRecurringTask(taskType: string, payload: Record<string, unknown>, intervalMs: number): Promise<string> {
     const taskId = `recurring-task-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     logger.info('Scheduling recurring task', {
       taskId,
@@ -247,7 +248,7 @@ export class SchedulerService {
   /**
    * Retrieves tasks that have failed and moved to a dead-letter queue.
    */
-  async getDeadLetterTasks(): Promise<any[]> {
+  async getDeadLetterTasks(): Promise<Record<string, unknown>[]> {
     logger.debug('Retrieving dead-letter tasks');
     return [];
   }

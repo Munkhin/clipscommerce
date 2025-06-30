@@ -20,7 +20,7 @@ export function useDebounce<T>(value: T, delay: number): T {
 }
 
 // Throttle hook for scroll and resize events
-export function useThrottle<T extends (...args: any[]) => any>(
+export function useThrottle<T extends (...args: unknown[]) => unknown>(
   callback: T,
   delay: number
 ): T {
@@ -101,8 +101,8 @@ export function useVirtualScrolling<T>(
     setVisibleRange({ start: startIndex, end: endIndex });
   }, [scrollTop, itemHeight, containerHeight, items.length]);
 
-  const handleScroll = useThrottle((e: React.UIEvent<HTMLDivElement>) => {
-    setScrollTop(e.currentTarget.scrollTop);
+  const handleScroll = useThrottle((e: React.UIEvent) => {
+    setScrollTop((e.target as HTMLElement).scrollTop);
   }, 16); // ~60fps
 
   const visibleItems = items.slice(visibleRange.start, visibleRange.end + 1);
@@ -301,10 +301,10 @@ interface UsePerformanceOptimizationOptions {
   debounceMs?: number;
 }
 
-interface VirtualScrollData {
+interface VirtualScrollData<T> {
   startIndex: number;
   endIndex: number;
-  visibleItems: any[];
+  visibleItems: T[];
   totalHeight: number;
   offsetY: number;
 }
@@ -325,7 +325,7 @@ export function usePerformanceOptimization<T>(
   const scrollTimeoutRef = useRef<NodeJS.Timeout>();
 
   // Calculate visible range
-  const virtualData = useMemo((): VirtualScrollData => {
+  const virtualData = useMemo((): VirtualScrollData<T> => {
     const visibleCount = Math.ceil(containerHeight / itemHeight);
     const startIndex = Math.max(0, Math.floor(scrollTop / itemHeight) - overscan);
     const endIndex = Math.min(items.length - 1, startIndex + visibleCount + overscan * 2);

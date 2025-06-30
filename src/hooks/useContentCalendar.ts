@@ -45,13 +45,14 @@ export function useContentCalendar({
           endDate: endOfWeek(currentDate, { weekStartsOn: 1 }), // Sunday
         };
       case 'month':
-      default:
+      default: {
         // For month view, we'll show 4 weeks at a time
         const start = startOfWeek(currentDate, { weekStartsOn: 1 });
         return {
           startDate: start,
           endDate: addDays(start, 27), // 4 weeks
         };
+      }
     }
   }, [currentDate, view]);
 
@@ -186,10 +187,10 @@ export function useContentCalendar({
 
 // Helper hook for drag and drop functionality
 export function useDragAndDrop() {
-  const [draggedItem, setDraggedItem] = useState<any>(null);
+  const [draggedItem, setDraggedItem] = useState<Post | null>(null);
   const [dropTarget, setDropTarget] = useState<Date | null>(null);
 
-  const handleDragStart = useCallback((item: any) => {
+  const handleDragStart = useCallback((item: Post) => {
     setDraggedItem(item);
   }, []);
 
@@ -198,7 +199,7 @@ export function useDragAndDrop() {
     setDropTarget(date);
   }, []);
 
-  const handleDrop = useCallback((e: React.DragEvent, onDrop: (item: any, date: Date) => void) => {
+  const handleDrop = useCallback((e: React.DragEvent, onDrop: (item: Post, date: Date) => void) => {
     e.preventDefault();
     if (draggedItem && dropTarget) {
       onDrop(draggedItem, dropTarget);

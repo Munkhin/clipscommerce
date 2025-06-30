@@ -50,4 +50,26 @@ export class YouTubeClient extends BasePlatformClient {
       rateLimit: this.rateLimit === null ? undefined : this.rateLimit,
     });
   }
+
+  protected handleRateLimit(headers: any): void {
+    // YouTube rate limit handling placeholder
+    this.log('debug', 'YouTube rate limit handling not implemented');
+  }
+
+  async fetchPosts(query: string): Promise<any[]> {
+    // Placeholder implementation
+    this.log('warn', 'fetchPosts not implemented for YouTube');
+    return [];
+  }
+
+  async uploadContent(content: any): Promise<any> {
+    // Use existing postVideo method
+    return this.postVideo(content);
+  }
+
+  async getAnalytics(postId: string): Promise<any> {
+    // Placeholder implementation
+    this.log('warn', 'getAnalytics not implemented for YouTube');
+    return { views: 0, likes: 0, comments: 0, shares: 0 };
+  }
 }

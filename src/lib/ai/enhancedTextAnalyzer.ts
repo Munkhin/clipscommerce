@@ -5,7 +5,7 @@
 
 import crypto from 'crypto';
 import type { ChatCompletionMessageParam } from './openai-chat-types';
-import { Platform } from '../app/workflows/deliverables/types/deliverables_types';
+import { Platform } from '@/types/platform';
 
 // Import utility modules
 import { withRetry, CircuitBreaker, CircuitState } from '../utils/resilience';
@@ -645,7 +645,7 @@ export class EnhancedTextAnalyzer {
     Object.entries(freq)
       .sort((a, b) => b[1] - a[1])
       .slice(0, 3)
-      .forEach(([word, count]) => {
+      .forEach(([word]) => {
         phrases.push({ text: word, score: 0.6 });
       });
     return { phrases };
@@ -701,6 +701,6 @@ export class EnhancedTextAnalyzer {
     if (typeof (this as Record<string, unknown>)[methodName] !== 'function') {
       throw new Error(`Method ${methodName} does not exist on EnhancedTextAnalyzer`);
     }
-    return Promise.all(texts.map(text => (this as Record<string, Function>)[methodName](text)));
+    return Promise.all(texts.map(text => (this as Record<string, (...args: any[]) => any>)[methodName](text)));
   }
 }

@@ -194,6 +194,136 @@ export class InstagramApiClient extends PlatformApiClient {
     }
   }
 
+  // Scheduling
+  async schedulePost(postId: string, publishAt: Date): Promise<boolean> {
+    // Instagram API doesn't support native scheduling
+    // This would typically integrate with a scheduling service
+    console.warn('Instagram native scheduling not supported. Use third-party scheduling service.');
+    return false;
+  }
+
+  async getScheduledPosts(startDate: Date, endDate: Date): Promise<Post[]> {
+    // Instagram API doesn't provide scheduled posts endpoint
+    console.warn('Instagram scheduled posts retrieval not supported.');
+    return [];
+  }
+
+  async getPostsInsights(postIds: string[]): Promise<Record<string, any>> {
+    const insights: Record<string, any> = {};
+    
+    for (const postId of postIds) {
+      try {
+        insights[postId] = await this.getPostInsights(postId);
+      } catch (error) {
+        console.error(`Failed to get insights for post ${postId}:`, error);
+        insights[postId] = null;
+      }
+    }
+    
+    return insights;
+  }
+
+  async getAccountMetrics(): Promise<any> {
+    try {
+      const response = await this.makeRequest<{ data: any[] }>(
+        `${this.API_BASE}/${this.userId}/insights?metric=impressions,reach,profile_views,follower_count`,
+        'GET'
+      );
+      
+      return response.data.reduce((acc, item) => {
+        acc[item.name] = item.values[0].value;
+        return acc;
+      }, {} as Record<string, any>);
+    } catch (error) {
+      console.error('Error getting account metrics:', error);
+      return {};
+    }
+  }
+
+  // Comments & Engagement
+  async getComments(postId: string): Promise<any[]> {
+    try {
+      const response = await this.makeRequest<{ data: any[] }>(
+        `${this.API_BASE}/${postId}/comments?fields=id,text,timestamp,username,replies`,
+        'GET'
+      );
+      
+      return response.data || [];
+    } catch (error) {
+      console.error('Error getting comments:', error);
+      return [];
+    }
+  }
+
+  async replyToComment(commentId: string, message: string): Promise<boolean> {
+    try {
+      await this.makeRequest(
+        `${this.API_BASE}/${commentId}/replies`,
+        'POST',
+        { message }
+      );
+      return true;
+    } catch (error) {
+      console.error('Error replying to comment:', error);
+      return false;
+    }
+  }
+
+  async likeComment(commentId: string): Promise<boolean> {
+    try {
+      await this.makeRequest(
+        `${this.API_BASE}/${commentId}/likes`,
+        'POST'
+      );
+      return true;
+    } catch (error) {
+      console.error('Error liking comment:', error);
+      return false;
+    }
+  }
+
+  // User Management
+  async getFollowers(): Promise<any[]> {
+    // Instagram Basic Display API doesn't provide follower list
+    console.warn('Instagram follower list not available via Basic Display API');
+    return [];
+  }
+
+  async followUser(userId: string): Promise<boolean> {
+    // Instagram Basic Display API doesn't support following users
+    console.warn('Instagram follow functionality not available via Basic Display API');
+    return false;
+  }
+
+  async unfollowUser(userId: string): Promise<boolean> {
+    // Instagram Basic Display API doesn't support unfollowing users
+    console.warn('Instagram unfollow functionality not available via Basic Display API');
+    return false;
+  }
+
+  // Media Handling
+  async uploadMedia(media: File | Blob, type: 'image' | 'video' | 'story'): Promise<{ id: string; url: string }> {
+    // This is a simplified example - real implementation would handle file upload
+    throw new Error('Direct media upload not implemented. Use uploadMediaToContainer instead.');
+  }
+
+  async getMediaStatus(mediaId: string): Promise<{ status: 'processing' | 'succeeded' | 'failed'; url?: string }> {
+    try {
+      const response = await this.makeRequest<{ status_code: string; status: string }>(
+        `${this.API_BASE}/${mediaId}?fields=status_code,status`,
+        'GET'
+      );
+      
+      const status = response.status_code === 'FINISHED' ? 'succeeded' : 
+                    response.status_code === 'ERROR' ? 'failed' : 'processing';
+                    
+      return { status };
+    } catch (error) {
+      console.error('Error getting media status:', error);
+      return { status: 'failed' };
+    }
+  }
+
   // Media Handling
   private async uploadMediaToContainer(mediaUrl: string, mediaType: 'image' | 'video'): Promise<string> {
     // In a real app, you would:

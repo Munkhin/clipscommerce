@@ -283,9 +283,26 @@ export class AccessibilityAuditor {
    * Run accessibility audit on the current page
    */
   async auditPage(url?: string): Promise<AccessibilityReport> {
-    const currentUrl = url || window.location.href;
+    const currentUrl = url || (typeof window !== 'undefined' ? window.location.href : 'unknown');
     const issues: AccessibilityIssue[] = [];
     
+    // Check if we're in a browser environment
+    if (typeof document === 'undefined') {
+      console.warn('auditPage called in non-browser environment');
+      return {
+        timestamp: new Date(),
+        url: currentUrl,
+        totalIssues: 0,
+        criticalIssues: 0,
+        seriousIssues: 0,
+        moderateIssues: 0,
+        minorIssues: 0,
+        score: 100,
+        issues: [],
+        recommendations: ['Accessibility audit can only run in browser environment']
+      };
+    }
+
     // Get all elements to check
     const elements = document.querySelectorAll('*');
     
@@ -359,6 +376,11 @@ export class AccessibilityAuditor {
   async applyFixes(issues: AccessibilityIssue[]): Promise<number> {
     if (!this.config.enableAutomaticFixes) {
       throw new Error('Automatic fixes are disabled');
+    }
+
+    if (typeof document === 'undefined') {
+      console.warn('applyFixes called in non-browser environment');
+      return 0;
     }
 
     let fixedCount = 0;
@@ -641,7 +663,12 @@ export class AccessibilityHelpers {
   /**
    * Announce content changes to screen readers
    */
-  static announceToScreenReader(message: string, priority: 'polite' | 'assertive' = 'polite'): NodeJS.Timeout {
+  static announceToScreenReader(message: string, priority: 'polite' | 'assertive' = 'polite'): number {
+    if (typeof document === 'undefined') {
+      console.warn('announceToScreenReader called in non-browser environment');
+      return 0;
+    }
+
     const announcement = document.createElement('div');
     announcement.setAttribute('aria-live', priority);
     announcement.setAttribute('aria-atomic', 'true');
@@ -652,16 +679,23 @@ export class AccessibilityHelpers {
     
     // Remove after announcement
     const timer = setTimeout(() => {
-      document.body.removeChild(announcement);
+      if (announcement.parentNode) {
+        document.body.removeChild(announcement);
+      }
     }, 1000);
     
-    return timer;
+    return timer as unknown as number;
   }
 
   /**
    * Add skip links for better navigation
    */
   static addSkipLinks(): void {
+    if (typeof document === 'undefined') {
+      console.warn('addSkipLinks called in non-browser environment');
+      return;
+    }
+
     const skipLinks = document.createElement('div');
     skipLinks.className = 'skip-links';
     skipLinks.innerHTML = `

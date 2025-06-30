@@ -10,7 +10,7 @@ import { getSchemaForEndpoint } from './validationSchemas';
  */
 
 // Types for validation results
-export interface ValidationResult<T = any> {
+export interface ValidationResult<T = unknown> {
   success: boolean;
   data?: T;
   errors?: string[];
@@ -77,7 +77,7 @@ export function createValidationMiddleware<T>(
       }
 
       // Extract request data
-      let requestData: any = {};
+      let requestData: Record<string, unknown> = {};
       
       if (req.method === 'GET') {
         // Parse query parameters
@@ -144,7 +144,7 @@ export function createValidationMiddleware<T>(
  */
 export function withValidation(config: ValidationConfig = DEFAULT_VALIDATION_CONFIG) {
   return (
-    handler: (req: NextRequest, validatedData: any) => Promise<NextResponse> | NextResponse
+    handler: (req: NextRequest, validatedData: unknown) => Promise<NextResponse> | NextResponse
   ) => {
     return async (req: NextRequest): Promise<NextResponse> => {
       const url = new URL(req.url);
@@ -153,7 +153,7 @@ export function withValidation(config: ValidationConfig = DEFAULT_VALIDATION_CON
       if (!schema) {
         // No schema found, proceed without validation but with basic sanitization
         if (config.enableSanitization) {
-          let requestData: any = {};
+          let requestData: Record<string, unknown> = {};
           
           try {
             if (req.method !== 'GET') {
@@ -182,7 +182,7 @@ export function withValidation(config: ValidationConfig = DEFAULT_VALIDATION_CON
  */
 async function validateData<T>(
   schema: z.ZodSchema<T>,
-  data: any
+  data: unknown
 ): Promise<ValidationResult<T>> {
   try {
     const validatedData = await schema.parseAsync(data);
@@ -256,7 +256,7 @@ export function withBodyParser(
   maxSize: number = 10 * 1024 * 1024, // 10MB default
   allowedTypes: string[] = ['application/json', 'application/x-www-form-urlencoded', 'multipart/form-data']
 ) {
-  return (handler: (req: NextRequest, body: any) => Promise<NextResponse> | NextResponse) => {
+  return (handler: (req: NextRequest, body: unknown) => Promise<NextResponse> | NextResponse) => {
     return async (req: NextRequest): Promise<NextResponse> => {
       try {
         // Check content type
@@ -274,7 +274,7 @@ export function withBodyParser(
         }
 
         // Parse body based on content type
-        let body: any = null;
+        let body: unknown = null;
         
         if (contentType.includes('application/json')) {
           body = await req.json();
@@ -374,8 +374,11 @@ export function withSecurityHeaders() {
 /**
  * Compose multiple middleware functions
  */
-export function compose(...middlewares: Array<(handler: any) => any>) {
-  return (handler: any) => {
+type MiddlewareHandler = (req: NextRequest) => Promise<NextResponse> | NextResponse;
+type Middleware = (handler: MiddlewareHandler) => MiddlewareHandler;
+
+export function compose(...middlewares: Middleware[]) {
+  return (handler: MiddlewareHandler): MiddlewareHandler => {
     return middlewares.reduceRight((acc, middleware) => middleware(acc), handler);
   };
 }

@@ -2,6 +2,37 @@ import { NextRequest, NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
 import logger from '../utils/logger';
 
+// Express types for middleware
+interface ExpressRequest {
+  headers: Record<string, string | string[] | undefined>;
+  method: string;
+  url: string;
+  connection?: { remoteAddress?: string };
+  correlationContext?: LogContext;
+}
+
+interface ExpressResponse {
+  setHeader: (name: string, value: string | number | readonly string[]) => void;
+  statusCode: number;
+  end: (chunk?: unknown, encoding?: BufferEncoding) => void;
+}
+
+type ExpressNext = () => void;
+type ApiHandler = (req: ExpressRequest, res: ExpressResponse) => Promise<unknown> | unknown;
+
+// Define LogContext interface
+interface LogContext {
+  correlationId?: string;
+  requestId?: string;
+  traceId?: string;
+  sessionId?: string;
+  userAgent?: string | null;
+  clientIp?: string;
+  hasAuth?: boolean;
+  method?: string;
+  url?: string;
+}
+
 // Correlation ID header names
 export const CORRELATION_ID_HEADER = 'x-correlation-id';
 export const REQUEST_ID_HEADER = 'x-request-id';
@@ -74,7 +105,7 @@ export function correlationMiddleware(request: NextRequest): NextResponse {
 }
 
 // Express middleware for API routes
-export const expressCorrelationMiddleware = (req: any, res: any, next: any) => {
+export const expressCorrelationMiddleware = (req: ExpressRequest, res: ExpressResponse, next: ExpressNext) => {
   const startTime = Date.now();
   
   // Extract correlation context
@@ -112,7 +143,7 @@ export const expressCorrelationMiddleware = (req: any, res: any, next: any) => {
   
   // Wrap end method to log completion
   const originalEnd = res.end;
-  res.end = function(chunk: any, encoding: any) {
+  res.end = function(chunk?: unknown, encoding?: BufferEncoding) {
     const duration = Date.now() - startTime;
     
     logger.request(
@@ -133,13 +164,13 @@ export const expressCorrelationMiddleware = (req: any, res: any, next: any) => {
 };
 
 // Utility function to get correlation context from request
-export const getRequestCorrelationContext = (req: any): LogContext | null => {
+export const getRequestCorrelationContext = (req: ExpressRequest): LogContext | null => {
   return req.correlationContext || null;
 };
 
 // React Server Component wrapper for correlation context
-export const withCorrelationContext = <T extends any[]>(
-  fn: (...args: T) => Promise<any>
+export const withCorrelationContext = <T extends unknown[]>(
+  fn: (...args: T) => Promise<unknown>
 ) => {
   return async (...args: T) => {
     // For server components, we need to extract context from headers
@@ -160,8 +191,8 @@ export const withCorrelationContext = <T extends any[]>(
 };
 
 // API route wrapper with correlation context
-export const withApiCorrelationContext = (handler: any) => {
-  return async (req: any, res: any) => {
+export const withApiCorrelationContext = (handler: ApiHandler) => {
+  return async (req: ExpressRequest, res: ExpressResponse) => {
     const startTime = Date.now();
     
     // Set up correlation context

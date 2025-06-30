@@ -8,6 +8,16 @@ import { realtimeService } from '@/app/workflows/autoposting/RealtimeService';
 import { authGuard } from '@/lib/security/auth-guard';
 import { createClient } from '@/lib/supabase/server';
 
+interface WebSocketActionRequestBody {
+  action: string;
+  connectionId: string;
+  data?: {
+    subscriptions?: string[];
+    targetUserId?: string;
+    message?: string;
+  };
+}
+
 // In a real implementation, you would use a WebSocket library like ws or socket.io
 // For now, we'll create a Server-Sent Events (SSE) endpoint as an alternative
 
@@ -146,7 +156,7 @@ export async function POST(request: NextRequest) {
     }
 
     const { user, body } = guardResult.context!;
-    const { action, connectionId, data } = body as { action: string; connectionId: string; data: { subscriptions: string[], targetUserId: string, message: string } };
+    const { action, connectionId, data } = body as WebSocketActionRequestBody;
     const userId = user!.id;
 
     switch (action) {

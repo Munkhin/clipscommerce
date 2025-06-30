@@ -1,9 +1,9 @@
 import { z } from 'zod';
 import validator from 'validator';
-import { createDOMPurify } from 'isomorphic-dompurify';
+import * as DOMPurifyFactory from 'isomorphic-dompurify';
 
 // Initialize DOMPurify for both server and client environments
-const DOMPurify = createDOMPurify();
+const DOMPurify = DOMPurifyFactory.createDOMPurify ? DOMPurifyFactory.createDOMPurify() : DOMPurifyFactory;
 
 /**
  * Comprehensive Input Sanitization and Validation Utility
@@ -131,7 +131,7 @@ export class InputSanitizer {
 
     // Remove control characters
     if (config.removeControlChars) {
-      sanitized = sanitized.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '');
+      sanitized = sanitized.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '');
     }
 
     // Normalize newlines
@@ -190,8 +190,8 @@ export class InputSanitizer {
       
       // Escape sequences
       /\\[nrtbfav]/g,
-      /\x[0-9a-fA-F]{2}/g,
-      /\u[0-9a-fA-F]{4}/g,
+      /\\x[0-9a-fA-F]{2}/g,
+      /\\u[0-9a-fA-F]{4}/g,
     ];
 
     injectionPatterns.forEach(pattern => {
@@ -234,7 +234,7 @@ export class InputSanitizer {
 
     // Remove path traversal attempts
     sanitized = sanitized.replace(/\.\./g, '');
-    sanitized = sanitized.replace(/[\/\\]/g, '');
+    sanitized = sanitized.replace(/[/\\]/g, '');
     
     // Remove null bytes
     sanitized = sanitized.replace(/\0/g, '');
@@ -394,7 +394,7 @@ function containsScriptProtocol(url: string): boolean {
 }
 
 function containsPathTraversal(filename: string): boolean {
-  return /\.\./g.test(filename) || /[\/\\]/g.test(filename);
+  return /\.\./g.test(filename) || /[/\\]/g.test(filename);
 }
 
 function hasAllowedExtension(filename: string): boolean {

@@ -5,6 +5,23 @@ import { checkRateLimit } from '@/lib/rate-limit';
 import logger from '@/utils/logger';
 import { User } from '@supabase/supabase-js';
 
+// Types for user profile and request body
+interface UserProfile {
+  role?: string;
+  subscription_tier?: 'lite' | 'pro' | 'team';
+}
+
+interface ValidationResult {
+  isValid: boolean;
+  errors: string[];
+}
+
+type RequestBody = Record<string, unknown>;
+type ValidationRule = (value: unknown) => boolean;
+type ExtendedValidationRule = ValidationRule | { validator: ValidationRule; message?: string };
+type ValidationSchema = Record<string, ExtendedValidationRule[]>;
+type SecureErrorDetails = Record<string, unknown>;
+
 export interface AuthGuardOptions {
   requireAuth?: boolean;
   requireCsrf?: boolean;
@@ -15,15 +32,15 @@ export interface AuthGuardOptions {
   };
   allowedRoles?: string[];
   requiredSubscriptionTier?: 'lite' | 'pro' | 'team';
-  validateInput?: (body: any) => { isValid: boolean; errors: string[] };
+  validateInput?: (body: RequestBody) => ValidationResult;
   logAccess?: boolean;
 }
 
 export interface AuthGuardContext {
   user: User | null;
-  profile?: any;
+  profile?: UserProfile | undefined;
   request: NextRequest;
-  body?: any;
+  body?: RequestBody | undefined;
 }
 
 export interface AuthGuardResult {
@@ -62,7 +79,13 @@ export async function authGuard(
             identifier: rateLimit.identifier
           });
         }
-        return { success: false, response: rateLimitResponse };
+        return { 
+          success: false, 
+          response: new NextResponse(rateLimitResponse.body, {
+            status: rateLimitResponse.status,
+            headers: rateLimitResponse.headers
+          })
+        };
       }
     }
 
@@ -105,7 +128,7 @@ export async function authGuard(
 
     // 3. Authentication check
     let user: User | null = null;
-    let profile: any = null;
+    let profile: UserProfile | null = null;
 
     if (requireAuth) {
       const supabase = await createClient();
@@ -211,11 +234,11 @@ export async function authGuard(
     }
 
     // 6. Input validation
-    let body: any = null;
+    let body: RequestBody | null = null;
     if (validateInput && (request.method === 'POST' || request.method === 'PUT' || request.method === 'PATCH')) {
       try {
         body = await request.json();
-        const validation = validateInput(body);
+        const validation = validateInput(body as RequestBody);
         
         if (!validation.isValid) {
           if (logAccess) {
@@ -269,9 +292,9 @@ export async function authGuard(
       success: true,
       context: {
         user,
-        profile,
+        profile: profile || undefined,
         request,
-        body
+        body: body || undefined
       }
     };
 
@@ -299,11 +322,11 @@ export async function authGuard(
 export function createSecureErrorResponse(
   message: string,
   status: number = 500,
-  details?: any
+  details?: SecureErrorDetails
 ): NextResponse {
   const isDevelopment = process.env.NODE_ENV === 'development';
   
-  const response: any = { error: message };
+  const response: { error: string; details?: SecureErrorDetails } = { error: message };
   
   // Only include details in development mode
   if (isDevelopment && details) {
@@ -317,9 +340,9 @@ export function createSecureErrorResponse(
  * Input validation helpers
  */
 export const validators = {
-  required: (value: any) => value !== null && value !== undefined && value !== '',
-  string: (value: any) => typeof value === 'string',
-  number: (value: any) => typeof value === 'number' && !isNaN(value),
+  required: (value: unknown) => value !== null && value !== undefined && value !== '',
+  string: (value: unknown) => typeof value === 'string',
+  number: (value: unknown) => typeof value === 'number' && !isNaN(value as number),
   email: (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
   url: (value: string) => {
     try {
@@ -337,8 +360,8 @@ export const validators = {
 /**
  * Create a validation function for common input patterns
  */
-export function createValidator(schema: Record<string, any[]>) {
-  return (body: any) => {
+export function createValidator(schema: ValidationSchema) {
+  return (body: RequestBody): ValidationResult => {
     const errors: string[] = [];
     
     for (const [field, validationRules] of Object.entries(schema)) {
@@ -350,7 +373,7 @@ export function createValidator(schema: Record<string, any[]>) {
             errors.push(`Invalid ${field}`);
             break;
           }
-        } else if (typeof rule === 'object' && rule.validator) {
+        } else if (typeof rule === 'object' && rule !== null && 'validator' in rule) {
           if (!rule.validator(value)) {
             errors.push(`${field}: ${rule.message || 'Invalid value'}`);
             break;

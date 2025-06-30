@@ -1,14 +1,15 @@
 import { BasePlatformClient } from './base-platform';
-import { ApiConfig, ApiResponse, PlatformComment, PlatformPostMetrics, PlatformUserActivity, PlatformPost, RateLimit } from './types';
+import { ApiConfig, ApiResponse, PlatformComment, PlatformPostMetrics, PlatformUserActivity, PlatformPost, ApiRateLimit } from './types';
 import { YouTubeCommentThreadListResponseSchema, YouTubeCommentThread, YouTubeChannelListResponseSchema, YouTubeChannelListResponse, YouTubeVideoListResponseSchema, YouTubeVideoListResponse, YouTubeVideo, YouTubeCommentThreadListResponse, YouTubeChannel } from './youtube.types';
 import { Platform } from '../../../deliverables/types/deliverables_types';
 import { IAuthTokenManager } from '../auth.types';
 import { ApiError, PlatformError, RateLimitError } from '../utils/errors';
+import { Post, Analytics } from '@/types/platform';
 
 export class YouTubeClient extends BasePlatformClient {
   public readonly platform: Platform = Platform.YOUTUBE;
 
-  constructor(config: Partial<ApiConfig> = {}, authTokenManager: IAuthTokenManager, userId?: string) {
+  constructor(config: ApiConfig, authTokenManager: IAuthTokenManager, userId?: string) {
     super(config, authTokenManager, userId);
   }
 
@@ -91,6 +92,29 @@ export class YouTubeClient extends BasePlatformClient {
       return post;
     } catch (error) {
       this.log('error', `[YouTubeClient] Failed to upload content`, { error });
+      throw error;
+    }
+  }
+
+  async listUserVideos(options: any = {}): Promise<any> {
+    this.log('debug', `[YouTubeClient] Fetching user videos`);
+    
+    try {
+      const response = await this.request<any>({
+        url: '/search',
+        method: 'GET',
+        params: {
+          part: 'snippet',
+          forMine: true,
+          type: 'video',
+          maxResults: options.maxResults || 25,
+          order: options.order || 'date'
+        }
+      });
+
+      return response.data;
+    } catch (error) {
+      this.log('error', `[YouTubeClient] Failed to fetch user videos`, { error });
       throw error;
     }
   }

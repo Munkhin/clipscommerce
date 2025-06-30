@@ -16,7 +16,7 @@ export interface ModelMetadata {
   name: string;
   version: string;
   type: 'contextual_bandit' | 'content_optimization' | 'engagement_prediction';
-  parameters: Record<string, any>;
+  parameters: Record<string, unknown>;
   performance: {
     accuracy?: number;
     precision?: number;
@@ -80,10 +80,10 @@ export interface ModelSnapshot {
 export class MLModelPersistenceService {
   private redis: Redis | null = null;
   private postgres: Pool | null = null;
-  private cache: EnhancedCache<string, any>;
+  private cache: EnhancedCache<string, ModelMetadata | ABTestConfig>;
   private metrics: MetricsTracker;
 
-  constructor(redisUrl?: string, postgresConfig?: any) {
+  constructor(redisUrl?: string, postgresConfig?: Record<string, unknown>) {
     this.cache = new EnhancedCache({ 
       namespace: 'ml-models',
       ttl: 1800000 // 30 minutes
@@ -457,7 +457,7 @@ export class MLModelPersistenceService {
   async logPerformance(
     modelId: string, 
     metrics: Record<string, number>,
-    context?: Record<string, any>
+    context?: Record<string, unknown>
   ): Promise<void> {
     if (!this.postgres) return;
 
@@ -482,7 +482,7 @@ export class MLModelPersistenceService {
   async getPerformanceHistory(
     modelId: string, 
     limit = 100
-  ): Promise<Array<{timestamp: Date, metrics: Record<string, number>, context?: any}>> {
+  ): Promise<Array<{timestamp: Date, metrics: Record<string, number>, context?: Record<string, unknown>}>> {
     if (!this.postgres) return [];
 
     try {
@@ -518,7 +518,7 @@ export class MLModelPersistenceService {
     if (!this.postgres) return [];
 
     let query = 'SELECT * FROM ml_models WHERE 1=1';
-    const params: any[] = [];
+    const params: unknown[] = [];
 
     if (filters.type) {
       query += ' AND type = $' + (params.length + 1);
@@ -582,7 +582,8 @@ export class MLModelPersistenceService {
    * Calculate checksum for data integrity
    */
   private calculateChecksum(data: Buffer | string): string {
-    return crypto.createHash('sha256').update(data).digest('hex');
+    const input = typeof data === 'string' ? data : new Uint8Array(data);
+    return crypto.createHash('sha256').update(input).digest('hex');
   }
 
   /**

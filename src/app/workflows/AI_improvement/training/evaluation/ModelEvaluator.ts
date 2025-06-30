@@ -118,7 +118,7 @@ export class ModelEvaluator extends EventEmitter {
       const coreMetrics = this.calculateCoreMetrics(predictions, targets, modelType);
       
       // Platform-specific analysis
-      let performanceByPlatform: Record<Platform, EvaluationMetrics> = {};
+      let performanceByPlatform: Record<Platform, EvaluationMetrics> = {} as Record<Platform, EvaluationMetrics>;
       if (options.platformBreakdown) {
         this.emit('progress', { phase: 'platform_analysis', progress: 50, message: 'Analyzing platform performance...' });
         performanceByPlatform = this.analyzePlatformPerformance(predictions, targets, metadata);
@@ -186,8 +186,8 @@ export class ModelEvaluator extends EventEmitter {
       
       return result;
       
-    } catch (error) {
-      this.emit('evaluationError', { modelName, error: error.message });
+    } catch (error: unknown) {
+      this.emit('evaluationError', { modelName, error: error instanceof Error ? error.message : 'Unknown error' });
       throw error;
     }
   }
@@ -410,7 +410,7 @@ export class ModelEvaluator extends EventEmitter {
     });
     
     // Calculate metrics for each platform
-    const result: Record<Platform, EvaluationMetrics> = {};
+    const result: Record<Platform, EvaluationMetrics> = {} as Record<Platform, EvaluationMetrics>;
     Object.entries(platformData).forEach(([platform, data]) => {
       result[platform as Platform] = this.calculateCoreMetrics(
         data.predictions,

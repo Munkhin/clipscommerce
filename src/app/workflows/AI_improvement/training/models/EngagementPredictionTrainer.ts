@@ -1,5 +1,5 @@
 import { SupabaseClient } from '@supabase/supabase-js';
-import { Platform } from '../../deliverables/types/deliverables_types';
+import { Platform } from '../../types/niche_types';
 import { PostMetrics } from '@/types/schedule';
 import { EventEmitter } from 'events';
 
@@ -535,7 +535,7 @@ export class EngagementPredictionTrainer extends EventEmitter {
   }
 
   private encodePlatform(platform: Platform): number {
-    const platformMap: { [key in Platform]: number } = { 'tiktok': 0.2, 'instagram': 0.4, 'youtube': 0.6, 'facebook': 0.8, 'twitter': 1.0, 'linkedin': 0.1 };
+    const platformMap: { [key in Platform]: number } = { 'TikTok': 0.2, 'Instagram': 0.4, 'YouTube': 0.6, 'Facebook': 0.8, 'Twitter': 1.0, 'LinkedIn': 0.1 };
     return platformMap[platform] || 0.5;
   }
 

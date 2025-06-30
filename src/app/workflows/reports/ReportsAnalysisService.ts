@@ -122,7 +122,7 @@ export class ReportsAnalysisService {
     // 1. Aggregate data
     const data = await collectReportData({
       client,
-      platform: request.platform.toLowerCase() as 'tiktok' | 'instagram' | 'youtube',
+      platform: request.platform.toString().toLowerCase() as 'tiktok' | 'instagram' | 'youtube',
       dateRange: {
         start: new Date(request.timeRange.start),
         end: new Date(request.timeRange.end),

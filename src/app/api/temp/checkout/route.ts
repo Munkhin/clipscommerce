@@ -1,8 +1,6 @@
 import { NextResponse, NextRequest } from 'next/server';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+import { createServerClient } from '@/../supabase/server-only';
 import Stripe from 'stripe';
-// import { URL } from 'url'; // Remove this line, use the global URL instead
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
@@ -18,7 +16,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const supabase = createRouteHandlerClient({ cookies });
+    const supabase = await createServerClient();
     const { data: { session } } = await supabase.auth.getSession();
 
     if (!session) {

@@ -175,8 +175,8 @@ export class SentimentAnalysisTrainer extends EventEmitter {
       this.emit('progress', { phase: 'data_loading', progress: 100, message: `Loaded ${this.trainingData.length} sentiment samples` });
       this.emit('dataLoaded', { sampleCount: this.trainingData.length });
 
-    } catch (error) {
-      this.emit('error', { phase: 'data_loading', error: error.message });
+    } catch (error: unknown) {
+      this.emit('error', { phase: 'data_loading', error: error instanceof Error ? error.message : 'Unknown error' });
       throw error;
     }
   }
@@ -184,7 +184,7 @@ export class SentimentAnalysisTrainer extends EventEmitter {
   private async extractSentimentFeatures(post: any): Promise<TrainingData> {
     const text = post.caption || '';
     const words = text.toLowerCase().split(/\s+/);
-    const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+    const sentences = text.split(/[.!?]+/).filter((s: string) => s.trim().length > 0);
     
     // Extract text features
     const features: SentimentFeatures = {
@@ -192,13 +192,13 @@ export class SentimentAnalysisTrainer extends EventEmitter {
       wordCount: words.length,
       sentenceCount: sentences.length,
       avgWordsPerSentence: words.length / Math.max(sentences.length, 1),
-      avgWordLength: words.reduce((sum, word) => sum + word.length, 0) / Math.max(words.length, 1),
+      avgWordLength: words.reduce((sum: number, word: string) => sum + word.length, 0) / Math.max(words.length, 1),
       
       // Lexical features
-      positiveWordCount: words.filter(word => this.positiveWords.has(word)).length,
-      negativeWordCount: words.filter(word => this.negativeWords.has(word)).length,
-      emotionalWordCount: words.filter(word => this.emotionalWords.has(word)).length,
-      intensifierCount: words.filter(word => this.intensifiers.has(word)).length,
+      positiveWordCount: words.filter((word: string) => this.positiveWords.has(word)).length,
+      negativeWordCount: words.filter((word: string) => this.negativeWords.has(word)).length,
+      emotionalWordCount: words.filter((word: string) => this.emotionalWords.has(word)).length,
+      intensifierCount: words.filter((word: string) => this.intensifiers.has(word)).length,
       
       // Punctuation features
       exclamationCount: (text.match(/!/g) || []).length,
@@ -328,8 +328,8 @@ export class SentimentAnalysisTrainer extends EventEmitter {
         testSize: testData.length
       });
 
-    } catch (error) {
-      this.emit('error', { phase: 'training', error: error.message });
+    } catch (error: unknown) {
+      this.emit('error', { phase: 'training', error: error instanceof Error ? error.message : 'Unknown error' });
       throw error;
     } finally {
       this.isTraining = false;
@@ -471,7 +471,7 @@ export class SentimentAnalysisTrainer extends EventEmitter {
     };
   }
 
-  async analyzeSentiment(text: string, platform: Platform = 'instagram', contentType: string = 'post'): Promise<SentimentTarget> {
+  async analyzeSentiment(text: string, platform: Platform = 'Instagram', contentType: string = 'post'): Promise<SentimentTarget> {
     if (!this.model) {
       throw new Error('Model not trained. Please train the model first.');
     }
@@ -512,19 +512,19 @@ export class SentimentAnalysisTrainer extends EventEmitter {
 
   private extractFeaturesFromText(text: string, platform: Platform, contentType: string): SentimentFeatures {
     const words = text.toLowerCase().split(/\s+/);
-    const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+    const sentences = text.split(/[.!?]+/).filter((s: string) => s.trim().length > 0);
     
     return {
       text,
       wordCount: words.length,
       sentenceCount: sentences.length,
       avgWordsPerSentence: words.length / Math.max(sentences.length, 1),
-      avgWordLength: words.reduce((sum, word) => sum + word.length, 0) / Math.max(words.length, 1),
+      avgWordLength: words.reduce((sum: number, word: string) => sum + word.length, 0) / Math.max(words.length, 1),
       
-      positiveWordCount: words.filter(word => this.positiveWords.has(word)).length,
-      negativeWordCount: words.filter(word => this.negativeWords.has(word)).length,
-      emotionalWordCount: words.filter(word => this.emotionalWords.has(word)).length,
-      intensifierCount: words.filter(word => this.intensifiers.has(word)).length,
+      positiveWordCount: words.filter((word: string) => this.positiveWords.has(word)).length,
+      negativeWordCount: words.filter((word: string) => this.negativeWords.has(word)).length,
+      emotionalWordCount: words.filter((word: string) => this.emotionalWords.has(word)).length,
+      intensifierCount: words.filter((word: string) => this.intensifiers.has(word)).length,
       
       exclamationCount: (text.match(/!/g) || []).length,
       questionCount: (text.match(/\?/g) || []).length,

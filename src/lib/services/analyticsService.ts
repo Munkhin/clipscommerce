@@ -1,4 +1,4 @@
-import { Platform } from '../../app/workflows/deliverables/types/deliverables_types';
+import { Platform } from '@/types/platform';
 import { Post, PostMetrics } from "@/types/schedule";
 import { AnalyticsFilter, EngagementMetrics, PerformanceMetrics, AudienceDemographics, PlatformComparison, ContentPerformance, TrendAnalysis, AnalyticsReport } from "@/types/analytics";
 import { PlatformApiFactory } from "./platformApis/factory";
@@ -84,14 +84,14 @@ export class AnalyticsService {
         id: bestPost.id,
         content: bestPost.content?.text?.substring(0, 100) || '',
         engagementRate: bestPost.engagementRate,
-        platform: bestPost.platforms?.[0] || 'unknown',
+        platform: bestPost.platforms?.[0] || 'instagram',
         publishedAt: bestPost.status?.publishedAt || new Date(),
       } : null,
       worstPerformingPost: worstPost.engagementRate < Infinity ? {
         id: worstPost.id,
         content: worstPost.content?.text?.substring(0, 100) || '',
         engagementRate: worstPost.engagementRate,
-        platform: worstPost.platforms?.[0] || 'unknown',
+        platform: worstPost.platforms?.[0] || 'instagram',
         publishedAt: worstPost.status?.publishedAt || new Date(),
       } : null,
     };

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/../supabase';
 import { useAuth } from '@/providers/AuthProvider';
 
 export default function SecuritySettingsPage() {
@@ -13,7 +13,7 @@ export default function SecuritySettingsPage() {
   const [challengeId, setChallengeId] = useState<string | null>(null);
   const [verificationCode, setVerificationCode] = useState('');
 
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   useEffect(() => {
     async function checkEnrollmentStatus() {

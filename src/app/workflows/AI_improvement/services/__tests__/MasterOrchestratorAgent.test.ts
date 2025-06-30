@@ -95,8 +95,8 @@ describe('MasterOrchestratorAgent', () => {
 
     it('should handle start failure gracefully', async () => {
       // Mock AIImprovementService to throw error
-      const mockAIService = require('../AIImprovementService').AIImprovementService;
-      mockAIService.prototype.initialize = jest.fn().mockRejectedValue(new Error('Initialization failed'));
+      const { AIImprovementService } = await import('../AIImprovementService');
+      AIImprovementService.prototype.initialize = jest.fn().mockRejectedValue(new Error('Initialization failed'));
       
       const newOrchestrator = new MasterOrchestratorAgent();
       
@@ -419,12 +419,12 @@ describe('MasterOrchestratorAgent', () => {
 
   describe('integration scenarios', () => {
     it('should coordinate with AI improvement service', async () => {
-      const mockAIService = require('../AIImprovementService').AIImprovementService;
-      mockAIService.prototype.initialize = jest.fn().mockResolvedValue(undefined);
+      const { AIImprovementService } = await import('../AIImprovementService');
+      AIImprovementService.prototype.initialize = jest.fn().mockResolvedValue(undefined);
       
       await orchestrator.start();
       
-      expect(mockAIService.prototype.initialize).toHaveBeenCalled();
+      expect(AIImprovementService.prototype.initialize).toHaveBeenCalled();
     });
 
     it('should handle cross-workflow optimizations', async () => {

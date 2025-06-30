@@ -1,13 +1,17 @@
 import { IAuthTokenManager } from '../auth.types';
-import { ApiConfig, RateLimit } from './types';
+import { ApiConfig, ApiRateLimit } from './types';
 import { ApiError, RateLimitError } from '../utils/errors';
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosHeaders } from 'axios';
+
+export type HeaderValue = string | string[] | number | boolean;
+
+export { ApiResponse } from './types';
 import logger from '@/utils/logger';
-import { Post, Analytics } from '@/types';
+import { Post, Analytics } from '@/types/platform';
 
 export abstract class BasePlatformClient {
   protected readonly client: AxiosInstance;
-  protected rateLimit: RateLimit | null = null;
+  protected rateLimit: ApiRateLimit | null = null;
 
   constructor(
     protected readonly config: ApiConfig,
@@ -20,9 +24,16 @@ export abstract class BasePlatformClient {
     });
 
     this.client.interceptors.request.use(async (config) => {
-      const token = await this.authTokenManager.getToken();
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+      const credentials = await this.authTokenManager.getValidCredentials({
+        platform: 'tiktok' as any, // This should be passed from constructor
+        userId: this.userId
+      });
+      if (credentials && credentials.strategy === 'oauth2') {
+        const oauth2Creds = credentials as any;
+        config.headers.Authorization = `Bearer ${oauth2Creds.accessToken}`;
+      } else if (credentials && credentials.strategy === 'api_key') {
+        const apiKeyCreds = credentials as any;
+        config.headers['X-API-Key'] = apiKeyCreds.apiKey;
       }
       return config;
     });
@@ -39,7 +50,7 @@ export abstract class BasePlatformClient {
             const retryAfter = error.response.headers['retry-after'];
             const waitTime = retryAfter ? parseInt(retryAfter, 10) * 1000 : this.getRetryDelay();
             await new Promise((resolve) => setTimeout(resolve, waitTime));
-            return this.client.request(error.config);
+            return this.client.request(error.config!);
           }
         }
         return Promise.reject(error);
@@ -73,6 +84,8 @@ export abstract class BasePlatformClient {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         throw new ApiError(
+          'API',
+          'REQUEST_FAILED',
           error.response?.statusText || 'Unknown API Error',
           error.response?.status || 500,
           error.response?.data
@@ -85,4 +98,5 @@ export abstract class BasePlatformClient {
   abstract fetchPosts(query: string): Promise<Post[]>;
   abstract uploadContent(content: any): Promise<Post>;
   abstract getAnalytics(postId: string): Promise<Analytics>;
+  abstract listUserVideos(options?: any): Promise<any>;
 }

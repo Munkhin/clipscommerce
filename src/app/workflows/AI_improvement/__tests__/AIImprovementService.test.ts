@@ -385,8 +385,8 @@ describe('AIImprovementService', () => {
 });
 
 describe('A/B Testing Functions', () => {
-  it('should create experiments with proper validation', () => {
-    const { createExperiment } = require('../functions/abTesting');
+  it('should create experiments with proper validation', async () => {
+    const { createExperiment } = await import('../functions/abTesting');
     
     const experimentData = {
       name: 'Test Experiment',
@@ -426,8 +426,8 @@ describe('A/B Testing Functions', () => {
 });
 
 describe('NLP Functions', () => {
-  it('should analyze sentiment with emotion detection', () => {
-    const { analyzeSentiment } = require('../functions/nlp');
+  it('should analyze sentiment with emotion detection', async () => {
+    const { analyzeSentiment } = await import('../functions/nlp');
     
     const result = analyzeSentiment('I love this amazing content! It makes me so happy and excited!');
     
@@ -438,8 +438,8 @@ describe('NLP Functions', () => {
     expect(result.keywords.length).toBeGreaterThan(0);
   });
 
-  it('should generate caption variations', () => {
-    const { generateCaptionVariations } = require('../functions/nlp');
+  it('should generate caption variations', async () => {
+    const { generateCaptionVariations } = await import('../functions/nlp');
     
     const variations = generateCaptionVariations(
       'Check out this amazing content!',

@@ -16,7 +16,7 @@ export type ScheduledPost = {
   created_at?: string;
   post_time?: string;
   media_urls?: string[];
-  metadata?: any;
+  metadata?: Record<string, unknown>;
 };
 
 export type CalendarPost = {
@@ -35,7 +35,7 @@ export type SchedulePostData = {
   media_urls: string[];
   post_time: string;
   hashtags?: string[];
-  additional_settings?: Record<string, any>;
+  additional_settings?: Record<string, unknown>;
 };
 
 export type OptimalTime = {
@@ -46,7 +46,7 @@ export type OptimalTime = {
 // API response schemas
 const ScheduledPostsResponseSchema = z.object({
   success: z.boolean(),
-  posts: z.array(z.any()),
+  posts: z.array(z.record(z.unknown())),
   pagination: z.object({
     total: z.number(),
     limit: z.number(),
@@ -57,7 +57,7 @@ const ScheduledPostsResponseSchema = z.object({
 
 const SchedulePostResponseSchema = z.object({
   success: z.boolean(),
-  scheduled_post: z.any(),
+  scheduled_post: z.record(z.unknown()),
   estimated_posting_time: z.string(),
 });
 
@@ -97,16 +97,16 @@ class SchedulingApiService {
       const validatedData = ScheduledPostsResponseSchema.parse(data);
 
       // Transform API response to match component expectations
-      return validatedData.posts.map(post => ({
-        id: post.id,
-        content: post.content,
-        platform: post.platform,
-        scheduledDate: new Date(post.post_time || post.created_at),
-        scheduledTime: new Date(post.post_time || post.created_at).toTimeString().slice(0, 5),
-        status: post.status,
+      return validatedData.posts.map((post: Record<string, unknown>) => ({
+        id: String(post.id),
+        content: String(post.content),
+        platform: String(post.platform),
+        scheduledDate: new Date(String(post.post_time || post.created_at)),
+        scheduledTime: new Date(String(post.post_time || post.created_at)).toTimeString().slice(0, 5),
+        status: String(post.status) as 'scheduled' | 'posted' | 'failed',
         type: this.inferContentType(post),
-        thumbnail: post.media_urls?.[0] || undefined,
-        isOptimalTime: post.metadata?.is_optimal_time || false,
+        thumbnail: Array.isArray(post.media_urls) ? String(post.media_urls[0]) : undefined,
+        isOptimalTime: Boolean((post.metadata as Record<string, unknown>)?.is_optimal_time),
       }));
     } catch (error) {
       console.error('Error fetching scheduled posts:', error);
@@ -134,15 +134,15 @@ class SchedulingApiService {
 
       const post = validatedData.scheduled_post;
       return {
-        id: post.id,
-        content: post.content,
-        platform: post.platform,
-        scheduledDate: new Date(post.post_time),
-        scheduledTime: new Date(post.post_time).toTimeString().slice(0, 5),
-        status: post.status,
+        id: String(post.id),
+        content: String(post.content),
+        platform: String(post.platform),
+        scheduledDate: new Date(String(post.post_time)),
+        scheduledTime: new Date(String(post.post_time)).toTimeString().slice(0, 5),
+        status: String(post.status) as 'scheduled' | 'posted' | 'failed',
         type: this.inferContentType(post),
-        thumbnail: post.media_urls?.[0] || undefined,
-        isOptimalTime: post.metadata?.is_optimal_time || false,
+        thumbnail: Array.isArray(post.media_urls) ? String(post.media_urls[0]) : undefined,
+        isOptimalTime: Boolean((post.metadata as Record<string, unknown>)?.is_optimal_time),
       };
     } catch (error) {
       console.error('Error scheduling post:', error);
@@ -211,13 +211,14 @@ class SchedulingApiService {
     }
   }
 
-  private inferContentType(post: any): 'video' | 'image' | 'carousel' | 'text' {
-    if (post.media_urls && post.media_urls.length > 0) {
-      if (post.media_urls.length > 1) {
+  private inferContentType(post: Record<string, unknown>): 'video' | 'image' | 'carousel' | 'text' {
+    const mediaUrls = post.media_urls;
+    if (Array.isArray(mediaUrls) && mediaUrls.length > 0) {
+      if (mediaUrls.length > 1) {
         return 'carousel';
       }
       
-      const url = post.media_urls[0];
+      const url = String(mediaUrls[0]);
       if (url.includes('.mp4') || url.includes('.mov') || url.includes('.avi')) {
         return 'video';
       }

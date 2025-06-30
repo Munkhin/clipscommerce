@@ -1,18 +1,113 @@
-import { NodeTracerProvider } from '@opentelemetry/sdk-node';
-import { Resource } from '@opentelemetry/resources';
-import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
-import { SimpleSpanProcessor, BatchSpanProcessor } from '@opentelemetry/sdk-trace-node';
-import { ConsoleSpanExporter } from '@opentelemetry/sdk-trace-node';
-import { OTLPTraceExporter } from '@opentelemetry/exporter-otlp-http';
-import { B3Propagator, B3InjectEncoding } from '@opentelemetry/propagator-b3';
-import { JaegerPropagator } from '@opentelemetry/propagator-jaeger';
-import { CompositePropagator, W3CTraceContextPropagator, W3CBaggagePropagator } from '@opentelemetry/core';
-import { registerInstrumentations } from '@opentelemetry/instrumentation';
-import { HttpInstrumentation } from '@opentelemetry/instrumentation-http';
-import { ExpressInstrumentation } from '@opentelemetry/instrumentation-express';
-import { RedisInstrumentation } from '@opentelemetry/instrumentation-redis';
-import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';
-import { context, trace, SpanStatusCode, SpanKind, propagation } from '@opentelemetry/api';
+// Fallback imports with error handling for missing OpenTelemetry dependencies
+type NodeTracerProviderType = typeof import('@opentelemetry/sdk-node').NodeTracerProvider;
+type ResourceType = typeof import('@opentelemetry/resources').Resource;
+type SemanticResourceAttributesType = typeof import('@opentelemetry/semantic-conventions').SemanticResourceAttributes;
+type SimpleSpanProcessorType = typeof import('@opentelemetry/sdk-trace-node').SimpleSpanProcessor;
+type BatchSpanProcessorType = typeof import('@opentelemetry/sdk-trace-node').BatchSpanProcessor;
+type TraceIdRatioBasedSamplerType = typeof import('@opentelemetry/sdk-trace-node').TraceIdRatioBasedSampler;
+type ParentBasedSamplerType = typeof import('@opentelemetry/sdk-trace-node').ParentBasedSampler;
+type ConsoleSpanExporterType = typeof import('@opentelemetry/sdk-trace-node').ConsoleSpanExporter;
+type OTLPTraceExporterType = typeof import('@opentelemetry/exporter-otlp-http').OTLPTraceExporter;
+type B3PropagatorType = typeof import('@opentelemetry/propagator-b3').B3Propagator;
+type B3InjectEncodingType = typeof import('@opentelemetry/propagator-b3').B3InjectEncoding;
+type JaegerPropagatorType = typeof import('@opentelemetry/propagator-jaeger').JaegerPropagator;
+type CompositePropagatorType = typeof import('@opentelemetry/core').CompositePropagator;
+type W3CTraceContextPropagatorType = typeof import('@opentelemetry/core').W3CTraceContextPropagator;
+type W3CBaggagePropagatorType = typeof import('@opentelemetry/core').W3CBaggagePropagator;
+type RegisterInstrumentationsType = typeof import('@opentelemetry/instrumentation').registerInstrumentations;
+type HttpInstrumentationType = typeof import('@opentelemetry/instrumentation-http').HttpInstrumentation;
+type ExpressInstrumentationType = typeof import('@opentelemetry/instrumentation-express').ExpressInstrumentation;
+type RedisInstrumentationType = typeof import('@opentelemetry/instrumentation-redis').RedisInstrumentation;
+type GetNodeAutoInstrumentationsType = typeof import('@opentelemetry/auto-instrumentations-node').getNodeAutoInstrumentations;
+type ContextType = typeof import('@opentelemetry/api').context;
+type TraceType = typeof import('@opentelemetry/api').trace;
+type SpanStatusCodeType = typeof import('@opentelemetry/api').SpanStatusCode;
+type SpanKindType = typeof import('@opentelemetry/api').SpanKind;
+type PropagationType = typeof import('@opentelemetry/api').propagation;
+
+let NodeTracerProvider: NodeTracerProviderType | null = null;
+let Resource: ResourceType | null = null;
+let SemanticResourceAttributes: SemanticResourceAttributesType | Record<string, string> = {};
+let SimpleSpanProcessor: SimpleSpanProcessorType | null = null;
+let BatchSpanProcessor: BatchSpanProcessorType | null = null;
+let TraceIdRatioBasedSampler: TraceIdRatioBasedSamplerType | null = null;
+let ParentBasedSampler: ParentBasedSamplerType | null = null;
+let ConsoleSpanExporter: ConsoleSpanExporterType | null = null;
+let OTLPTraceExporter: OTLPTraceExporterType | null = null;
+let B3Propagator: B3PropagatorType | null = null;
+let B3InjectEncoding: B3InjectEncodingType | Record<string, unknown> = {};
+let JaegerPropagator: JaegerPropagatorType | null = null;
+let CompositePropagator: CompositePropagatorType | null = null;
+let W3CTraceContextPropagator: W3CTraceContextPropagatorType | null = null;
+let W3CBaggagePropagator: W3CBaggagePropagatorType | null = null;
+let registerInstrumentations: RegisterInstrumentationsType | null = null;
+let HttpInstrumentation: HttpInstrumentationType | null = null;
+let ExpressInstrumentation: ExpressInstrumentationType | null = null;
+let RedisInstrumentation: RedisInstrumentationType | null = null;
+let getNodeAutoInstrumentations: GetNodeAutoInstrumentationsType | null = null;
+let context: ContextType | null = null;
+let trace: TraceType | null = null;
+let SpanStatusCode: SpanStatusCodeType | Record<string, number> = {};
+let SpanKind: SpanKindType | Record<string, number> = {};
+let propagation: PropagationType | null = null;
+
+// Dynamic imports with fallbacks
+try {
+  const sdkNode = require('@opentelemetry/sdk-node');
+  NodeTracerProvider = sdkNode.NodeTracerProvider;
+  
+  const resources = require('@opentelemetry/resources');
+  Resource = resources.Resource;
+  
+  const semanticConventions = require('@opentelemetry/semantic-conventions');
+  SemanticResourceAttributes = semanticConventions.SemanticResourceAttributes || {};
+  
+  const sdkTraceNode = require('@opentelemetry/sdk-trace-node');
+  SimpleSpanProcessor = sdkTraceNode.SimpleSpanProcessor;
+  BatchSpanProcessor = sdkTraceNode.BatchSpanProcessor;
+  TraceIdRatioBasedSampler = sdkTraceNode.TraceIdRatioBasedSampler;
+  ParentBasedSampler = sdkTraceNode.ParentBasedSampler;
+  ConsoleSpanExporter = sdkTraceNode.ConsoleSpanExporter;
+  
+  const otlpExporter = require('@opentelemetry/exporter-otlp-http');
+  OTLPTraceExporter = otlpExporter.OTLPTraceExporter;
+  
+  const b3Propagator = require('@opentelemetry/propagator-b3');
+  B3Propagator = b3Propagator.B3Propagator;
+  B3InjectEncoding = b3Propagator.B3InjectEncoding || {};
+  
+  const jaegerPropagator = require('@opentelemetry/propagator-jaeger');
+  JaegerPropagator = jaegerPropagator.JaegerPropagator;
+  
+  const core = require('@opentelemetry/core');
+  CompositePropagator = core.CompositePropagator;
+  W3CTraceContextPropagator = core.W3CTraceContextPropagator;
+  W3CBaggagePropagator = core.W3CBaggagePropagator;
+  
+  const instrumentation = require('@opentelemetry/instrumentation');
+  registerInstrumentations = instrumentation.registerInstrumentations;
+  
+  const httpInstrumentation = require('@opentelemetry/instrumentation-http');
+  HttpInstrumentation = httpInstrumentation.HttpInstrumentation;
+  
+  const expressInstrumentation = require('@opentelemetry/instrumentation-express');
+  ExpressInstrumentation = expressInstrumentation.ExpressInstrumentation;
+  
+  const redisInstrumentation = require('@opentelemetry/instrumentation-redis');
+  RedisInstrumentation = redisInstrumentation.RedisInstrumentation;
+  
+  const autoInstrumentations = require('@opentelemetry/auto-instrumentations-node');
+  getNodeAutoInstrumentations = autoInstrumentations.getNodeAutoInstrumentations;
+  
+  const api = require('@opentelemetry/api');
+  context = api.context;
+  trace = api.trace;
+  SpanStatusCode = api.SpanStatusCode || {};
+  SpanKind = api.SpanKind || {};
+  propagation = api.propagation;
+} catch (error) {
+  console.warn('OpenTelemetry dependencies not available:', error.message);
+}
 
 export interface TelemetryConfig {
   serviceName: string;
@@ -43,7 +138,7 @@ export interface CorrelationIds {
 const DEFAULT_CONFIG: TelemetryConfig = {
   serviceName: 'clipscommerce',
   serviceVersion: process.env.npm_package_version || '1.0.0',
-  environment: (process.env.NODE_ENV as any) || 'development',
+  environment: (process.env.NODE_ENV as 'development' | 'staging' | 'production') || 'development',
   otlpEndpoint: process.env.OTEL_EXPORTER_OTLP_ENDPOINT || 'http://localhost:4318/v1/traces',
   exporterType: process.env.NODE_ENV === 'production' ? 'otlp' : 'console',
   sampling: {
@@ -63,7 +158,7 @@ const DEFAULT_CONFIG: TelemetryConfig = {
 };
 
 class TelemetryManager {
-  private provider: NodeTracerProvider | null = null;
+  private provider: InstanceType<NodeTracerProviderType> | null = null;
   private initialized = false;
   private config: TelemetryConfig;
 
@@ -77,12 +172,19 @@ class TelemetryManager {
       return;
     }
 
+    // Check if OpenTelemetry dependencies are available
+    if (!NodeTracerProvider || !Resource) {
+      console.warn('OpenTelemetry dependencies not available, skipping telemetry initialization');
+      this.initialized = true;
+      return;
+    }
+
     try {
       // Create resource with service information
       const resource = new Resource({
-        [SemanticResourceAttributes.SERVICE_NAME]: this.config.serviceName,
-        [SemanticResourceAttributes.SERVICE_VERSION]: this.config.serviceVersion,
-        [SemanticResourceAttributes.DEPLOYMENT_ENVIRONMENT]: this.config.environment,
+        [SemanticResourceAttributes.SERVICE_NAME || 'service.name']: this.config.serviceName,
+        [SemanticResourceAttributes.SERVICE_VERSION || 'service.version']: this.config.serviceVersion,
+        [SemanticResourceAttributes.DEPLOYMENT_ENVIRONMENT || 'deployment.environment']: this.config.environment,
         ...this.config.customAttributes
       });
 
@@ -109,14 +211,16 @@ class TelemetryManager {
 
     } catch (error) {
       console.error('Failed to initialize OpenTelemetry:', error);
-      throw error;
+      // Don't throw error, just log it to prevent breaking the app
+      this.initialized = true;
     }
   }
 
   private createSampler() {
-    // Import sampler classes at runtime to avoid issues
-    const { TraceIdRatioBasedSampler, ParentBasedSampler } = require('@opentelemetry/sdk-trace-node');
-    
+    if (!TraceIdRatioBasedSampler || !ParentBasedSampler) {
+      return null;
+    }
+
     const baseSampler = new TraceIdRatioBasedSampler(this.config.sampling.rate);
     
     if (this.config.sampling.parentBased) {
@@ -129,119 +233,158 @@ class TelemetryManager {
   }
 
   private configureExporters(): void {
-    if (!this.provider) return;
+    if (!this.provider || !SimpleSpanProcessor || !ConsoleSpanExporter) return;
 
     const { performance } = this.config;
 
     switch (this.config.exporterType) {
       case 'console':
-        this.provider.addSpanProcessor(
-          new SimpleSpanProcessor(new ConsoleSpanExporter())
-        );
+        if (ConsoleSpanExporter) {
+          this.provider.addSpanProcessor(
+            new SimpleSpanProcessor(new ConsoleSpanExporter())
+          );
+        }
         break;
 
       case 'otlp': {
-        const otlpExporter = new OTLPTraceExporter({
-          url: this.config.otlpEndpoint,
-          headers: {},
-        });
-        this.provider.addSpanProcessor(
-          new BatchSpanProcessor(otlpExporter, {
-            scheduledDelayMillis: performance.batchTimeout,
-            maxExportBatchSize: performance.maxExportBatchSize,
-            maxQueueSize: performance.maxQueueSize,
-          })
-        );
+        if (OTLPTraceExporter && BatchSpanProcessor) {
+          const otlpExporter = new OTLPTraceExporter({
+            url: this.config.otlpEndpoint,
+            headers: {},
+          });
+          this.provider.addSpanProcessor(
+            new BatchSpanProcessor(otlpExporter, {
+              scheduledDelayMillis: performance.batchTimeout,
+              maxExportBatchSize: performance.maxExportBatchSize,
+              maxQueueSize: performance.maxQueueSize,
+            })
+          );
+        }
         break;
       }
 
-      case 'multi':
+      case 'multi': {
         // Console for development visibility
-        this.provider.addSpanProcessor(
-          new SimpleSpanProcessor(new ConsoleSpanExporter())
-        );
+        if (ConsoleSpanExporter) {
+          this.provider.addSpanProcessor(
+            new SimpleSpanProcessor(new ConsoleSpanExporter())
+          );
+        }
         
         // OTLP for production telemetry
-        const multiOtlpExporter = new OTLPTraceExporter({
-          url: this.config.otlpEndpoint,
-        });
-        this.provider.addSpanProcessor(
-          new BatchSpanProcessor(multiOtlpExporter, {
-            scheduledDelayMillis: performance.batchTimeout,
-            maxExportBatchSize: performance.maxExportBatchSize,
-            maxQueueSize: performance.maxQueueSize,
-          })
-        );
+        if (OTLPTraceExporter && BatchSpanProcessor) {
+          const multiOtlpExporter = new OTLPTraceExporter({
+            url: this.config.otlpEndpoint,
+          });
+          this.provider.addSpanProcessor(
+            new BatchSpanProcessor(multiOtlpExporter, {
+              scheduledDelayMillis: performance.batchTimeout,
+              maxExportBatchSize: performance.maxExportBatchSize,
+              maxQueueSize: performance.maxQueueSize,
+            })
+          );
+        }
         break;
+      }
 
       default:
         console.warn(`Unknown exporter type: ${this.config.exporterType}, falling back to console`);
-        this.provider.addSpanProcessor(
-          new SimpleSpanProcessor(new ConsoleSpanExporter())
-        );
+        if (ConsoleSpanExporter) {
+          this.provider.addSpanProcessor(
+            new SimpleSpanProcessor(new ConsoleSpanExporter())
+          );
+        }
     }
   }
 
   private configurePropagation(): void {
-    // Configure multiple propagators for compatibility
-    propagation.setGlobalPropagator(
-      new CompositePropagator({
-        propagators: [
-          new W3CTraceContextPropagator(),
-          new W3CBaggagePropagator(),
-          new B3Propagator({ injectEncoding: B3InjectEncoding.MULTI_HEADER }),
-          new JaegerPropagator(),
-        ],
-      })
-    );
+    if (!propagation || !CompositePropagator) return;
+
+    try {
+      // Configure multiple propagators for compatibility
+      const propagators = [];
+      
+      if (W3CTraceContextPropagator) propagators.push(new W3CTraceContextPropagator());
+      if (W3CBaggagePropagator) propagators.push(new W3CBaggagePropagator());
+      if (B3Propagator) propagators.push(new B3Propagator({ injectEncoding: (B3InjectEncoding as any).MULTI_HEADER || 0 }));
+      if (JaegerPropagator) propagators.push(new JaegerPropagator());
+      
+      if (propagators.length > 0) {
+        propagation.setGlobalPropagator(
+          new CompositePropagator({ propagators })
+        );
+      }
+    } catch (error) {
+      console.warn('Failed to configure propagation:', error.message);
+    }
   }
 
   private registerInstrumentations(): void {
-    registerInstrumentations({
-      instrumentations: [
-        // Auto-instrumentations for common libraries
-        getNodeAutoInstrumentations({
-          '@opentelemetry/instrumentation-http': {
-            enabled: true,
-            ignoreIncomingRequestHook: (req) => {
-              // Ignore health checks and static assets
-              const url = req.url || '';
-              return (
-                url.includes('/_next/') ||
-                url.includes('/health') ||
-                url.includes('/favicon.ico') ||
-                url.includes('/robots.txt') ||
-                url.includes('/.well-known/')
-              );
-            },
-            ignoredOutgoingUrls: [
-              /localhost:3000/, // Ignore self-requests
-            ]
-          },
-          '@opentelemetry/instrumentation-express': {
-            enabled: true,
-          },
-          '@opentelemetry/instrumentation-redis': {
-            enabled: true,
-          },
-        }),
+    if (!registerInstrumentations) return;
 
-        // Custom instrumentations
-        new HttpInstrumentation({
-          requestHook: (span, request) => {
-            span.setAttributes({
-              'http.request.header.user-agent': request.getHeader?.('user-agent') || '',
-              'http.request.header.x-forwarded-for': request.getHeader?.('x-forwarded-for') || '',
-            });
-          },
-          responseHook: (span, response) => {
-            span.setAttributes({
-              'http.response.header.content-length': response.getHeader?.('content-length') || '',
-            });
-          }
-        }),
-      ],
-    });
+    try {
+      const instrumentations = [];
+      
+      // Auto-instrumentations for common libraries
+      if (getNodeAutoInstrumentations) {
+        instrumentations.push(
+          getNodeAutoInstrumentations({
+            '@opentelemetry/instrumentation-http': {
+              enabled: true,
+              ignoreIncomingRequestHook: (req: { url?: string }) => {
+                // Ignore health checks and static assets
+                const url = req.url || '';
+                return (
+                  url.includes('/_next/') ||
+                  url.includes('/health') ||
+                  url.includes('/favicon.ico') ||
+                  url.includes('/robots.txt') ||
+                  url.includes('/.well-known/')
+                );
+              },
+              ignoredOutgoingUrls: [
+                /localhost:3000/, // Ignore self-requests
+              ]
+            },
+            '@opentelemetry/instrumentation-express': {
+              enabled: true,
+            },
+            '@opentelemetry/instrumentation-redis': {
+              enabled: true,
+            },
+          })
+        );
+      }
+
+      // Custom instrumentations
+      if (HttpInstrumentation) {
+        instrumentations.push(
+          new HttpInstrumentation({
+            requestHook: (span: any, request: any) => {
+              if (span && span.setAttributes) {
+                span.setAttributes({
+                  'http.request.header.user-agent': request.getHeader?.('user-agent') || '',
+                  'http.request.header.x-forwarded-for': request.getHeader?.('x-forwarded-for') || '',
+                });
+              }
+            },
+            responseHook: (span: any, response: any) => {
+              if (span && span.setAttributes) {
+                span.setAttributes({
+                  'http.response.header.content-length': response.getHeader?.('content-length') || '',
+                });
+              }
+            }
+          })
+        );
+      }
+
+      if (instrumentations.length > 0) {
+        registerInstrumentations({ instrumentations });
+      }
+    } catch (error) {
+      console.warn('Failed to register instrumentations:', error.message);
+    }
   }
 
   public shutdown(): Promise<void> {
@@ -252,68 +395,96 @@ class TelemetryManager {
   }
 
   public getTracer(name: string, version?: string) {
-    return trace.getTracer(name, version);
+    if (trace && trace.getTracer) {
+      return trace.getTracer(name, version);
+    }
+    return {
+      startSpan: () => ({ end: () => {}, setAttributes: () => {}, setStatus: () => {}, recordException: () => {} })
+    };
   }
 
   // Utility methods for custom instrumentation
-  public createSpan(tracer: any, name: string, options?: any) {
-    return tracer.startSpan(name, {
-      kind: SpanKind.INTERNAL,
-      ...options,
-    });
+  public createSpan(tracer: { startSpan?: (name: string, options?: unknown) => unknown }, name: string, options?: unknown) {
+    if (tracer && tracer.startSpan) {
+      return tracer.startSpan(name, {
+        kind: SpanKind.INTERNAL || 'INTERNAL',
+        ...options,
+      });
+    }
+    return { end: () => {}, setAttributes: () => {}, setStatus: () => {}, recordException: () => {} };
   }
 
-  public withSpan<T>(tracer: any, name: string, fn: (span: any) => Promise<T>, options?: any): Promise<T> {
+  public withSpan<T>(tracer: any, name: string, fn: (span: any) => Promise<T>, options?: unknown): Promise<T> {
+    if (!context || !trace) {
+      return fn({ end: () => {}, setAttributes: () => {}, setStatus: () => {}, recordException: () => {} });
+    }
+
     const span = this.createSpan(tracer, name, options);
     
-    return context.with(trace.setSpan(context.active(), span), async () => {
+    return context.with(trace.setSpan(context.active(), span as any), async () => {
       try {
         const result = await fn(span);
-        span.setStatus({ code: SpanStatusCode.OK });
+        if (span.setStatus) {
+          span.setStatus({ code: SpanStatusCode.OK || 1 });
+        }
         return result;
       } catch (error) {
-        span.recordException(error as Error);
-        span.setStatus({ 
-          code: SpanStatusCode.ERROR, 
-          message: (error as Error).message 
-        });
+        if (span.recordException) {
+          span.recordException(error as Error);
+        }
+        if (span.setStatus) {
+          span.setStatus({ 
+            code: SpanStatusCode.ERROR || 2, 
+            message: (error as Error).message 
+          });
+        }
         throw error;
       } finally {
-        span.end();
+        if (span.end) {
+          span.end();
+        }
       }
     });
   }
 
   // Context propagation utilities
   public extractContext(headers: Record<string, string | string[]>) {
-    return propagation.extract(context.active(), headers);
+    if (propagation && propagation.extract && context) {
+      return propagation.extract(context.active(), headers);
+    }
+    return {};
   }
 
-  public injectContext(ctx: any, headers: Record<string, string>) {
-    propagation.inject(ctx, headers);
+  public injectContext(ctx: unknown, headers: Record<string, string>) {
+    if (propagation && propagation.inject) {
+      propagation.inject(ctx, headers);
+    }
     return headers;
   }
 
   public getCurrentSpan() {
-    return trace.getActiveSpan();
+    if (trace && trace.getActiveSpan) {
+      return trace.getActiveSpan();
+    }
+    return null;
   }
 
   public getCorrelationIds(): CorrelationIds {
     const activeSpan = this.getCurrentSpan();
-    const spanContext = activeSpan?.spanContext();
+    const spanContext = activeSpan?.spanContext?.();
     
     return {
       traceId: spanContext?.traceId || '',
       spanId: spanContext?.spanId || '',
-      userId: activeSpan?.getAttribute('user.id') as string,
-      sessionId: activeSpan?.getAttribute('session.id') as string,
-      operationId: activeSpan?.getAttribute('operation.id') as string,
+      userId: activeSpan?.getAttribute?.('user.id') as string,
+      sessionId: activeSpan?.getAttribute?.('session.id') as string,
+      operationId: activeSpan?.getAttribute?.('operation.id') as string,
     };
   }
 
   public addUserContext(userId: string, userEmail?: string) {
     const activeSpan = this.getCurrentSpan();
-    if (activeSpan) {
+    if (activeSpan && activeSpan.setAttributes) {
       activeSpan.setAttributes({
         'user.id': userId,
         'user.email': userEmail || '',
@@ -323,16 +494,18 @@ class TelemetryManager {
 
   public addBusinessContext(attributes: Record<string, string | number | boolean>) {
     const activeSpan = this.getCurrentSpan();
-    if (activeSpan) {
+    if (activeSpan && activeSpan.setAttributes) {
       activeSpan.setAttributes(attributes);
     }
   }
 
-  public recordError(error: Error, context?: Record<string, any>) {
+  public recordError(error: Error, context?: Record<string, unknown>) {
     const activeSpan = this.getCurrentSpan();
     if (activeSpan) {
-      activeSpan.recordException(error);
-      if (context) {
+      if (activeSpan.recordException) {
+        activeSpan.recordException(error);
+      }
+      if (context && activeSpan.setAttributes) {
         activeSpan.setAttributes(context);
       }
     }
