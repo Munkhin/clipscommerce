@@ -449,7 +449,7 @@ export class InstagramPoster implements PlatformPoster {
         caption: content.caption || '',
         hashtags: content.hashtags || [],
         scheduled_time: scheduleTime.toISOString(),
-        media_type: content.type || (content.videoUrl ? 'video' : 'image')
+        media_type: content.type || ('videoUrl' in content && content.videoUrl ? 'video' : 'image')
       };
       
       const mockId = `instagram_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -623,7 +623,7 @@ export class YouTubePoster implements PlatformPoster {
       const supportedFormats = ['.mp4', '.mov', '.avi', '.wmv', '.flv', '.webm'];
       const path = content.videoPath || content.videoUrl;
       const hasValidFormat = supportedFormats.some(format => 
-        path.toLowerCase().includes(format)
+        path?.toLowerCase().includes(format)
       );
       if (!hasValidFormat) {
         errors.push('Video format must be MP4, MOV, AVI, WMV, FLV, or WebM');
@@ -657,7 +657,7 @@ export class YouTubePoster implements PlatformPoster {
     if (content.thumbnail) {
       const supportedFormats = ['.jpg', '.jpeg', '.png', '.gif', '.bmp'];
       const hasValidFormat = supportedFormats.some(format => 
-        content.thumbnail.toLowerCase().includes(format)
+        content.thumbnail?.toLowerCase().includes(format)
       );
       if (!hasValidFormat) {
         warnings.push('Thumbnail should be JPG, JPEG, PNG, GIF, or BMP for best results');
