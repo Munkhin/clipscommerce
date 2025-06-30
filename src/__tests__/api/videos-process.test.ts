@@ -1,21 +1,19 @@
 import { NextRequest } from 'next/server';
-import { POST } from '@/app/api/videos/process/route';
+import { POST, GET } from '@/app/api/videos/process/route';
 import {
   createMockRequest,
   createMockSupabaseClient,
   mockSuccessfulAuth,
   mockFailedAuth,
-  mockDatabaseSuccess,
-  mockDatabaseError,
   cleanupMocks,
   mockVideoData,
-  MOCK_USER_ID,
   MOCK_VIDEO_ID
 } from '../utils/test-helpers';
+import { createClient } from '@/../supabase';
 
 // Mock Supabase auth helpers
-jest.mock('@supabase/auth-helpers-nextjs', () => ({
-  createRouteHandlerClient: jest.fn()
+jest.mock('@/../supabase', () => ({
+  createClient: jest.fn()
 }));
 
 // Mock cookies
@@ -23,14 +21,12 @@ jest.mock('next/headers', () => ({
   cookies: jest.fn()
 }));
 
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-
 describe('/api/videos/process API Route', () => {
-  let mockSupabaseClient: any;
+  let mockSupabaseClient: ReturnType<typeof createMockSupabaseClient>;
 
   beforeEach(() => {
     mockSupabaseClient = createMockSupabaseClient();
-    (createRouteHandlerClient as jest.Mock).mockReturnValue(mockSupabaseClient);
+    (createClient as jest.Mock).mockReturnValue(mockSupabaseClient);
   });
 
   afterEach(() => {
