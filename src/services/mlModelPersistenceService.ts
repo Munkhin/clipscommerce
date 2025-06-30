@@ -7,9 +7,67 @@
 
 import Redis from 'ioredis';
 import { Pool } from 'pg';
-import { MetricsTracker } from '@/lib/utils/metrics';
-import { EnhancedCache } from '@/lib/utils/caching';
-import crypto from 'crypto';
+import * as crypto from 'crypto';
+
+// Use a simple metrics implementation since the full MetricsTracker isn't available
+interface SimpleMetrics {
+  timeAsync<T>(name: string, fn: () => Promise<T>): Promise<T>;
+  increment(name: string): void;
+  recordError(error: unknown): void;
+  getMetrics(): Record<string, unknown>;
+}
+
+class SimpleMetricsTracker implements SimpleMetrics {
+  private metrics: Record<string, number> = {};
+  
+  async timeAsync<T>(name: string, fn: () => Promise<T>): Promise<T> {
+    const start = Date.now();
+    try {
+      const result = await fn();
+      this.metrics[`${name}_duration`] = Date.now() - start;
+      return result;
+    } catch (error) {
+      this.recordError(error);
+      throw error;
+    }
+  }
+  
+  increment(name: string): void {
+    this.metrics[name] = (this.metrics[name] || 0) + 1;
+  }
+  
+  recordError(error: unknown): void {
+    this.metrics.errors = (this.metrics.errors || 0) + 1;
+    console.error('Metrics error:', error);
+  }
+  
+  getMetrics(): Record<string, unknown> {
+    return { ...this.metrics };
+  }
+}
+
+// Simple cache implementation since EnhancedCache isn't available
+class SimpleCache<K, V> {
+  private cache = new Map<K, V>();
+  private ttlMap = new Map<K, number>();
+  
+  constructor(private config: { namespace: string; ttl: number }) {}
+  
+  set(key: K, value: V): void {
+    this.cache.set(key, value);
+    this.ttlMap.set(key, Date.now() + this.config.ttl);
+  }
+  
+  get(key: K): V | undefined {
+    const ttl = this.ttlMap.get(key);
+    if (ttl && Date.now() > ttl) {
+      this.cache.delete(key);
+      this.ttlMap.delete(key);
+      return undefined;
+    }
+    return this.cache.get(key);
+  }
+}
 
 export interface ModelMetadata {
   id: string;
@@ -80,15 +138,15 @@ export interface ModelSnapshot {
 export class MLModelPersistenceService {
   private redis: Redis | null = null;
   private postgres: Pool | null = null;
-  private cache: EnhancedCache<string, ModelMetadata | ABTestConfig>;
-  private metrics: MetricsTracker;
+  private cache: SimpleCache<string, ModelMetadata | ABTestConfig>;
+  private metrics: SimpleMetrics;
 
   constructor(redisUrl?: string, postgresConfig?: Record<string, unknown>) {
-    this.cache = new EnhancedCache({ 
+    this.cache = new SimpleCache({ 
       namespace: 'ml-models',
       ttl: 1800000 // 30 minutes
     });
-    this.metrics = new MetricsTracker();
+    this.metrics = new SimpleMetricsTracker();
 
     // Initialize Redis
     if (redisUrl || process.env.REDIS_URL) {
@@ -249,9 +307,9 @@ export class MLModelPersistenceService {
     return this.metrics.timeAsync('loadModel', async () => {
       // Check cache first
       const cached = this.cache.get(`model:${modelId}`);
-      if (cached) {
+      if (cached && 'name' in cached && 'version' in cached) {
         this.metrics.increment('cacheHits');
-        return cached;
+        return cached as ModelMetadata;
       }
 
       if (!this.postgres) return null;
@@ -417,7 +475,9 @@ export class MLModelPersistenceService {
    */
   async getABTest(testId: string): Promise<ABTestConfig | null> {
     const cached = this.cache.get(`abtest:${testId}`);
-    if (cached) return cached;
+    if (cached && 'models' in cached && 'trafficSplit' in cached) {
+      return cached as ABTestConfig;
+    }
 
     if (!this.postgres) return null;
 
