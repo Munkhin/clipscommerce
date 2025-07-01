@@ -453,7 +453,7 @@ export class ContentOptimizationTrainer extends EventEmitter {
 
     // Add high-performing platform-specific hashtags
     const suggestedHashtags = platformPatterns
-      .filter(tag => !hashtags.includes(tag))
+      .filter((tag: string) => !hashtags.includes(tag))
       .slice(0, 3); // Add up to 3 new hashtags
 
     const optimized = [...goodHashtags, ...suggestedHashtags].join(' ');
@@ -707,7 +707,7 @@ export class ContentOptimizationTrainer extends EventEmitter {
   private analyzePlatformSpecificTiming(): Map<Platform, any> {
     const platformTiming = new Map<Platform, any>();
     
-    ['tiktok', 'instagram', 'youtube'].forEach(platform => {
+    ['TikTok', 'Instagram', 'YouTube'].forEach(platform => {
       const platformData = this.trainingData.filter(data => data.features.platform === platform);
       const timeAnalysis = new Map<number, number[]>();
       
@@ -750,12 +750,12 @@ export class ContentOptimizationTrainer extends EventEmitter {
 
   private selectCallToAction(platform: Platform): string {
     const platformCTAs = {
-      'tiktok': 'Follow for more! 🔥',
-      'instagram': 'Double tap if you agree! ❤️',
-      'youtube': 'Subscribe for more content!',
-      'facebook': 'Share your thoughts below!',
-      'twitter': 'Retweet if you agree!',
-      'linkedin': 'What are your thoughts on this?'
+      'TikTok': 'Follow for more! 🔥',
+      'Instagram': 'Double tap if you agree! ❤️',
+      'YouTube': 'Subscribe for more content!',
+      'Facebook': 'Share your thoughts below!',
+      'Twitter': 'Retweet if you agree!',
+      'LinkedIn': 'What are your thoughts on this?'
     };
     
     return platformCTAs[platform] || 'Let me know what you think!';
@@ -763,12 +763,12 @@ export class ContentOptimizationTrainer extends EventEmitter {
 
   private getOptimalLength(platform: Platform): number {
     const platformLengths = {
-      'tiktok': 150,
-      'instagram': 200,
-      'youtube': 300,
-      'facebook': 250,
-      'twitter': 280,
-      'linkedin': 400
+      'TikTok': 150,
+      'Instagram': 200,
+      'YouTube': 300,
+      'Facebook': 250,
+      'Twitter': 280,
+      'LinkedIn': 400
     };
     
     return platformLengths[platform] || 200;
