@@ -421,7 +421,7 @@ export function analyzeContentPerformancePatterns(): {
         .sort((a, b) => b.engagement - a.engagement)
         .slice(0, Math.ceil(lengthPerformance.length * 0.2)); // Top 20%
       
-      optimalCaptionLength[platform as Platform] = Math.round(
+      optimalCaptionLength[platform] = Math.round(
         topPerforming.reduce((sum, p) => sum + p.length, 0) / topPerforming.length
       );
 
@@ -434,7 +434,7 @@ export function analyzeContentPerformancePatterns(): {
         }
       }
 
-      highEngagementHashtags[platform as Platform] = Object.entries(hashtagPerf)
+      highEngagementHashtags[platform] = Object.entries(hashtagPerf)
         .map(([hashtag, rates]) => ({
           hashtag,
           avgRate: rates.reduce((sum, rate) => sum + rate, 0) / rates.length,
@@ -461,7 +461,7 @@ function shortenCaption(caption: string): string {
 }
 
 function expandCaption(caption: string, platform: Platform): string {
-  const platformExpansions: Record<Platform, string> = {
+  const platformExpansions: Record<string, string> = {
     [PlatformEnum.TIKTOK]: ' What do you think? Drop a comment below! 👇',
     [PlatformEnum.INSTAGRAM]: ' Double tap if you agree! Share your thoughts in the comments ✨',
     [PlatformEnum.YOUTUBE]: ' Let me know what you think in the comments and don\'t forget to subscribe!',
@@ -476,7 +476,7 @@ function expandCaption(caption: string, platform: Platform): string {
 function adjustToneForPlatform(caption: string, platform: Platform): string {
   const currentTone = analyzeTone(caption);
   
-  const platformTones: Record<Platform, string> = {
+  const platformTones: Record<string, string> = {
     [PlatformEnum.TIKTOK]: 'excited',
     [PlatformEnum.INSTAGRAM]: 'casual',
     [PlatformEnum.YOUTUBE]: 'professional',
@@ -502,7 +502,7 @@ function adjustToneForPlatform(caption: string, platform: Platform): string {
 }
 
 function addPlatformSpecificEmojis(caption: string, platform: Platform): string {
-  const platformEmojis: Record<Platform, string[]> = {
+  const platformEmojis: Record<string, string[]> = {
     [PlatformEnum.TIKTOK]: ['🔥', '✨', '💯', '🚀', '⚡'],
     [PlatformEnum.INSTAGRAM]: ['✨', '💕', '🌟', '💫', '🦋'],
     [PlatformEnum.YOUTUBE]: ['🎬', '📹', '🎥', '👍', '🔔'],
@@ -518,7 +518,7 @@ function addPlatformSpecificEmojis(caption: string, platform: Platform): string 
 }
 
 function addCallToAction(caption: string, platform: Platform): string {
-  const platformCTAs: Record<Platform, string> = {
+  const platformCTAs: Record<string, string> = {
     [PlatformEnum.TIKTOK]: 'Follow for more! 👆',
     [PlatformEnum.INSTAGRAM]: 'Save this post! 📌',
     [PlatformEnum.YOUTUBE]: 'Subscribe for more content! 🔔',
@@ -550,7 +550,7 @@ function calculateExpectedPerformance(
   performance *= typeMultipliers[variationType as keyof typeof typeMultipliers] || 1;
 
   // Adjust based on platform
-  const platformMultipliers: Record<Platform, number> = {
+  const platformMultipliers: Record<string, number> = {
     [PlatformEnum.TIKTOK]: 1.2,
     [PlatformEnum.INSTAGRAM]: 1.1,
     [PlatformEnum.YOUTUBE]: 1.0,
@@ -579,7 +579,7 @@ function extractTopicsFromContent(content: string): string[] {
 
 function getTrendingHashtagsForPlatform(platform: Platform): string[] {
   // Mock trending hashtags (in production, fetch from real APIs)
-  const trending: Record<Platform, string[]> = {
+  const trending: Record<string, string[]> = {
     [PlatformEnum.TIKTOK]: ['#fyp', '#viral', '#trending', '#foryou', '#tiktok'],
     [PlatformEnum.INSTAGRAM]: ['#instagood', '#photooftheday', '#love', '#beautiful', '#happy'],
     [PlatformEnum.YOUTUBE]: ['#youtube', '#subscribe', '#viral', '#trending', '#shorts'],
@@ -597,7 +597,7 @@ function getHighPerformingHashtags(platform: Platform): string[] {
   
   if (platformContent.length === 0) {
     // Return default high-performing hashtags if no historical data
-    const defaultHashtags: Record<Platform, string[]> = {
+    const defaultHashtags: Record<string, string[]> = {
       [PlatformEnum.TIKTOK]: ['#fyp', '#viral', '#trending', '#foryou', '#content'],
       [PlatformEnum.INSTAGRAM]: ['#instagood', '#photooftheday', '#love', '#beautiful', '#content'],
       [PlatformEnum.YOUTUBE]: ['#youtube', '#subscribe', '#viral', '#trending', '#content'],
@@ -675,7 +675,7 @@ function estimateHashtagReach(hashtag: string, platform: Platform): number {
 }
 
 function getOptimalLengthForPlatform(platform: Platform): number {
-  const optimalLengths: Record<Platform, number> = {
+  const optimalLengths: Record<string, number> = {
     [PlatformEnum.TIKTOK]: 150,
     [PlatformEnum.INSTAGRAM]: 125,
     [PlatformEnum.YOUTUBE]: 200,
