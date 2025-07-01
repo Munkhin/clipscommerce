@@ -173,7 +173,8 @@ export class ContentOptimizationTrainer extends EventEmitter {
       this.emit('dataLoaded', { sampleCount: this.trainingData.length });
 
     } catch (error) {
-      this.emit('error', { phase: 'data_loading', error: error.message });
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      this.emit('error', { phase: 'data_loading', error: errorMessage });
       throw error;
     }
   }
@@ -270,7 +271,8 @@ export class ContentOptimizationTrainer extends EventEmitter {
       });
 
     } catch (error) {
-      this.emit('error', { phase: 'training', error: error.message });
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      this.emit('error', { phase: 'training', error: errorMessage });
       throw error;
     } finally {
       this.isTraining = false;
