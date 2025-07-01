@@ -187,7 +187,8 @@ export class ModelEvaluator extends EventEmitter {
       return result;
       
     } catch (error) {
-      this.emit('evaluationError', { modelName, error: error.message });
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      this.emit('evaluationError', { modelName, error: errorMessage });
       throw error;
     }
   }
@@ -410,7 +411,7 @@ export class ModelEvaluator extends EventEmitter {
     });
     
     // Calculate metrics for each platform
-    const result: Record<Platform, EvaluationMetrics> = {};
+    const result: Partial<Record<Platform, EvaluationMetrics>> = {};
     Object.entries(platformData).forEach(([platform, data]) => {
       result[platform as Platform] = this.calculateCoreMetrics(
         data.predictions,
