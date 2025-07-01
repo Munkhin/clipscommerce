@@ -122,15 +122,15 @@ export class ContentOptimizationTrainer extends EventEmitter {
     ]);
 
     // Platform-specific hashtag patterns
-    this.hashtagPatterns.set('tiktok', [
+    this.hashtagPatterns.set('TikTok', [
       '#fyp', '#foryou', '#viral', '#trending', '#tiktok'
     ]);
 
-    this.hashtagPatterns.set('instagram', [
+    this.hashtagPatterns.set('Instagram', [
       '#instagood', '#photooftheday', '#love', '#beautiful', '#happy'
     ]);
 
-    this.hashtagPatterns.set('youtube', [
+    this.hashtagPatterns.set('YouTube', [
       '#youtube', '#subscribe', '#viral', '#trending'
     ]);
 
@@ -172,8 +172,8 @@ export class ContentOptimizationTrainer extends EventEmitter {
       this.emit('progress', { phase: 'data_loading', progress: 100, message: `Loaded ${this.trainingData.length} optimization samples` });
       this.emit('dataLoaded', { sampleCount: this.trainingData.length });
 
-    } catch (error) {
-      this.emit('error', { phase: 'data_loading', error: error.message });
+    } catch (error: unknown) {
+      this.emit('error', { phase: 'data_loading', error: error instanceof Error ? error.message : 'Unknown error' });
       throw error;
     }
   }
@@ -269,8 +269,8 @@ export class ContentOptimizationTrainer extends EventEmitter {
         trainingSize: this.trainingData.length
       });
 
-    } catch (error) {
-      this.emit('error', { phase: 'training', error: error.message });
+    } catch (error: unknown) {
+      this.emit('error', { phase: 'training', error: error instanceof Error ? error.message : 'Unknown error' });
       throw error;
     } finally {
       this.isTraining = false;
@@ -444,14 +444,14 @@ export class ContentOptimizationTrainer extends EventEmitter {
     const platformPatterns = this.model.hashtagOptimizer.platformPatterns.get(platform) || [];
     
     // Remove low-performing hashtags
-    const goodHashtags = hashtags.filter(tag => {
+    const goodHashtags = hashtags.filter((tag: string) => {
       const perf = performance.get(tag);
       return !perf || perf.avgEngagement > 0;
     });
 
     // Add high-performing platform-specific hashtags
     const suggestedHashtags = platformPatterns
-      .filter(tag => !hashtags.includes(tag))
+      .filter((tag: string) => !hashtags.includes(tag))
       .slice(0, 3); // Add up to 3 new hashtags
 
     const optimized = [...goodHashtags, ...suggestedHashtags].join(' ');
@@ -705,7 +705,7 @@ export class ContentOptimizationTrainer extends EventEmitter {
   private analyzePlatformSpecificTiming(): Map<Platform, any> {
     const platformTiming = new Map<Platform, any>();
     
-    ['tiktok', 'instagram', 'youtube'].forEach(platform => {
+    (['TikTok', 'Instagram', 'YouTube'] as Platform[]).forEach(platform => {
       const platformData = this.trainingData.filter(data => data.features.platform === platform);
       const timeAnalysis = new Map<number, number[]>();
       
@@ -747,26 +747,26 @@ export class ContentOptimizationTrainer extends EventEmitter {
   }
 
   private selectCallToAction(platform: Platform): string {
-    const platformCTAs = {
-      'tiktok': 'Follow for more! 🔥',
-      'instagram': 'Double tap if you agree! ❤️',
-      'youtube': 'Subscribe for more content!',
-      'facebook': 'Share your thoughts below!',
-      'twitter': 'Retweet if you agree!',
-      'linkedin': 'What are your thoughts on this?'
+    const platformCTAs: Record<Platform, string> = {
+      'TikTok': 'Follow for more! 🔥',
+      'Instagram': 'Double tap if you agree! ❤️',
+      'YouTube': 'Subscribe for more content!',
+      'Facebook': 'Share your thoughts below!',
+      'Twitter': 'Retweet if you agree!',
+      'LinkedIn': 'What are your thoughts on this?'
     };
     
     return platformCTAs[platform] || 'Let me know what you think!';
   }
 
   private getOptimalLength(platform: Platform): number {
-    const platformLengths = {
-      'tiktok': 150,
-      'instagram': 200,
-      'youtube': 300,
-      'facebook': 250,
-      'twitter': 280,
-      'linkedin': 400
+    const platformLengths: Record<Platform, number> = {
+      'TikTok': 150,
+      'Instagram': 200,
+      'YouTube': 300,
+      'Facebook': 250,
+      'Twitter': 280,
+      'LinkedIn': 400
     };
     
     return platformLengths[platform] || 200;
@@ -842,11 +842,21 @@ export class ContentOptimizationTrainer extends EventEmitter {
       .insert({
         model_name: 'content_optimization',
         model_type: 'ensemble',
-        model_data: modelData,
-        performance_metrics: this.performance,
-        training_date: new Date().toISOString(),
         version: '1.0.0',
-        status: 'active'
+        description: 'Content optimization model for improving engagement',
+        training_date: new Date().toISOString(),
+        training_data_size: this.trainingData.length,
+        performance_metrics: this.performance,
+        overall_score: this.performance.accuracy,
+        model_data: modelData,
+        model_size: JSON.stringify(modelData).length,
+        status: 'trained',
+        is_latest: true,
+        prediction_count: 0,
+        tags: ['content', 'optimization', 'engagement'],
+        created_by: 'system',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
       });
 
     if (error) throw error;

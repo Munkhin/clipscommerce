@@ -551,12 +551,41 @@ export class LightGBMModel {
     return shuffled;
   }
 
-  predict(features: number[][]): number[] {
+  predict(features: number[] | number[][]): number | number[] {
     if (this.trees.length === 0) {
       throw new Error('Model has not been trained yet');
     }
 
-    return features.map(featureRow => {
+    // Handle single sample prediction
+    if (typeof features[0] === 'number') {
+      const featureRow = features as number[];
+      let prediction = 0;
+      const useIteration = this.bestIteration > 0 ? this.bestIteration : this.trees.length - 1;
+      
+      for (let i = 0; i <= useIteration; i++) {
+        const tree = this.trees[i];
+        if (tree) {
+          const treePred = this.predictTree(featureRow, tree.rootNode);
+          prediction += tree.learningRate * treePred;
+        }
+      }
+
+      // Apply final transformation based on objective
+      switch (this.config.objective) {
+        case 'binary':
+          return 1 / (1 + Math.exp(-prediction));
+        case 'regression':
+          return prediction;
+        case 'multiclass':
+          return prediction; // Would need softmax for true multiclass
+        default:
+          return prediction;
+      }
+    }
+
+    // Handle batch prediction
+    const featureMatrix = features as number[][];
+    return featureMatrix.map(featureRow => {
       let prediction = 0;
       const useIteration = this.bestIteration > 0 ? this.bestIteration : this.trees.length - 1;
       
@@ -582,6 +611,16 @@ export class LightGBMModel {
     });
   }
 
+  batchPredict(features: number[][]): number[] {
+    return this.predict(features) as number[];
+  }
+
+  getWeights(): number[] {
+    // For tree-based models, return feature importances as weights
+    const importances = this.getFeatureImportances();
+    return this.featureNames.map(name => importances[name] || 0);
+  }
+
   async hyperparameterSearch(
     trainFeatures: number[][],
     trainTargets: number[],
@@ -599,7 +638,7 @@ export class LightGBMModel {
       
       try {
         await model.train(trainFeatures, trainTargets, validFeatures, validTargets);
-        const predictions = model.predict(validFeatures);
+        const predictions = model.predict(validFeatures) as number[];
         const score = this.calculateLoss(validTargets, predictions);
         
         if (score < bestScore) {

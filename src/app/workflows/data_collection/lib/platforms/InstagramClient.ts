@@ -50,4 +50,27 @@ export class InstagramClient extends BasePlatformClient {
       rateLimit: this.rateLimit === null ? undefined : this.rateLimit,
     });
   }
+
+  protected handleRateLimit(headers: any): void {
+    // Instagram rate limit handling placeholder
+    this.log('debug', 'Instagram rate limit handling not implemented');
+  }
+
+  async fetchPosts(query: string): Promise<any[]> {
+    // Placeholder implementation
+    this.log('warn', 'fetchPosts not implemented for Instagram');
+    return [];
+  }
+
+  async uploadContent(content: any): Promise<any> {
+    // Placeholder implementation
+    this.log('warn', 'uploadContent not implemented for Instagram');
+    return { id: 'placeholder' };
+  }
+
+  async getAnalytics(postId: string): Promise<any> {
+    // Placeholder implementation
+    this.log('warn', 'getAnalytics not implemented for Instagram');
+    return { views: 0, likes: 0, comments: 0, shares: 0 };
+  }
 }

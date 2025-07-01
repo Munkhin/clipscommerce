@@ -1,20 +1,16 @@
-import { NextRequest } from 'next/server';
 import { GET } from '@/app/api/competitors/route';
 import {
   createMockRequest,
   createMockSupabaseClient,
   mockSuccessfulAuth,
   mockFailedAuth,
-  assertErrorResponse,
-  assertSuccessResponse,
-  cleanupMocks,
-  mockCompetitorData,
-  MOCK_USER_ID
+  cleanupMocks
 } from '../utils/test-helpers';
+import { createClient } from '@/../supabase';
 
 // Mock Supabase auth helpers
-jest.mock('@supabase/auth-helpers-nextjs', () => ({
-  createRouteHandlerClient: jest.fn()
+jest.mock('@/../supabase', () => ({
+  createClient: jest.fn()
 }));
 
 // Mock cookies
@@ -22,14 +18,12 @@ jest.mock('next/headers', () => ({
   cookies: jest.fn()
 }));
 
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-
 describe('/api/competitors API Route', () => {
-  let mockSupabaseClient: any;
+  let mockSupabaseClient: ReturnType<typeof createMockSupabaseClient>;
 
   beforeEach(() => {
     mockSupabaseClient = createMockSupabaseClient();
-    (createRouteHandlerClient as jest.Mock).mockReturnValue(mockSupabaseClient);
+    (createClient as jest.Mock).mockReturnValue(mockSupabaseClient);
   });
 
   afterEach(() => {
@@ -247,7 +241,6 @@ describe('/api/competitors API Route', () => {
         throw new Error('Internal error');
       }) as any;
       global.Date.now = originalDate.now;
-      global.Date.prototype = originalDate.prototype;
 
       const request = createMockRequest('http://localhost:3000/api/competitors');
       const response = await GET(request);
@@ -334,7 +327,7 @@ describe('/api/competitors API Route', () => {
       const responseData = await response.json();
 
       expect(response.status).toBe(200);
-      responseData.data.forEach((competitor: any) => {
+      responseData.data.forEach((competitor: { engagement: string }) => {
         expect(competitor.engagement).toMatch(/^\d+(\.\d+)?%$/);
         const percentage = parseFloat(competitor.engagement.replace('%', ''));
         expect(percentage).toBeGreaterThanOrEqual(0);
@@ -348,7 +341,7 @@ describe('/api/competitors API Route', () => {
       const responseData = await response.json();
 
       expect(response.status).toBe(200);
-      responseData.data.forEach((competitor: any) => {
+      responseData.data.forEach((competitor: { followers: string }) => {
         expect(competitor.followers).toMatch(/^\d+(\.\d+)?[KMB]?$/);
       });
     });
@@ -359,8 +352,8 @@ describe('/api/competitors API Route', () => {
       const responseData = await response.json();
 
       expect(response.status).toBe(200);
-      responseData.data.forEach((competitor: any) => {
-        competitor.topContent.forEach((content: any) => {
+      responseData.data.forEach((competitor: { topContent: Array<{ url: string }> }) => {
+        competitor.topContent.forEach((content: { url: string }) => {
           expect(content.url).toMatch(/^https?:\/\/.+/);
         });
       });

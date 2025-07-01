@@ -9,22 +9,18 @@ import {
   MOCK_USER_ID,
   MOCK_VIDEO_ID,
 } from '../utils/test-helpers';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/../supabase';
 
 // Mock Supabase client
-jest.mock('@supabase/auth-helpers-nextjs', () => ({
-  createClientComponentClient: jest.fn(),
-}));
+jest.mock('@/../supabase');
 
 describe('UserVideoService', () => {
   let service: UserVideoService;
-  let mockSupabaseClient: any;
+  let mockSupabaseClient: ReturnType<typeof createMockSupabaseClient>;
 
   beforeEach(() => {
     mockSupabaseClient = createMockSupabaseClient();
-    (createClientComponentClient as jest.Mock).mockReturnValue(
-      mockSupabaseClient
-    );
+    (createClient as jest.Mock).mockReturnValue(mockSupabaseClient);
 
     service = new UserVideoService();
   });
@@ -640,7 +636,7 @@ describe('UserVideoService', () => {
   });
 
   describe('subscribeToVideoUpdates', () => {
-    let mockChannel: any;
+    let mockChannel: { on: jest.Mock; subscribe: jest.Mock };
 
     beforeEach(() => {
       mockChannel = {
@@ -686,7 +682,7 @@ describe('UserVideoService', () => {
       const callback = jest.fn();
       let updateHandler: any;
 
-      mockChannel.on.mockImplementation((event, config, handler) => {
+      mockChannel.on.mockImplementation((_event: string, _config: any, handler: any) => {
         updateHandler = handler;
         return mockChannel;
       });

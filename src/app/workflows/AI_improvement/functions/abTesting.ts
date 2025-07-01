@@ -9,7 +9,7 @@ export interface ExperimentVariant {
   id: string;
   name: string;
   description: string;
-  config: Record<string, any>;
+  config: Record<string, string | number | boolean | string[]>;
   weight: number; // Traffic allocation percentage (0-100)
 }
 
@@ -56,6 +56,29 @@ export interface ExperimentAnalysis {
   effectSize?: number;
   recommendations: string[];
   analysisDate: Date;
+}
+
+export interface ExperimentResultData {
+  experiment_id: string;
+  variant_id: string;
+  user_id: string;
+  post_id: string;
+  metric_value: number;
+  conversion_event: boolean;
+  metadata: {
+    platform: string;
+    publishedAt: string;
+    engagement: Record<string, number>;
+  };
+  recorded_at: string;
+}
+
+export interface ExperimentAnalysisResult {
+  status: ExperimentAnalysis['status'];
+  winningVariant?: string;
+  pValue?: number;
+  effectSize?: number;
+  probabilities?: Record<string, number>;
 }
 
 import { SupabaseClient } from '@supabase/supabase-js';
@@ -132,7 +155,7 @@ export class ExperimentManager {
    * Updates an existing experiment with database persistence
    */
   async updateExperiment(id: string, updates: Partial<Experiment>): Promise<Experiment | null> {
-    let experiment = this.experimentsCache.get(id);
+    let experiment: Experiment | null = this.experimentsCache.get(id) || null;
     
     if (!experiment) {
       // Try to load from database
@@ -360,7 +383,7 @@ export class ExperimentManager {
     }
 
     // Group results by variant
-    const variantResults = new Map<string, any[]>();
+    const variantResults = new Map<string, ExperimentResultData[]>();
     for (const result of experimentResults || []) {
       const variantId = result.variant_id;
       if (!variantResults.has(variantId)) {
@@ -565,7 +588,7 @@ export class ExperimentManager {
   /**
    * Store analysis results in database
    */
-  private async storeAnalysisResults(experimentId: string, analysis: any): Promise<void> {
+  private async storeAnalysisResults(experimentId: string, analysis: ExperimentAnalysisResult): Promise<void> {
     const { error } = await this.supabase
       .from('ab_experiments')
       .update({

@@ -1,8 +1,9 @@
 import { BasePlatformClient } from './base-platform';
-import { ApiConfig, ApiResponse, PlatformPostMetrics, PlatformUserActivity, PlatformPost, PlatformComment, RateLimit } from './types';
+import { ApiConfig, ApiResponse, PlatformPostMetrics, PlatformUserActivity, PlatformPost, PlatformComment, ApiRateLimit } from './types';
 import { IAuthTokenManager } from '../auth.types';
 import { Platform } from '../../../deliverables/types/deliverables_types';
 import { ApiError, PlatformError, RateLimitError } from '../utils/errors';
+import { Post, Analytics } from '@/types/platform';
 import {
   TikTokVideoData,
   TikTokVideoQueryError,
@@ -58,22 +59,18 @@ export class TikTokClient extends BasePlatformClient {
 
       if (responseData.error && responseData.error.code !== 'ok' && responseData.error.code !== 0) {
         this.log('error', `[TikTokClient] API error in getVideoComments: ${responseData.error.message}`, responseData.error);
-        throw new ApiError(responseData.error.message, responseData.error.code, responseData.error);
+        throw new ApiError(Platform.TIKTOK, responseData.error.code, responseData.error.message, 400, responseData.error);
       }
 
       const comments: Post[] = (responseData.comments || []).map((comment: any): Post => ({
         id: comment.id || comment.comment_id,
-        postId: postId,
-        userId: comment.user?.unique_id || comment.user?.user_id,
-        userName: comment.user?.display_name || comment.user?.nickname,
-        userProfileImageUrl: comment.user?.avatar_url,
-        text: comment.text || comment.comment_text,
-        likeCount: comment.like_count || 0,
-        replyCount: comment.reply_comment_total || 0,
-        publishedAt: comment.create_time ? new Date(comment.create_time * 1000).toISOString() : new Date().toISOString(),
-        updatedAt: comment.update_time ? new Date(comment.update_time * 1000).toISOString() : undefined,
-        platform: Platform.TIKTOK,
-        sourceData: comment,
+        title: comment.text || comment.comment_text || 'TikTok Comment',
+        content: comment.text || comment.comment_text || '',
+        createdAt: comment.create_time ? new Date(comment.create_time * 1000) : new Date(),
+        author: {
+          id: comment.user?.unique_id || comment.user?.user_id || 'unknown',
+          name: comment.user?.display_name || comment.user?.nickname || 'Unknown User'
+        }
       }));
 
       this.log('debug', `[TikTokClient] Successfully fetched ${comments.length} comments for video ${postId}.`);
@@ -84,7 +81,7 @@ export class TikTokClient extends BasePlatformClient {
       if (error instanceof ApiError) {
         throw error;
       }
-      throw new ApiError('An unexpected error occurred while fetching video comments from TikTok.', 500);
+      throw new ApiError(Platform.TIKTOK, 'UNEXPECTED_ERROR', 'An unexpected error occurred while fetching video comments from TikTok.', 500);
     }
   }
 
@@ -111,7 +108,7 @@ export class TikTokClient extends BasePlatformClient {
 
       if (responseData.error && responseData.error.code !== 'ok' && responseData.error.code !== 0) {
         this.log('error', `[TikTokClient] API error in uploadContent: ${responseData.error.message}`, responseData.error);
-        throw new ApiError(responseData.error.message, responseData.error.code, responseData.error);
+        throw new ApiError(Platform.TIKTOK, responseData.error.code, responseData.error.message, 400, responseData.error);
       }
 
       const post: Post = {
@@ -150,7 +147,7 @@ export class TikTokClient extends BasePlatformClient {
 
       if (responseData.error && responseData.error.code !== 'ok' && responseData.error.code !== 0) {
         this.log('error', `[TikTokClient] API error in getAnalytics: ${responseData.error.message}`, responseData.error);
-        throw new ApiError(responseData.error.message, responseData.error.code, responseData.error);
+        throw new ApiError(Platform.TIKTOK, responseData.error.code, responseData.error.message, 400, responseData.error);
       }
 
       const videoData = responseData.data?.videos?.[0] || {};

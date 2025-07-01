@@ -1,6 +1,4 @@
 import { NextRequest } from 'next/server';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 // Mock data constants
 export const MOCK_USER_ID = 'test-user-123';
@@ -65,10 +63,10 @@ export const mockAudioData = {
 export function createMockRequest(
   url: string,
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' = 'GET',
-  body?: any,
+  body?: unknown,
   headers?: Record<string, string>
 ): NextRequest {
-  const requestInit: RequestInit = {
+  const requestInit: any = {
     method,
     headers: {
       'Content-Type': 'application/json',
@@ -90,7 +88,7 @@ export function createMockSupabaseClient() {
       getUser: jest.fn(),
       getSession: jest.fn()
     },
-    from: jest.fn(() => ({
+    from: jest.fn((_table: string) => ({
       select: jest.fn(() => ({
         eq: jest.fn(() => ({
           single: jest.fn(),
@@ -141,7 +139,7 @@ export function createMockSupabaseClient() {
       }))
     },
     channel: jest.fn(() => ({
-      on: jest.fn(() => ({
+      on: jest.fn((_event: string, _config: any, _handler: (...args: any[]) => void) => ({
         subscribe: jest.fn()
       }))
     })),
@@ -169,15 +167,31 @@ export function mockFailedAuth(supabaseClient: any) {
 
 // Helper to mock database operations
 export function mockDatabaseSuccess(supabaseClient: any, data: any) {
-  const mockQuery = {
-    select: jest.fn(() => mockQuery),
-    eq: jest.fn(() => mockQuery),
-    order: jest.fn(() => mockQuery),
-    limit: jest.fn(() => mockQuery),
-    gte: jest.fn(() => mockQuery),
-    lte: jest.fn(() => mockQuery),
+  type MockQuery = {
+    select: jest.Mock;
+    eq: jest.Mock;
+    order: jest.Mock;
+    limit: jest.Mock;
+    gte: jest.Mock;
+    lte: jest.Mock;
+    single: jest.Mock;
+  };
+  const mockQuery: MockQuery = {
+    select: jest.fn(),
+    eq: jest.fn(),
+    order: jest.fn(),
+    limit: jest.fn(),
+    gte: jest.fn(),
+    lte: jest.fn(),
     single: jest.fn(() => Promise.resolve({ data, error: null }))
   };
+  // Chain all methods to return mockQuery
+  mockQuery.select.mockReturnValue(mockQuery);
+  mockQuery.eq.mockReturnValue(mockQuery);
+  mockQuery.order.mockReturnValue(mockQuery);
+  mockQuery.limit.mockReturnValue(mockQuery);
+  mockQuery.gte.mockReturnValue(mockQuery);
+  mockQuery.lte.mockReturnValue(mockQuery);
 
   supabaseClient.from.mockReturnValue(mockQuery);
   return mockQuery;
@@ -185,15 +199,31 @@ export function mockDatabaseSuccess(supabaseClient: any, data: any) {
 
 // Helper to mock database errors
 export function mockDatabaseError(supabaseClient: any, error: string) {
-  const mockQuery = {
-    select: jest.fn(() => mockQuery),
-    eq: jest.fn(() => mockQuery),
-    order: jest.fn(() => mockQuery),
-    limit: jest.fn(() => mockQuery),
-    gte: jest.fn(() => mockQuery),
-    lte: jest.fn(() => mockQuery),
+  type MockQuery = {
+    select: jest.Mock;
+    eq: jest.Mock;
+    order: jest.Mock;
+    limit: jest.Mock;
+    gte: jest.Mock;
+    lte: jest.Mock;
+    single: jest.Mock;
+  };
+  const mockQuery: MockQuery = {
+    select: jest.fn(),
+    eq: jest.fn(),
+    order: jest.fn(),
+    limit: jest.fn(),
+    gte: jest.fn(),
+    lte: jest.fn(),
     single: jest.fn(() => Promise.resolve({ data: null, error: new Error(error) }))
   };
+  // Chain all methods to return mockQuery
+  mockQuery.select.mockReturnValue(mockQuery);
+  mockQuery.eq.mockReturnValue(mockQuery);
+  mockQuery.order.mockReturnValue(mockQuery);
+  mockQuery.limit.mockReturnValue(mockQuery);
+  mockQuery.gte.mockReturnValue(mockQuery);
+  mockQuery.lte.mockReturnValue(mockQuery);
 
   supabaseClient.from.mockReturnValue(mockQuery);
   return mockQuery;

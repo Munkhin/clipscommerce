@@ -42,7 +42,7 @@ import {
   HardDrive,
   AlertCircle,
   Calendar,
-  FileSize
+  FolderOpen
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { BucketName, FileMetadata } from '@/lib/storage/supabase-storage';
@@ -68,7 +68,7 @@ export function FileManager({
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedBucket, setSelectedBucket] = useState<BucketName | 'all'>(bucket || 'all');
-  const [stats, setStats] = useState<any>(null);
+  const [stats, setStats] = useState<{ totalFiles: number; totalSize: number } | null>(null);
   const [deleteConfirm, setDeleteConfirm] = useState<FileMetadata | null>(null);
 
   const supabase = createClient();
@@ -227,7 +227,7 @@ export function FileManager({
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
-                <FileSize className="h-8 w-8 text-green-500" />
+                <FolderOpen className="h-8 w-8 text-green-500" />
                 <div>
                   <p className="text-sm text-muted-foreground">Total Size</p>
                   <p className="text-2xl font-bold">{formatBytes(stats.totalSize)}</p>
@@ -297,7 +297,7 @@ export function FileManager({
               />
             </div>
             
-            <Tabs value={selectedBucket} onValueChange={(value) => setSelectedBucket(value as any)}>
+            <Tabs value={selectedBucket} onValueChange={(value) => setSelectedBucket(value as BucketName | 'all')}>
               <TabsList>
                 {buckets.map(bucket => (
                   <TabsTrigger key={bucket.value} value={bucket.value}>
@@ -429,7 +429,7 @@ export function FileManager({
           <DialogHeader>
             <DialogTitle>Delete File</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete "{deleteConfirm?.original_name}"? This action cannot be undone.
+              Are you sure you want to delete &quot;{deleteConfirm?.original_name}&quot;? This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>

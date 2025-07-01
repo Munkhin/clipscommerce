@@ -8,18 +8,19 @@ import {
 } from '../utils/test-helpers';
 
 // Mock Supabase client
-jest.mock('@supabase/auth-helpers-nextjs', () => ({
-  createClientComponentClient: jest.fn()
+jest.mock('@/../supabase', () => ({
+  createClient: jest.fn()
 }));
+
+import { createClient } from '@/../supabase';
 
 describe('CompetitorAnalysisService', () => {
   let service: CompetitorAnalysisService;
-  let mockSupabaseClient: any;
+  let mockSupabaseClient: ReturnType<typeof createMockSupabaseClient>;
 
   beforeEach(() => {
     mockSupabaseClient = createMockSupabaseClient();
-    const { createClientComponentClient } = require('@supabase/auth-helpers-nextjs');
-    createClientComponentClient.mockReturnValue(mockSupabaseClient);
+    (createClient as jest.Mock).mockReturnValue(mockSupabaseClient);
     
     service = new CompetitorAnalysisService();
   });

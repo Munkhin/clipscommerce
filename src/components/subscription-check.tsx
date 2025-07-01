@@ -1,3 +1,4 @@
+import React from 'react';
 import { redirect } from 'next/navigation';
 import { checkUserSubscription } from '@/app/actions';
 import { createClient } from '../../supabase/server';
@@ -18,7 +19,7 @@ export async function SubscriptionCheck({
         redirect('/sign-in');
     }
 
-    const isSubscribed = await checkUserSubscription(user?.id!);
+    const isSubscribed = await checkUserSubscription(user.id);
 
     if (!isSubscribed) {
         redirect(redirectTo);

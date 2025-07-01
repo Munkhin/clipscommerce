@@ -1,7 +1,9 @@
 import { BasePlatformClient } from './base-platform';
-import { ApiConfig, ApiResponse, RateLimit } from './types';
+import { ApiConfig, ApiResponse, ApiRateLimit } from './types';
 import { IAuthTokenManager } from '../auth.types';
 import { Platform } from '../../../deliverables/types/deliverables_types';
+import { Post, Analytics } from '@/types/platform';
+import { ApiError, PlatformError, RateLimitError } from '../utils/errors';
 
 export class InstagramClient extends BasePlatformClient {
   protected readonly platform: Platform = Platform.INSTAGRAM;
@@ -17,8 +19,9 @@ export class InstagramClient extends BasePlatformClient {
   protected handleRateLimit(headers: any): void {
     if (headers && headers['x-ratelimit-remaining'] && headers['x-ratelimit-reset']) {
       this.rateLimit = {
+        limit: parseInt(headers['x-ratelimit-limit'], 10) || 200,
         remaining: parseInt(headers['x-ratelimit-remaining'], 10),
-        reset: new Date(parseInt(headers['x-ratelimit-reset'], 10) * 1000),
+        reset: parseInt(headers['x-ratelimit-reset'], 10),
       };
     }
   }
@@ -66,8 +69,7 @@ export class InstagramClient extends BasePlatformClient {
         method: 'POST',
         data: {
           image_url: content.mediaUrl,
-          caption: content.caption,
-          access_token: await this.authTokenManager.getToken()
+          caption: content.caption
         }
       });
 
@@ -76,8 +78,7 @@ export class InstagramClient extends BasePlatformClient {
         url: '/me/media_publish',
         method: 'POST',
         data: {
-          creation_id: mediaResponse.data.id,
-          access_token: await this.authTokenManager.getToken()
+          creation_id: mediaResponse.data.id
         }
       });
 
@@ -132,5 +133,25 @@ export class InstagramClient extends BasePlatformClient {
   private getMetricValue(metrics: any[], metricName: string): number {
     const metric = metrics.find(m => m.name === metricName);
     return metric?.values?.[0]?.value || 0;
+  }
+
+  async listUserVideos(options?: any): Promise<any> {
+    this.log('debug', `[InstagramClient] Fetching user videos`);
+    
+    try {
+      const response = await this.request<any>({
+        url: '/me/media',
+        method: 'GET',
+        params: {
+          fields: 'id,caption,media_type,media_url,permalink,timestamp,username,thumbnail_url',
+          limit: options?.limit || 25
+        }
+      });
+
+      return response.data;
+    } catch (error) {
+      this.log('error', `[InstagramClient] Failed to fetch user videos`, { error });
+      throw error;
+    }
   }
 }

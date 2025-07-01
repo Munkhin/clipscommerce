@@ -47,9 +47,9 @@ export async function generateInsights(
   const generatedText = response.generated_text;
 
   // This is a simple parsing of the generated text. A more robust solution would be to use a structured output model.
-  const keyFindings = generatedText.match(/Key Findings:(.*?)Opportunities:/s)?.[1].trim().split('\n- ').filter(Boolean) || [];
-  const opportunities = generatedText.match(/Opportunities:(.*?)Recommendations:/s)?.[1].trim().split('\n- ').filter(Boolean) || [];
-  const recommendations = generatedText.match(/Recommendations:(.*?)$/s)?.[1].trim().split('\n- ').filter(Boolean) || [];
+  const keyFindings = generatedText.match(/Key Findings:([\s\S]*?)Opportunities:/)?.[1].trim().split('\n- ').filter(Boolean) || [];
+  const opportunities = generatedText.match(/Opportunities:([\s\S]*?)Recommendations:/)?.[1].trim().split('\n- ').filter(Boolean) || [];
+  const recommendations = generatedText.match(/Recommendations:([\s\S]*?)$/)?.[1].trim().split('\n- ').filter(Boolean) || [];
 
   return {
     keyFindings,

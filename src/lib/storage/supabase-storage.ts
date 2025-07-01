@@ -1,7 +1,7 @@
 import { createClient as createServerClient } from '@/lib/supabase/server';
 import { createClient } from '@/lib/supabase/client';
 import { StorageError } from '@supabase/storage-js';
-import crypto from 'crypto';
+import * as crypto from 'crypto';
 import { v4 as uuidv4 } from 'uuid';
 
 export type BucketName = 'avatars' | 'videos' | 'thumbnails' | 'documents' | 'temp';
@@ -144,7 +144,7 @@ export class SupabaseStorageService {
       optimized: !!optimizationResult,
       optimization_metadata: optimizationResult,
       tags,
-      expires_at: expiresAt
+      expires_at: expiresAt || undefined
     });
 
     return {
@@ -428,7 +428,7 @@ export class SupabaseStorageService {
   }
 
   private generateFileHash(buffer: Buffer): string {
-    return crypto.createHash('sha256').update(buffer).digest('hex');
+    return crypto.createHash('sha256').update(new Uint8Array(buffer)).digest('hex');
   }
 
   private isImageFile(mimeType: string): boolean {
@@ -509,7 +509,7 @@ export class SupabaseStorageService {
     }
 
     // Delete files from storage and metadata
-    const deletionPromises = expiredFiles.map(file =>
+    const deletionPromises = expiredFiles.map((file: any) =>
       this.deleteFile(file.bucket_id as BucketName, file.file_path, currentUserId)
     );
 
@@ -547,10 +547,10 @@ export class SupabaseStorageService {
 
     if (files) {
       stats.totalFiles = files.length;
-      stats.totalSize = files.reduce((sum, file) => sum + file.file_size, 0);
+      stats.totalSize = files.reduce((sum: number, file: any) => sum + file.file_size, 0);
 
       // Group by bucket
-      files.forEach(file => {
+      files.forEach((file: any) => {
         const bucket = file.bucket_id as BucketName;
         if (!stats.byBucket[bucket]) {
           stats.byBucket[bucket] = { count: 0, size: 0 };

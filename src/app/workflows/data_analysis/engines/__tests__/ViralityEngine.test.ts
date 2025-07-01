@@ -1,14 +1,14 @@
 import { ViralityEngine } from '../ViralityEngine';
 import { AudioAnalysisService } from '@/services/audioAnalysisService';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/../supabase';
 import { BaseAnalysisRequest, Platform } from '../../types/analysis_types';
 
 // Mock dependencies
 jest.mock('@/services/audioAnalysisService');
-jest.mock('@supabase/auth-helpers-nextjs');
+jest.mock('@/../supabase');
 
 const MockedAudioAnalysisService = AudioAnalysisService as jest.MockedClass<typeof AudioAnalysisService>;
-const mockSupabaseClient = createClientComponentClient as jest.MockedFunction<typeof createClientComponentClient>;
+const mockSupabaseClient = createClient as jest.MockedFunction<typeof createClient>;
 
 describe('ViralityEngine', () => {
   let viralityEngine: ViralityEngine;
@@ -55,7 +55,7 @@ describe('ViralityEngine', () => {
       analyzeAudioVirality: jest.fn(),
       discoverTrendingAudiosWithVirality: jest.fn(),
       getTrendingAudios: jest.fn()
-    } as jest.Mocked<AudioAnalysisService>;
+    } as Partial<AudioAnalysisService> as jest.Mocked<AudioAnalysisService>;
 
     MockedAudioAnalysisService.mockImplementation(() => mockAudioService);
 
@@ -289,7 +289,6 @@ describe('ViralityEngine', () => {
 
     it('should query with correct time cutoff', async () => {
       const maxAgeMinutes = 45;
-      const expectedCutoff = new Date(Date.now() - maxAgeMinutes * 60 * 1000).toISOString();
 
       await viralityEngine.getCachedAnalysis('test-user-id', 'TikTok', maxAgeMinutes);
 

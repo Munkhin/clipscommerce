@@ -15,6 +15,15 @@ interface ErrorContext {
   platform?: string;
   contentId?: string;
   retryAttempt?: number;
+  operationId?: string;
+  attempt?: number;
+  maxRetries?: number;
+  isLastAttempt?: boolean;
+  nextDelay?: number;
+  processId?: string;
+  processingTime?: number;
+  queueLength?: number;
+  lastSuccessfulRun?: string;
   additionalData?: Record<string, any>;
 }
 
@@ -266,7 +275,7 @@ function categorizeError(error: any, context: ErrorContext): {
   }
 
   // Check for rate limiting
-  if (errorMessage.includes('rate limit') || errorMessage.includes('too many requests') || error.status === 429) {
+  if (errorMessage.includes('rate limit') || errorMessage.includes('too many requests') || (error as any)?.status === 429) {
     return {
       severity: AutopostingErrorSeverity.MEDIUM,
       errorType: AutopostingErrorType.RATE_LIMIT_ERROR

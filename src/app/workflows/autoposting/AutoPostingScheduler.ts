@@ -86,7 +86,7 @@ export class AutoPostingScheduler {
         if (!poster) continue;
         try {
           await poster.validateContent(item.content);
-          const postId = await poster.schedulePost(item.content, item.metadata.scheduledTime);
+          const postId = await poster.schedulePost(item.content, item.metadata?.scheduledTime || new Date());
           this.queue.updateStatus(item.id, 'scheduled');
         } catch (error) {
           // Use the ErrorRecoveryService for comprehensive error handling
@@ -97,7 +97,7 @@ export class AutoPostingScheduler {
             retryCount: item.metadata?.retryCount || 0,
             originalFunction: async () => {
               await poster.validateContent(item.content);
-              return await poster.schedulePost(item.content, item.metadata.scheduledTime);
+              return await poster.schedulePost(item.content, item.metadata?.scheduledTime || new Date());
             }
           });
 
@@ -140,7 +140,7 @@ export class AutoPostingScheduler {
               sessionId: item.metadata?.sessionId,
               requestId: item.metadata?.requestId,
               additionalData: {
-                scheduledTime: item.metadata.scheduledTime,
+                scheduledTime: item.metadata?.scheduledTime,
                 contentType: item.content.type,
                 platforms: item.platforms,
                 queuePosition: batch.indexOf(item),

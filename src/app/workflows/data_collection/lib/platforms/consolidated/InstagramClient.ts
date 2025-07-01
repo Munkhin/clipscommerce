@@ -5,6 +5,7 @@ import {
 } from '../base-platform';
 import { Platform } from '../../../../deliverables/types/deliverables_types';
 import { ApiConfig, ApiCredentials, ApiResponse, PlatformPost, PlatformPostMetrics, PlatformUserActivity, PlatformComment } from '../types';
+import { IAuthTokenManager } from '../../auth.types';
 
 const INSTAGRAM_GRAPH_API_VERSION = 'v19.0';
 
@@ -35,7 +36,7 @@ export class InstagramClient extends BasePlatformClient {
 
   protected client: AxiosInstance;
 
-  constructor(authTokenManager: any, userId?: string, config: Partial<ApiConfig> = {}) {
+  constructor(authTokenManager: IAuthTokenManager, userId?: string, config: Partial<ApiConfig> = {}) {
     const mergedConfig = { ...InstagramClient.DEFAULT_CONFIG, ...config };
     super(mergedConfig, authTokenManager, userId);
     this.client = axios.create({
@@ -87,10 +88,20 @@ export class InstagramClient extends BasePlatformClient {
   }
 
   protected async getAuthHeaders(): Promise<Record<string, string>> {
-    // Implement as async to match base class/interface
-    return {
-      'Authorization': `Bearer token`, // Replace with real token logic
-    };
+    // Get valid credentials from the auth token manager
+    const credentials = await this.authTokenManager.getValidCredentials({
+      platform: this.platform,
+      userId: this.userId
+    });
+    
+    if (credentials && credentials.strategy === 'oauth2') {
+      return {
+        'Authorization': `Bearer ${credentials.accessToken}`,
+      };
+    }
+    
+    // Return empty headers if no valid credentials
+    return {};
   }
 
   /**
@@ -236,6 +247,38 @@ export class InstagramClient extends BasePlatformClient {
     }
   }
 
+  // BasePlatformClient abstract methods implementation
+  async fetchPosts(query: string): Promise<any[]> {
+    this.log('warn', 'fetchPosts not fully implemented for Instagram', { query });
+    return [];
+  }
+
+  async uploadContent(content: any): Promise<any> {
+    this.log('warn', 'uploadContent not implemented for Instagram', { content });
+    throw new Error('Instagram content upload not implemented');
+  }
+
+  async getAnalytics(postId: string): Promise<any> {
+    const mediaDetails = await this.getMediaDetails(postId);
+    if (mediaDetails) {
+      return {
+        views: 0, // Instagram API doesn't provide view count
+        likes: mediaDetails.like_count || 0,
+        comments: mediaDetails.comments_count || 0,
+        shares: 0, // Instagram API doesn't provide share count
+      };
+    }
+    return { views: 0, likes: 0, comments: 0, shares: 0 };
+  }
+
+  async listUserVideos(options?: any): Promise<any> {
+    const userId = options?.userId || this.userId || 'me';
+    const limit = options?.limit || 25;
+    const cursor = options?.cursor;
+    
+    return this.getUserVideos({ userId, cursor, limit });
+  }
+
   // PlatformClient interface stubs
   async getPostMetrics(postId: string): Promise<ApiResponse<PlatformPostMetrics>> {
     return { data: undefined };
@@ -315,39 +358,35 @@ export class InstagramClient extends BasePlatformClient {
   }
   async getVideoComments(postId: string, options?: { cursor?: string; limit?: number; }): Promise<ApiResponse<{ comments: PlatformComment[]; nextPageCursor?: string; hasMore?: boolean }>> {
     const { cursor, limit = 25 } = options || {};
-    try {
-      const response = await this.get<{ data: any[]; paging?: any }>(
-        `/${postId}/comments`,
-        {
-          fields: 'id,text,username,timestamp,like_count',
-          limit,
-          after: cursor,
-        },
-      );
+    const response = await this.get<{ data: any[]; paging?: any }>(
+      `/${postId}/comments`,
+      {
+        fields: 'id,text,username,timestamp,like_count',
+        limit,
+        after: cursor,
+      },
+    );
 
-      const commentsArray = response.data?.data || [];
-      const comments: PlatformComment[] = commentsArray.map((c: any) => ({
-        id: c.id,
-        postId,
-        userName: c.username,
-        text: c.text,
-        likeCount: c.like_count,
-        publishedAt: c.timestamp,
-        platform: Platform.INSTAGRAM,
-        sourceData: c,
-      }));
+    const commentsArray = response.data?.data || [];
+    const comments: PlatformComment[] = commentsArray.map((c: any) => ({
+      id: c.id,
+      postId,
+      userName: c.username,
+      text: c.text,
+      likeCount: c.like_count,
+      publishedAt: c.timestamp,
+      platform: Platform.INSTAGRAM,
+      sourceData: c,
+    }));
 
-      const paging = (response as any)?.paging || {};
-      return {
-        data: {
-          comments,
-          nextPageCursor: paging?.cursors?.after,
-          hasMore: !!paging?.next,
-        },
-      };
-    } catch (error) {
-      throw error;
-    }
+    const paging = (response as any)?.paging || {};
+    return {
+      data: {
+        comments,
+        nextPageCursor: paging?.cursors?.after,
+        hasMore: !!paging?.next,
+      },
+    };
   }
 }
 

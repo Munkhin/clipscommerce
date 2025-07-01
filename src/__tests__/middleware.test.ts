@@ -64,7 +64,7 @@ describe('Middleware', () => {
       return response;
     });
 
-    (NextResponse.json as jest.Mock).mockImplementation((data: any, options: any) => {
+    (NextResponse.json as jest.Mock).mockImplementation((data: unknown, options?: ResponseInit) => {
       const actual = jest.requireActual('next/server');
       const response = actual.NextResponse.json(data, options);
       return response;
@@ -90,7 +90,7 @@ describe('Middleware', () => {
         locale: '',
         locales: [],
         trailingSlash: false,
-      } as any,
+      } as NextRequest['nextUrl'],
       headers: new Headers(),
       cookies: {
         get: jest.fn(),
@@ -99,10 +99,10 @@ describe('Middleware', () => {
         getAll: jest.fn(),
         has: jest.fn(),
         clear: jest.fn(),
-        [Symbol.iterator]: jest.fn(),
+        [Symbol.iterator]: jest.fn().mockReturnValue([][Symbol.iterator]()),
         size: 0,
-      } as any,
-    } as any;
+      } as NextRequest['cookies'],
+    } as NextRequest;
 
     mockSupabaseClient = {
       auth: {
@@ -598,7 +598,7 @@ describe('Middleware', () => {
       ];
 
       for (const malformedReq of malformedRequests) {
-        await expect(middleware(malformedReq as any)).rejects.toThrow();
+        await expect(middleware(malformedReq as NextRequest)).rejects.toThrow();
       }
     });
 

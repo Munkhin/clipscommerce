@@ -259,7 +259,7 @@ export const maskSensitiveData = (data: any, sensitiveFields: string[]): any => 
   }
   
   if (Array.isArray(data)) {
-    return data.map(item => maskSensitiveData(item, sensitiveFields));
+    return data.map((item: any) => maskSensitiveData(item, sensitiveFields));
   }
   
   const masked = { ...data };
@@ -271,7 +271,7 @@ export const maskSensitiveData = (data: any, sensitiveFields: string[]): any => 
     if (sensitiveFields.some(field => lowerKey.includes(field.toLowerCase()))) {
       masked[key] = '[MASKED]';
     } else if (typeof value === 'object' && value !== null) {
-      masked[key] = maskSensitiveData(value, sensitiveFields);
+      masked[key] = maskSensitiveData(value as any, sensitiveFields);
     }
   }
   

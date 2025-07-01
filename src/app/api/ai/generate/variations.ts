@@ -3,6 +3,13 @@ import { suggestCaptionsAndHashtags } from '@/app/workflows/AI_improvement/funct
 import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
 import { authGuard, createValidator, validators } from '@/lib/security/auth-guard';
 
+interface GenerateVariationsRequestBody {
+  caption: string;
+  hashtags?: string[];
+  platform?: 'tiktok' | 'instagram' | 'youtube';
+  targetAudience?: string;
+}
+
 const inputValidator = createValidator({
   caption: [validators.required, validators.string, validators.maxLength(1000)],
   platform: [validators.string, validators.enum(['tiktok', 'instagram', 'youtube'])],
@@ -27,7 +34,7 @@ export async function POST(req: NextRequest) {
   }
 
   const { body } = guardResult.context!;
-  const { caption, hashtags, platform = 'tiktok', targetAudience = 'general' } = body;
+  const { caption, hashtags, platform = 'tiktok', targetAudience = 'general' } = body as unknown as GenerateVariationsRequestBody;
   
   const platformEnum = platform.toUpperCase() as Platform;
   const variations = suggestCaptionsAndHashtags({ 

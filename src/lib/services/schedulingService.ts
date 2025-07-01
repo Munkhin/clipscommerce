@@ -1,4 +1,4 @@
-import { Platform } from '../../app/workflows/deliverables/types/deliverables_types';
+import { Platform } from '@/types/platform';
 import { Post, ScheduleRule } from "@/types/schedule";
 import { Scheduler, OptimalTimeWindow } from "@/lib/ai/scheduling";
 import { EngagementPredictor, EngagementMetrics } from "@/lib/ai/engagementPredictor";

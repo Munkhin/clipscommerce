@@ -1,4 +1,4 @@
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/../supabase';
 
 export interface UserVideo {
   id: string;
@@ -41,7 +41,7 @@ export class UserVideoService {
   private supabase;
 
   constructor() {
-    this.supabase = createClientComponentClient();
+    this.supabase = createClient();
   }
 
   async getUserVideos(userId: string): Promise<{
@@ -140,7 +140,7 @@ export class UserVideoService {
       const filename = `${userId}/${timestamp}.${fileExtension}`;
 
       // Upload to storage
-      const { data: uploadData, error: uploadError } = await this.supabase.storage
+      const { error: uploadError } = await this.supabase.storage
         .from('videos')
         .upload(filename, file);
 
@@ -395,12 +395,12 @@ export class UserVideoService {
 
     return {
       sentiment: results.sentiment_analysis ? {
-        score: (results.sentiment_analysis as any)?.score || 0,
-        sentiment: (results.sentiment_analysis as any)?.label || 'neutral'
+        score: (results.sentiment_analysis as Record<string, unknown>)?.score as number || 0,
+        sentiment: (results.sentiment_analysis as Record<string, unknown>)?.label as string || 'neutral'
       } : undefined,
       tone: results.tone_analysis ? {
-        tone: (results.tone_analysis as any)?.tone || 'neutral',
-        confidence: (results.tone_analysis as any)?.confidence || 0
+        tone: (results.tone_analysis as Record<string, unknown>)?.tone as string || 'neutral',
+        confidence: (results.tone_analysis as Record<string, unknown>)?.confidence as number || 0
       } : undefined,
       hashtags: (results.hashtag_recommendations as string[]) || [],
       optimizations: (results.optimization_suggestions as string[]) || [],

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
+import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -13,7 +14,7 @@ import { AuditLogService } from '@/services/AuditLogService';
 
 export function AutopostScheduler() {
   const { user } = useAuth();
-  const [scheduledPosts, setScheduledPosts] = useState([]);
+  const [scheduledPosts, setScheduledPosts] = useState<any[]>([]);
   const [content, setContent] = useState('');
   const [mediaUrl, setMediaUrl] = useState('');
   const [postTime, setPostTime] = useState<Date | undefined>(new Date());
@@ -35,7 +36,7 @@ export function AutopostScheduler() {
       if (error) {
         console.error('Error fetching scheduled posts:', error);
       } else {
-        setScheduledPosts(data as any);
+        setScheduledPosts(data || []);
       }
     }
 
@@ -63,8 +64,8 @@ export function AutopostScheduler() {
     if (error) {
       console.error('Error scheduling post:', error);
     } else {
-      await auditLogService.log(user.id, 'create_post', { postId: (data as any)[0].id });
-      setScheduledPosts([data, ...scheduledPosts] as any);
+      await auditLogService.log(user.id, 'create_post', { postId: data?.[0]?.id });
+      setScheduledPosts([data, ...scheduledPosts]);
       setContent('');
       setMediaUrl('');
       setPostTime(new Date());
@@ -106,7 +107,7 @@ export function AutopostScheduler() {
                   </DialogHeader>
                   <div>
                     <p>{content}</p>
-                    {mediaUrl && <img src={mediaUrl} alt="media preview" className="mt-4" />}
+                    {mediaUrl && <Image src={mediaUrl} alt="media preview" className="mt-4" width={400} height={300} />}
                   </div>
                 </DialogContent>
               </Dialog>

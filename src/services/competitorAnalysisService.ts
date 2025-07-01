@@ -1,4 +1,4 @@
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/../supabase';
 
 export interface CompetitorContent {
   id: string;
@@ -34,7 +34,7 @@ export class CompetitorAnalysisService {
   private supabase;
 
   constructor() {
-    this.supabase = createClientComponentClient();
+    this.supabase = createClient();
   }
 
   async getTopCompetitors(options: CompetitorAnalysisOptions = {}): Promise<{
@@ -54,12 +54,15 @@ export class CompetitorAnalysisService {
       }
 
       // Build query parameters
-      const params = new URLSearchParams({
-        niche: niche,
-        limit: (options.limit || 5).toString(),
-        ...(options.platform && options.platform !== 'all' && { platform: options.platform }),
-        ...(options.timeRange && { timeRange: options.timeRange })
-      });
+      const params = new URLSearchParams();
+      params.append('niche', niche || 'general');
+      params.append('limit', (options.limit || 5).toString());
+      if (options.platform && options.platform !== 'all') {
+        params.append('platform', options.platform);
+      }
+      if (options.timeRange) {
+        params.append('timeRange', options.timeRange);
+      }
 
       // Fetch competitor data from API
       const response = await fetch(`/api/competitors?${params}`, {
@@ -127,7 +130,7 @@ export class CompetitorAnalysisService {
 
     // Analyze hook formulas
     const allHooks = competitors.flatMap(c => c.hooks);
-    const hookFormulas = [...new Set(allHooks)].slice(0, 6);
+    const hookFormulas = Array.from(new Set(allHooks)).slice(0, 6);
 
     // Analyze content types
     const contentTypes = [

@@ -2,11 +2,15 @@ import { NextRequest, NextResponse } from 'next/server';
 import { predictEngagement } from '@/app/workflows/AI_improvement/functions/updateModel';
 import { authGuard, createValidator, validators } from '@/lib/security/auth-guard';
 
+interface PredictPerformanceRequestBody {
+  likeRatio: number;
+}
+
 const inputValidator = createValidator({
-  likeRatio: [validators.required, validators.number, (value: number) => value >= 0 && value <= 1]
+  likeRatio: [validators.required, validators.number, (value: unknown) => typeof value === 'number' && value >= 0 && value <= 1]
 });
 
-async function POST(req: NextRequest) {
+export async function POST(req: NextRequest) {
   // Apply security guard with authentication and input validation
   const guardResult = await authGuard(req, {
     requireAuth: true,
@@ -24,7 +28,7 @@ async function POST(req: NextRequest) {
   }
 
   const { body } = guardResult.context!;
-  const { likeRatio } = body;
+  const { likeRatio } = body as unknown as PredictPerformanceRequestBody;
   const predictedEngagement = predictEngagement(likeRatio);
   return NextResponse.json({
     likeRatio,
@@ -32,4 +36,4 @@ async function POST(req: NextRequest) {
   });
 }
 
-export { POST }; 
+ 

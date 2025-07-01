@@ -52,9 +52,19 @@ interface RecoveryAttempt {
   retryCount: number;
 }
 
+// Dead letter queue item interface
+interface DeadLetterQueueItem {
+  id: string;
+  platform: string;
+  error: string;
+  reason: string;
+  timestamp: number;
+  retryCount: number;
+}
+
 export class ErrorRecoveryService {
   private circuitBreakers: Map<string, CircuitBreakerState> = new Map();
-  private deadLetterQueue: QueuedContent[] = [];
+  private deadLetterQueue: DeadLetterQueueItem[] = [];
   private recoveryAttempts: RecoveryAttempt[] = [];
   private monitoring: MonitoringService;
   private recoveryConfigs: Map<string, RecoveryConfig> = new Map();
@@ -349,7 +359,7 @@ export class ErrorRecoveryService {
    */
   private classifyError(error: any, platform: string): ErrorClassification {
     const errorMessage = error instanceof Error ? error.message.toLowerCase() : String(error).toLowerCase();
-    const status = error.status || error.code;
+    const status = (error as any)?.status || (error as any)?.code;
     
     // Network/timeout errors - retryable with exponential backoff
     if (errorMessage.includes('timeout') ||
@@ -536,7 +546,7 @@ export class ErrorRecoveryService {
     error: any,
     reason: string
   ): Promise<void> {
-    const dlqItem = {
+    const dlqItem: DeadLetterQueueItem = {
       id: contentId,
       platform,
       error: error instanceof Error ? error.message : String(error),
@@ -545,7 +555,7 @@ export class ErrorRecoveryService {
       retryCount: 0
     };
     
-    this.deadLetterQueue.push(dlqItem as any);
+    this.deadLetterQueue.push(dlqItem);
     
     logger.warn('Item moved to dead letter queue', {
       contentId,

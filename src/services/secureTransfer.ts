@@ -1,13 +1,23 @@
-import crypto from 'crypto';
+import * as crypto from 'crypto';
+
+// Types for encrypted data structure
+interface EncryptedData {
+  iv: string;
+  authTag: string;
+  encrypted: string;
+}
+
+// Type for serializable data
+type SerializableData = string | number | boolean | null | undefined | SerializableData[] | { [key: string]: SerializableData };
 
 const ALGORITHM = 'aes-256-gcm';
 const KEY_LENGTH = 32; // 256 bits
 const IV_LENGTH = 16; // 128 bits
 
 // Ideally, derive this from a secure secret vault.
-const DEFAULT_SECRET = process.env.SECURE_TRANSFER_KEY || crypto.randomBytes(KEY_LENGTH).toString('hex');
+const _DEFAULT_SECRET = process.env.SECURE_TRANSFER_KEY || crypto.randomBytes(KEY_LENGTH).toString('hex');
 
-export function encrypt(data: any, secret: string): { iv: string; authTag: string; encrypted: string } {
+export function encrypt(data: SerializableData, secret: string): EncryptedData {
   // Input validation
   if (!secret || secret.length === 0) {
     throw new Error('Secret key is required for encryption');
@@ -43,7 +53,7 @@ export function encrypt(data: any, secret: string): { iv: string; authTag: strin
   };
 }
 
-export function decrypt(encryptedData: { iv: string; authTag: string; encrypted: string }, secret: string): any {
+export function decrypt(encryptedData: EncryptedData, secret: string): SerializableData {
   // Input validation
   if (!secret || secret.length === 0) {
     throw new Error('Secret key is required for decryption');
@@ -64,11 +74,14 @@ export function decrypt(encryptedData: { iv: string; authTag: string; encrypted:
     keyBuffer = Buffer.from(secret.slice(0, KEY_LENGTH), 'utf-8');
   }
 
-  const decipher = crypto.createDecipheriv(ALGORITHM, keyBuffer, Buffer.from(encryptedData.iv, 'hex'));
-  decipher.setAuthTag(Buffer.from(encryptedData.authTag, 'hex'));
+  const ivBuffer = Buffer.from(encryptedData.iv, 'hex');
+  const authTagBuffer = Buffer.from(encryptedData.authTag, 'hex');
+  const decipher = crypto.createDecipheriv(ALGORITHM, keyBuffer, ivBuffer);
+  decipher.setAuthTag(authTagBuffer);
   
+  const encryptedBuffer = Buffer.from(encryptedData.encrypted, 'hex');
   const decrypted = Buffer.concat([
-    decipher.update(Buffer.from(encryptedData.encrypted, 'hex')),
+    decipher.update(encryptedBuffer),
     decipher.final(),
   ]);
   

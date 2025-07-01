@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import { IAuthTokenManager, PlatformClientIdentifier, PlatformCredentials, AuthStrategy } from './auth.types';
+import { IAuthTokenManager, PlatformClientIdentifier, PlatformCredentials, AuthStrategy, OAuth2Credentials } from './auth.types';
 import { Platform } from '../../deliverables/types/deliverables_types';
 
 export class SupabaseAuthTokenManager implements IAuthTokenManager {
@@ -55,14 +55,19 @@ export class SupabaseAuthTokenManager implements IAuthTokenManager {
   }
 
   async storeCredentials(identifier: PlatformClientIdentifier, credentials: PlatformCredentials): Promise<void> {
+    if (credentials.strategy !== AuthStrategy.OAUTH2) {
+      throw new Error('Only OAuth2 credentials are supported for storage');
+    }
+
+    const oauth2Credentials = credentials as OAuth2Credentials;
     const { error } = await this.supabase
       .from('user_social_credentials')
       .upsert({
         user_id: identifier.userId,
         platform: identifier.platform,
-        access_token: credentials.accessToken,
-        refresh_token: credentials.refreshToken,
-        expires_at: new Date(credentials.expiresAt * 1000).toISOString(),
+        access_token: oauth2Credentials.accessToken,
+        refresh_token: oauth2Credentials.refreshToken,
+        expires_at: oauth2Credentials.expiresAt ? new Date(oauth2Credentials.expiresAt * 1000).toISOString() : null,
       });
 
     if (error) {
@@ -258,5 +263,31 @@ export class SupabaseAuthTokenManager implements IAuthTokenManager {
       tokenType: tokenData.token_type || 'bearer',
       strategy: AuthStrategy.OAUTH2,
     };
+  }
+
+  /**
+   * Validates that required environment variables are set for a given platform
+   */
+  static validateEnvironmentVariables(platform: Platform): { isValid: boolean; missing: string[] } {
+    const missing: string[] = [];
+    
+    switch (platform) {
+      case Platform.TIKTOK:
+        if (!process.env.TIKTOK_CLIENT_ID) missing.push('TIKTOK_CLIENT_ID');
+        if (!process.env.TIKTOK_CLIENT_SECRET) missing.push('TIKTOK_CLIENT_SECRET');
+        break;
+      case Platform.INSTAGRAM:
+        if (!process.env.INSTAGRAM_CLIENT_ID) missing.push('INSTAGRAM_CLIENT_ID');
+        if (!process.env.INSTAGRAM_CLIENT_SECRET) missing.push('INSTAGRAM_CLIENT_SECRET');
+        break;
+      case Platform.YOUTUBE:
+        if (!process.env.YOUTUBE_CLIENT_ID) missing.push('YOUTUBE_CLIENT_ID');
+        if (!process.env.YOUTUBE_CLIENT_SECRET) missing.push('YOUTUBE_CLIENT_SECRET');
+        break;
+      default:
+        return { isValid: false, missing: [`Unsupported platform: ${platform}`] };
+    }
+
+    return { isValid: missing.length === 0, missing };
   }
 }

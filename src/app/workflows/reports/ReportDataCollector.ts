@@ -46,8 +46,8 @@ export async function collectReportData(
   return {
     summary: {
       total_posts: posts.length,
-      total_engagement: timeSeries.reduce((acc, cur) => acc + cur.engagement, 0),
-      total_views: timeSeries.reduce((acc, cur) => acc + cur.views, 0),
+      total_engagement: timeSeries.reduce((acc: number, cur: any) => acc + cur.engagement, 0),
+      total_views: timeSeries.reduce((acc: number, cur: any) => acc + cur.views, 0),
     },
     timeSeries,
     comparisons: undefined,

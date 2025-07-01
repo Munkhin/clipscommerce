@@ -74,5 +74,5 @@ export function withRetry<T>(
   options: { maxRetries?: number; backoffMs?: number } = {}
 ): Promise<T> {
   const { maxRetries = 3, backoffMs = 1000 } = options;
-  return retryWithBackoff(fn, { maxRetries, initialDelayMs: backoffMs });
+  return retryWithBackoff(fn, maxRetries, backoffMs);
 }

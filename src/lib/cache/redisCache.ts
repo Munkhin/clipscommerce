@@ -33,7 +33,7 @@ export interface CacheStats {
 export class RedisCache {
   private static instance: RedisCache;
   private config: CacheConfig;
-  private client: unknown; // Redis client
+  private client: Map<string, string> = new Map(); // Redis client simulation
   private isConnected = false;
   private stats: CacheStats = {
     hits: 0,
@@ -75,7 +75,7 @@ export class RedisCache {
     try {
       // In production, you would use a real Redis client like ioredis
       // For now, we'll simulate with a Map-based cache
-      this.client = new Map();
+      this.client = new Map<string, string>();
       this.isConnected = true;
       
       console.log('[CACHE] Redis cache initialized');
@@ -224,7 +224,7 @@ export class RedisCache {
       const regex = new RegExp(pattern.replace('*', '.*'));
       let deletedCount = 0;
 
-      for (const key of this.client.keys()) {
+      for (const key of Array.from(this.client.keys())) {
         if (regex.test(key)) {
           this.client.delete(key);
           deletedCount++;
@@ -261,7 +261,7 @@ export class RedisCache {
       });
 
       let deletedCount = 0;
-      for (const key of keysToDelete) {
+      for (const key of Array.from(keysToDelete)) {
         this.client.delete(key);
         deletedCount++;
       }

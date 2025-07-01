@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+import { createServerClient } from '@/../supabase/server-only';
 
 interface VideoProcessingRequest {
   videoId: string;
@@ -12,22 +11,10 @@ interface VideoProcessingRequest {
   };
 }
 
-interface VideoProcessingResponse {
-  success: boolean;
-  processingId?: string;
-  estimatedTime?: string;
-  status?: 'queued' | 'processing' | 'completed' | 'failed';
-  error?: string;
-  details?: {
-    stage?: string;
-    progress?: number;
-    message?: string;
-  };
-}
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
+    const supabase = await createServerClient();
     
     // Get current user
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -158,7 +145,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
+    const supabase = await createServerClient();
     
     // Get current user
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -253,7 +240,7 @@ async function initiateVideoProcessing(params: {
   options: VideoProcessingRequest['options'];
 }): Promise<{ success: boolean; error?: string }> {
   try {
-    const { videoId, userId, processingId, videoUrl, options } = params;
+    const { videoId, userId: _userId, processingId, videoUrl: _videoUrl, options } = params;
 
     // In a real implementation, this would:
     // 1. Add job to processing queue (Redis, BullMQ, etc.)

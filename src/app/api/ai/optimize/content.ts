@@ -3,13 +3,20 @@ import { analyzeSentiment, analyzeTone, suggestCaptionsAndHashtags } from '@/app
 import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
 import { authGuard, createValidator, validators } from '@/lib/security/auth-guard';
 
+interface OptimizeContentRequestBody {
+  caption: string;
+  hashtags?: string[];
+  platform?: 'tiktok' | 'instagram' | 'youtube';
+  targetAudience?: string;
+}
+
 const inputValidator = createValidator({
   caption: [validators.required, validators.string, validators.maxLength(1000)],
   platform: [validators.string, validators.enum(['tiktok', 'instagram', 'youtube'])],
   targetAudience: [validators.string, validators.maxLength(100)]
 });
 
-async function POST(req: NextRequest) {
+export async function POST(req: NextRequest) {
   // Apply security guard with authentication and input validation
   const guardResult = await authGuard(req, {
     requireAuth: true,
@@ -27,7 +34,7 @@ async function POST(req: NextRequest) {
   }
 
   const { body } = guardResult.context!;
-  const { caption, hashtags, platform = 'tiktok', targetAudience = 'general' } = body;
+  const { caption, hashtags, platform = 'tiktok', targetAudience = 'general' } = body as unknown as OptimizeContentRequestBody;
   
   const platformEnum = platform.toUpperCase() as Platform;
   const sentiment = analyzeSentiment(caption);
@@ -48,4 +55,4 @@ async function POST(req: NextRequest) {
   });
 }
 
-export { POST }; 
+ 

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+import { createServerClient } from '@/../supabase/server-only';
 
 interface CompetitorContent {
   id: string;
@@ -27,7 +26,7 @@ interface CompetitorData {
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
+    const supabase = await createServerClient();
     const { searchParams } = new URL(request.url);
     const niche = searchParams.get('niche') || 'general';
     const limit = parseInt(searchParams.get('limit') || '5');
@@ -56,7 +55,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-async function fetchCompetitorData(niche: string, limit: number, userId: string): Promise<CompetitorData[]> {
+async function fetchCompetitorData(niche: string, limit: number, _userId: string): Promise<CompetitorData[]> {
   // This would typically integrate with platform APIs like TikTok Research API,
   // Instagram Basic Display API, YouTube Data API v3, etc.
   // For now, returning enhanced mock data based on niche

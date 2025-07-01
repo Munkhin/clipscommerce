@@ -347,4 +347,30 @@ export class TikTokClient extends BasePlatformClient {
       rateLimit: this.rateLimit === null ? undefined : this.rateLimit,
     });
   }
+
+  async fetchPosts(query: string): Promise<any[]> {
+    // Placeholder implementation
+    this.log('warn', 'fetchPosts not implemented for TikTok');
+    return [];
+  }
+
+  async uploadContent(content: any): Promise<any> {
+    // Use existing postVideo method
+    return this.postVideo(content);
+  }
+
+  async getAnalytics(postId: string): Promise<any> {
+    // Use existing queryVideos method
+    const result = await this.queryVideos({ video_ids: [postId] });
+    if (result.videos && result.videos[0]) {
+      const video = result.videos[0];
+      return {
+        views: video.view_count || 0,
+        likes: video.like_count || 0,
+        comments: video.comment_count || 0,
+        shares: video.share_count || 0
+      };
+    }
+    return { views: 0, likes: 0, comments: 0, shares: 0 };
+  }
 }

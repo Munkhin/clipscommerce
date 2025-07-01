@@ -31,7 +31,7 @@ interface ContentAutomationResult {
   optimization: AnalysisResult<VideoOptimizationAnalysisData>;
   autopostId: string;
   status?: string;
-  error?: { message: string; code?: string; details?: any };
+  error?: { message: string; code?: string; details?: Record<string, unknown> };
   workflowState?: WorkflowState;
   resumptionInfo?: ResumptionInfo;
 }
@@ -77,32 +77,31 @@ export class ContentAutomationWorkflow {
       });
 
       let resultStatus: string = 'pending';
-      let resultError: { message: string; code?: string; details?: any } | undefined;
+      let resultError: { message: string; code?: string; details?: Record<string, unknown> } | undefined;
 
       if (!optimization.success) {
         resultStatus = 'failed';
         resultError = optimization.error;
       }
 
-      let autopostResult: { id: string; success: boolean; error?: any };
+      let autopostResult: { id: string } = { id: '' };
       if (resultStatus !== 'failed') {
         // 2) Autoposting (fire-and-forget inside autoposting)
         const autopostRequest: AutoPostRequest = {
           content: {
             videoUrl: req.videoUrl,
-            caption: optimization.data!.optimizedVideoContent!.optimizedCaption ?? req.caption,
-            hashtags: optimization.data!.optimizedVideoContent!.trendingHashtags?.map((h) => h.tag) ?? req.hashtags,
+            caption: optimization.data?.optimizedVideoContent?.optimizedCaption ?? req.caption,
+            hashtags: optimization.data?.optimizedVideoContent?.optimizedHashtags?.map((h) => h.tag) ?? req.hashtags,
           },
-          platforms: [req.platform.toLowerCase() as any],
+          platforms: [req.platform.toLowerCase() as 'youtube' | 'tiktok' | 'instagram'],
           scheduleTime: req.scheduleTime,
         };
-        autopostResult = await autopost(autopostRequest);
-
-        if (!autopostResult.success) {
-          resultStatus = 'failed';
-          resultError = autopostResult.error ? { message: autopostResult.error.message, code: autopostResult.error.code } : { message: 'Autoposting failed' };
-        } else {
+        try {
+          autopostResult = await autopost(autopostRequest);
           resultStatus = 'success';
+        } catch (error) {
+          resultStatus = 'failed';
+          resultError = { message: 'Autoposting failed', details: error };
         }
       }
 
@@ -112,7 +111,7 @@ export class ContentAutomationWorkflow {
       sink.push({
         requestId,
         optimization,
-        autopostId: autopostResult?.id || '' ,
+        autopostId: autopostResult.id,
         status: resultStatus,
         error: resultError,
         workflowState,

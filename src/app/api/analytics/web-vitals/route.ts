@@ -1,6 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authGuard, createValidator, validators } from '@/lib/security/auth-guard';
 
+interface WebVitalsMetric {
+  name: 'CLS' | 'FCP' | 'FID' | 'INP' | 'LCP' | 'TTFB';
+  value: number;
+  rating: 'good' | 'needs-improvement' | 'poor';
+  delta: number;
+  id: string;
+}
+
 const inputValidator = createValidator({
   name: [validators.required, validators.string, validators.enum(['CLS', 'FCP', 'FID', 'INP', 'LCP', 'TTFB'])],
   value: [validators.required, validators.number],
@@ -27,7 +35,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const metric = guardResult.context!.body;
+    const metric = guardResult.context!.body as unknown as WebVitalsMetric;
     
     // Log metrics in development
     if (process.env.NODE_ENV === 'development') {

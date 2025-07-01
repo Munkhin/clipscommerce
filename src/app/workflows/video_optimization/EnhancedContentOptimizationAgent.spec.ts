@@ -24,7 +24,9 @@ jest.mock('openai', () => {
 });
 
 const MockedVideoOptimizationAnalysisService = VideoOptimizationAnalysisService as jest.MockedClass<typeof VideoOptimizationAnalysisService>;
-const mockOpenAICreate = new (require('openai'))({apiKey: 'test'}).chat.completions.create;
+import OpenAI from 'openai';
+const mockOpenAI = new OpenAI({apiKey: 'test'});
+const mockOpenAICreate = mockOpenAI.chat.completions.create;
 
 
 describe('EnhancedContentOptimizationAgent', () => {

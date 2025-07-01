@@ -14,7 +14,7 @@ export class AuditLogService {
     this.supabase = createClient(supabaseUrl, supabaseKey);
   }
 
-  async log(userId: string, action: string, details?: any) {
+  async log(userId: string, action: string, details?: Record<string, unknown>) {
     const { error } = await this.supabase.from('audit_logs').insert([
       {
         user_id: userId,

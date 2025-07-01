@@ -2,23 +2,20 @@ import { ContentInsightsService } from '@/services/contentInsightsService';
 import {
   createMockSupabaseClient,
   cleanupMocks,
-  mockVideoData,
   MOCK_USER_ID
 } from '../utils/test-helpers';
+import { createClient } from '@/../supabase';
 
 // Mock Supabase client
-jest.mock('@supabase/auth-helpers-nextjs', () => ({
-  createClientComponentClient: jest.fn()
-}));
+jest.mock('@/../supabase');
 
 describe('ContentInsightsService', () => {
   let service: ContentInsightsService;
-  let mockSupabaseClient: any;
+  let mockSupabaseClient: ReturnType<typeof createMockSupabaseClient>;
 
   beforeEach(() => {
     mockSupabaseClient = createMockSupabaseClient();
-    const { createClientComponentClient } = require('@supabase/auth-helpers-nextjs');
-    createClientComponentClient.mockReturnValue(mockSupabaseClient);
+    (createClient as jest.Mock).mockReturnValue(mockSupabaseClient);
     
     service = new ContentInsightsService();
   });
@@ -249,7 +246,7 @@ describe('ContentInsightsService', () => {
       const result = await service.getTrendingHashtags('tiktok', undefined, 20);
 
       for (let i = 1; i < result.length; i++) {
-        expect(result[i].rank).toBeGreaterThan(result[i - 1].rank);
+        expect(result[i].rank).toBeGreaterThan(result[i - 1].rank ?? 0);
       }
     });
 
@@ -303,7 +300,7 @@ describe('ContentInsightsService', () => {
 
       expect(Array.isArray(result.peakEngagementTimes)).toBe(true);
       
-      if (result.peakEngagementTimes.length > 0) {
+      if (result.peakEngagementTimes && result.peakEngagementTimes.length > 0) {
         const peakTime = result.peakEngagementTimes[0];
         expect(peakTime).toHaveProperty('dayOfWeek');
         expect(peakTime).toHaveProperty('hourOfDay');
@@ -321,7 +318,7 @@ describe('ContentInsightsService', () => {
 
       expect(Array.isArray(result.contentFormatPerformance)).toBe(true);
       
-      if (result.contentFormatPerformance.length > 0) {
+      if (result.contentFormatPerformance && result.contentFormatPerformance.length > 0) {
         const format = result.contentFormatPerformance[0];
         expect(format).toHaveProperty('formatName');
         expect(format).toHaveProperty('averageViews');
@@ -342,14 +339,16 @@ describe('ContentInsightsService', () => {
     it('should validate demographic percentages sum to approximately 1', async () => {
       const result = await service.getDetailedPlatformAnalytics(MOCK_USER_ID, 'tiktok', timeRange);
 
-      const ageGroupSum = Object.values(result.audienceDemographics.ageGroups)
-        .reduce((sum: number, value: any) => sum + value, 0);
-      
-      const genderSum = Object.values(result.audienceDemographics.genderDistribution)
-        .reduce((sum: number, value: any) => sum + value, 0);
+      if (result.audienceDemographics && result.audienceDemographics.ageGroups) {
+        const ageGroupSum = Object.values(result.audienceDemographics.ageGroups)
+          .reduce((sum: number, value: any) => sum + value, 0);
+        
+        const genderSum = Object.values(result.audienceDemographics?.genderDistribution ?? {})
+          .reduce((sum: number, value: any) => sum + value, 0);
 
-      expect(ageGroupSum).toBeCloseTo(1, 1); // Within 0.1 of 1.0
-      expect(genderSum).toBeCloseTo(1, 1);
+        expect(ageGroupSum).toBeCloseTo(1, 1); // Within 0.1 of 1.0
+        expect(genderSum).toBeCloseTo(1, 1);
+      }
     });
 
     it('should handle service errors and return defaults', async () => {

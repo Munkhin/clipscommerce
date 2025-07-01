@@ -3,52 +3,21 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/providers/AuthProvider';
 import GlassCard from '@/components/ui/GlassCard';
-import { AnimatedButton } from '@/components/ui/AnimatedButton';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import { 
-  Search, 
-  Zap, 
-  BarChart3, 
-  RefreshCw, 
-  ArrowRight, 
   Sparkles, 
   TrendingUp, 
   TrendingDown, 
   Users, 
   DollarSign, 
   Target, 
-  Rocket,
-  Activity, 
-  Eye, 
-  Heart, 
   Calendar, 
-  Clock, 
-  CheckCircle2, 
-  AlertTriangle, 
   Upload, 
   Bot, 
-  Gauge, 
-  LineChart,
-  Play,
-  Settings,
   Bell,
-  ChevronRight,
-  MoreHorizontal,
-  ShoppingBag,
-  Video,
-  MessageSquare,
-  Share2,
-  Filter,
-  PlusCircle,
-  ArrowUpRight,
-  Star,
-  Globe,
-  Briefcase
+  ShoppingBag
 } from 'lucide-react';
 import { ReportsAnalysisService } from '@/app/workflows/reports/ReportsAnalysisService';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { ChartWrapper } from '@/components/ui/chart-wrapper';
+import { createClient } from '@/../supabase';
 import { LineChartComponent, BarChartComponent } from '@/components/dashboard/charts';
 import UsageTracker from '@/components/dashboard/UsageTracker';
 import { useUsageLimits } from '@/hooks/useUsageLimits';
@@ -60,11 +29,11 @@ import { AutopostScheduler } from '@/components/dashboard/autopost/AutopostSched
 export default function DashboardPage() {
   const { user } = useAuth();
   const [greeting, setGreeting] = useState('Hello');
-  const [analytics, setAnalytics] = useState<Awaited<ReturnType<ReportsAnalysisService['getReport']>>['data']>(undefined);
-  const [loading, setLoading] = useState(false);
-  const [currentTime, setCurrentTime] = useState(new Date());
+  const [_analytics, setAnalytics] = useState<Awaited<ReturnType<ReportsAnalysisService['getReport']>>['data']>(undefined);
+  const [_loading, setLoading] = useState(false);
+  const [currentTime, _setCurrentTime] = useState(new Date());
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [_searchQuery, _setSearchQuery] = useState('');
   const [animationStage, setAnimationStage] = useState(0);
   const [realtimeData, setRealtimeData] = useState({
     revenue: 0,
@@ -78,7 +47,7 @@ export default function DashboardPage() {
   });
 
   const subscriptionTier = user?.user_metadata?.subscription_tier || 'lite';
-  const { hasFeatureAccess, tier } = useUsageLimits(subscriptionTier);
+  const { hasFeatureAccess } = useUsageLimits(subscriptionTier);
   
   const {
     checkFeatureAccess,
@@ -109,7 +78,7 @@ export default function DashboardPage() {
 
   // Real-time data updates
   useEffect(() => {
-    const supabase = createClientComponentClient();
+    const supabase = createClient();
 
     async function fetchInitialData() {
       const { data, error } = await supabase.from('realtime_metrics').select('*');
@@ -147,7 +116,7 @@ export default function DashboardPage() {
       if (!user) return;
       setLoading(true);
       try {
-        const supabase = createClientComponentClient();
+        const supabase = createClient();
         const reportsService = new ReportsAnalysisService(supabase);
         const now = new Date();
         const start = new Date(now.getFullYear(), now.getMonth(), 1);

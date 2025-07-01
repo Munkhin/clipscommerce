@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
@@ -287,7 +288,14 @@ export function FileUpload({
 }
 
 interface FilePreviewProps {
-  progress: any[];
+  progress: Array<{
+    file: File;
+    status: string;
+    percentage: number;
+    loaded: number;
+    total: number;
+    error?: string;
+  }>;
   getFilePreview: (file: File) => Promise<string>;
 }
 
@@ -332,10 +340,12 @@ function FilePreview({ progress, getFilePreview }: FilePreviewProps) {
               <div key={index} className="aspect-square border rounded-lg overflow-hidden bg-muted">
                 {previewUrl ? (
                   item.file.type.startsWith('image/') ? (
-                    <img
+                    <Image
                       src={previewUrl}
                       alt={item.file.name}
                       className="w-full h-full object-cover"
+                      width={200}
+                      height={200}
                     />
                   ) : (
                     <video

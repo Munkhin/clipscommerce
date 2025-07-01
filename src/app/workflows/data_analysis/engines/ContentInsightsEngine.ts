@@ -1,6 +1,6 @@
 import { BaseAnalysisRequest, VideoOptimizationAnalysisData, AnalysisResult, DetailedPlatformMetrics } from '../types/analysis_types';
 import { ContentInsightsService } from '@/services/contentInsightsService';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/../supabase';
 
 export class ContentInsightsEngine {
   private contentInsightsService: ContentInsightsService;
@@ -8,7 +8,7 @@ export class ContentInsightsEngine {
 
   constructor() {
     this.contentInsightsService = new ContentInsightsService();
-    this.supabase = createClientComponentClient();
+    this.supabase = createClient();
   }
 
   async getTopPerformingContentInsights(
@@ -167,7 +167,7 @@ export class ContentInsightsEngine {
   async getContentRecommendations(
     userId: string,
     platform: string,
-    contentType?: string,
+    _contentType?: string,
     limit: number = 10
   ): Promise<AnalysisResult<{ captions: string[]; hashtags: any[]; patterns: any[] }>> {
     try {
@@ -259,7 +259,7 @@ export class ContentInsightsEngine {
     });
 
     // Add trending hashtags (if not already present)
-    trendingHashtags.forEach((hashtag, index) => {
+    trendingHashtags.forEach((hashtag, _index) => {
       if (!hashtagMap.has(hashtag.tag)) {
         hashtagMap.set(hashtag.tag, {
           tag: hashtag.tag,

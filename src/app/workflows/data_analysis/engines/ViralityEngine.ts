@@ -1,6 +1,6 @@
 import { BaseAnalysisRequest, AudioVirality, AnalysisResult } from '../types/analysis_types';
 import { AudioAnalysisService } from '@/services/audioAnalysisService';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/../supabase';
 
 export class ViralityEngine {
   private audioAnalysisService: AudioAnalysisService;
@@ -8,7 +8,7 @@ export class ViralityEngine {
 
   constructor() {
     this.audioAnalysisService = new AudioAnalysisService();
-    this.supabase = createClientComponentClient();
+    this.supabase = createClient();
   }
 
   async analyzeAudioVirality(
@@ -107,7 +107,7 @@ export class ViralityEngine {
 
   private async filterByTimeRange(
     audioData: AudioVirality[],
-    timeRange: BaseAnalysisRequest['timeRange']
+    _timeRange: BaseAnalysisRequest['timeRange']
   ): Promise<AudioVirality[]> {
     // In a real implementation, this would filter audios based on when they became trending
     // within the specified time range. For now, we'll return all data since we're working
@@ -179,7 +179,7 @@ export class ViralityEngine {
   async getAudioRecommendations(
     userId: string,
     platform: string,
-    contentType?: string,
+    _contentType?: string,
     limit: number = 10
   ): Promise<AnalysisResult<AudioVirality[]>> {
     try {
@@ -201,7 +201,7 @@ export class ViralityEngine {
       // Generate fresh recommendations
       const baseRequest: BaseAnalysisRequest = {
         userId,
-        platform: platform as any,
+        platform: platform as BaseAnalysisRequest['platform'],
         timeRange: {
           start: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(), // Last 7 days
           end: new Date().toISOString()

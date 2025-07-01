@@ -1,5 +1,8 @@
 'use client';
 
+/* eslint-env browser */
+/* global EventSource */
+
 export type RealtimeUpdate = {
   type: 'post_status_update' | 'post_scheduled' | 'post_published' | 'post_failed' | 'connection_established' | 'ping';
   data: {

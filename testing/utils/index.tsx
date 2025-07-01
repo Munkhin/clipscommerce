@@ -18,14 +18,14 @@ export interface TestUser {
 
 export interface MockSupabaseOptions {
   user?: TestUser | null;
-  session?: any;
-  error?: any;
+  session?: Record<string, unknown>;
+  error?: Error | null;
 }
 
 export interface ComponentTestOptions extends RenderOptions {
   user?: TestUser;
   theme?: 'light' | 'dark' | 'system';
-  router?: Partial<any>;
+  router?: Partial<Record<string, unknown>>;
   supabase?: MockSupabaseOptions;
 }
 
@@ -91,21 +91,21 @@ export async function testAccessibility(component: ReactElement) {
   
   // Check for basic accessibility attributes
   const buttons = container.querySelectorAll('button');
-  buttons.forEach(button => {
+  buttons.forEach((button: Element) => {
     if (!button.getAttribute('aria-label') && !button.textContent?.trim()) {
       console.warn('Button without accessible name found:', button);
     }
   });
 
   const images = container.querySelectorAll('img');
-  images.forEach(img => {
+  images.forEach((img: Element) => {
     if (!img.getAttribute('alt')) {
       console.warn('Image without alt text found:', img);
     }
   });
 
   const inputs = container.querySelectorAll('input');
-  inputs.forEach(input => {
+  inputs.forEach((input: Element) => {
     const hasLabel = input.getAttribute('aria-label') || 
                     input.getAttribute('aria-labelledby') ||
                     container.querySelector(`label[for="${input.id}"]`);
@@ -128,7 +128,7 @@ export async function testResponsive(
     { width: 1920, height: 1080, name: 'desktop' },
   ]
 ) {
-  const results: Record<string, any> = {};
+  const results: Record<string, { viewport: typeof viewport; container: HTMLElement; screenshot: string }> = {};
 
   for (const viewport of viewports) {
     // Mock window dimensions
@@ -322,6 +322,71 @@ export async function measureRenderPerformance(
 }
 
 // =============================================================================
+// SUPABASE MOCK HELPERS
+// =============================================================================
+
+/**
+ * Create a comprehensive Supabase query builder mock
+ */
+export function createSupabaseQueryMock(mockData: any, error: any = null) {
+  const baseMock = {
+    select: jest.fn(() => baseMock),
+    insert: jest.fn(() => baseMock),
+    update: jest.fn(() => baseMock),
+    delete: jest.fn(() => baseMock),
+    eq: jest.fn(() => baseMock),
+    gte: jest.fn(() => baseMock),
+    lte: jest.fn(() => baseMock),
+    order: jest.fn(() => baseMock),
+    limit: jest.fn(() => baseMock),
+    single: jest.fn(() => Promise.resolve({ data: mockData, error })),
+  };
+
+  // Make all methods return the base mock for chaining, except those that should resolve
+  Object.keys(baseMock).forEach(key => {
+    if (key !== 'single') {
+      (baseMock as any)[key] = jest.fn(() => {
+        // For the final operations, return a promise
+        if (key === 'order' || key === 'limit') {
+          return Promise.resolve({ data: Array.isArray(mockData) ? mockData : [mockData], error });
+        }
+        return baseMock;
+      });
+    }
+  });
+
+  return baseMock;
+}
+
+/**
+ * Create a Supabase storage mock
+ */
+export function createSupabaseStorageMock() {
+  return {
+    upload: jest.fn(() => Promise.resolve({ data: { path: 'test/path' }, error: null })),
+    getPublicUrl: jest.fn(() => ({ data: { publicUrl: 'https://example.com/file.jpg' } })),
+    remove: jest.fn(() => Promise.resolve({ error: null })),
+  };
+}
+
+/**
+ * Create a complete Supabase client mock
+ */
+export function createSupabaseClientMock(overrides: Record<string, any> = {}) {
+  return {
+    from: jest.fn((table: string) => createSupabaseQueryMock([], null)),
+    storage: {
+      from: jest.fn(() => createSupabaseStorageMock()),
+    },
+    auth: {
+      getUser: jest.fn(() => Promise.resolve({ data: { user: null }, error: null })),
+      getSession: jest.fn(() => Promise.resolve({ data: { session: null }, error: null })),
+    },
+    ...overrides,
+  };
+}
+
+// =============================================================================
 // MOCK DATA GENERATORS
 // =============================================================================
 
@@ -342,7 +407,7 @@ export function createMockUser(overrides: Partial<TestUser> = {}): TestUser {
 /**
  * Generate mock pricing data
  */
-export function createMockPricingTier(overrides: any = {}) {
+export function createMockPricingTier(overrides: Record<string, unknown> = {}) {
   return {
     id: `tier-${Math.random().toString(36).substr(2, 9)}`,
     name: 'Test Plan',
@@ -359,7 +424,7 @@ export function createMockPricingTier(overrides: any = {}) {
 /**
  * Generate mock content data
  */
-export function createMockContent(overrides: any = {}) {
+export function createMockContent(overrides: Record<string, unknown> = {}) {
   return {
     id: `content-${Math.random().toString(36).substr(2, 9)}`,
     title: 'Test Content',

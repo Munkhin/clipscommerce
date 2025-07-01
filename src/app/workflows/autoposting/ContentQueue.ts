@@ -7,15 +7,21 @@ export interface QueuedContent {
   metadata: {
     caption?: string;
     hashtags?: string[];
-    scheduledTime: Date;
+    scheduledTime?: Date;
     status: 'pending' | 'scheduled' | 'posted' | 'failed';
+    userId?: string;
+    sessionId?: string;
+    requestId?: string;
+    retryCount?: number;
+    priority?: 'low' | 'normal' | 'high' | 'urgent';
+    [key: string]: any;
   };
 }
 
 export class ContentQueue {
   private queue: QueuedContent[] = [];
 
-  addToQueue(content: Omit<QueuedContent, 'id' | 'metadata' | 'metadata.status'> & { metadata: Omit<QueuedContent['metadata'], 'status'> }): string {
+  addToQueue(content: Omit<QueuedContent, 'id'> & { metadata: Omit<QueuedContent['metadata'], 'status'> }): string {
     const id = uuidv4();
     this.queue.push({
       ...content,
@@ -29,10 +35,13 @@ export class ContentQueue {
     return this.queue.filter(item => item.metadata.status === 'pending').slice(0, limit);
   }
 
-  updateStatus(id: string, status: QueuedContent['metadata']['status']): void {
+  updateStatus(id: string, status: QueuedContent['metadata']['status'], additionalMetadata?: Record<string, any>): void {
     const item = this.queue.find(q => q.id === id);
     if (item) {
       item.metadata.status = status;
+      if (additionalMetadata) {
+        Object.assign(item.metadata, additionalMetadata);
+      }
     }
   }
 
@@ -83,7 +92,7 @@ export class ContentQueue {
 
   // Priority queue functionality
   addToQueueWithPriority(
-    content: Omit<QueuedContent, 'id' | 'metadata' | 'metadata.status'> & { 
+    content: Omit<QueuedContent, 'id'> & { 
       metadata: Omit<QueuedContent['metadata'], 'status'> & { priority?: 'low' | 'normal' | 'high' | 'urgent' } 
     }
   ): string {
@@ -101,7 +110,7 @@ export class ContentQueue {
 
     let insertIndex = this.queue.length;
     for (let i = 0; i < this.queue.length; i++) {
-      const existingPriority = priorityValues[(this.queue[i].metadata as any).priority || 'normal'];
+      const existingPriority = priorityValues[this.queue[i].metadata?.priority || 'normal'];
       if (itemPriority > existingPriority) {
         insertIndex = i;
         break;
