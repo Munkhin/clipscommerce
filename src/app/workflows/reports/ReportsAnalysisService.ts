@@ -17,7 +17,14 @@ import { SupabaseAuthTokenManager } from '../data_collection/lib/auth';
 import { Platform } from '../deliverables/types/deliverables_types';
 import { CacheService } from '@/services/CacheService';
 
-interface GetReportRequest extends BaseAnalysisRequest {
+interface GetReportRequest {
+  userId: string;
+  platform: Platform;
+  timeRange: {
+    start: string;
+    end: string;
+  };
+  correlationId?: string;
   eCommerceData?: any; // Define a more specific type if eCommerce data structure is known
 }
 
