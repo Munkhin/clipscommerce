@@ -1,10 +1,10 @@
-import { BasePlatformClient } from './base-platform';
-import { ApiConfig, ApiResponse, RateLimit } from './types';
+import { BasePlatformClient, Post, Analytics } from './base-platform';
+import { ApiConfig, ApiResponse, ApiRateLimit } from './types';
 import { IAuthTokenManager } from '../auth.types';
-import { Platform } from '../../../deliverables/types/deliverables_types';
+import { Platform, PlatformEnum } from '../../../deliverables/types/deliverables_types';
 
 export class InstagramClient extends BasePlatformClient {
-  protected readonly platform: Platform = Platform.INSTAGRAM;
+  protected readonly platform: Platform = PlatformEnum.INSTAGRAM;
 
   constructor(
     platformConfigFromFactory: ApiConfig,

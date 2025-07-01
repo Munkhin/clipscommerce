@@ -1,13 +1,14 @@
 // difficult: Instagram's Graph API requires long-lived tokens and has complex permissions
 // Pay special attention to token expiration and permission scopes
 
-import { BasePlatformClient, HeaderValue } from './base-platform';
-import { ApiConfig, ApiResponse, PlatformPostMetrics, PlatformUserActivity } from './types';
-import { Platform } from '../../../deliverables/types/deliverables_types';
+import { BasePlatformClient, HeaderValue, Post, Analytics } from './base-platform';
+import { ApiConfig, ApiResponse, PlatformPostMetrics, PlatformUserActivity, ApiRateLimit } from './types';
+import { Platform, PlatformEnum } from '../../../deliverables/types/deliverables_types';
 import { IAuthTokenManager } from '../auth.types';
+import { ApiError, PlatformError, RateLimitError } from '../utils/errors';
 
 export class InstagramClient extends BasePlatformClient {
-  protected readonly platform: Platform = Platform.INSTAGRAM;
+  protected readonly platform: Platform = PlatformEnum.INSTAGRAM;
   private static readonly DEFAULT_CONFIG: ApiConfig = {
     baseUrl: 'https://graph.instagram.com',
     version: 'v12.0',

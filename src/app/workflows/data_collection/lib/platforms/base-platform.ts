@@ -24,6 +24,9 @@ export interface Analytics {
 
 export type HeaderValue = string | number | boolean;
 
+// Export ApiResponse for compatibility
+export type { ApiResponse } from './types';
+
 export abstract class BasePlatformClient {
   protected readonly client: AxiosInstance;
   protected rateLimit: ApiRateLimit | null = null;

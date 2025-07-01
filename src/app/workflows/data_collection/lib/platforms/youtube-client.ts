@@ -1,12 +1,12 @@
-import { BasePlatformClient } from './base-platform';
-import { ApiConfig, ApiResponse, PlatformComment, PlatformPostMetrics, PlatformUserActivity, PlatformPost, RateLimit } from './types';
+import { BasePlatformClient, Post, Analytics } from './base-platform';
+import { ApiConfig, ApiResponse, PlatformComment, PlatformPostMetrics, PlatformUserActivity, PlatformPost, ApiRateLimit } from './types';
 import { YouTubeCommentThreadListResponseSchema, YouTubeCommentThread, YouTubeChannelListResponseSchema, YouTubeChannelListResponse, YouTubeVideoListResponseSchema, YouTubeVideoListResponse, YouTubeVideo, YouTubeCommentThreadListResponse, YouTubeChannel } from './youtube.types';
-import { Platform } from '../../../deliverables/types/deliverables_types';
+import { Platform, PlatformEnum } from '../../../deliverables/types/deliverables_types';
 import { IAuthTokenManager } from '../auth.types';
 import { ApiError, PlatformError, RateLimitError } from '../utils/errors';
 
 export class YouTubeClient extends BasePlatformClient {
-  public readonly platform: Platform = Platform.YOUTUBE;
+  public readonly platform: Platform = PlatformEnum.YOUTUBE;
 
   constructor(config: Partial<ApiConfig> = {}, authTokenManager: IAuthTokenManager, userId?: string) {
     super(config, authTokenManager, userId);
