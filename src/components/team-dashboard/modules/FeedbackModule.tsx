@@ -33,7 +33,7 @@ import {
   Target
 } from 'lucide-react';
 
-interface ClientReport {
+export interface ClientReport {
   id: string;
   clientId: string;
   clientName: string;

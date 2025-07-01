@@ -33,13 +33,20 @@ import { VideoProcessingSkeleton, LoadingSpinner, ProcessingIndicator } from '@/
 import { NoVideosEmpty } from '@/components/ui/empty-states';
 import { UploadError, ApiError, ProcessingError } from '@/components/ui/error-states';
 
+interface VideoResult {
+  insights?: string[];
+  optimizations?: string[];
+  engagementScore?: number;
+  recommendations?: string[];
+}
+
 interface Video {
   id: string;
   title: string;
   thumbnailUrl?: string;
   status: string;
   columnId: string;
-  result?: any;
+  result?: VideoResult;
   error?: string;
   loading?: boolean;
   uploadProgress?: number;

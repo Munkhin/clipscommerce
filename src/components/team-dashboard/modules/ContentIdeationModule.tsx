@@ -35,7 +35,7 @@ import {
   Globe
 } from 'lucide-react';
 
-interface ContentIdea {
+export interface ContentIdea {
   id: string;
   title: string;
   description: string;
@@ -52,7 +52,7 @@ interface ContentIdea {
   clientMatch: string[];
 }
 
-interface TrendAnalysis {
+export interface TrendAnalysis {
   id: string;
   keyword: string;
   platform: string;
@@ -66,7 +66,7 @@ interface TrendAnalysis {
   source: 'api' | 'ai-detected' | 'competitor-analysis';
 }
 
-interface CompetitorInsight {
+export interface CompetitorInsight {
   id: string;
   competitorName: string;
   platform: string;
@@ -90,7 +90,7 @@ interface CompetitorInsight {
   analysisDate: Date;
 }
 
-interface ContentCalendar {
+export interface ContentCalendar {
   id: string;
   date: Date;
   ideas: ContentIdea[];

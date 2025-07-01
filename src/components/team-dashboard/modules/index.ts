@@ -7,21 +7,34 @@ export { AutoPostingScheduler } from './AutoPostingScheduler';
 export { FeedbackModule } from './FeedbackModule';
 export { ContentIdeationModule } from './ContentIdeationModule';
 
-// Module types for type safety
+// Module types for type safety - export only the types that actually exist
 export type {
   BrandVoice,
   AutomationJob,
-  VideoFile,
+  VideoFile
+} from './ContentAutomationModule';
+
+export type {
+  BulkVideoFile,
   ProcessingQueue,
-  ProcessingStats,
+  ProcessingStats
+} from './BulkVideoProcessor';
+
+export type {
   PostingSchedule,
   ClientPreferences,
-  PlatformAnalytics,
+  PlatformAnalytics
+} from './AutoPostingScheduler';
+
+export type {
   ClientReport,
   EmailTemplate,
-  AutomationRule,
+  AutomationRule
+} from './feedback/types';
+
+export type {
   ContentIdea,
   TrendAnalysis,
   CompetitorInsight,
   ContentCalendar
-} from './ContentAutomationModule'; 
+} from './ContentIdeationModule'; 

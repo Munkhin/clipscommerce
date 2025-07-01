@@ -32,7 +32,7 @@ import {
   RefreshCw
 } from 'lucide-react';
 
-interface PostingSchedule {
+export interface PostingSchedule {
   id: string;
   clientId: string;
   clientName: string;
@@ -50,7 +50,7 @@ interface PostingSchedule {
   timeZone: string;
 }
 
-interface ClientPreferences {
+export interface ClientPreferences {
   id: string;
   name: string;
   timeZone: string;
@@ -79,7 +79,7 @@ interface ClientPreferences {
   };
 }
 
-interface PlatformAnalytics {
+export interface PlatformAnalytics {
   platform: string;
   bestPostingTimes: {
     hour: number;

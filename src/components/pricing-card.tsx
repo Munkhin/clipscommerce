@@ -13,13 +13,24 @@ import {
 import { Check, ArrowRight, Sparkles } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
+interface PricingItem {
+  id?: string;
+  name?: string;
+  amount?: number;
+  interval?: string;
+  currency?: string;
+  popular?: boolean;
+}
+
+interface PricingCardProps {
+  item: PricingItem;
+  user: User | null;
+}
+
 export default function PricingCard({
   item,
   user,
-}: {
-  item: any;
-  user: User | null;
-}) {
+}: PricingCardProps) {
   // Handle checkout process
   const handleCheckout = async (priceId: string) => {
     if (!user) {
