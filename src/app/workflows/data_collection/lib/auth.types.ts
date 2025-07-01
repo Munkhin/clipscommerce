@@ -25,6 +25,7 @@ export interface OAuth2Credentials extends BaseCredentials {
   clientId?: string;
   clientSecret?: string;
   openId?: string; // Platform-specific user identifier (e.g., for TikTok)
+  tokenType?: string; // e.g., 'bearer'
 }
 
 export type PlatformCredentials = ApiKeyCredentials | OAuth2Credentials;
@@ -36,6 +37,7 @@ export interface PlatformClientIdentifier {
 
 export interface IAuthTokenManager {
   getValidCredentials(id: PlatformClientIdentifier): Promise<PlatformCredentials | null>;
+  getToken(id?: PlatformClientIdentifier): Promise<string | null>;
   storeCredentials(id: PlatformClientIdentifier, credentials: PlatformCredentials): Promise<void>;
   clearCredentials(id: PlatformClientIdentifier): Promise<void>;
   refreshOAuth2Token?(id: PlatformClientIdentifier, currentCredentials: OAuth2Credentials): Promise<OAuth2Credentials | null>;

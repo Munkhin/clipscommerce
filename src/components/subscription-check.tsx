@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { checkUserSubscription } from '@/app/actions';
+import { checkUserSubscription } from '@/lib/auth/actions';
 import { createClient } from '../../supabase/server';
 
 interface SubscriptionCheckProps {

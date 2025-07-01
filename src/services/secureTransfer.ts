@@ -31,7 +31,7 @@ export function encrypt(data: any, secret: string): { iv: string; authTag: strin
     keyBuffer = Buffer.from(secret.slice(0, KEY_LENGTH), 'utf-8');
   }
   
-  const cipher = crypto.createCipheriv(ALGORITHM, keyBuffer, iv);
+  const cipher = crypto.createCipheriv(ALGORITHM, new Uint8Array(keyBuffer), iv);
   const json = JSON.stringify(data);
   const encrypted = Buffer.concat([cipher.update(json, 'utf8'), cipher.final()]);
   const authTag = cipher.getAuthTag();
@@ -64,15 +64,15 @@ export function decrypt(encryptedData: { iv: string; authTag: string; encrypted:
     keyBuffer = Buffer.from(secret.slice(0, KEY_LENGTH), 'utf-8');
   }
 
-  const decipher = crypto.createDecipheriv(ALGORITHM, keyBuffer, Buffer.from(encryptedData.iv, 'hex'));
-  decipher.setAuthTag(Buffer.from(encryptedData.authTag, 'hex'));
+  const decipher = crypto.createDecipheriv(ALGORITHM, new Uint8Array(keyBuffer), Buffer.from(encryptedData.iv, 'hex'));
+  decipher.setAuthTag(new Uint8Array(Buffer.from(encryptedData.authTag, 'hex')));
   
   const decrypted = Buffer.concat([
     decipher.update(Buffer.from(encryptedData.encrypted, 'hex')),
     decipher.final(),
   ]);
   
-  const jsonString = decrypted.toString('utf8');
+  const jsonString = Buffer.from(decrypted).toString('utf8');
   return JSON.parse(jsonString);
 }
 

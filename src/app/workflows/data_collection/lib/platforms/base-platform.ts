@@ -1,13 +1,32 @@
 import { IAuthTokenManager } from '../auth.types';
-import { ApiConfig, RateLimit } from './types';
+import { ApiConfig, ApiRateLimit, ApiResponse } from './types';
 import { ApiError, RateLimitError } from '../utils/errors';
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import logger from '@/utils/logger';
-import { Post, Analytics } from '@/types';
+
+// Define core types that are used by platform clients
+export interface Post {
+  id: string;
+  platform: string;
+  content: string;
+  mediaUrl?: string;
+  publishedAt: Date;
+  metrics?: Analytics;
+}
+
+export interface Analytics {
+  views: number;
+  likes: number;
+  comments: number;
+  shares: number;
+  engagementRate: number;
+}
+
+export type HeaderValue = string | number | boolean;
 
 export abstract class BasePlatformClient {
   protected readonly client: AxiosInstance;
-  protected rateLimit: RateLimit | null = null;
+  protected rateLimit: ApiRateLimit | null = null;
 
   constructor(
     protected readonly config: ApiConfig,
@@ -73,6 +92,8 @@ export abstract class BasePlatformClient {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         throw new ApiError(
+          'unknown', // platform will be set by subclass
+          error.response?.status?.toString() || '500',
           error.response?.statusText || 'Unknown API Error',
           error.response?.status || 500,
           error.response?.data

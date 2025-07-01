@@ -1,8 +1,8 @@
-import { Platform } from '../../deliverables/types/deliverables_types';
+import { Platform, PlatformEnum } from '../../deliverables/types/deliverables_types';
 import { PostMetrics } from '../../data_collection/functions/types';
 import { Beta } from 'jstat'; // Use jstat for Beta distribution (if not available, mock below)
 
-export { Platform }; // Re-export Platform
+export type { Platform }; // Re-export Platform type
 
 // A/B Testing Types
 export interface ExperimentVariant {
@@ -808,9 +808,9 @@ export function generateContentVariations(
 function optimizeCaption(caption: string, platform: Platform): string {
   // Platform-specific optimization
   switch (platform) {
-    case Platform.TIKTOK:
+    case PlatformEnum.TIKTOK:
       return caption + ' 🔥 #fyp #viral';
-    case Platform.INSTAGRAM:
+    case PlatformEnum.INSTAGRAM:
       return caption + ' ✨ #instagood #photooftheday';
     default:
       return caption + ' 🚀';
@@ -820,12 +820,12 @@ function optimizeCaption(caption: string, platform: Platform): string {
 function generateTrendingHashtags(platform: Platform): string[] {
   // Mock trending hashtags (in production, fetch from real data)
   const trendingByPlatform = {
-    [Platform.TIKTOK]: ['#fyp', '#viral', '#trending', '#foryou', '#tiktok'],
-    [Platform.INSTAGRAM]: ['#instagood', '#photooftheday', '#love', '#beautiful', '#happy'],
-    [Platform.YOUTUBE]: ['#youtube', '#subscribe', '#viral', '#trending', '#shorts'],
-    [Platform.FACEBOOK]: ['#facebook', '#social', '#community', '#share', '#connect'],
-    [Platform.TWITTER]: ['#twitter', '#trending', '#viral', '#news', '#social'],
-    [Platform.LINKEDIN]: ['#linkedin', '#professional', '#career', '#business', '#networking'],
+    [PlatformEnum.TIKTOK]: ['#fyp', '#viral', '#trending', '#foryou', '#tiktok'],
+    [PlatformEnum.INSTAGRAM]: ['#instagood', '#photooftheday', '#love', '#beautiful', '#happy'],
+    [PlatformEnum.YOUTUBE]: ['#youtube', '#subscribe', '#viral', '#trending', '#shorts'],
+    [PlatformEnum.FACEBOOK]: ['#facebook', '#social', '#community', '#share', '#connect'],
+    [PlatformEnum.TWITTER]: ['#twitter', '#trending', '#viral', '#news', '#social'],
+    [PlatformEnum.LINKEDIN]: ['#linkedin', '#professional', '#career', '#business', '#networking'],
   };
 
   return trendingByPlatform[platform] || ['#trending', '#viral'];

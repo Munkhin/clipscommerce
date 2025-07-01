@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { createClient } from '@/lib/supabase/server';
 import { AuthTokenManagerService } from '../../../../workflows/data_collection/lib/auth-token-manager.service';
-import { Platform } from '../../../../workflows/deliverables/types/deliverables_types';
+import { PlatformEnum } from '../../../../workflows/deliverables/types/deliverables_types';
 import { PlatformClientIdentifier } from '../../../../workflows/data_collection/lib/auth.types';
 
 
@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
 
   const authTokenManager = new AuthTokenManagerService();
   const platformId: PlatformClientIdentifier = {
-    platform: Platform.TIKTOK,
+    platform: PlatformEnum.TIKTOK,
     // userId is not known at this point; AuthTokenManagerService will use open_id from TikTok's response
   };
 

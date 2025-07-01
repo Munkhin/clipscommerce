@@ -1,4 +1,4 @@
-import { BasePlatformClient, HeaderValue, ApiResponse as BaseApiResponse } from './base-platform';
+import { BasePlatformClient, HeaderValue, ApiResponse as BaseApiResponse, Post, Analytics } from './base-platform';
 import { ApiConfig as PlatformSpecificApiConfig, PlatformComment, ApiResponse } from './types';
 import { IAuthTokenManager } from '../auth.types';
 import { Platform } from '../../../deliverables/types/deliverables_types';
@@ -346,5 +346,106 @@ export class TikTokClient extends BasePlatformClient {
       },
       rateLimit: this.rateLimit === null ? undefined : this.rateLimit,
     });
+  }
+
+  // Implementation of abstract methods from BasePlatformClient
+  async fetchPosts(query: string): Promise<Post[]> {
+    try {
+      this.log('info', `Fetching TikTok posts with query: ${query}`);
+      
+      // Use existing listUserVideos method
+      const videoListData = await this.listUserVideos({
+        fields: ['id', 'title', 'create_time', 'share_url', 'video_description'],
+        max_count: 20
+      });
+
+      const posts: Post[] = videoListData.videos?.map((video: any) => ({
+        id: video.id,
+        platform: this.platform.toString(),
+        content: video.video_description || video.title || '',
+        mediaUrl: video.share_url,
+        publishedAt: new Date(video.create_time * 1000), // TikTok uses Unix timestamp
+        metrics: undefined // Would be fetched separately
+      })) || [];
+
+      return posts;
+    } catch (error) {
+      this.log('error', 'Failed to fetch TikTok posts', error);
+      return [];
+    }
+  }
+
+  async uploadContent(content: any): Promise<Post> {
+    try {
+      this.log('info', 'Uploading content to TikTok', content);
+      
+      // Use existing postVideo method
+      const result = await this.postVideo({
+        video_url: content.videoUrl,
+        title: content.title,
+        description: content.description || '',
+        privacy_level: content.privacyLevel || 'EVERYONE_CAN_SEE',
+        disable_comment: content.disableComment || false,
+        disable_duet: content.disableDuet || false,
+        disable_stitch: content.disableStitch || false
+      });
+
+      return {
+        id: result.publish_id || 'unknown',
+        platform: this.platform.toString(),
+        content: content.description || content.title || '',
+        mediaUrl: content.videoUrl,
+        publishedAt: new Date()
+      };
+    } catch (error) {
+      this.log('error', 'Failed to upload content to TikTok', error);
+      throw error;
+    }
+  }
+
+  async getAnalytics(postId: string): Promise<Analytics> {
+    try {
+      this.log('info', `Fetching analytics for TikTok post: ${postId}`);
+      
+      // Use existing queryVideos method
+      const videoData = await this.queryVideos({
+        video_ids: [postId],
+        fields: ['id', 'like_count', 'comment_count', 'share_count', 'view_count']
+      });
+
+      const video = videoData.videos?.[0];
+      if (!video) {
+        return {
+          views: 0,
+          likes: 0,
+          comments: 0,
+          shares: 0,
+          engagementRate: 0
+        };
+      }
+
+      const views = video.view_count || 0;
+      const likes = video.like_count || 0;
+      const comments = video.comment_count || 0;
+      const shares = video.share_count || 0;
+      const engagementRate = views > 0 ? ((likes + comments + shares) / views) * 100 : 0;
+
+      return {
+        views,
+        likes,
+        comments,
+        shares,
+        engagementRate
+      };
+    } catch (error) {
+      this.log('error', 'Failed to fetch TikTok analytics', error);
+      return {
+        views: 0,
+        likes: 0,
+        comments: 0,
+        shares: 0,
+        engagementRate: 0
+      };
+    }
   }
 }

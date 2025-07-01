@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { TikTokClient } from '@/app/workflows/data_collection/lib/platforms/TikTokClient';
 import { SupabaseAuthTokenManager } from '@/app/workflows/data_collection/lib/auth';
 import { ApiConfig } from '@/app/workflows/data_collection/lib/platforms/types';
-import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
+import { PlatformEnum } from '@/app/workflows/deliverables/types/deliverables_types';
 import { authGuard, createSecureErrorResponse } from '@/lib/security/auth-guard';
 import logger from '@/utils/logger';
 
@@ -59,7 +59,7 @@ export async function GET(request: NextRequest) {
         const authTokenManager = new SupabaseAuthTokenManager();
         const config: ApiConfig = {
           baseUrl: 'https://open.tiktokapis.com',
-          platform: Platform.TIKTOK,
+          platform: PlatformEnum.TIKTOK,
           version: 'v2',
           rateLimit: { requests: 10, perSeconds: 1 },
           credentials: {

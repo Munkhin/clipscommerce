@@ -69,11 +69,12 @@ export const signUpAction = async (prevState: unknown, formData: FormData): Prom
       data: authData 
     };
   } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : "An error occurred during sign up";
     logger.error('Signup error', error as Error, {
       email,
       hasFullName: Boolean(fullName),
     });
-    return { error: error.message || "An error occurred during sign up" };
+    return { error: errorMessage };
   }
 };
 
@@ -99,7 +100,8 @@ export const signInAction = async (prevState: unknown, formData: FormData): Prom
 
     return { success: true };
   } catch (error: unknown) {
-    return { error: error.message || "An error occurred during sign in" };
+    const errorMessage = error instanceof Error ? error.message : "An error occurred during sign in";
+    return { error: errorMessage };
   }
 };
 
@@ -123,7 +125,8 @@ export const forgotPasswordAction = async (prevState: unknown, formData: FormDat
 
     return { success: true };
   } catch (error: unknown) {
-    return { error: error.message || "An error occurred" };
+    const errorMessage = error instanceof Error ? error.message : "An error occurred";
+    return { error: errorMessage };
   }
 };
 
@@ -173,8 +176,9 @@ export const resetPasswordAction = async (prevState: unknown, formData: FormData
     return { success: true };
   } catch (error: unknown) {
     console.error("Error resetting password:", error);
+    const errorMessage = error instanceof Error ? error.message : "An error occurred while resetting your password. Please try again.";
     return { 
-      error: error.message || "An error occurred while resetting your password. Please try again." 
+      error: errorMessage
     };
   }
 };
@@ -189,6 +193,31 @@ export const signOutAction = async (): Promise<ActionResult> => {
     }
     return { success: true };
   } catch (error: unknown) {
-    return { error: error.message || "An error occurred during sign out" };
+    const errorMessage = error instanceof Error ? error.message : "An error occurred during sign out";
+    return { error: errorMessage };
+  }
+};
+
+export const checkUserSubscription = async (userId: string): Promise<boolean> => {
+  // Placeholder implementation - replace with actual subscription check logic
+  const supabase = createClient();
+  
+  try {
+    // Check if user has an active subscription
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('subscription_status')
+      .eq('id', userId)
+      .single();
+    
+    if (error) {
+      logger.error('Error checking subscription status', error as Error, { userId });
+      return false;
+    }
+    
+    return data?.subscription_status === 'active';
+  } catch (error: unknown) {
+    logger.error('Error checking user subscription', error as Error, { userId });
+    return false;
   }
 };

@@ -1,6 +1,6 @@
 // Specialized Hashtag Performance Analysis Module
 import { PostMetrics } from '../types';
-import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
+import { Platform, PlatformEnum } from '@/app/workflows/deliverables/types/deliverables_types';
 import { Cache } from '@/lib/utils/cache';
 
 /**
@@ -90,7 +90,7 @@ export class HashtagAnalyzer {
     });
     
     // Initialize platform index for each supported platform
-    const platforms: Platform[] = [Platform.TIKTOK, Platform.INSTAGRAM, Platform.YOUTUBE];
+    const platforms: Platform[] = [PlatformEnum.TIKTOK, PlatformEnum.INSTAGRAM, PlatformEnum.YOUTUBE];
     for (const platform of platforms) {
       this.platformHashtagIndex.set(platform, new Map());
     }
@@ -118,7 +118,7 @@ export class HashtagAnalyzer {
       // Clear indices if replacing all posts
       this.hashtagIndex.clear();
       this.coOccurrenceMatrix.clear();
-      const platformsList: Platform[] = [Platform.TIKTOK, Platform.INSTAGRAM, Platform.YOUTUBE];
+      const platformsList: Platform[] = [PlatformEnum.TIKTOK, PlatformEnum.INSTAGRAM, PlatformEnum.YOUTUBE];
       for (const platform of platformsList) {
         this.platformHashtagIndex.set(platform, new Map());
       }

@@ -1,9 +1,9 @@
 import axios, { AxiosError, AxiosInstance } from 'axios';
 import { InstagramApiMediaNode, InstagramApiUserNode } from '../../../types/instagramTypes';
 import { 
-  BasePlatformClient
+  BasePlatformClient, Post, Analytics
 } from '../base-platform';
-import { Platform } from '../../../../deliverables/types/deliverables_types';
+import { Platform, PlatformEnum } from '../../../../deliverables/types/deliverables_types';
 import { ApiConfig, ApiCredentials, ApiResponse, PlatformPost, PlatformPostMetrics, PlatformUserActivity, PlatformComment } from '../types';
 
 const INSTAGRAM_GRAPH_API_VERSION = 'v19.0';
@@ -19,7 +19,7 @@ interface InstagramApiErrorResponse {
 }
 
 export class InstagramClient extends BasePlatformClient {
-  protected readonly platform: Platform = Platform.INSTAGRAM;
+  protected readonly platform: Platform = PlatformEnum.INSTAGRAM;
 
   private static readonly DEFAULT_CONFIG: ApiConfig = {
     baseUrl: 'https://graph.instagram.com',
@@ -277,7 +277,7 @@ export class InstagramClient extends BasePlatformClient {
     
     const posts: PlatformPost[] = validMediaItems.map((m) => ({
       id: m.id,
-      platform: Platform.INSTAGRAM,
+      platform: PlatformEnum.INSTAGRAM,
       userId: userId,
       description: m.caption,
       mediaUrl: m.media_url,
@@ -333,7 +333,7 @@ export class InstagramClient extends BasePlatformClient {
         text: c.text,
         likeCount: c.like_count,
         publishedAt: c.timestamp,
-        platform: Platform.INSTAGRAM,
+        platform: PlatformEnum.INSTAGRAM,
         sourceData: c,
       }));
 
@@ -347,6 +347,71 @@ export class InstagramClient extends BasePlatformClient {
       };
     } catch (error) {
       throw error;
+    }
+  }
+
+  // Implementation of abstract methods from BasePlatformClient
+  protected handleRateLimit(headers: any): void {
+    const rateLimitRemaining = headers['x-ratelimit-remaining'];
+    const rateLimitLimit = headers['x-ratelimit-limit'];
+    const rateLimitReset = headers['x-ratelimit-reset'];
+
+    if (rateLimitLimit && rateLimitRemaining && rateLimitReset) {
+      this.rateLimit = {
+        limit: parseInt(rateLimitLimit, 10),
+        remaining: parseInt(rateLimitRemaining, 10),
+        reset: parseInt(rateLimitReset, 10)
+      };
+    }
+  }
+
+  async fetchPosts(query: string): Promise<Post[]> {
+    try {
+      this.log('info', `Fetching Instagram posts with query: ${query}`);
+      return []; // Placeholder implementation
+    } catch (error) {
+      this.log('error', 'Failed to fetch Instagram posts', error);
+      return [];
+    }
+  }
+
+  async uploadContent(content: any): Promise<Post> {
+    try {
+      this.log('info', 'Uploading content to Instagram', content);
+      // Placeholder implementation
+      return {
+        id: 'placeholder-id',
+        platform: this.platform.toString(),
+        content: content.caption || '',
+        mediaUrl: content.mediaUrl,
+        publishedAt: new Date()
+      };
+    } catch (error) {
+      this.log('error', 'Failed to upload content to Instagram', error);
+      throw error;
+    }
+  }
+
+  async getAnalytics(postId: string): Promise<Analytics> {
+    try {
+      this.log('info', `Fetching analytics for Instagram post: ${postId}`);
+      // Placeholder implementation
+      return {
+        views: 0,
+        likes: 0,
+        comments: 0,
+        shares: 0,
+        engagementRate: 0
+      };
+    } catch (error) {
+      this.log('error', 'Failed to fetch Instagram analytics', error);
+      return {
+        views: 0,
+        likes: 0,
+        comments: 0,
+        shares: 0,
+        engagementRate: 0
+      };
     }
   }
 }

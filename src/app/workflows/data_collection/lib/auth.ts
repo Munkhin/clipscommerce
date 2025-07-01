@@ -16,6 +16,25 @@ export class SupabaseAuthTokenManager implements IAuthTokenManager {
     this.supabase = createClient(supabaseUrl, supabaseKey);
   }
 
+  async getToken(identifier?: PlatformClientIdentifier): Promise<string | null> {
+    if (!identifier) {
+      return null;
+    }
+
+    const credentials = await this.getValidCredentials(identifier);
+    if (!credentials) {
+      return null;
+    }
+
+    if (credentials.strategy === AuthStrategy.OAUTH2) {
+      return credentials.accessToken;
+    } else if (credentials.strategy === AuthStrategy.API_KEY) {
+      return credentials.apiKey;
+    }
+
+    return null;
+  }
+
   async getValidCredentials(identifier: PlatformClientIdentifier): Promise<PlatformCredentials | null> {
     const { data, error } = await this.supabase
       .from('user_social_credentials')
@@ -55,14 +74,26 @@ export class SupabaseAuthTokenManager implements IAuthTokenManager {
   }
 
   async storeCredentials(identifier: PlatformClientIdentifier, credentials: PlatformCredentials): Promise<void> {
+    let accessToken: string | undefined;
+    let refreshToken: string | undefined;
+    let expiresAt: number | undefined;
+
+    if (credentials.strategy === AuthStrategy.OAUTH2) {
+      accessToken = credentials.accessToken;
+      refreshToken = credentials.refreshToken;
+      expiresAt = credentials.expiresAt;
+    } else if (credentials.strategy === AuthStrategy.API_KEY) {
+      accessToken = credentials.apiKey;
+    }
+
     const { error } = await this.supabase
       .from('user_social_credentials')
       .upsert({
         user_id: identifier.userId,
         platform: identifier.platform,
-        access_token: credentials.accessToken,
-        refresh_token: credentials.refreshToken,
-        expires_at: new Date(credentials.expiresAt * 1000).toISOString(),
+        access_token: accessToken,
+        refresh_token: refreshToken,
+        expires_at: expiresAt ? new Date(expiresAt * 1000).toISOString() : null,
       });
 
     if (error) {

@@ -408,6 +408,12 @@ export class ScannerService {
           }
           return null;
         },
+        getToken: async (id?: PlatformClientIdentifier): Promise<string | null> => {
+          if (!id || (id.platform === platform && (!id.userId || id.userId === userId))) {
+            return accessToken;
+          }
+          return null;
+        },
         storeCredentials: async (id: PlatformClientIdentifier, credentials: PlatformCredentials) => { /* no-op */ },
         clearCredentials: async (id: PlatformClientIdentifier) => { /* no-op */ },
       };

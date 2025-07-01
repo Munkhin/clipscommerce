@@ -1,0 +1,440 @@
+src/app/workflows/AI_improvement/cli/collect-data.ts(189,19): error TS2304: Cannot find name 'DataCollectionConfig'.
+src/app/workflows/AI_improvement/functions/abTesting.ts(139,7): error TS2322: Type 'Experiment | null' is not assignable to type 'Experiment | undefined'.
+  Type 'null' is not assignable to type 'Experiment | undefined'.
+src/app/workflows/AI_improvement/training/evaluation/ModelEvaluator.ts(121,11): error TS2740: Type '{}' is missing the following properties from type 'Record<Platform, EvaluationMetrics>': TikTok, Instagram, Facebook, YouTube, and 2 more.
+src/app/workflows/AI_improvement/training/evaluation/ModelEvaluator.ts(190,56): error TS18046: 'error' is of type 'unknown'.
+src/app/workflows/AI_improvement/training/evaluation/ModelEvaluator.ts(413,11): error TS2740: Type '{}' is missing the following properties from type 'Record<Platform, EvaluationMetrics>': TikTok, Instagram, Facebook, YouTube, and 2 more.
+src/app/workflows/AI_improvement/training/models/ContentOptimizationTrainer.ts(125,30): error TS2345: Argument of type '"tiktok"' is not assignable to parameter of type 'Platform'.
+src/app/workflows/AI_improvement/training/models/ContentOptimizationTrainer.ts(129,30): error TS2345: Argument of type '"instagram"' is not assignable to parameter of type 'Platform'.
+src/app/workflows/AI_improvement/training/models/ContentOptimizationTrainer.ts(133,30): error TS2345: Argument of type '"youtube"' is not assignable to parameter of type 'Platform'.
+src/app/workflows/AI_improvement/training/models/ContentOptimizationTrainer.ts(176,58): error TS18046: 'error' is of type 'unknown'.
+src/app/workflows/AI_improvement/training/models/ContentOptimizationTrainer.ts(273,54): error TS18046: 'error' is of type 'unknown'.
+src/app/workflows/AI_improvement/training/models/ContentOptimizationTrainer.ts(454,15): error TS7006: Parameter 'tag' implicitly has an 'any' type.
+src/app/workflows/AI_improvement/training/models/ContentOptimizationTrainer.ts(759,25): error TS2551: Property 'TikTok' does not exist on type '{ tiktok: string; instagram: string; youtube: string; facebook: string; twitter: string; linkedin: string; }'. Did you mean 'tiktok'?
+src/app/workflows/AI_improvement/training/models/ContentOptimizationTrainer.ts(772,28): error TS2551: Property 'TikTok' does not exist on type '{ tiktok: number; instagram: number; youtube: number; facebook: number; twitter: number; linkedin: number; }'. Did you mean 'tiktok'?
+src/app/workflows/AI_improvement/training/models/EngagementPredictionTrainer.ts(2,26): error TS2307: Cannot find module '../../deliverables/types/deliverables_types' or its corresponding type declarations.
+src/app/workflows/AI_improvement/training/models/SentimentAnalysisTrainer.ts(179,58): error TS18046: 'error' is of type 'unknown'.
+src/app/workflows/AI_improvement/training/models/SentimentAnalysisTrainer.ts(187,51): error TS7006: Parameter 's' implicitly has an 'any' type.
+src/app/workflows/AI_improvement/training/models/SentimentAnalysisTrainer.ts(195,36): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+src/app/workflows/AI_improvement/training/models/SentimentAnalysisTrainer.ts(195,41): error TS7006: Parameter 'word' implicitly has an 'any' type.
+src/app/workflows/AI_improvement/training/models/SentimentAnalysisTrainer.ts(198,39): error TS7006: Parameter 'word' implicitly has an 'any' type.
+src/app/workflows/AI_improvement/training/models/SentimentAnalysisTrainer.ts(199,39): error TS7006: Parameter 'word' implicitly has an 'any' type.
+src/app/workflows/AI_improvement/training/models/SentimentAnalysisTrainer.ts(200,40): error TS7006: Parameter 'word' implicitly has an 'any' type.
+src/app/workflows/AI_improvement/training/models/SentimentAnalysisTrainer.ts(201,38): error TS7006: Parameter 'word' implicitly has an 'any' type.
+src/app/workflows/AI_improvement/training/models/SentimentAnalysisTrainer.ts(332,54): error TS18046: 'error' is of type 'unknown'.
+src/app/workflows/AI_improvement/training/models/SentimentAnalysisTrainer.ts(474,40): error TS2820: Type '"instagram"' is not assignable to type 'Platform'. Did you mean '"Instagram"'?
+src/app/workflows/autoposting/AutoPostAnalytics.ts(132,55): error TS2365: Operator '+' cannot be applied to types 'number' and '{ likes: number; comments: number; shares: number; saves?: number | undefined; clicks?: number | undefined; }'.
+src/app/workflows/autoposting/AutoPostAnalytics.ts(133,50): error TS2365: Operator '+' cannot be applied to types 'number' and '{ impressions: number; uniqueViews: number; organicReach: number; paidReach?: number | undefined; }'.
+src/app/workflows/autoposting/AutoPostingScheduler.ts(97,40): error TS2339: Property 'retryCount' does not exist on type '{ caption?: string | undefined; hashtags?: string[] | undefined; scheduledTime: Date; status: "pending" | "failed" | "posted" | "scheduled"; }'.
+src/app/workflows/autoposting/AutoPostingScheduler.ts(106,59): error TS2554: Expected 2 arguments, but got 3.
+src/app/workflows/autoposting/AutoPostingScheduler.ts(139,38): error TS2339: Property 'userId' does not exist on type '{ caption?: string | undefined; hashtags?: string[] | undefined; scheduledTime: Date; status: "pending" | "failed" | "posted" | "scheduled"; }'.
+src/app/workflows/autoposting/AutoPostingScheduler.ts(140,41): error TS2339: Property 'sessionId' does not exist on type '{ caption?: string | undefined; hashtags?: string[] | undefined; scheduledTime: Date; status: "pending" | "failed" | "posted" | "scheduled"; }'.
+src/app/workflows/autoposting/AutoPostingScheduler.ts(141,41): error TS2339: Property 'requestId' does not exist on type '{ caption?: string | undefined; hashtags?: string[] | undefined; scheduledTime: Date; status: "pending" | "failed" | "posted" | "scheduled"; }'.
+src/app/workflows/autoposting/AutoPostingScheduler.ts(155,56): error TS2554: Expected 2 arguments, but got 3.
+src/app/workflows/autoposting/AutoPostingScheduler.ts(193,40): error TS2339: Property 'userId' does not exist on type '{ caption?: string | undefined; hashtags?: string[] | undefined; scheduledTime: Date; status: "pending" | "failed" | "posted" | "scheduled"; }'.
+src/app/workflows/autoposting/AutoPostingScheduler.ts(421,9): error TS2353: Object literal may only specify known properties, and 'processId' does not exist in type 'ErrorContext'.
+src/app/workflows/autoposting/ContentQueue.ts(104,32): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ urgent: number; high: number; normal: number; low: number; }'.
+src/app/workflows/autoposting/ErrorHandling.ts(87,9): error TS2561: Object literal may only specify known properties, but 'operationId' does not exist in type 'ErrorContext'. Did you mean to write 'operation'?
+src/app/workflows/autoposting/ErrorRecoveryService.ts(722,22): error TS2551: Property 'platform' does not exist on type 'QueuedContent'. Did you mean 'platforms'?
+src/app/workflows/autoposting/ErrorRecoveryService.ts(723,28): error TS2339: Property 'reason' does not exist on type 'QueuedContent'.
+src/app/workflows/autoposting/PlatformPoster.ts(643,11): error TS2353: Object literal may only specify known properties, and 'platformSpecificData' does not exist in type 'PostStatusResult'.
+src/app/workflows/data_analysis/engines/ContentOptimizationEngine.ts(119,68): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/app/workflows/data_analysis/engines/EngagementPredictionEngine.ts(126,9): error TS2322: Type 'string' is not assignable to type '"stable" | "up" | "down"'.
+src/app/workflows/data_analysis/engines/EngagementPredictionEngine.ts(234,12): error TS7053: Element implicitly has an 'any' type because expression of type '"TikTok" | "Instagram" | "Facebook" | "YouTube" | "Twitter" | "LinkedIn"' can't be used to index type '{ TikTok: { baseEngagementRate: number; likeRate: number; commentRate: number; shareRate: number; trendScore: number; }; Instagram: { baseEngagementRate: number; likeRate: number; commentRate: number; shareRate: number; trendScore: number; }; YouTube: { ...; }; }'.
+  Property 'Facebook' does not exist on type '{ TikTok: { baseEngagementRate: number; likeRate: number; commentRate: number; shareRate: number; trendScore: number; }; Instagram: { baseEngagementRate: number; likeRate: number; commentRate: number; shareRate: number; trendScore: number; }; YouTube: { ...; }; }'.
+src/app/workflows/data_analysis/engines/SentimentAnalysisEngine.ts(35,7): error TS2322: Type '{ score: number; label: "positive" | "negative" | "neutral"; }' is not assignable to type '{ score: number; label: "neutral"; }'.
+  Types of property 'label' are incompatible.
+    Type '"positive" | "negative" | "neutral"' is not assignable to type '"neutral"'.
+      Type '"positive"' is not assignable to type '"neutral"'.
+src/app/workflows/data_collection/cli/collect-data.ts(70,5): error TS2322: Type '"tiktok" | Platform' is not assignable to type 'Platform'.
+  Type '"tiktok"' is not assignable to type 'Platform'.
+src/app/workflows/data_collection/lib/auth.ts(52,7): error TS2353: Object literal may only specify known properties, and 'tokenType' does not exist in type 'OAuth2Credentials'.
+src/app/workflows/data_collection/lib/auth.ts(63,35): error TS2339: Property 'accessToken' does not exist on type 'PlatformCredentials'.
+  Property 'accessToken' does not exist on type 'ApiKeyCredentials'.
+src/app/workflows/data_collection/lib/auth.ts(64,36): error TS2339: Property 'refreshToken' does not exist on type 'PlatformCredentials'.
+  Property 'refreshToken' does not exist on type 'ApiKeyCredentials'.
+src/app/workflows/data_collection/lib/auth.ts(65,42): error TS2339: Property 'expiresAt' does not exist on type 'PlatformCredentials'.
+  Property 'expiresAt' does not exist on type 'ApiKeyCredentials'.
+src/app/workflows/data_collection/lib/auth.ts(139,9): error TS2353: Object literal may only specify known properties, and 'tokenType' does not exist in type 'OAuth2Credentials'.
+src/app/workflows/data_collection/lib/auth.ts(258,7): error TS2353: Object literal may only specify known properties, and 'tokenType' does not exist in type 'OAuth2Credentials'.
+src/app/workflows/data_collection/lib/platforms/InstagramClient.ts(6,14): error TS2654: Non-abstract class 'InstagramClient' is missing implementations for the following members of 'BasePlatformClient': 'handleRateLimit', 'fetchPosts', 'uploadContent', 'getAnalytics'.
+src/app/workflows/data_collection/lib/platforms/TikTokClient.ts(1,30): error TS2305: Module '"./base-platform"' has no exported member 'HeaderValue'.
+src/app/workflows/data_collection/lib/platforms/TikTokClient.ts(1,43): error TS2305: Module '"./base-platform"' has no exported member 'ApiResponse'.
+src/app/workflows/data_collection/lib/platforms/TikTokClient.ts(44,14): error TS2654: Non-abstract class 'TikTokClient' is missing implementations for the following members of 'BasePlatformClient': 'fetchPosts', 'uploadContent', 'getAnalytics'.
+src/app/workflows/data_collection/lib/platforms/YouTubeClient.ts(6,14): error TS2654: Non-abstract class 'YouTubeClient' is missing implementations for the following members of 'BasePlatformClient': 'handleRateLimit', 'fetchPosts', 'uploadContent', 'getAnalytics'.
+src/app/workflows/data_collection/lib/platforms/base-platform.ts(2,21): error TS2724: '"./types"' has no exported member named 'RateLimit'. Did you mean 'ApiRateLimit'?
+src/app/workflows/data_collection/lib/platforms/base-platform.ts(6,33): error TS2307: Cannot find module '@/types' or its corresponding type declarations.
+src/app/workflows/data_collection/lib/platforms/base-platform.ts(23,49): error TS2339: Property 'getToken' does not exist on type 'IAuthTokenManager'.
+src/app/workflows/data_collection/lib/platforms/base-platform.ts(42,40): error TS2345: Argument of type 'InternalAxiosRequestConfig<any> | undefined' is not assignable to parameter of type 'AxiosRequestConfig<any>'.
+  Type 'undefined' is not assignable to type 'AxiosRequestConfig<any>'.
+src/app/workflows/data_collection/lib/platforms/base-platform.ts(75,15): error TS2554: Expected 4-5 arguments, but got 3.
+src/app/workflows/data_collection/lib/platforms/consolidated/InstagramClient.ts(21,14): error TS2654: Non-abstract class 'InstagramClient' is missing implementations for the following members of 'BasePlatformClient': 'fetchPosts', 'uploadContent', 'getAnalytics'.
+src/app/workflows/data_collection/lib/platforms/consolidated/TikTokClient.ts(22,14): error TS2654: Non-abstract class 'TikTokClient' is missing implementations for the following members of 'BasePlatformClient': 'fetchPosts', 'uploadContent', 'getAnalytics'.
+src/app/workflows/data_collection/lib/platforms/consolidated/TikTokClient.ts(105,7): error TS2353: Object literal may only specify known properties, and 'useAuth' does not exist in type 'AxiosRequestConfig<any>'.
+src/app/workflows/data_collection/lib/platforms/consolidated/TikTokClient.ts(159,7): error TS2353: Object literal may only specify known properties, and 'useAuth' does not exist in type 'AxiosRequestConfig<any>'.
+src/app/workflows/data_collection/lib/platforms/instagram-client.ts(4,30): error TS2305: Module '"./base-platform"' has no exported member 'HeaderValue'.
+src/app/workflows/data_collection/lib/platforms/instagram-client.ts(38,14): error TS2339: Property 'requestQueue' does not exist on type 'InstagramClient'.
+src/app/workflows/data_collection/lib/platforms/instagram-client.ts(193,16): error TS2416: Property 'fetchPosts' in type 'InstagramClient' is not assignable to the same property in base type 'BasePlatformClient'.
+  Type '(options?: { userId?: string | undefined; cursor?: string | undefined; limit?: number | undefined; includeMetrics?: boolean | undefined; } | undefined) => Promise<ApiResponse<{ posts: any[]; nextPageCursor?: string | undefined; hasMore?: boolean | undefined; }>>' is not assignable to type '(query: string) => Promise<Post[]>'.
+    Types of parameters 'options' and 'query' are incompatible.
+      Type 'string' has no properties in common with type '{ userId?: string | undefined; cursor?: string | undefined; limit?: number | undefined; includeMetrics?: boolean | undefined; }'.
+src/app/workflows/data_collection/lib/platforms/instagram-client.ts(326,28): error TS2304: Cannot find name 'ApiError'.
+src/app/workflows/data_collection/lib/platforms/instagram-client.ts(326,57): error TS2304: Cannot find name 'PlatformError'.
+src/app/workflows/data_collection/lib/platforms/instagram-client.ts(326,91): error TS2304: Cannot find name 'RateLimitError'.
+src/app/workflows/data_collection/lib/platforms/instagram-client.ts(342,16): error TS2416: Property 'getAnalytics' in type 'InstagramClient' is not assignable to the same property in base type 'BasePlatformClient'.
+  Type '(options?: { dateRange?: { start: string; end: string; } | undefined; metrics?: string[] | undefined; postIds?: string[] | undefined; granularity?: "hour" | "day" | "week" | "month" | undefined; } | undefined) => Promise<...>' is not assignable to type '(postId: string) => Promise<Analytics>'.
+    Types of parameters 'options' and 'postId' are incompatible.
+      Type 'string' has no properties in common with type '{ dateRange?: { start: string; end: string; } | undefined; metrics?: string[] | undefined; postIds?: string[] | undefined; granularity?: "hour" | "day" | "week" | "month" | undefined; }'.
+src/app/workflows/data_collection/lib/platforms/instagram-client.ts(478,28): error TS2304: Cannot find name 'ApiError'.
+src/app/workflows/data_collection/lib/platforms/instagram-client.ts(478,57): error TS2304: Cannot find name 'PlatformError'.
+src/app/workflows/data_collection/lib/platforms/instagram-client.ts(478,91): error TS2304: Cannot find name 'RateLimitError'.
+src/app/workflows/data_collection/lib/platforms/instagram.ts(2,34): error TS2724: '"./types"' has no exported member named 'RateLimit'. Did you mean 'ApiRateLimit'?
+src/app/workflows/data_collection/lib/platforms/instagram.ts(26,44): error TS2304: Cannot find name 'Post'.
+src/app/workflows/data_collection/lib/platforms/instagram.ts(39,20): error TS2304: Cannot find name 'Post'.
+src/app/workflows/data_collection/lib/platforms/instagram.ts(39,73): error TS2304: Cannot find name 'Post'.
+src/app/workflows/data_collection/lib/platforms/instagram.ts(58,46): error TS2304: Cannot find name 'Post'.
+src/app/workflows/data_collection/lib/platforms/instagram.ts(70,53): error TS2339: Property 'getToken' does not exist on type 'IAuthTokenManager'.
+src/app/workflows/data_collection/lib/platforms/instagram.ts(80,53): error TS2339: Property 'getToken' does not exist on type 'IAuthTokenManager'.
+src/app/workflows/data_collection/lib/platforms/instagram.ts(84,19): error TS2304: Cannot find name 'Post'.
+src/app/workflows/data_collection/lib/platforms/instagram.ts(103,47): error TS2304: Cannot find name 'Analytics'.
+src/app/workflows/data_collection/lib/platforms/instagram.ts(116,24): error TS2304: Cannot find name 'Analytics'.
+src/app/workflows/data_collection/lib/platforms/platform-factory.ts(35,9): error TS2739: Type 'TikTokClient' is missing the following properties from type 'PlatformClient': getPostMetrics, getUserActivity, getUserVideos, getVideoComments
+src/app/workflows/data_collection/lib/platforms/platform-factory.ts(39,9): error TS2739: Type 'YouTubeClient' is missing the following properties from type 'PlatformClient': getPostMetrics, getUserActivity, getUserVideos, getVideoComments
+src/app/workflows/data_collection/lib/platforms/tiktok-client.ts(2,108): error TS2724: '"./types"' has no exported member named 'RateLimit'. Did you mean 'ApiRateLimit'?
+src/app/workflows/data_collection/lib/platforms/tiktok-client.ts(37,45): error TS2304: Cannot find name 'Post'.
+src/app/workflows/data_collection/lib/platforms/tiktok-client.ts(61,15): error TS2554: Expected 4-5 arguments, but got 3.
+src/app/workflows/data_collection/lib/platforms/tiktok-client.ts(64,23): error TS2304: Cannot find name 'Post'.
+src/app/workflows/data_collection/lib/platforms/tiktok-client.ts(64,82): error TS2304: Cannot find name 'Post'.
+src/app/workflows/data_collection/lib/platforms/tiktok-client.ts(87,13): error TS2554: Expected 4-5 arguments, but got 2.
+src/app/workflows/data_collection/lib/platforms/tiktok-client.ts(91,46): error TS2304: Cannot find name 'Post'.
+src/app/workflows/data_collection/lib/platforms/tiktok-client.ts(114,15): error TS2554: Expected 4-5 arguments, but got 3.
+src/app/workflows/data_collection/lib/platforms/tiktok-client.ts(117,19): error TS2304: Cannot find name 'Post'.
+src/app/workflows/data_collection/lib/platforms/tiktok-client.ts(136,47): error TS2304: Cannot find name 'Analytics'.
+src/app/workflows/data_collection/lib/platforms/tiktok-client.ts(153,15): error TS2554: Expected 4-5 arguments, but got 3.
+src/app/workflows/data_collection/lib/platforms/tiktok-client.ts(157,24): error TS2304: Cannot find name 'Analytics'.
+src/app/workflows/data_collection/lib/platforms/youtube-client.ts(2,108): error TS2724: '"./types"' has no exported member named 'RateLimit'. Did you mean 'ApiRateLimit'?
+src/app/workflows/data_collection/lib/platforms/youtube-client.ts(12,11): error TS2345: Argument of type 'Partial<ApiConfig>' is not assignable to parameter of type 'ApiConfig'.
+  Types of property 'baseUrl' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/app/workflows/data_collection/lib/platforms/youtube-client.ts(19,44): error TS2304: Cannot find name 'Post'.
+src/app/workflows/data_collection/lib/platforms/youtube-client.ts(35,20): error TS2304: Cannot find name 'Post'.
+src/app/workflows/data_collection/lib/platforms/youtube-client.ts(35,74): error TS2304: Cannot find name 'Post'.
+src/app/workflows/data_collection/lib/platforms/youtube-client.ts(54,48): error TS2304: Cannot find name 'Post'.
+src/app/workflows/data_collection/lib/platforms/youtube-client.ts(79,19): error TS2304: Cannot find name 'Post'.
+src/app/workflows/data_collection/lib/platforms/youtube-client.ts(98,47): error TS2304: Cannot find name 'Analytics'.
+src/app/workflows/data_collection/lib/platforms/youtube-client.ts(119,24): error TS2304: Cannot find name 'Analytics'.
+src/app/workflows/data_collection/lib/utils/errors.ts(77,31): error TS2345: Argument of type '{ maxRetries: number; initialDelayMs: number; }' is not assignable to parameter of type 'number'.
+src/app/workflows/reports/ChartGenerator.ts(1,41): error TS2307: Cannot find module './types' or its corresponding type declarations.
+src/app/workflows/reports/InsightsEngine.ts(50,77): error TS1501: This regular expression flag is only available when targeting 'es2018' or later.
+src/app/workflows/reports/InsightsEngine.ts(51,82): error TS1501: This regular expression flag is only available when targeting 'es2018' or later.
+src/app/workflows/reports/InsightsEngine.ts(52,71): error TS1501: This regular expression flag is only available when targeting 'es2018' or later.
+src/app/workflows/reports/ReportDataCollector.ts(38,30): error TS2339: Property 'listUserVideos' does not exist on type 'BasePlatformClient'.
+src/app/workflows/reports/ReportDataCollector.ts(49,44): error TS7006: Parameter 'acc' implicitly has an 'any' type.
+src/app/workflows/reports/ReportDataCollector.ts(49,49): error TS7006: Parameter 'cur' implicitly has an 'any' type.
+src/app/workflows/reports/ReportDataCollector.ts(50,39): error TS7006: Parameter 'acc' implicitly has an 'any' type.
+src/app/workflows/reports/ReportDataCollector.ts(50,44): error TS7006: Parameter 'cur' implicitly has an 'any' type.
+src/app/workflows/reports/ReportsAnalysisService.ts(11,26): error TS2459: Module '"./ChartGenerator"' declares 'ChartData' locally, but it is not exported.
+src/app/workflows/reports/ReportsAnalysisService.ts(109,12): error TS2678: Type 'Platform.TIKTOK' is not comparable to type '"TikTok" | "Instagram" | "Facebook" | "YouTube" | "Twitter" | "LinkedIn"'.
+src/app/workflows/reports/ReportsAnalysisService.ts(112,12): error TS2678: Type 'Platform.INSTAGRAM' is not comparable to type '"TikTok" | "Instagram" | "Facebook" | "YouTube" | "Twitter" | "LinkedIn"'.
+src/app/workflows/reports/ReportsAnalysisService.ts(115,12): error TS2678: Type 'Platform.YOUTUBE' is not comparable to type '"TikTok" | "Instagram" | "Facebook" | "YouTube" | "Twitter" | "LinkedIn"'.
+src/app/workflows/reports/services/ModelTrainingService.ts(158,87): error TS2552: Cannot find name 'validEngagementFeatures'. Did you mean 'valEngagementFeatures'?
+src/app/workflows/reports/services/ModelTrainingService.ts(158,112): error TS2552: Cannot find name 'validEngagementTargets'. Did you mean 'valEngagementTargets'?
+src/app/workflows/reports/services/ModelTrainingService.ts(161,72): error TS2552: Cannot find name 'validViralFeatures'. Did you mean 'valViralFeatures'?
+src/app/workflows/reports/services/ModelTrainingService.ts(161,92): error TS2552: Cannot find name 'validViralTargets'. Did you mean 'valViralTargets'?
+src/app/workflows/reports/services/ModelTrainingService.ts(258,56): error TS2339: Property 'batchPredict' does not exist on type 'LightGBMModel | SimpleMLModel'.
+  Property 'batchPredict' does not exist on type 'LightGBMModel'.
+src/app/workflows/reports/services/ModelTrainingService.ts(262,46): error TS2339: Property 'batchPredict' does not exist on type 'LightGBMModel | SimpleMLModel'.
+  Property 'batchPredict' does not exist on type 'LightGBMModel'.
+src/app/workflows/reports/services/ModelTrainingService.ts(267,57): error TS2339: Property 'getWeights' does not exist on type 'LightGBMModel | SimpleMLModel'.
+  Property 'getWeights' does not exist on type 'LightGBMModel'.
+src/app/workflows/reports/services/ModelTrainingService.ts(416,57): error TS2345: Argument of type 'number[]' is not assignable to parameter of type 'number[][] & number[]'.
+  Type 'number[]' is not assignable to type 'number[][]'.
+    Type 'number' is not assignable to type 'number[]'.
+src/app/workflows/reports/services/ModelTrainingService.ts(417,54): error TS2345: Argument of type 'number[]' is not assignable to parameter of type 'number[][] & number[]'.
+  Type 'number[]' is not assignable to type 'number[][]'.
+    Type 'number' is not assignable to type 'number[]'.
+src/app/workflows/reports/services/ModelTrainingService.ts(427,47): error TS2345: Argument of type 'number | number[]' is not assignable to parameter of type 'number'.
+  Type 'number[]' is not assignable to type 'number'.
+src/app/workflows/reports/services/ModelTrainingService.ts(428,49): error TS2345: Argument of type 'number | number[]' is not assignable to parameter of type 'number'.
+  Type 'number[]' is not assignable to type 'number'.
+src/components/dashboard/AccelerateComponent.tsx(136,28): error TS2304: Cannot find name 'handleRetryVideo'.
+src/components/dashboard/AccelerateComponent.tsx(137,29): error TS2304: Cannot find name 'handleRemoveVideo'.
+src/components/dashboard/AccelerateComponent.tsx(662,14): error TS2741: Property 'title' is missing in type '{ onUpload: () => void; className: string; }' but required in type 'NoVideosEmptyProps'.
+src/components/optimized/LazyComponents.tsx(8,42): error TS2307: Cannot find module '../team-dashboard/BulkOperationsPanel' or its corresponding type declarations.
+src/components/optimized/LazyComponents.tsx(9,44): error TS2307: Cannot find module '../team-dashboard/AdvancedClientFilters' or its corresponding type declarations.
+src/components/optimized/LazyComponents.tsx(10,39): error TS2307: Cannot find module '../team-dashboard/ClientDetailView' or its corresponding type declarations.
+src/components/optimized/LazyComponents.tsx(89,16): error TS2307: Cannot find module '../team-dashboard/ClientImportWizard' or its corresponding type declarations.
+src/components/optimized/LazyComponents.tsx(95,16): error TS2307: Cannot find module '../team-dashboard/WorkflowTemplateManager' or its corresponding type declarations.
+src/components/optimized/LazyComponents.tsx(101,16): error TS2307: Cannot find module '../team-dashboard/PerformanceMonitoringDashboard' or its corresponding type declarations.
+src/components/optimized/LazyComponents.tsx(107,16): error TS2307: Cannot find module '../team-dashboard/TeamAnalyticsOverview' or its corresponding type declarations.
+src/components/optimized/LazyComponents.tsx(113,16): error TS2307: Cannot find module '../team-dashboard/BulkOperationsPanel' or its corresponding type declarations.
+src/components/optimized/LazyComponents.tsx(119,16): error TS2307: Cannot find module '../team-dashboard/AdvancedClientFilters' or its corresponding type declarations.
+src/components/optimized/LazyComponents.tsx(125,16): error TS2307: Cannot find module '../team-dashboard/ClientDetailView' or its corresponding type declarations.
+src/components/optimized/LazyComponents.tsx(131,16): error TS2307: Cannot find module '../team-dashboard/WorkflowScheduler' or its corresponding type declarations.
+src/components/storage/file-manager.tsx(45,3): error TS2305: Module '"lucide-react"' has no exported member 'FileSize'.
+src/components/subscription-check.tsx(2,39): error TS2307: Cannot find module '@/app/actions' or its corresponding type declarations.
+src/components/team-dashboard/modules/index.ts(15,3): error TS2305: Module '"./ContentAutomationModule"' has no exported member 'ProcessingQueue'.
+src/components/team-dashboard/modules/index.ts(16,3): error TS2305: Module '"./ContentAutomationModule"' has no exported member 'ProcessingStats'.
+src/components/team-dashboard/modules/index.ts(17,3): error TS2305: Module '"./ContentAutomationModule"' has no exported member 'PostingSchedule'.
+src/components/team-dashboard/modules/index.ts(18,3): error TS2305: Module '"./ContentAutomationModule"' has no exported member 'ClientPreferences'.
+src/components/team-dashboard/modules/index.ts(19,3): error TS2305: Module '"./ContentAutomationModule"' has no exported member 'PlatformAnalytics'.
+src/components/team-dashboard/modules/index.ts(20,3): error TS2305: Module '"./ContentAutomationModule"' has no exported member 'ClientReport'.
+src/components/team-dashboard/modules/index.ts(21,3): error TS2305: Module '"./ContentAutomationModule"' has no exported member 'EmailTemplate'.
+src/components/team-dashboard/modules/index.ts(22,3): error TS2305: Module '"./ContentAutomationModule"' has no exported member 'AutomationRule'.
+src/components/team-dashboard/modules/index.ts(23,3): error TS2305: Module '"./ContentAutomationModule"' has no exported member 'ContentIdea'.
+src/components/team-dashboard/modules/index.ts(24,3): error TS2305: Module '"./ContentAutomationModule"' has no exported member 'TrendAnalysis'.
+src/components/team-dashboard/modules/index.ts(25,3): error TS2305: Module '"./ContentAutomationModule"' has no exported member 'CompetitorInsight'.
+src/components/team-dashboard/modules/index.ts(26,3): error TS2305: Module '"./ContentAutomationModule"' has no exported member 'ContentCalendar'.
+src/components/ui/chart-wrapper.tsx(27,9): error TS2322: Type 'ReactNode' is not assignable to type 'ReactElement<any, string | JSXElementConstructor<any>>'.
+  Type 'undefined' is not assignable to type 'ReactElement<any, string | JSXElementConstructor<any>>'.
+src/components/ui/error-states.tsx(37,12): error TS2322: Type '"info" | "warning" | "destructive"' is not assignable to type '"default" | "destructive" | null | undefined'.
+  Type '"info"' is not assignable to type '"default" | "destructive" | null | undefined'.
+src/hooks/useUsageLimits.tsx(43,66): error TS2345: Argument of type '"analytics" | "teamDashboard" | "ecommerce"' is not assignable to parameter of type 'keyof UsageLimits'.
+  Type '"analytics"' is not assignable to type 'keyof UsageLimits'.
+src/instrumentation/telemetry.ts(1,10): error TS2305: Module '"@opentelemetry/sdk-node"' has no exported member 'NodeTracerProvider'.
+src/instrumentation/telemetry.ts(6,35): error TS2307: Cannot find module '@opentelemetry/exporter-otlp-http' or its corresponding type declarations.
+src/instrumentation/telemetry.ts(13,38): error TS2307: Cannot find module '@opentelemetry/instrumentation-redis' or its corresponding type declarations.
+src/instrumentation/telemetry.ts(14,45): error TS2307: Cannot find module '@opentelemetry/auto-instrumentations-node' or its corresponding type declarations.
+src/instrumentation/telemetry.ts(206,41): error TS7006: Parameter 'req' implicitly has an 'any' type.
+src/instrumentation/telemetry.ts(233,57): error TS2339: Property 'getHeader' does not exist on type 'ClientRequest | IncomingMessage'.
+  Property 'getHeader' does not exist on type 'IncomingMessage'.
+src/instrumentation/telemetry.ts(234,62): error TS2339: Property 'getHeader' does not exist on type 'ClientRequest | IncomingMessage'.
+  Property 'getHeader' does not exist on type 'IncomingMessage'.
+src/instrumentation/telemetry.ts(239,63): error TS2339: Property 'getHeader' does not exist on type 'IncomingMessage | ServerResponse<IncomingMessage>'.
+  Property 'getHeader' does not exist on type 'IncomingMessage'.
+src/instrumentation/telemetry.ts(308,27): error TS2551: Property 'getAttribute' does not exist on type 'Span'. Did you mean 'setAttribute'?
+src/instrumentation/telemetry.ts(309,30): error TS2551: Property 'getAttribute' does not exist on type 'Span'. Did you mean 'setAttribute'?
+src/instrumentation/telemetry.ts(310,32): error TS2551: Property 'getAttribute' does not exist on type 'Span'. Did you mean 'setAttribute'?
+src/lib/accessibility/accessibilityAuditor.ts(95,32): error TS2532: Object is possibly 'undefined'.
+src/lib/accessibility/accessibilityAuditor.ts(223,7): error TS2322: Type '(element: Element) => string | true | null' is not assignable to type '(element: Element) => boolean'.
+  Type 'string | true | null' is not assignable to type 'boolean'.
+    Type 'null' is not assignable to type 'boolean'.
+src/lib/accessibility/accessibilityAuditor.ts(632,15): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(type: keyof ElementEventMap, listener: (this: Element, ev: Event) => any, options?: boolean | AddEventListenerOptions | undefined): void', gave the following error.
+    Argument of type '"keydown"' is not assignable to parameter of type 'keyof ElementEventMap'.
+  Overload 2 of 2, '(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions | undefined): void', gave the following error.
+    Argument of type '(event: KeyboardEvent) => void' is not assignable to parameter of type 'EventListenerOrEventListenerObject'.
+      Type '(event: KeyboardEvent) => void' is not assignable to type 'EventListener'.
+        Types of parameters 'event' and 'evt' are incompatible.
+          Type 'Event' is missing the following properties from type 'KeyboardEvent': altKey, charCode, code, ctrlKey, and 17 more.
+src/lib/accessibility/accessibilityAuditor.ts(637,17): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(type: keyof ElementEventMap, listener: (this: Element, ev: Event) => any, options?: boolean | EventListenerOptions | undefined): void', gave the following error.
+    Argument of type '"keydown"' is not assignable to parameter of type 'keyof ElementEventMap'.
+  Overload 2 of 2, '(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions | undefined): void', gave the following error.
+    Argument of type '(event: KeyboardEvent) => void' is not assignable to parameter of type 'EventListenerOrEventListenerObject'.
+      Type '(event: KeyboardEvent) => void' is not assignable to type 'EventListener'.
+        Types of parameters 'event' and 'evt' are incompatible.
+          Type 'Event' is missing the following properties from type 'KeyboardEvent': altKey, charCode, code, ctrlKey, and 17 more.
+src/lib/ai/contentOptimizer.ts(1,26): error TS2307: Cannot find module '../app/workflows/deliverables/types/deliverables_types' or its corresponding type declarations.
+src/lib/ai/engagementPredictor.ts(1,26): error TS2307: Cannot find module '../app/workflows/deliverables/types/deliverables_types' or its corresponding type declarations.
+src/lib/ai/engagementPredictor.ts(126,23): error TS2322: Type 'EngagementMetrics | OptimalTimeSlot[] | ContentSimulation[]' is not assignable to type 'EngagementMetrics'.
+  Type 'OptimalTimeSlot[]' is missing the following properties from type 'EngagementMetrics': likes, comments, shares, saves, and 3 more.
+src/lib/ai/engagementPredictor.ts(332,23): error TS2322: Type 'EngagementMetrics | OptimalTimeSlot[] | ContentSimulation[]' is not assignable to type 'OptimalTimeSlot[]'.
+  Type 'EngagementMetrics' is missing the following properties from type 'OptimalTimeSlot[]': length, pop, push, concat, and 35 more.
+src/lib/ai/engagementPredictor.ts(522,23): error TS2322: Type 'EngagementMetrics | OptimalTimeSlot[] | ContentSimulation[]' is not assignable to type 'ContentSimulation[]'.
+  Type 'EngagementMetrics' is missing the following properties from type 'ContentSimulation[]': length, pop, push, concat, and 35 more.
+src/lib/ai/enhancedTextAnalyzer.ts(8,26): error TS2307: Cannot find module '../app/workflows/deliverables/types/deliverables_types' or its corresponding type declarations.
+src/lib/ai/enhancedTextAnalyzer.ts(304,24): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'ContentSummaryResult'.
+src/lib/ai/enhancedTextAnalyzer.ts(513,7): error TS2322: Type 'unknown' is not assignable to type 'ContentSummaryResult'.
+src/lib/ai/enhancedTextAnalyzer.ts(704,43): error TS2352: Conversion of type 'this' to type 'Record<string, Function>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type 'EnhancedTextAnalyzer' is not comparable to type 'Record<string, Function>'.
+    Index signature for type 'string' is missing in type 'EnhancedTextAnalyzer'.
+src/lib/ai/scheduling.ts(1,26): error TS2307: Cannot find module '../app/workflows/deliverables/types/deliverables_types' or its corresponding type declarations.
+src/lib/ai/textAnalyzer.ts(3,26): error TS2307: Cannot find module '../app/workflows/deliverables/types/deliverables_types' or its corresponding type declarations.
+src/lib/ai/visualAnalyzer.ts(309,53): error TS2345: Argument of type '{ hasText: boolean; textPercentage?: number | undefined; complexity: number; brightness: number; contrast: number; faceCount: number; dominant: "object" | "text" | "other" | "person" | "nature" | "abstract"; } | { ...; }' is not assignable to parameter of type '{ hasText: boolean; textPercentage?: number | undefined; complexity: number; brightness: number; contrast: number; faceCount: number; dominant: "object" | "text" | "other" | "person" | "nature" | "abstract"; }'.
+  Type '{ hasText: boolean; complexity: number; brightness: number; contrast: number; faceCount: number; dominant: string; }' is not assignable to type '{ hasText: boolean; textPercentage?: number | undefined; complexity: number; brightness: number; contrast: number; faceCount: number; dominant: "object" | "text" | "other" | "person" | "nature" | "abstract"; }'.
+    Types of property 'dominant' are incompatible.
+      Type 'string' is not assignable to type '"object" | "text" | "other" | "person" | "nature" | "abstract"'.
+src/lib/ai/visualAnalyzer.ts(315,7): error TS2322: Type '{ hasText: boolean; textPercentage?: number | undefined; complexity: number; brightness: number; contrast: number; faceCount: number; dominant: "object" | "text" | "other" | "person" | "nature" | "abstract"; } | { ...; }' is not assignable to type '{ hasText: boolean; textPercentage?: number | undefined; complexity: number; brightness: number; contrast: number; faceCount: number; dominant: "object" | "text" | "other" | "person" | "nature" | "abstract"; }'.
+  Type '{ hasText: boolean; complexity: number; brightness: number; contrast: number; faceCount: number; dominant: string; }' is not assignable to type '{ hasText: boolean; textPercentage?: number | undefined; complexity: number; brightness: number; contrast: number; faceCount: number; dominant: "object" | "text" | "other" | "person" | "nature" | "abstract"; }'.
+    Types of property 'dominant' are incompatible.
+      Type 'string' is not assignable to type '"object" | "text" | "other" | "person" | "nature" | "abstract"'.
+src/lib/auth/actions.ts(76,21): error TS18046: 'error' is of type 'unknown'.
+src/lib/auth/actions.ts(102,21): error TS18046: 'error' is of type 'unknown'.
+src/lib/auth/actions.ts(126,21): error TS18046: 'error' is of type 'unknown'.
+src/lib/auth/actions.ts(177,14): error TS18046: 'error' is of type 'unknown'.
+src/lib/auth/actions.ts(192,21): error TS18046: 'error' is of type 'unknown'.
+src/lib/cache/redisCache.ts(123,7): error TS2571: Object is of type 'unknown'.
+src/lib/cache/redisCache.ts(135,9): error TS2571: Object is of type 'unknown'.
+src/lib/cache/redisCache.ts(158,22): error TS2571: Object is of type 'unknown'.
+src/lib/cache/redisCache.ts(197,22): error TS2571: Object is of type 'unknown'.
+src/lib/cache/redisCache.ts(204,7): error TS2571: Object is of type 'unknown'.
+src/lib/cache/redisCache.ts(227,25): error TS2571: Object is of type 'unknown'.
+src/lib/cache/redisCache.ts(229,11): error TS2571: Object is of type 'unknown'.
+src/lib/cache/redisCache.ts(265,9): error TS2571: Object is of type 'unknown'.
+src/lib/cache/redisCache.ts(295,14): error TS2571: Object is of type 'unknown'.
+src/lib/cache/redisCache.ts(373,7): error TS2571: Object is of type 'unknown'.
+src/lib/cache/redisCache.ts(393,14): error TS2571: Object is of type 'unknown'.
+src/lib/cache/redisCache.ts(471,21): error TS2339: Property 'clear' does not exist on type '{}'.
+src/lib/csrf/index.ts(119,7): error TS2345: Argument of type 'Buffer' is not assignable to parameter of type 'ArrayBufferView'.
+  Type 'Buffer' is not assignable to type 'Uint8Array<ArrayBufferLike> | DataView<ArrayBufferLike>'.
+    Type 'Buffer' is not assignable to type 'Uint8Array<ArrayBufferLike>'.
+      The types of 'slice(...).buffer' are incompatible between these types.
+        Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+          Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength
+src/lib/errors/errorAnalytics.ts(174,46): error TS2339: Property 'navigationStart' does not exist on type 'PerformanceNavigationTiming'.
+src/lib/errors/errorReporting.ts(214,11): error TS2322: Type '{ errorId: string; timestamp?: string | undefined; category: ErrorCategory; severity: ErrorSeverity; userId: string; sessionId?: string | undefined; requestId: string; userAgent?: string | undefined; url?: string | undefined; component: string; action: string; additionalContext: Record<string, any>; fingerprint: str...' is not assignable to type 'ErrorInfo'.
+  Types of property 'timestamp' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/lib/errors/errorReporting.ts(247,39): error TS2345: Argument of type 'ErrorInfo' is not assignable to parameter of type 'Context'.
+  Index signature for type 'string' is missing in type 'ErrorInfo'.
+src/lib/errors/index.ts(12,91): error TS2307: Cannot find module '../../components/team-dashboard/TeamModeErrorBoundary' or its corresponding type declarations.
+src/lib/security/auth-guard.ts(65,34): error TS2739: Type 'Response' is missing the following properties from type 'NextResponse<unknown>': cookies, [INTERNALS]
+src/lib/security/inputSanitizer.ts(3,10): error TS2305: Module '"isomorphic-dompurify"' has no exported member 'createDOMPurify'.
+src/lib/security/inputSanitizer.ts(193,10): error TS1125: Hexadecimal digit expected.
+src/lib/security/inputSanitizer.ts(194,10): error TS1125: Hexadecimal digit expected.
+src/lib/services/analyticsService.ts(36,51): error TS2345: Argument of type 'import("/workspaces/clipscommerce/src/types/platform").Platform' is not assignable to parameter of type 'import("/workspaces/clipscommerce/src/app/workflows/deliverables/types/deliverables_types").Platform'.
+  Type '"tiktok"' is not assignable to type 'Platform'.
+src/lib/services/analyticsService.ts(83,7): error TS2322: Type '{ id: any; content: any; engagementRate: number; platform: any; publishedAt: any; } | null' is not assignable to type '{ id: string; content: string; engagementRate: number; platform: Platform; publishedAt: Date; }'.
+  Type 'null' is not assignable to type '{ id: string; content: string; engagementRate: number; platform: Platform; publishedAt: Date; }'.
+src/lib/services/analyticsService.ts(84,22): error TS2339: Property 'id' does not exist on type '{ engagementRate: number; }'.
+src/lib/services/analyticsService.ts(85,27): error TS2339: Property 'content' does not exist on type '{ engagementRate: number; }'.
+src/lib/services/analyticsService.ts(87,28): error TS2339: Property 'platforms' does not exist on type '{ engagementRate: number; }'.
+src/lib/services/analyticsService.ts(88,31): error TS2339: Property 'status' does not exist on type '{ engagementRate: number; }'.
+src/lib/services/analyticsService.ts(90,7): error TS2322: Type '{ id: any; content: any; engagementRate: number; platform: any; publishedAt: any; } | null' is not assignable to type '{ id: string; content: string; engagementRate: number; platform: Platform; publishedAt: Date; }'.
+  Type 'null' is not assignable to type '{ id: string; content: string; engagementRate: number; platform: Platform; publishedAt: Date; }'.
+src/lib/services/analyticsService.ts(91,23): error TS2339: Property 'id' does not exist on type '{ engagementRate: number; }'.
+src/lib/services/analyticsService.ts(92,28): error TS2339: Property 'content' does not exist on type '{ engagementRate: number; }'.
+src/lib/services/analyticsService.ts(94,29): error TS2339: Property 'platforms' does not exist on type '{ engagementRate: number; }'.
+src/lib/services/analyticsService.ts(95,32): error TS2339: Property 'status' does not exist on type '{ engagementRate: number; }'.
+src/lib/services/analyticsService.ts(184,73): error TS2345: Argument of type 'import("/workspaces/clipscommerce/src/types/platform").Platform' is not assignable to parameter of type 'import("/workspaces/clipscommerce/src/app/workflows/deliverables/types/deliverables_types").Platform'.
+  Type '"tiktok"' is not assignable to type 'Platform'.
+src/lib/services/platformApis/base.ts(1,20): error TS2724: '"@/types/platform"' has no exported member named 'PlatformAuth'. Did you mean 'Platform'?
+src/lib/services/platformApis/factory.ts(1,20): error TS2724: '"@/types/platform"' has no exported member named 'PlatformAuth'. Did you mean 'Platform'?
+src/lib/services/platformApis/instagram.ts(1,20): error TS2724: '"@/types/platform"' has no exported member named 'PlatformAuth'. Did you mean 'Platform'?
+src/lib/services/platformApis/instagram.ts(5,14): error TS2655: Non-abstract class 'InstagramApiClient' is missing implementations for the following members of 'PlatformApiClient': 'schedulePost', 'getScheduledPosts', 'getPostsInsights', 'getAccountMetrics' and 8 more.
+src/lib/services/queueService.ts(107,60): error TS2345: Argument of type 'import("/workspaces/clipscommerce/src/types/platform").Platform' is not assignable to parameter of type 'import("/workspaces/clipscommerce/src/app/workflows/deliverables/types/deliverables_types").Platform'.
+  Type '"tiktok"' is not assignable to type 'Platform'.
+src/lib/services/queueService.ts(149,55): error TS2345: Argument of type 'import("/workspaces/clipscommerce/src/types/platform").Platform' is not assignable to parameter of type 'import("/workspaces/clipscommerce/src/app/workflows/deliverables/types/deliverables_types").Platform'.
+  Type '"tiktok"' is not assignable to type 'Platform'.
+src/lib/services/queueService.ts(169,11): error TS2345: Argument of type 'import("/workspaces/clipscommerce/src/types/platform").Platform' is not assignable to parameter of type 'import("/workspaces/clipscommerce/src/app/workflows/deliverables/types/deliverables_types").Platform'.
+  Type '"tiktok"' is not assignable to type 'Platform'.
+src/lib/services/schedulingService.ts(77,61): error TS2345: Argument of type 'import("/workspaces/clipscommerce/src/types/platform").Platform' is not assignable to parameter of type 'import("/workspaces/clipscommerce/src/app/workflows/deliverables/types/deliverables_types").Platform'.
+  Type '"tiktok"' is not assignable to type 'Platform'.
+src/lib/services/schedulingService.ts(83,17): error TS2322: Type 'import("/workspaces/clipscommerce/src/types/platform").Platform' is not assignable to type 'import("/workspaces/clipscommerce/src/app/workflows/deliverables/types/deliverables_types").Platform'.
+  Type '"tiktok"' is not assignable to type 'Platform'.
+src/lib/services/schedulingService.ts(111,21): error TS2322: Type 'import("/workspaces/clipscommerce/src/types/platform").Platform' is not assignable to type 'import("/workspaces/clipscommerce/src/app/workflows/deliverables/types/deliverables_types").Platform'.
+  Type '"tiktok"' is not assignable to type 'Platform'.
+src/lib/services/schedulingService.ts(136,17): error TS2322: Type 'import("/workspaces/clipscommerce/src/types/platform").Platform' is not assignable to type 'import("/workspaces/clipscommerce/src/app/workflows/deliverables/types/deliverables_types").Platform'.
+  Type '"tiktok"' is not assignable to type 'Platform'.
+src/lib/services/schedulingService.ts(193,11): error TS2345: Argument of type 'Post[]' is not assignable to parameter of type '{ publishedAt?: string | undefined; engagementRate?: number | undefined; }[]'.
+  Type 'Post' has no properties in common with type '{ publishedAt?: string | undefined; engagementRate?: number | undefined; }'.
+src/lib/services/schedulingService.ts(297,11): error TS2345: Argument of type 'Post[]' is not assignable to parameter of type '{ publishedAt?: string | undefined; engagementRate?: number | undefined; }[]'.
+  Type 'Post' has no properties in common with type '{ publishedAt?: string | undefined; engagementRate?: number | undefined; }'.
+src/lib/storage/cleanup-service.ts(1,10): error TS2724: '"@/lib/supabase/server"' has no exported member named 'createServerClient'. Did you mean 'createClient'?
+src/lib/storage/cleanup-service.ts(36,50): error TS7006: Parameter 'acc' implicitly has an 'any' type.
+src/lib/storage/cleanup-service.ts(36,55): error TS7006: Parameter 'file' implicitly has an 'any' type.
+src/lib/storage/cleanup-service.ts(48,29): error TS18046: 'files' is of type 'unknown'.
+src/lib/storage/cleanup-service.ts(48,39): error TS7006: Parameter 'f' implicitly has an 'any' type.
+src/lib/storage/cleanup-service.ts(59,27): error TS18046: 'files' is of type 'unknown'.
+src/lib/storage/cleanup-service.ts(59,37): error TS7006: Parameter 'f' implicitly has an 'any' type.
+src/lib/storage/cleanup-service.ts(70,27): error TS18046: 'files' is of type 'unknown'.
+src/lib/storage/cleanup-service.ts(71,37): error TS18046: 'files' is of type 'unknown'.
+src/lib/storage/cleanup-service.ts(122,58): error TS7006: Parameter 'f' implicitly has an 'any' type.
+src/lib/storage/cleanup-service.ts(125,51): error TS7006: Parameter 'file' implicitly has an 'any' type.
+src/lib/storage/cleanup-service.ts(131,51): error TS7006: Parameter 'f' implicitly has an 'any' type.
+src/lib/storage/cleanup-service.ts(234,44): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+src/lib/storage/cleanup-service.ts(234,49): error TS7006: Parameter 'file' implicitly has an 'any' type.
+src/lib/storage/cleanup-service.ts(237,26): error TS7006: Parameter 'file' implicitly has an 'any' type.
+src/lib/storage/supabase-storage.ts(147,7): error TS2322: Type 'string | null' is not assignable to type 'string | undefined'.
+  Type 'null' is not assignable to type 'string | undefined'.
+src/lib/storage/supabase-storage.ts(431,47): error TS2345: Argument of type 'Buffer' is not assignable to parameter of type 'BinaryLike'.
+  Type 'Buffer' is not assignable to type 'Uint8Array<ArrayBufferLike> | DataView<ArrayBufferLike>'.
+    Type 'Buffer' is not assignable to type 'Uint8Array<ArrayBufferLike>'.
+      The types of 'slice(...).buffer' are incompatible between these types.
+        Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+          Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength
+src/lib/storage/supabase-storage.ts(512,47): error TS7006: Parameter 'file' implicitly has an 'any' type.
+src/lib/storage/supabase-storage.ts(550,39): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+src/lib/storage/supabase-storage.ts(550,44): error TS7006: Parameter 'file' implicitly has an 'any' type.
+src/lib/storage/supabase-storage.ts(553,21): error TS7006: Parameter 'file' implicitly has an 'any' type.
+src/lib/supabase/queries/pricing.ts(4,49): error TS2339: Property 'pricing_tiers' does not exist on type '{ model_training_sessions: unknown; trained_models: unknown; training_data_quality: unknown; ai_suggestions: unknown; ab_experiments: unknown; experiment_results: unknown; user_posts: unknown; profiles: unknown; autopost_schedule: unknown; user_social_credentials: unknown; }'.
+src/lib/supabase/queries/pricing.ts(60,41): error TS2339: Property 'pricing_tiers' does not exist on type '{ model_training_sessions: unknown; trained_models: unknown; training_data_quality: unknown; ai_suggestions: unknown; ab_experiments: unknown; experiment_results: unknown; user_posts: unknown; profiles: unknown; autopost_schedule: unknown; user_social_credentials: unknown; }'.
+src/lib/supabase/queries/pricing.ts(91,41): error TS2339: Property 'tier_benefits' does not exist on type '{ model_training_sessions: unknown; trained_models: unknown; training_data_quality: unknown; ai_suggestions: unknown; ab_experiments: unknown; experiment_results: unknown; user_posts: unknown; profiles: unknown; autopost_schedule: unknown; user_social_credentials: unknown; }'.
+src/middleware/correlation.ts(16,59): error TS2304: Cannot find name 'LogContext'.
+src/middleware/correlation.ts(85,18): error TS2304: Cannot find name 'LogContext'.
+src/middleware/correlation.ts(118,12): error TS2339: Property 'request' does not exist on type 'Logger<never, boolean>'.
+src/middleware/correlation.ts(136,57): error TS2304: Cannot find name 'LogContext'.
+src/middleware/correlation.ts(148,20): error TS2304: Cannot find name 'LogContext'.
+src/providers/AuthProvider.tsx(26,48): error TS7031: Binding element 'session' implicitly has an 'any' type.
+src/providers/AuthProvider.tsx(34,14): error TS7006: Parameter 'event' implicitly has an 'any' type.
+src/providers/AuthProvider.tsx(34,21): error TS7006: Parameter 'session' implicitly has an 'any' type.
+src/services/SchedulerService.ts(40,22): error TS2339: Property 'id' does not exist on type 'Omit<Post, "status" | "id"> & { scheduledTime: Date; }'.
+src/services/SchedulerService.ts(44,41): error TS2339: Property 'media' does not exist on type 'PostContent'.
+src/services/SchedulerService.ts(53,22): error TS2339: Property 'id' does not exist on type 'Omit<Post, "status" | "id"> & { scheduledTime: Date; }'.
+src/services/SchedulerService.ts(75,41): error TS2339: Property 'media' does not exist on type 'PostContent'.
+src/services/competitorAnalysisService.ts(57,42): error TS2345: Argument of type '{ timeRange?: "week" | "month" | "quarter" | undefined; platform?: "tiktok" | "instagram" | "youtube" | undefined; niche: string | undefined; limit: string; }' is not assignable to parameter of type 'string | URLSearchParams | Record<string, string> | string[][] | undefined'.
+  Type '{ timeRange?: "week" | "month" | "quarter" | undefined; platform?: "tiktok" | "instagram" | "youtube" | undefined; niche: string | undefined; limit: string; }' is not assignable to type 'undefined'.
+src/services/contentAutomationWorkflow.ts(94,65): error TS2339: Property 'trendingHashtags' does not exist on type 'OptimizedVideoContent'.
+src/services/contentAutomationWorkflow.ts(94,88): error TS7006: Parameter 'h' implicitly has an 'any' type.
+src/services/contentAutomationWorkflow.ts(99,9): error TS2741: Property 'success' is missing in type '{ id: string; }' but required in type '{ id: string; success: boolean; error?: any; }'.
+src/services/contentAutomationWorkflow.ts(115,21): error TS2454: Variable 'autopostResult' is used before being assigned.
+src/services/contentIdeationWorkflow.ts(11,25): error TS2304: Cannot find name 'ContentOptimization'.
+src/services/mlModelPersistenceService.ts(585,47): error TS2345: Argument of type 'string | Buffer' is not assignable to parameter of type 'BinaryLike'.
+  Type 'Buffer' is not assignable to type 'BinaryLike'.
+    Type 'Buffer' is not assignable to type 'Uint8Array<ArrayBufferLike> | DataView<ArrayBufferLike>'.
+      Type 'Buffer' is not assignable to type 'Uint8Array<ArrayBufferLike>'.
+        The types of 'slice(...).buffer' are incompatible between these types.
+          Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+            Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength
+src/services/secureTransfer.ts(34,51): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(algorithm: CipherGCMTypes, key: CipherKey, iv: BinaryLike, options?: CipherGCMOptions | undefined): CipherGCM', gave the following error.
+    Argument of type 'Buffer' is not assignable to parameter of type 'CipherKey'.
+      Type 'Buffer' is not assignable to type 'Uint8Array<ArrayBufferLike> | DataView<ArrayBufferLike>'.
+        Type 'Buffer' is not assignable to type 'Uint8Array<ArrayBufferLike>'.
+          The types of 'slice(...).buffer' are incompatible between these types.
+            Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+              Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength
+  Overload 2 of 4, '(algorithm: string, key: CipherKey, iv: BinaryLike | null, options?: TransformOptions | undefined): Cipher', gave the following error.
+    Argument of type 'Buffer' is not assignable to parameter of type 'CipherKey'.
+      Type 'Buffer' is not assignable to type 'Uint8Array<ArrayBufferLike> | DataView<ArrayBufferLike>'.
+        Type 'Buffer' is not assignable to type 'Uint8Array<ArrayBufferLike>'.
+          The types of 'slice(...).buffer' are incompatible between these types.
+            Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+              Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength
+src/services/secureTransfer.ts(36,36): error TS2322: Type 'Buffer' is not assignable to type 'Uint8Array<ArrayBufferLike>'.
+  The types of 'slice(...).buffer' are incompatible between these types.
+    Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+      Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength
+src/services/secureTransfer.ts(36,65): error TS2322: Type 'Buffer' is not assignable to type 'Uint8Array<ArrayBufferLike>'.
+  The types of 'slice(...).buffer' are incompatible between these types.
+    Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+      Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength
+src/services/secureTransfer.ts(67,55): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(algorithm: CipherGCMTypes, key: CipherKey, iv: BinaryLike, options?: CipherGCMOptions | undefined): DecipherGCM', gave the following error.
+    Argument of type 'Buffer' is not assignable to parameter of type 'CipherKey'.
+      Type 'Buffer' is not assignable to type 'Uint8Array<ArrayBufferLike> | DataView<ArrayBufferLike>'.
+        Type 'Buffer' is not assignable to type 'Uint8Array<ArrayBufferLike>'.
+          The types of 'slice(...).buffer' are incompatible between these types.
+            Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+              Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength
+  Overload 2 of 4, '(algorithm: string, key: CipherKey, iv: BinaryLike | null, options?: TransformOptions | undefined): Decipher', gave the following error.
+    Argument of type 'Buffer' is not assignable to parameter of type 'CipherKey'.
+      Type 'Buffer' is not assignable to type 'Uint8Array<ArrayBufferLike> | DataView<ArrayBufferLike>'.
+        Type 'Buffer' is not assignable to type 'Uint8Array<ArrayBufferLike>'.
+          The types of 'slice(...).buffer' are incompatible between these types.
+            Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+              Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength
+src/services/secureTransfer.ts(68,23): error TS2345: Argument of type 'Buffer' is not assignable to parameter of type 'ArrayBufferView'.
+  Type 'Buffer' is not assignable to type 'Uint8Array<ArrayBufferLike> | DataView<ArrayBufferLike>'.
+    Type 'Buffer' is not assignable to type 'Uint8Array<ArrayBufferLike>'.
+      The types of 'slice(...).buffer' are incompatible between these types.
+        Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+          Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength
+src/services/secureTransfer.ts(71,5): error TS2322: Type 'Buffer & string' is not assignable to type 'Uint8Array<ArrayBufferLike>'.
+  The types of 'slice(...).buffer' are incompatible between these types.
+    Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+      Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength
+src/services/secureTransfer.ts(71,21): error TS2345: Argument of type 'Buffer' is not assignable to parameter of type 'ArrayBufferView'.
+  Type 'Buffer' is not assignable to type 'Uint8Array<ArrayBufferLike> | DataView<ArrayBufferLike>'.
+    Type 'Buffer' is not assignable to type 'Uint8Array<ArrayBufferLike>'.
+      The types of 'slice(...).buffer' are incompatible between these types.
+        Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+          Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength
+src/services/secureTransfer.ts(72,5): error TS2322: Type 'Buffer' is not assignable to type 'Uint8Array<ArrayBufferLike>'.
+  The types of 'slice(...).buffer' are incompatible between these types.
+    Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+      Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength

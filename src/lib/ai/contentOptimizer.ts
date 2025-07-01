@@ -1,4 +1,4 @@
-import { Platform } from '../app/workflows/deliverables/types/deliverables_types';
+import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
 
 export interface ContentOptimizationOptions {
   maxLength?: number;

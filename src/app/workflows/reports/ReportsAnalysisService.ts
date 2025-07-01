@@ -106,13 +106,13 @@ export class ReportsAnalysisService {
     let client;
 
     switch (platform) {
-      case Platform.TIKTOK:
+      case 'tiktok':
         client = new TikTokClient({} as any, authManager, userId);
         break;
-      case Platform.INSTAGRAM:
+      case 'instagram':
         client = new InstagramClient({} as any, authManager, userId);
         break;
-      case Platform.YOUTUBE:
+      case 'youtube':
         client = new YouTubeClient({} as any, authManager, userId);
         break;
       default:

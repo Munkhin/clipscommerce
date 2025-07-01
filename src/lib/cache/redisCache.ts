@@ -120,7 +120,7 @@ export class RedisCache {
       };
 
       // Store in cache
-      this.client.set(cacheKey, JSON.stringify(entry));
+      (this.client as Map<string, string>).set(cacheKey, JSON.stringify(entry));
 
       // Update tag index
       tags.forEach(tag => {
@@ -132,7 +132,7 @@ export class RedisCache {
 
       // Set expiration (simulated)
       setTimeout(() => {
-        this.client.delete(cacheKey);
+        (this.client as Map<string, string>).delete(cacheKey);
         this.removeFromTagIndex(cacheKey, tags);
       }, ttl * 1000);
 
@@ -155,7 +155,7 @@ export class RedisCache {
       }
 
       const cacheKey = this.generateKey(key);
-      const cached = this.client.get(cacheKey);
+      const cached = (this.client as Map<string, string>).get(cacheKey);
 
       if (!cached) {
         this.stats.misses++;
@@ -194,14 +194,14 @@ export class RedisCache {
       }
 
       const cacheKey = this.generateKey(key);
-      const cached = this.client.get(cacheKey);
+      const cached = (this.client as Map<string, string>).get(cacheKey);
 
       if (cached) {
         const entry: CacheEntry = JSON.parse(cached);
         this.removeFromTagIndex(cacheKey, entry.tags);
       }
 
-      this.client.delete(cacheKey);
+      (this.client as Map<string, string>).delete(cacheKey);
       this.stats.deletes++;
       
       console.log(`[CACHE] Deleted key: ${key}`);
@@ -224,9 +224,9 @@ export class RedisCache {
       const regex = new RegExp(pattern.replace('*', '.*'));
       let deletedCount = 0;
 
-      for (const key of this.client.keys()) {
+      for (const key of (this.client as Map<string, string>).keys()) {
         if (regex.test(key)) {
-          this.client.delete(key);
+          (this.client as Map<string, string>).delete(key);
           deletedCount++;
         }
       }
@@ -262,7 +262,7 @@ export class RedisCache {
 
       let deletedCount = 0;
       for (const key of keysToDelete) {
-        this.client.delete(key);
+        (this.client as Map<string, string>).delete(key);
         deletedCount++;
       }
 
@@ -292,7 +292,7 @@ export class RedisCache {
       }
 
       const cacheKey = this.generateKey(key);
-      return this.client.has(cacheKey);
+      return (this.client as Map<string, string>).has(cacheKey);
     } catch (error) {
       this.stats.errors++;
       console.error('[CACHE] Error checking existence:', error);
@@ -370,7 +370,7 @@ export class RedisCache {
         throw new Error('Redis client not connected');
       }
 
-      this.client.clear();
+      (this.client as Map<string, string>).clear();
       this.tagIndex.clear();
       
       console.log('[CACHE] Cleared all cache');
@@ -390,7 +390,7 @@ export class RedisCache {
         return 0;
       }
 
-      return this.client.size;
+      return (this.client as Map<string, string>).size;
     } catch (error) {
       console.error('[CACHE] Error getting cache size:', error);
       return 0;
@@ -468,7 +468,7 @@ export class RedisCache {
     try {
       if (this.client && this.isConnected) {
         // In production, you would call client.disconnect()
-        this.client.clear();
+        (this.client as Map<string, string>).clear();
         this.isConnected = false;
         console.log('[CACHE] Disconnected from Redis');
       }

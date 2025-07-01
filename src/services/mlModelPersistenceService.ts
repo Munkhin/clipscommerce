@@ -582,7 +582,8 @@ export class MLModelPersistenceService {
    * Calculate checksum for data integrity
    */
   private calculateChecksum(data: Buffer | string): string {
-    return crypto.createHash('sha256').update(data).digest('hex');
+    const input = typeof data === 'string' ? data : new Uint8Array(data);
+    return crypto.createHash('sha256').update(input).digest('hex');
   }
 
   /**

@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from "axios";
-import { BasePlatformClient } from "../base-platform";
+import { BasePlatformClient, Post, Analytics } from "../base-platform";
 import {
   ApiConfig,
   ApiResponse,
@@ -9,6 +9,7 @@ import {
   PlatformUserActivity,
   PlatformComment,
 } from "../types";
+import { PlatformEnum } from "../../../../deliverables/types/deliverables_types";
 
 interface TikTokApiErrorResponse {
   error: {
@@ -21,7 +22,7 @@ interface TikTokApiErrorResponse {
 
 export class TikTokClient extends BasePlatformClient {
   protected client: AxiosInstance;
-  protected readonly platform: Platform = Platform.TIKTOK;
+  protected readonly platform: Platform = PlatformEnum.TIKTOK;
   private static readonly DEFAULT_CONFIG: ApiConfig = {
     baseUrl: "https://open.tiktokapis.com",
     version: "v2",
@@ -184,6 +185,57 @@ export class TikTokClient extends BasePlatformClient {
   // Minimal no-op handleRateLimit to satisfy abstract member requirement
   protected handleRateLimit(headers: Record<string, any>): void {
     // No-op for now
+  }
+
+  // Implementation of abstract methods from BasePlatformClient
+  async fetchPosts(query: string): Promise<Post[]> {
+    try {
+      this.log('info', `Fetching TikTok posts with query: ${query}`);
+      return []; // Placeholder implementation
+    } catch (error) {
+      this.log('error', 'Failed to fetch TikTok posts', error);
+      return [];
+    }
+  }
+
+  async uploadContent(content: any): Promise<Post> {
+    try {
+      this.log('info', 'Uploading content to TikTok', content);
+      // Placeholder implementation
+      return {
+        id: 'placeholder-id',
+        platform: this.platform.toString(),
+        content: content.description || '',
+        mediaUrl: content.videoUrl,
+        publishedAt: new Date()
+      };
+    } catch (error) {
+      this.log('error', 'Failed to upload content to TikTok', error);
+      throw error;
+    }
+  }
+
+  async getAnalytics(postId: string): Promise<Analytics> {
+    try {
+      this.log('info', `Fetching analytics for TikTok post: ${postId}`);
+      // Placeholder implementation
+      return {
+        views: 0,
+        likes: 0,
+        comments: 0,
+        shares: 0,
+        engagementRate: 0
+      };
+    } catch (error) {
+      this.log('error', 'Failed to fetch TikTok analytics', error);
+      return {
+        views: 0,
+        likes: 0,
+        comments: 0,
+        shares: 0,
+        engagementRate: 0
+      };
+    }
   }
 }
 
