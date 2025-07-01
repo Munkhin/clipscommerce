@@ -1,7 +1,6 @@
 // Specialized Hashtag Performance Analysis Module
-import { PostMetrics } from '../types';
-import { Platform, PlatformEnum } from '@/app/workflows/deliverables/types/deliverables_types';
-import { Cache } from '@/lib/utils/cache';
+import { PostMetrics, Platform } from '../types';
+import { Cache } from '../../../../../lib/utils/cache';
 
 /**
  * HashtagPerformanceResult - Detailed performance metrics for a hashtag
@@ -90,7 +89,7 @@ export class HashtagAnalyzer {
     });
     
     // Initialize platform index for each supported platform
-    const platforms: Platform[] = [PlatformEnum.TIKTOK, PlatformEnum.INSTAGRAM, PlatformEnum.YOUTUBE];
+    const platforms: Platform[] = ['tiktok', 'instagram', 'youtube'];
     for (const platform of platforms) {
       this.platformHashtagIndex.set(platform, new Map());
     }
@@ -118,7 +117,7 @@ export class HashtagAnalyzer {
       // Clear indices if replacing all posts
       this.hashtagIndex.clear();
       this.coOccurrenceMatrix.clear();
-      const platformsList: Platform[] = [PlatformEnum.TIKTOK, PlatformEnum.INSTAGRAM, PlatformEnum.YOUTUBE];
+      const platformsList: Platform[] = ['tiktok', 'instagram', 'youtube'];
       for (const platform of platformsList) {
         this.platformHashtagIndex.set(platform, new Map());
       }
@@ -133,14 +132,16 @@ export class HashtagAnalyzer {
     // Invalidate cache for affected hashtags
     const affectedHashtags = new Set<string>();
     for (const post of newPosts) {
-      if (post.hashtags) {
+      if (post.hashtags && Array.isArray(post.hashtags)) {
         for (const hashtag of post.hashtags) {
-          affectedHashtags.add(hashtag.toLowerCase());
+          if (typeof hashtag === 'string') {
+            affectedHashtags.add(hashtag.toLowerCase());
+          }
         }
       }
     }
     
-    for (const hashtag of affectedHashtags) {
+    for (const hashtag of Array.from(affectedHashtags)) {
       // Remove from cache if exists
       const cacheKey = `hashtag_${hashtag}`;
       if (this.hashtagCache.get(cacheKey)) {
@@ -157,14 +158,16 @@ export class HashtagAnalyzer {
    * @param post Post to index
    */
   private indexPost(post: PostMetrics): void {
-    if (!post.hashtags || post.hashtags.length === 0) return;
+    if (!post.hashtags || !Array.isArray(post.hashtags) || post.hashtags.length === 0) return;
     
-    const postId = post.id;
-    const platform = post.platform;
-    const timestamp = new Date(post.timestamp);
+    const postId = post.id as string;
+    const platform = post.platform as Platform;
+    const timestamp = post.timestamp instanceof Date ? post.timestamp : new Date(post.timestamp as string | number);
     
     // Normalize hashtags (lowercase)
-    const normalizedHashtags = post.hashtags.map((tag: string) => tag.toLowerCase());
+    const normalizedHashtags = post.hashtags
+      .filter((tag): tag is string => typeof tag === 'string')
+      .map((tag: string) => tag.toLowerCase());
     
     // Update hashtag index
     for (const hashtag of normalizedHashtags) {
@@ -265,13 +268,13 @@ export class HashtagAnalyzer {
     }
     
     // Apply time range filter if specified
-    let filteredPostIds = [...postIds];
+    let filteredPostIds = Array.from(postIds);
     if (options.timeRange) {
       filteredPostIds = filteredPostIds.filter(id => {
         const post = this.posts.find(p => p.id === id);
         if (!post) return false;
         
-        const postDate = new Date(post.timestamp);
+        const postDate = post.timestamp instanceof Date ? post.timestamp : new Date(post.timestamp as string | number);
         if (options.timeRange!.start && postDate < options.timeRange!.start) return false;
         if (options.timeRange!.end && postDate > options.timeRange!.end) return false;
         
@@ -283,7 +286,7 @@ export class HashtagAnalyzer {
     if (options.platforms && options.platforms.length > 0) {
       filteredPostIds = filteredPostIds.filter(id => {
         const post = this.posts.find(p => p.id === id);
-        return post && options.platforms!.includes(post.platform);
+        return post && options.platforms!.includes(post.platform as Platform);
       });
     }
     
@@ -304,17 +307,19 @@ export class HashtagAnalyzer {
     let totalImpressions = 0;
     
     // Platform-specific metrics
-    const platformMetrics: Record<string, { 
+    const platformMetrics: Record<Platform, { 
       posts: number; 
       engagement: number;
       reach: number;
       impressions: number;
-    }> = {};
-    
-    const platforms = ['tiktok', 'instagram', 'youtube'] as Platform[];
-    for (const platform of platforms) {
-      platformMetrics[platform] = { posts: 0, engagement: 0, reach: 0, impressions: 0 };
-    }
+    }> = {
+      'tiktok': { posts: 0, engagement: 0, reach: 0, impressions: 0 },
+      'instagram': { posts: 0, engagement: 0, reach: 0, impressions: 0 },
+      'youtube': { posts: 0, engagement: 0, reach: 0, impressions: 0 },
+      'facebook': { posts: 0, engagement: 0, reach: 0, impressions: 0 },
+      'twitter': { posts: 0, engagement: 0, reach: 0, impressions: 0 },
+      'linkedin': { posts: 0, engagement: 0, reach: 0, impressions: 0 }
+    };
     
     // Calculate engagement metrics
     for (const post of hashtagPosts) {
@@ -322,27 +327,32 @@ export class HashtagAnalyzer {
       totalEngagement += engagement;
       
       // Platform-specific metrics
-      platformMetrics[post.platform].posts++;
-      platformMetrics[post.platform].engagement += engagement;
+      const platform = post.platform as Platform;
+      platformMetrics[platform].posts++;
+      platformMetrics[platform].engagement += engagement;
       
       // Reach and impressions estimates
-      const reachEstimate = Math.floor(engagement * this.getReachMultiplier(post.platform));
-      const impressionsEstimate = Math.floor(reachEstimate * this.getImpressionMultiplier(post.platform));
+      const reachEstimate = Math.floor(engagement * this.getReachMultiplier(platform));
+      const impressionsEstimate = Math.floor(reachEstimate * this.getImpressionMultiplier(platform));
       
       totalReach += reachEstimate;
       totalImpressions += impressionsEstimate;
-      platformMetrics[post.platform].reach += reachEstimate;
-      platformMetrics[post.platform].impressions += impressionsEstimate;
+      platformMetrics[platform].reach += reachEstimate;
+      platformMetrics[platform].impressions += impressionsEstimate;
     }
     
     // Calculate performance by platform
-    const performanceByPlatform: Record<string, {
+    const performanceByPlatform: Record<Platform, {
       posts: number;
       engagement: number;
       engagementRate: number;
-    }> = {};
+    }> = {} as Record<Platform, {
+      posts: number;
+      engagement: number;
+      engagementRate: number;
+    }>;
     
-    const platformsList = ['tiktok', 'instagram', 'youtube'] as Platform[];
+    const platformsList: Platform[] = ['tiktok', 'instagram', 'youtube', 'facebook', 'twitter', 'linkedin'];
     for (const platform of platformsList) {
       const metrics = platformMetrics[platform];
       performanceByPlatform[platform] = {
@@ -386,7 +396,7 @@ export class HashtagAnalyzer {
       const twoWeeksAgo = new Date();
       twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
       
-      const isNew = hashtagPosts.every(post => new Date(post.timestamp) >= twoWeeksAgo);
+      const isNew = hashtagPosts.every(post => (post.timestamp instanceof Date ? post.timestamp : new Date(post.timestamp as string | number)) >= twoWeeksAgo);
       if (isNew) trend = 'new';
     }
     
@@ -445,7 +455,7 @@ export class HashtagAnalyzer {
         let monthEngagement = 0;
         if (monthPosts > 0) {
           const postIds = monthIndex?.get(normalizedTag) || new Set();
-          const periodPosts = [...postIds].map(id => 
+          const periodPosts = Array.from(postIds).map(id => 
             this.posts.find(p => p.id === id)
           ).filter(Boolean) as PostMetrics[];
           
@@ -546,29 +556,24 @@ export class HashtagAnalyzer {
    */
   private calculateEngagement(post: PostMetrics): number {
     // Platform-specific engagement calculation
+    const likes = typeof post.likes === 'number' ? post.likes : 0;
+    const comments = typeof post.comments === 'number' ? post.comments : 0;
+    const shares = typeof post.shares === 'number' ? post.shares : 0;
+    const views = typeof post.views === 'number' ? post.views : 0;
+    
     switch (post.platform) {
       case 'instagram':
-        return (post.likes || 0) * 1.0 + 
-               (post.comments || 0) * 1.5 + 
-               (post.shares || 0) * 1.8;
+        return likes * 1.0 + comments * 1.5 + shares * 1.8;
       
       case 'tiktok':
-        return (post.likes || 0) * 1.0 + 
-               (post.comments || 0) * 1.5 + 
-               (post.shares || 0) * 2.0 + 
-               (post.views || 0) * 0.01;
+        return likes * 1.0 + comments * 1.5 + shares * 2.0 + views * 0.01;
       
       case 'youtube':
-        return (post.likes || 0) * 1.0 + 
-               (post.comments || 0) * 2.0 + 
-               (post.shares || 0) * 3.0 + 
-               (post.views || 0) * 0.01;
+        return likes * 1.0 + comments * 2.0 + shares * 3.0 + views * 0.01;
       
       default:
         // Generic calculation
-        return (post.likes || 0) + 
-               (post.comments || 0) * 2 + 
-               (post.shares || 0) * 2;
+        return likes + comments * 2 + shares * 2;
     }
   }
 
