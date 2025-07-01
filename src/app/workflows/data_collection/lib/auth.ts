@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { IAuthTokenManager, PlatformClientIdentifier, PlatformCredentials, AuthStrategy } from './auth.types';
-import { Platform } from '../../deliverables/types/deliverables_types';
+import { Platform } from '../../../deliverables/types/deliverables_types';
 
 export class SupabaseAuthTokenManager implements IAuthTokenManager {
   private supabase;

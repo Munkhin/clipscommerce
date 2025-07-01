@@ -1,6 +1,6 @@
 // Optimized Post Analytics Module with improved performance strategies
 import { Platform, PostMetrics } from '../types';
-import { PlatformEnum } from '../../deliverables/types/deliverables_types';
+import { PlatformEnum } from '../../../deliverables/types/deliverables_types';
 import { formatInTimeZone, toZonedTime, getTimezoneOffset } from 'date-fns-tz';
 import { format, isValid, differenceInMilliseconds, addMinutes } from 'date-fns';
 import { HashtagAnalyzer, HashtagPerformanceResult, HashtagAnalysisOptions } from './HashtagAnalyzer';

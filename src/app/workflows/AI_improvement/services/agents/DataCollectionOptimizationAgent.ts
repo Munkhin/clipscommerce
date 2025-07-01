@@ -1,4 +1,4 @@
-import { Platform } from '../../../deliverables/types/deliverables_types'; // Updated import path
+import { PlatformEnum, Platform } from '../../../deliverables/types/deliverables_types'; // Updated import path
 
 export interface Niche {
   id: string;
@@ -46,8 +46,8 @@ export class DataCollectionOptimizationAgent {
     this.sampleCounts = new Map();
     this.nicheQualityStats = new Map();
 
-    for (const platform of Object.values(Platform)) {
-      const platformKey = platform as Platform;
+    for (const platform of Object.values(PlatformEnum)) {
+      const platformKey = platform as PlatformEnum;
       this.sampleCounts.set(platformKey, new Map<string, number>());
       this.nicheQualityStats.set(platformKey, new Map<string, { totalScoreSum: number; acceptedSamplesCount: number }>());
     }
@@ -59,8 +59,8 @@ export class DataCollectionOptimizationAgent {
       return;
     }
     this.niches.push(niche);
-    for (const platform of Object.values(Platform)) {
-      const platformKey = platform as Platform;
+    for (const platform of Object.values(PlatformEnum)) {
+      const platformKey = platform as PlatformEnum;
       // Initialize sample count
       if (!this.sampleCounts.has(platformKey)) {
         this.sampleCounts.set(platformKey, new Map<string, number>());

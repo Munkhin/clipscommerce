@@ -1,4 +1,4 @@
-import { Platform } from '../../deliverables/types/deliverables_types';
+import { PlatformEnum } from '../../deliverables/types/deliverables_types';
 import { ContentNiche } from '../types/niche_types';
 import { AIImprovementService } from './AIImprovementService';
 import { DataCollectionAgent, DataGap } from './agents/DataCollectionAgent';
@@ -591,7 +591,7 @@ Respond with structured JSON containing specific actions for each sub-agent.`;
         return {
           type: 'optimize_collection',
           niche: Object.values(ContentNiche)[Math.floor(Math.random() * Object.values(ContentNiche).length)],
-          platform: Object.values(Platform)[Math.floor(Math.random() * Object.values(Platform).length)],
+          platform: Object.values(PlatformEnum)[Math.floor(Math.random() * Object.values(PlatformEnum).length)],
           priority: status.performance < 0.5 ? 'high' : 'medium',
         };
 
@@ -623,7 +623,7 @@ Respond with structured JSON containing specific actions for each sub-agent.`;
                 experimentDetails: {
                     name: `EngagementBoost_Exp_${Date.now()}`,
                     description: 'Experiment to boost low engagement rate.',
-                    platform: Platform.TIKTOK, // Default or determine dynamically
+                    platform: PlatformEnum.TIKTOK, // Default or determine dynamically
                     baseContent: { caption: 'Current average caption style', hashtags: ['general'] }, // Placeholder
                     variationType: 'caption', // Default or determine dynamically
                     targetMetric: 'engagementRate',

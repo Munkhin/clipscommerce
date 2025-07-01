@@ -1,7 +1,7 @@
 import { BasePlatformClient, Post, Analytics } from './base-platform';
 import { ApiConfig, PlatformComment, ApiResponse } from './types';
 import { IAuthTokenManager } from '../auth.types';
-import { Platform } from '../../../deliverables/types/deliverables_types';
+import { Platform } from '../../../../deliverables/types/deliverables_types';
 
 export class InstagramClient extends BasePlatformClient {
   protected readonly platform: Platform = Platform.INSTAGRAM;

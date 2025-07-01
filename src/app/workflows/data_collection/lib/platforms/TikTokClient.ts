@@ -1,7 +1,7 @@
 import { BasePlatformClient, HeaderValue, ApiResponse as BaseApiResponse, Post, Analytics } from './base-platform';
 import { ApiConfig as PlatformSpecificApiConfig, PlatformComment, ApiResponse } from './types';
 import { IAuthTokenManager } from '../auth.types';
-import { Platform } from '../../../deliverables/types/deliverables_types';
+import { Platform } from '../../../../deliverables/types/deliverables_types';
 import { ApiError, PlatformError, RateLimitError, ValidationError } from '../utils/errors';
 import { z } from 'zod';
 

@@ -132,7 +132,7 @@ export class ExperimentManager {
    * Updates an existing experiment with database persistence
    */
   async updateExperiment(id: string, updates: Partial<Experiment>): Promise<Experiment | null> {
-    let experiment = this.experimentsCache.get(id);
+    let experiment: Experiment | null | undefined = this.experimentsCache.get(id);
     
     if (!experiment) {
       // Try to load from database
