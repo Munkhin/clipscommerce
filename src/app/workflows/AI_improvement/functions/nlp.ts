@@ -1,4 +1,4 @@
-import { Platform } from '../../deliverables/types/deliverables_types';
+import { Platform, PlatformEnum } from '../../deliverables/types/deliverables_types';
 import { featureStore } from './feedbackLoop';
 
 // Core NLP utilities for AI Improvement Workflow
@@ -403,11 +403,11 @@ export function analyzeContentPerformancePatterns(): {
     .map(w => w.word);
 
   // Analyze optimal caption length by platform
-  const optimalCaptionLength: Record<Platform, number> = {} as any;
-  const bestPerformingTones: Record<Platform, string[]> = {} as any;
-  const highEngagementHashtags: Record<Platform, string[]> = {} as any;
+  const optimalCaptionLength: Record<Platform, number> = {} as Record<Platform, number>;
+  const bestPerformingTones: Record<Platform, string[]> = {} as Record<Platform, string[]>;
+  const highEngagementHashtags: Record<Platform, string[]> = {} as Record<Platform, string[]>;
 
-  for (const platform of Object.values(Platform)) {
+  for (const platform of Object.values(PlatformEnum)) {
     const platformContent = contentData.filter(c => c.platform === platform);
     
     if (platformContent.length > 0) {
@@ -421,7 +421,7 @@ export function analyzeContentPerformancePatterns(): {
         .sort((a, b) => b.engagement - a.engagement)
         .slice(0, Math.ceil(lengthPerformance.length * 0.2)); // Top 20%
       
-      optimalCaptionLength[platform] = Math.round(
+      optimalCaptionLength[platform as Platform] = Math.round(
         topPerforming.reduce((sum, p) => sum + p.length, 0) / topPerforming.length
       );
 
@@ -434,7 +434,7 @@ export function analyzeContentPerformancePatterns(): {
         }
       }
 
-      highEngagementHashtags[platform] = Object.entries(hashtagPerf)
+      highEngagementHashtags[platform as Platform] = Object.entries(hashtagPerf)
         .map(([hashtag, rates]) => ({
           hashtag,
           avgRate: rates.reduce((sum, rate) => sum + rate, 0) / rates.length,
@@ -461,13 +461,13 @@ function shortenCaption(caption: string): string {
 }
 
 function expandCaption(caption: string, platform: Platform): string {
-  const platformExpansions = {
-    [Platform.TIKTOK]: ' What do you think? Drop a comment below! 👇',
-    [Platform.INSTAGRAM]: ' Double tap if you agree! Share your thoughts in the comments ✨',
-    [Platform.YOUTUBE]: ' Let me know what you think in the comments and don\'t forget to subscribe!',
-    [Platform.FACEBOOK]: ' What\'s your experience with this? Share your story!',
-    [Platform.TWITTER]: ' What are your thoughts? Retweet if you agree!',
-    [Platform.LINKEDIN]: ' I\'d love to hear your professional perspective on this.',
+  const platformExpansions: Record<Platform, string> = {
+    [PlatformEnum.TIKTOK]: ' What do you think? Drop a comment below! 👇',
+    [PlatformEnum.INSTAGRAM]: ' Double tap if you agree! Share your thoughts in the comments ✨',
+    [PlatformEnum.YOUTUBE]: ' Let me know what you think in the comments and don\'t forget to subscribe!',
+    [PlatformEnum.FACEBOOK]: ' What\'s your experience with this? Share your story!',
+    [PlatformEnum.TWITTER]: ' What are your thoughts? Retweet if you agree!',
+    [PlatformEnum.LINKEDIN]: ' I\'d love to hear your professional perspective on this.',
   };
 
   return caption + (platformExpansions[platform] || ' Let me know your thoughts!');
@@ -476,13 +476,13 @@ function expandCaption(caption: string, platform: Platform): string {
 function adjustToneForPlatform(caption: string, platform: Platform): string {
   const currentTone = analyzeTone(caption);
   
-  const platformTones = {
-    [Platform.TIKTOK]: 'excited',
-    [Platform.INSTAGRAM]: 'casual',
-    [Platform.YOUTUBE]: 'professional',
-    [Platform.FACEBOOK]: 'casual',
-    [Platform.TWITTER]: 'casual',
-    [Platform.LINKEDIN]: 'professional',
+  const platformTones: Record<Platform, string> = {
+    [PlatformEnum.TIKTOK]: 'excited',
+    [PlatformEnum.INSTAGRAM]: 'casual',
+    [PlatformEnum.YOUTUBE]: 'professional',
+    [PlatformEnum.FACEBOOK]: 'casual',
+    [PlatformEnum.TWITTER]: 'casual',
+    [PlatformEnum.LINKEDIN]: 'professional',
   };
 
   const targetTone = platformTones[platform];
@@ -502,13 +502,13 @@ function adjustToneForPlatform(caption: string, platform: Platform): string {
 }
 
 function addPlatformSpecificEmojis(caption: string, platform: Platform): string {
-  const platformEmojis = {
-    [Platform.TIKTOK]: ['🔥', '✨', '💯', '🚀', '⚡'],
-    [Platform.INSTAGRAM]: ['✨', '💕', '🌟', '💫', '🦋'],
-    [Platform.YOUTUBE]: ['🎬', '📹', '🎥', '👍', '🔔'],
-    [Platform.FACEBOOK]: ['👍', '❤️', '😊', '🎉', '👏'],
-    [Platform.TWITTER]: ['🧵', '💭', '🔥', '📢', '⚡'],
-    [Platform.LINKEDIN]: ['💼', '🚀', '💡', '📈', '🎯'],
+  const platformEmojis: Record<Platform, string[]> = {
+    [PlatformEnum.TIKTOK]: ['🔥', '✨', '💯', '🚀', '⚡'],
+    [PlatformEnum.INSTAGRAM]: ['✨', '💕', '🌟', '💫', '🦋'],
+    [PlatformEnum.YOUTUBE]: ['🎬', '📹', '🎥', '👍', '🔔'],
+    [PlatformEnum.FACEBOOK]: ['👍', '❤️', '😊', '🎉', '👏'],
+    [PlatformEnum.TWITTER]: ['🧵', '💭', '🔥', '📢', '⚡'],
+    [PlatformEnum.LINKEDIN]: ['💼', '🚀', '💡', '📈', '🎯'],
   };
 
   const emojis = platformEmojis[platform] || ['✨'];
@@ -518,13 +518,13 @@ function addPlatformSpecificEmojis(caption: string, platform: Platform): string 
 }
 
 function addCallToAction(caption: string, platform: Platform): string {
-  const platformCTAs = {
-    [Platform.TIKTOK]: 'Follow for more! 👆',
-    [Platform.INSTAGRAM]: 'Save this post! 📌',
-    [Platform.YOUTUBE]: 'Subscribe for more content! 🔔',
-    [Platform.FACEBOOK]: 'Share with friends! 👥',
-    [Platform.TWITTER]: 'Retweet to spread the word! 🔄',
-    [Platform.LINKEDIN]: 'Connect with me for more insights! 🤝',
+  const platformCTAs: Record<Platform, string> = {
+    [PlatformEnum.TIKTOK]: 'Follow for more! 👆',
+    [PlatformEnum.INSTAGRAM]: 'Save this post! 📌',
+    [PlatformEnum.YOUTUBE]: 'Subscribe for more content! 🔔',
+    [PlatformEnum.FACEBOOK]: 'Share with friends! 👥',
+    [PlatformEnum.TWITTER]: 'Retweet to spread the word! 🔄',
+    [PlatformEnum.LINKEDIN]: 'Connect with me for more insights! 🤝',
   };
 
   return caption + '\n\n' + (platformCTAs[platform] || 'Engage with this content!');
@@ -550,13 +550,13 @@ function calculateExpectedPerformance(
   performance *= typeMultipliers[variationType as keyof typeof typeMultipliers] || 1;
 
   // Adjust based on platform
-  const platformMultipliers = {
-    [Platform.TIKTOK]: 1.2,
-    [Platform.INSTAGRAM]: 1.1,
-    [Platform.YOUTUBE]: 1.0,
-    [Platform.FACEBOOK]: 0.9,
-    [Platform.TWITTER]: 0.95,
-    [Platform.LINKEDIN]: 0.85,
+  const platformMultipliers: Record<Platform, number> = {
+    [PlatformEnum.TIKTOK]: 1.2,
+    [PlatformEnum.INSTAGRAM]: 1.1,
+    [PlatformEnum.YOUTUBE]: 1.0,
+    [PlatformEnum.FACEBOOK]: 0.9,
+    [PlatformEnum.TWITTER]: 0.95,
+    [PlatformEnum.LINKEDIN]: 0.85,
   };
 
   performance *= platformMultipliers[platform] || 1;
@@ -579,13 +579,13 @@ function extractTopicsFromContent(content: string): string[] {
 
 function getTrendingHashtagsForPlatform(platform: Platform): string[] {
   // Mock trending hashtags (in production, fetch from real APIs)
-  const trending = {
-    [Platform.TIKTOK]: ['#fyp', '#viral', '#trending', '#foryou', '#tiktok'],
-    [Platform.INSTAGRAM]: ['#instagood', '#photooftheday', '#love', '#beautiful', '#happy'],
-    [Platform.YOUTUBE]: ['#youtube', '#subscribe', '#viral', '#trending', '#shorts'],
-    [Platform.FACEBOOK]: ['#facebook', '#social', '#community', '#share', '#connect'],
-    [Platform.TWITTER]: ['#twitter', '#trending', '#viral', '#news', '#social'],
-    [Platform.LINKEDIN]: ['#linkedin', '#professional', '#career', '#business', '#networking'],
+  const trending: Record<Platform, string[]> = {
+    [PlatformEnum.TIKTOK]: ['#fyp', '#viral', '#trending', '#foryou', '#tiktok'],
+    [PlatformEnum.INSTAGRAM]: ['#instagood', '#photooftheday', '#love', '#beautiful', '#happy'],
+    [PlatformEnum.YOUTUBE]: ['#youtube', '#subscribe', '#viral', '#trending', '#shorts'],
+    [PlatformEnum.FACEBOOK]: ['#facebook', '#social', '#community', '#share', '#connect'],
+    [PlatformEnum.TWITTER]: ['#twitter', '#trending', '#viral', '#news', '#social'],
+    [PlatformEnum.LINKEDIN]: ['#linkedin', '#professional', '#career', '#business', '#networking'],
   };
 
   return trending[platform] || [];
@@ -597,13 +597,13 @@ function getHighPerformingHashtags(platform: Platform): string[] {
   
   if (platformContent.length === 0) {
     // Return default high-performing hashtags if no historical data
-    const defaultHashtags = {
-      [Platform.TIKTOK]: ['#fyp', '#viral', '#trending', '#foryou', '#content'],
-      [Platform.INSTAGRAM]: ['#instagood', '#photooftheday', '#love', '#beautiful', '#content'],
-      [Platform.YOUTUBE]: ['#youtube', '#subscribe', '#viral', '#trending', '#content'],
-      [Platform.FACEBOOK]: ['#facebook', '#social', '#community', '#share', '#content'],
-      [Platform.TWITTER]: ['#twitter', '#trending', '#viral', '#news', '#content'],
-      [Platform.LINKEDIN]: ['#linkedin', '#professional', '#career', '#business', '#content'],
+    const defaultHashtags: Record<Platform, string[]> = {
+      [PlatformEnum.TIKTOK]: ['#fyp', '#viral', '#trending', '#foryou', '#content'],
+      [PlatformEnum.INSTAGRAM]: ['#instagood', '#photooftheday', '#love', '#beautiful', '#content'],
+      [PlatformEnum.YOUTUBE]: ['#youtube', '#subscribe', '#viral', '#trending', '#content'],
+      [PlatformEnum.FACEBOOK]: ['#facebook', '#social', '#community', '#share', '#content'],
+      [PlatformEnum.TWITTER]: ['#twitter', '#trending', '#viral', '#news', '#content'],
+      [PlatformEnum.LINKEDIN]: ['#linkedin', '#professional', '#career', '#business', '#content'],
     };
     return defaultHashtags[platform] || ['#content', '#trending', '#viral'];
   }
@@ -675,13 +675,13 @@ function estimateHashtagReach(hashtag: string, platform: Platform): number {
 }
 
 function getOptimalLengthForPlatform(platform: Platform): number {
-  const optimalLengths = {
-    [Platform.TIKTOK]: 150,
-    [Platform.INSTAGRAM]: 125,
-    [Platform.YOUTUBE]: 200,
-    [Platform.FACEBOOK]: 250,
-    [Platform.TWITTER]: 280,
-    [Platform.LINKEDIN]: 300,
+  const optimalLengths: Record<Platform, number> = {
+    [PlatformEnum.TIKTOK]: 150,
+    [PlatformEnum.INSTAGRAM]: 125,
+    [PlatformEnum.YOUTUBE]: 200,
+    [PlatformEnum.FACEBOOK]: 250,
+    [PlatformEnum.TWITTER]: 280,
+    [PlatformEnum.LINKEDIN]: 300,
   };
 
   return optimalLengths[platform] || 150;
@@ -697,7 +697,7 @@ function getPlatformOptimizations(text: string, platform: Platform): {
   let expectedIncrease = 0;
 
   switch (platform) {
-    case Platform.TIKTOK:
+    case PlatformEnum.TIKTOK:
       if (!text.includes('#fyp')) {
         optimizedText += ' #fyp';
         improvements.push('Added #fyp for TikTok algorithm');
@@ -705,7 +705,7 @@ function getPlatformOptimizations(text: string, platform: Platform): {
       }
       break;
     
-    case Platform.INSTAGRAM:
+    case PlatformEnum.INSTAGRAM:
       if (!text.match(/[✨💕🌟]/)) {
         optimizedText += ' ✨';
         improvements.push('Added Instagram-style emoji');
@@ -713,7 +713,7 @@ function getPlatformOptimizations(text: string, platform: Platform): {
       }
       break;
     
-    case Platform.LINKEDIN:
+    case PlatformEnum.LINKEDIN:
       if (!text.match(/\b(professional|business|career|industry)\b/i)) {
         improvements.push('Consider adding professional context');
         expectedIncrease += 3;
