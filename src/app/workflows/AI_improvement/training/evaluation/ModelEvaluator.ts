@@ -39,7 +39,7 @@ export interface EvaluationResult {
   metrics: EvaluationMetrics;
   
   // Detailed analysis
-  performanceByPlatform: Record<Platform, EvaluationMetrics>;
+  performanceByPlatform: Partial<Record<Platform, EvaluationMetrics>>;
   performanceByContentType: Record<string, EvaluationMetrics>;
   performanceOverTime: Array<{
     period: string;
@@ -118,7 +118,7 @@ export class ModelEvaluator extends EventEmitter {
       const coreMetrics = this.calculateCoreMetrics(predictions, targets, modelType);
       
       // Platform-specific analysis
-      let performanceByPlatform: Record<Platform, EvaluationMetrics> = {};
+      let performanceByPlatform: Partial<Record<Platform, EvaluationMetrics>> = {};
       if (options.platformBreakdown) {
         this.emit('progress', { phase: 'platform_analysis', progress: 50, message: 'Analyzing platform performance...' });
         performanceByPlatform = this.analyzePlatformPerformance(predictions, targets, metadata);
@@ -503,7 +503,7 @@ export class ModelEvaluator extends EventEmitter {
 
   private performQualityAssessment(
     coreMetrics: EvaluationMetrics,
-    platformMetrics: Record<Platform, EvaluationMetrics>
+    platformMetrics: Partial<Record<Platform, EvaluationMetrics>>
   ): { strengths: string[], weaknesses: string[], recommendations: string[] } {
     const strengths: string[] = [];
     const weaknesses: string[] = [];

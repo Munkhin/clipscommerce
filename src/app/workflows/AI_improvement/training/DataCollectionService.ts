@@ -44,15 +44,21 @@ export class TrainingDataCollectionService {
   private config: DataCollectionConfig;
   private collectionProgress: Map<Platform, CollectionProgress> = new Map();
 
-  // Convert string platform to scanner platform enum
+  // Convert analysis platform to scanner platform string
   private convertToScannerPlatform(platform: Platform): ScannerPlatform {
     switch (platform) {
       case 'TikTok':
-        return ScannerPlatform.TIKTOK;
+        return 'tiktok';
       case 'Instagram':
-        return ScannerPlatform.INSTAGRAM;
+        return 'instagram';
       case 'Facebook':
-        return ScannerPlatform.FACEBOOK;
+        return 'facebook';
+      case 'YouTube':
+        return 'youtube';
+      case 'Twitter':
+        return 'twitter';
+      case 'LinkedIn':
+        return 'linkedin';
       default:
         throw new Error(`Unsupported platform: ${platform}`);
     }
