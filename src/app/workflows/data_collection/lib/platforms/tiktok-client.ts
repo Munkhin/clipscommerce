@@ -15,7 +15,7 @@ import {
 } from './tiktok.types';
 
 export class TikTokClient extends BasePlatformClient {
-  protected readonly platform: Platform = Platform.TIKTOK;
+  protected readonly platform: Platform = 'tiktok';
 
   constructor(
     platformConfigFromFactory: ApiConfig,
@@ -28,8 +28,9 @@ export class TikTokClient extends BasePlatformClient {
   protected handleRateLimit(headers: any): void {
     if (headers && headers['x-ratelimit-remaining'] && headers['x-ratelimit-reset']) {
       this.rateLimit = {
+        limit: parseInt(headers['x-ratelimit-limit'], 10) || 1000,
         remaining: parseInt(headers['x-ratelimit-remaining'], 10),
-        reset: new Date(parseInt(headers['x-ratelimit-reset'], 10) * 1000),
+        reset: parseInt(headers['x-ratelimit-reset'], 10) * 1000,
       };
     }
   }
@@ -58,22 +59,14 @@ export class TikTokClient extends BasePlatformClient {
 
       if (responseData.error && responseData.error.code !== 'ok' && responseData.error.code !== 0) {
         this.log('error', `[TikTokClient] API error in getVideoComments: ${responseData.error.message}`, responseData.error);
-        throw new ApiError(responseData.error.message, responseData.error.code, responseData.error);
+        throw new ApiError('tiktok', responseData.error.code, responseData.error.message, 400, responseData.error);
       }
 
       const comments: Post[] = (responseData.comments || []).map((comment: any): Post => ({
         id: comment.id || comment.comment_id,
-        postId: postId,
-        userId: comment.user?.unique_id || comment.user?.user_id,
-        userName: comment.user?.display_name || comment.user?.nickname,
-        userProfileImageUrl: comment.user?.avatar_url,
-        text: comment.text || comment.comment_text,
-        likeCount: comment.like_count || 0,
-        replyCount: comment.reply_comment_total || 0,
-        publishedAt: comment.create_time ? new Date(comment.create_time * 1000).toISOString() : new Date().toISOString(),
-        updatedAt: comment.update_time ? new Date(comment.update_time * 1000).toISOString() : undefined,
-        platform: Platform.TIKTOK,
-        sourceData: comment,
+        platform: 'tiktok',
+        content: comment.text || comment.comment_text,
+        publishedAt: comment.create_time ? new Date(comment.create_time * 1000) : new Date(),
       }));
 
       this.log('debug', `[TikTokClient] Successfully fetched ${comments.length} comments for video ${postId}.`);
@@ -84,7 +77,7 @@ export class TikTokClient extends BasePlatformClient {
       if (error instanceof ApiError) {
         throw error;
       }
-      throw new ApiError('An unexpected error occurred while fetching video comments from TikTok.', 500);
+      throw new ApiError('tiktok', '500', 'An unexpected error occurred while fetching video comments from TikTok.', 500, error);
     }
   }
 
@@ -111,18 +104,14 @@ export class TikTokClient extends BasePlatformClient {
 
       if (responseData.error && responseData.error.code !== 'ok' && responseData.error.code !== 0) {
         this.log('error', `[TikTokClient] API error in uploadContent: ${responseData.error.message}`, responseData.error);
-        throw new ApiError(responseData.error.message, responseData.error.code, responseData.error);
+        throw new ApiError('tiktok', responseData.error.code, responseData.error.message, 400, responseData.error);
       }
 
       const post: Post = {
         id: responseData.data?.publish_id || responseData.publish_id || 'unknown',
-        title: content.description ? content.description.substring(0, 100) : 'TikTok Video',
+        platform: 'tiktok',
         content: content.description || '',
-        createdAt: new Date(),
-        author: {
-          id: 'current_user',
-          name: 'Current User'
-        }
+        publishedAt: new Date()
       };
 
       this.log('debug', `[TikTokClient] Successfully uploaded content with ID: ${post.id}`);
@@ -150,7 +139,7 @@ export class TikTokClient extends BasePlatformClient {
 
       if (responseData.error && responseData.error.code !== 'ok' && responseData.error.code !== 0) {
         this.log('error', `[TikTokClient] API error in getAnalytics: ${responseData.error.message}`, responseData.error);
-        throw new ApiError(responseData.error.message, responseData.error.code, responseData.error);
+        throw new ApiError('tiktok', responseData.error.code, responseData.error.message, 400, responseData.error);
       }
 
       const videoData = responseData.data?.videos?.[0] || {};
@@ -158,7 +147,8 @@ export class TikTokClient extends BasePlatformClient {
         views: videoData.view_count || 0,
         likes: videoData.like_count || 0,
         comments: videoData.comment_count || 0,
-        shares: videoData.share_count || 0
+        shares: videoData.share_count || 0,
+        engagementRate: this.calculateEngagementRate(videoData.view_count || 0, videoData.like_count || 0, videoData.comment_count || 0, videoData.share_count || 0)
       };
 
       this.log('debug', `[TikTokClient] Successfully fetched analytics for post ${postId}`, analytics);
@@ -166,7 +156,13 @@ export class TikTokClient extends BasePlatformClient {
     } catch (error) {
       this.log('error', `[TikTokClient] Failed to fetch analytics for post ${postId}`, { error });
       // Return default analytics instead of throwing error
-      return { views: 0, likes: 0, comments: 0, shares: 0 };
+      return { views: 0, likes: 0, comments: 0, shares: 0, engagementRate: 0 };
     }
+  }
+
+  private calculateEngagementRate(views: number, likes: number, comments: number, shares: number): number {
+    if (views === 0) return 0;
+    const engagements = likes + comments + shares;
+    return (engagements / views) * 100;
   }
 }
