@@ -1,5 +1,6 @@
 // Optimized Post Analytics Module with improved performance strategies
 import { Platform, PostMetrics } from '../types';
+import { PlatformEnum } from '../../deliverables/types/deliverables_types';
 import { formatInTimeZone, toZonedTime, getTimezoneOffset } from 'date-fns-tz';
 import { format, isValid, differenceInMilliseconds, addMinutes } from 'date-fns';
 import { HashtagAnalyzer, HashtagPerformanceResult, HashtagAnalysisOptions } from './HashtagAnalyzer';
@@ -200,7 +201,7 @@ export class OptimizedPostAnalyzer {
     // Parallel processing within batch
     const promises = posts.map(async (post) => {
       const engagement = this.calculateEngagementFast(post);
-      this.precomputed.engagementScores.set(post.id, engagement);
+      this.precomputed.engagementScores.set(post.id as string, engagement);
       
       // Build indices
       this.updateIndices(post);
@@ -215,7 +216,7 @@ export class OptimizedPostAnalyzer {
    */
   private calculateEngagementFast(post: PostMetrics): number {
     // Use precomputed platform weights (lookup table)
-    const weights = this.getPlatformWeights(post.platform);
+    const weights = this.getPlatformWeights(post.platform as Platform);
     
     // Vectorized calculation - process multiple metrics at once
     const metrics = this.engagementPool.acquire();
@@ -307,18 +308,18 @@ export class OptimizedPostAnalyzer {
    */
   private updateIndices(post: PostMetrics): void {
     // Platform index
-    if (!this.precomputed.platformIndex.has(post.platform)) {
-      this.precomputed.platformIndex.set(post.platform, []);
+    if (!this.precomputed.platformIndex.has(post.platform as Platform)) {
+      this.precomputed.platformIndex.set(post.platform as Platform, []);
     }
-    this.precomputed.platformIndex.get(post.platform)!.push(post.id);
+    this.precomputed.platformIndex.get(post.platform as Platform)!.push(post.id as string);
 
     // Hashtag index
-    if (post.hashtags) {
-      post.hashtags.forEach(hashtag => {
+    if (post.hashtags && Array.isArray(post.hashtags)) {
+      post.hashtags.forEach((hashtag: string) => {
         if (!this.precomputed.hashtagIndex.has(hashtag)) {
           this.precomputed.hashtagIndex.set(hashtag, new Set());
         }
-        this.precomputed.hashtagIndex.get(hashtag)!.add(post.id);
+        this.precomputed.hashtagIndex.get(hashtag)!.add(post.id as string);
       });
     }
   }
@@ -339,10 +340,10 @@ export class OptimizedPostAnalyzer {
     
     for await (const postBatch of stream) {
       for (const post of postBatch) {
-        if (post.hashtags) {
-          const engagement = await this.getEngagementScore(post.id);
+        if (post.hashtags && Array.isArray(post.hashtags)) {
+          const engagement = await this.getEngagementScore(post.id as string);
           
-          post.hashtags.forEach(hashtag => {
+          post.hashtags.forEach((hashtag: string) => {
             if (!hashtagStats.has(hashtag)) {
               hashtagStats.set(hashtag, { total: 0, count: 0 });
             }
@@ -417,7 +418,7 @@ export class OptimizedPostAnalyzer {
     for (const batch of batches) {
       batch.forEach(post => {
         try {
-          const { hour, day, dayOfWeek } = this.convertToTimezone(post.timestamp, targetTimezone);
+          const { hour, day, dayOfWeek } = this.convertToTimezone(post.timestamp as string | Date, targetTimezone);
           const key = `${day}-${hour}`;
           
           if (!timeSlots.has(key)) {
@@ -429,7 +430,7 @@ export class OptimizedPostAnalyzer {
           }
           
           const slot = timeSlots.get(key);
-          slot.engagement += this.precomputed.engagementScores.get(post.id) || 0;
+          slot.engagement += this.precomputed.engagementScores.get(post.id as string) || 0;
           slot.count++;
         } catch (error) {
           console.warn(`Error processing post ${post.id}:`, error);
@@ -642,7 +643,7 @@ export class OptimizedPostAnalyzer {
     });
     
     // Group by platform performance
-    const platforms = ['tiktok', 'instagram', 'youtube'] as Platform[];
+    const platforms: Platform[] = [PlatformEnum.TIKTOK, PlatformEnum.INSTAGRAM, PlatformEnum.YOUTUBE];
     const result: Record<string, HashtagPerformanceResult[]> = {};
     
     for (const platform of platforms) {
@@ -679,7 +680,7 @@ export class OptimizedPostAnalyzer {
     // Fallback sequential processing
     for (const post of this.posts) {
       const engagement = this.calculateEngagementFast(post);
-      this.precomputed.engagementScores.set(post.id, engagement);
+      this.precomputed.engagementScores.set(post.id as string, engagement);
       this.updateIndices(post);
     }
   }
