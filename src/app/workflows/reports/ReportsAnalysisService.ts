@@ -145,11 +145,14 @@ export class ReportsAnalysisService {
     );
     // 3. Generate charts (stub)
     const chart: ChartData = {
-      type: 'line',
-      title: 'Engagement Over Time',
-      data: data.timeSeries,
-      xAxis: 'date',
-      yAxis: 'engagement',
+      labels: data.timeSeries.map(item => item.date),
+      datasets: [{
+        label: 'Engagement Over Time',
+        data: data.timeSeries.map(item => item.engagement),
+        borderColor: 'rgb(75, 192, 192)',
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        type: 'line'
+      }]
     };
     const chartGenerator = new ChartGenerator();
     const chartSvg = options.includeCharts ? await chartGenerator.generateChart(chart, 'svg') : '';

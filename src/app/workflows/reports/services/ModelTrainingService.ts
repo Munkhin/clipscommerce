@@ -155,10 +155,10 @@ export class ModelTrainingService {
     const valViralTargets = viralTargets.slice(splitIndex);
 
         // Train engagement model
-    await this.engagementModel.train(trainEngagementFeatures, trainEngagementTargets, validEngagementFeatures, validEngagementTargets);
+    await this.engagementModel.train(trainEngagementFeatures, trainEngagementTargets, valEngagementFeatures, valEngagementTargets);
 
     // Train viral model
-    await this.viralModel.train(trainViralFeatures, trainViralTargets, validViralFeatures, validViralTargets);
+    await this.viralModel.train(trainViralFeatures, trainViralTargets, valViralFeatures, valViralTargets);
 
     this.isModelsTrained = true;
 
@@ -255,16 +255,22 @@ export class ModelTrainingService {
     valViralTargets: number[]
   ): Promise<ModelEvaluation> {
     // Engagement model evaluation
-    const engagementPredictions = this.engagementModel.batchPredict(valEngagementFeatures);
+    const engagementPredictions = this.engagementModel instanceof SimpleMLModel 
+      ? this.engagementModel.batchPredict(valEngagementFeatures)
+      : valEngagementFeatures.map(features => this.engagementModel.predict(features));
     const engagementMetrics = this.calculateRegressionMetrics(valEngagementTargets, engagementPredictions);
 
     // Viral model evaluation
-    const viralPredictions = this.viralModel.batchPredict(valViralFeatures);
+    const viralPredictions = this.viralModel instanceof SimpleMLModel 
+      ? this.viralModel.batchPredict(valViralFeatures)
+      : valViralFeatures.map(features => this.viralModel.predict(features));
     const viralMetrics = this.calculateClassificationMetrics(valViralTargets, viralPredictions);
 
     // Feature importance (simplified - based on weight magnitudes)
     const featureImportance: Record<string, number> = {};
-    const engagementModelWeights = this.engagementModel.getWeights();
+    const engagementModelWeights = this.engagementModel instanceof SimpleMLModel 
+      ? this.engagementModel.getWeights()
+      : new Array(this.config.engagementModel.features.length).fill(0.1);
     this.config.engagementModel.features.forEach((feature, index) => {
       if (index < engagementModelWeights.length) {
         featureImportance[feature] = Math.abs(engagementModelWeights[index]);
@@ -408,13 +414,18 @@ export class ModelTrainingService {
     }
 
     const engagementFeatureVector = this.extractFeatureVector(features, this.config.engagementModel.features);
-    const scaledEngagementVector = this.engagementScaler.transform([engagementFeatureVector])[0];
+    const scaledEngagementMatrix = this.engagementScaler.transform([engagementFeatureVector]);
+    const scaledEngagementVector = Array.isArray(scaledEngagementMatrix[0]) ? scaledEngagementMatrix[0] : scaledEngagementMatrix;
 
     const viralFeatureVectorRaw = this.extractFeatureVector(features, this.config.viralModel.features);
-    const scaledViralVector = this.viralScaler.transform([viralFeatureVectorRaw])[0];
+    const scaledViralMatrix = this.viralScaler.transform([viralFeatureVectorRaw]);
+    const scaledViralVector = Array.isArray(scaledViralMatrix[0]) ? scaledViralMatrix[0] : scaledViralMatrix;
 
-    const engagementRate = this.engagementModel.predict(scaledEngagementVector);
-    const viralProbability = this.viralModel.predict(scaledViralVector);
+    const engagementRateRaw = this.engagementModel.predict(Array.isArray(scaledEngagementVector) ? scaledEngagementVector : [scaledEngagementVector]);
+    const viralProbabilityRaw = this.viralModel.predict(Array.isArray(scaledViralVector) ? scaledViralVector : [scaledViralVector]);
+    
+    const engagementRate = Array.isArray(engagementRateRaw) ? engagementRateRaw[0] : engagementRateRaw;
+    const viralProbability = Array.isArray(viralProbabilityRaw) ? viralProbabilityRaw[0] : viralProbabilityRaw;
 
     // Simple confidence calculation based on feature completeness
     const totalFeatures = Object.keys(features).length;
