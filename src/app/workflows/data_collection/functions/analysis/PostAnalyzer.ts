@@ -520,7 +520,7 @@ export class OptimizedPostAnalyzer {
   private estimateMemoryUsage(): number {
     // Estimate current cache memory usage
     let total = 0;
-    for (const entry of this.cache.values()) {
+    for (const entry of Array.from(this.cache.values())) {
       total += entry.size || 0;
     }
     return total;
@@ -530,7 +530,7 @@ export class OptimizedPostAnalyzer {
     const now = Date.now();
     let deleted = 0;
     
-    for (const [key, entry] of this.cache.entries()) {
+    for (const [key, entry] of Array.from(this.cache.entries())) {
       if (entry.expiresAt < now) {
         this.cache.delete(key);
         deleted++;
