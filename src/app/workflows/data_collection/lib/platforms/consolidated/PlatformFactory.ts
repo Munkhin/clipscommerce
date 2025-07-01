@@ -3,6 +3,7 @@ import InstagramClient from './InstagramClient';
 import TikTokClient from './TikTokClient';
 import { YouTubeClient } from '../YouTubeClient';
 import { ApiConfig, ApiCredentials, Platform } from '../types';
+import { PlatformEnum } from '../../../../deliverables/types/deliverables_types';
 
 /**
  * Factory class for creating platform-specific API clients
@@ -19,11 +20,11 @@ class PlatformFactory {
    */
   static createClient(platform: Platform, authTokenManager: any, userId?: string, config: Partial<ApiConfig> = {}) {
     switch (platform) {
-      case Platform.INSTAGRAM:
+      case PlatformEnum.INSTAGRAM:
         return new InstagramClient(authTokenManager, userId, config);
-      case Platform.TIKTOK:
+      case PlatformEnum.TIKTOK:
         return new TikTokClient(authTokenManager, userId, config);
-      case Platform.YOUTUBE:
+      case PlatformEnum.YOUTUBE:
         return new YouTubeClient(
           {
             version: 'v3',

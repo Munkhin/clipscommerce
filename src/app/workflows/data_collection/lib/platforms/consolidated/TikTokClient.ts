@@ -103,7 +103,6 @@ export class TikTokClient extends BasePlatformClient {
         cursor: cursor ?? 0,
         max_count: limit,
       },
-      useAuth: true,
     });
 
     const videos: any[] = response.data?.data?.videos || [];
@@ -157,7 +156,6 @@ export class TikTokClient extends BasePlatformClient {
         cursor: cursor ?? 0,
         count: limit,
       },
-      useAuth: true,
     });
 
     const returnedComments: any[] = response.data?.data?.comments || [];
