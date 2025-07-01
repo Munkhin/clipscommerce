@@ -61,16 +61,20 @@ export class AnalyticsService {
     });
     
     // Find best and worst performing posts
-    let bestPost = { engagementRate: -1 };
-    let worstPost = { engagementRate: Infinity };
+    let bestPost: (typeof posts[0] & { engagementRate: number }) | null = null;
+    let worstPost: (typeof posts[0] & { engagementRate: number }) | null = null;
     
     posts.forEach((post, index) => {
       const metrics = allMetrics[index];
-      if (metrics && metrics.engagementRate > bestPost.engagementRate) {
-        bestPost = { ...post, ...metrics };
-      }
-      if (metrics && metrics.engagementRate < worstPost.engagementRate) {
-        worstPost = { ...post, ...metrics };
+      if (metrics) {
+        const postWithMetrics = { ...post, engagementRate: metrics.engagementRate || 0 };
+        
+        if (!bestPost || metrics.engagementRate > bestPost.engagementRate) {
+          bestPost = postWithMetrics;
+        }
+        if (!worstPost || metrics.engagementRate < worstPost.engagementRate) {
+          worstPost = postWithMetrics;
+        }
       }
     });
     
@@ -80,18 +84,18 @@ export class AnalyticsService {
       avgEngagementRate: allMetrics.length > 0 
         ? totalEngagement.engagementRate / allMetrics.length 
         : 0,
-      bestPerformingPost: bestPost.engagementRate > -1 ? {
+      bestPerformingPost: bestPost ? {
         id: bestPost.id,
         content: bestPost.content?.text?.substring(0, 100) || '',
         engagementRate: bestPost.engagementRate,
-        platform: bestPost.platforms?.[0] || 'unknown',
+        platform: bestPost.platforms?.[0] || 'instagram' as Platform,
         publishedAt: bestPost.status?.publishedAt || new Date(),
       } : null,
-      worstPerformingPost: worstPost.engagementRate < Infinity ? {
+      worstPerformingPost: worstPost ? {
         id: worstPost.id,
         content: worstPost.content?.text?.substring(0, 100) || '',
         engagementRate: worstPost.engagementRate,
-        platform: worstPost.platforms?.[0] || 'unknown',
+        platform: worstPost.platforms?.[0] || 'instagram' as Platform,
         publishedAt: worstPost.status?.publishedAt || new Date(),
       } : null,
     };
