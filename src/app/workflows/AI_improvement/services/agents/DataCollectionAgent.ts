@@ -1,4 +1,4 @@
-import { Platform } from '../../../deliverables/types/deliverables_types';
+import { Platform, PlatformEnum } from '../../../deliverables/types/deliverables_types';
 import { ContentNiche, getNicheCharacteristics } from '../../types/niche_types';
 
 export interface DataCollectionTask {
@@ -248,9 +248,9 @@ export class DataCollectionAgent {
       existingStrategy.contentDiscovery.keywords.push(...keywords);
       
       // Remove duplicates
-      existingStrategy.contentDiscovery.hashtags = [...new Set(existingStrategy.contentDiscovery.hashtags)];
-      existingStrategy.contentDiscovery.influencers = [...new Set(existingStrategy.contentDiscovery.influencers)];
-      existingStrategy.contentDiscovery.keywords = [...new Set(existingStrategy.contentDiscovery.keywords)];
+      existingStrategy.contentDiscovery.hashtags = Array.from(new Set(existingStrategy.contentDiscovery.hashtags));
+      existingStrategy.contentDiscovery.influencers = Array.from(new Set(existingStrategy.contentDiscovery.influencers));
+      existingStrategy.contentDiscovery.keywords = Array.from(new Set(existingStrategy.contentDiscovery.keywords));
     }
     
     console.log(`🔍 New data sources discovered for ${niche} on ${platform}:`, {
@@ -292,8 +292,8 @@ export class DataCollectionAgent {
     this.dataGaps = [];
     
     for (const niche of Object.values(ContentNiche)) {
-      for (const platform of Object.values(Platform)) {
-        const gap = await this.analyzeNichePlatformGap(niche, platform);
+      for (const platform of Object.values(PlatformEnum)) {
+        const gap = await this.analyzeNichePlatformGap(niche as ContentNiche, platform as Platform);
         if (gap) {
           this.dataGaps.push(gap);
         }
@@ -402,21 +402,21 @@ export class DataCollectionAgent {
    */
   private initializeCollectionStrategies(): void {
     for (const niche of Object.values(ContentNiche)) {
-      for (const platform of Object.values(Platform)) {
-        const nicheCharacteristics = getNicheCharacteristics(niche);
-        const platformPreference = nicheCharacteristics.platformPreferences[platform.toLowerCase() as keyof typeof nicheCharacteristics.platformPreferences];
+      for (const platform of Object.values(PlatformEnum)) {
+        const nicheCharacteristics = getNicheCharacteristics(niche as ContentNiche);
+        const platformPreference = nicheCharacteristics.platformPreferences[(platform as Platform).toLowerCase() as keyof typeof nicheCharacteristics.platformPreferences];
         
         // Only create strategies for platforms with good preference scores
         if (platformPreference > 0.6) {
           const strategyKey = `${niche}_${platform}`;
           const strategy: CollectionStrategy = {
-            platform,
-            niche,
-            endpoints: this.getOptimalEndpoints(platform),
-            rateLimitOptimization: this.optimizeRateLimit(platform, nicheCharacteristics),
-            contentDiscovery: this.optimizeContentDiscovery(niche, nicheCharacteristics),
-            qualityFilters: this.optimizeQualityFilters(niche, { minSamples: 10000, qualityThreshold: 0.95, timeRange: '30d', contentTypes: [] }),
-            schedulingStrategy: this.optimizeScheduling(niche, nicheCharacteristics),
+            platform: platform as Platform,
+            niche: niche as ContentNiche,
+            endpoints: this.getOptimalEndpoints(platform as Platform),
+            rateLimitOptimization: this.optimizeRateLimit(platform as Platform, nicheCharacteristics),
+            contentDiscovery: this.optimizeContentDiscovery(niche as ContentNiche, nicheCharacteristics),
+            qualityFilters: this.optimizeQualityFilters(niche as ContentNiche, { minSamples: 10000, qualityThreshold: 0.95, timeRange: '30d', contentTypes: [] }),
+            schedulingStrategy: this.optimizeScheduling(niche as ContentNiche, nicheCharacteristics),
           };
           
           this.collectionStrategies.set(strategyKey, strategy);
@@ -432,35 +432,35 @@ export class DataCollectionAgent {
    */
   private getOptimalEndpoints(platform: Platform): string[] {
     const endpointMap: Record<Platform, string[]> = {
-      [Platform.TIKTOK]: [
+      [PlatformEnum.TIKTOK]: [
         '/research/video/query/',
         '/research/user/info/',
         '/research/hashtag/videos/',
         '/research/trending/'
       ],
-      [Platform.INSTAGRAM]: [
+      [PlatformEnum.INSTAGRAM]: [
         '/media',
         '/insights',
         '/hashtag/recent_media',
         '/business_discovery'
       ],
-      [Platform.YOUTUBE]: [
+      [PlatformEnum.YOUTUBE]: [
         '/videos',
         '/search',
         '/channels',
         '/playlistItems'
       ],
-      [Platform.FACEBOOK]: [
+      [PlatformEnum.FACEBOOK]: [
         '/posts',
         '/insights',
         '/page_insights'
       ],
-      [Platform.TWITTER]: [
+      [PlatformEnum.TWITTER]: [
         '/tweets/search/recent',
         '/users/by/username',
         '/tweets/counts/recent'
       ],
-      [Platform.LINKEDIN]: [
+      [PlatformEnum.LINKEDIN]: [
         '/shares',
         '/posts',
         '/ugcPosts'
@@ -475,12 +475,12 @@ export class DataCollectionAgent {
    */
   private optimizeRateLimit(platform: Platform, nicheCharacteristics: any): CollectionStrategy['rateLimitOptimization'] {
     const baseRates: Record<Platform, number> = {
-      [Platform.TIKTOK]: 100,
-      [Platform.INSTAGRAM]: 200,
-      [Platform.YOUTUBE]: 10000,
-      [Platform.FACEBOOK]: 200,
-      [Platform.TWITTER]: 300,
-      [Platform.LINKEDIN]: 100,
+      [PlatformEnum.TIKTOK]: 100,
+      [PlatformEnum.INSTAGRAM]: 200,
+      [PlatformEnum.YOUTUBE]: 10000,
+      [PlatformEnum.FACEBOOK]: 200,
+      [PlatformEnum.TWITTER]: 300,
+      [PlatformEnum.LINKEDIN]: 100,
     };
     
     const platformRate = baseRates[platform] || 100;
