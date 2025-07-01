@@ -398,7 +398,7 @@ export class ModelEvaluator extends EventEmitter {
     predictions: any[],
     targets: any[],
     metadata: any[]
-  ): Record<Platform, EvaluationMetrics> {
+  ): Partial<Record<Platform, EvaluationMetrics>> {
     const platformData: Record<string, { predictions: any[], targets: any[] }> = {};
     
     // Group by platform

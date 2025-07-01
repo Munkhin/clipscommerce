@@ -122,15 +122,15 @@ export class ContentOptimizationTrainer extends EventEmitter {
     ]);
 
     // Platform-specific hashtag patterns
-    this.hashtagPatterns.set('tiktok', [
+    this.hashtagPatterns.set('TikTok', [
       '#fyp', '#foryou', '#viral', '#trending', '#tiktok'
     ]);
 
-    this.hashtagPatterns.set('instagram', [
+    this.hashtagPatterns.set('Instagram', [
       '#instagood', '#photooftheday', '#love', '#beautiful', '#happy'
     ]);
 
-    this.hashtagPatterns.set('youtube', [
+    this.hashtagPatterns.set('YouTube', [
       '#youtube', '#subscribe', '#viral', '#trending'
     ]);
 
