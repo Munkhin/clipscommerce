@@ -106,13 +106,13 @@ export class ReportsAnalysisService {
     let client;
 
     switch (platform) {
-      case Platform.TIKTOK:
+      case "TikTok":
         client = new TikTokClient({} as any, authManager, userId);
         break;
-      case Platform.INSTAGRAM:
+      case "Instagram":
         client = new InstagramClient({} as any, authManager, userId);
         break;
-      case Platform.YOUTUBE:
+      case "YouTube":
         client = new YouTubeClient({} as any, authManager, userId);
         break;
       default:
@@ -145,11 +145,14 @@ export class ReportsAnalysisService {
     );
     // 3. Generate charts (stub)
     const chart: ChartData = {
-      type: 'line',
-      title: 'Engagement Over Time',
-      data: data.timeSeries,
-      xAxis: 'date',
-      yAxis: 'engagement',
+      labels: data.timeSeries.map(item => item.date),
+      datasets: [{
+        label: 'Engagement Over Time',
+        data: data.timeSeries.map(item => item.engagement),
+        borderColor: 'rgb(75, 192, 192)',
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        type: 'line'
+      }]
     };
     const chartGenerator = new ChartGenerator();
     const chartSvg = options.includeCharts ? await chartGenerator.generateChart(chart, 'svg') : '';

@@ -35,7 +35,7 @@ export async function collectReportData(
   eCommerceMetrics?: Record<string, number>;
 }> {
   const { client, dateRange } = input;
-  const posts = await client.listUserVideos();
+  const posts = await client.fetchPosts('recent');
 
   const timeSeries = posts.map((post: any) => ({
     date: new Date(post.create_time * 1000).toISOString().split('T')[0],
@@ -46,8 +46,8 @@ export async function collectReportData(
   return {
     summary: {
       total_posts: posts.length,
-      total_engagement: timeSeries.reduce((acc, cur) => acc + cur.engagement, 0),
-      total_views: timeSeries.reduce((acc, cur) => acc + cur.views, 0),
+      total_engagement: timeSeries.reduce((acc: number, cur: { engagement: number }) => acc + cur.engagement, 0),
+      total_views: timeSeries.reduce((acc: number, cur: { views: number }) => acc + cur.views, 0),
     },
     timeSeries,
     comparisons: undefined,
