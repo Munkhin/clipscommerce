@@ -1,5 +1,5 @@
 import { TrainingOrchestrator } from '../training/TrainingOrchestrator';
-import { Platform } from '../types/niche_types';
+import { Platform } from '../../deliverables/types/deliverables_types';
 import { createClient } from '@supabase/supabase-js';
 
 // Mock Supabase client
@@ -41,7 +41,7 @@ describe('TrainingOrchestrator', () => {
   describe('startTraining', () => {
     it('should start training successfully with valid parameters', async () => {
       const userId = 'test-user-1';
-      const platforms: Platform[] = ['TikTok', 'Instagram'];
+      const platforms: Platform[] = [Platform.TIKTOK, Platform.INSTAGRAM];
       const options = {
         lookbackDays: 30,
         minPostsPerPlatform: 10,

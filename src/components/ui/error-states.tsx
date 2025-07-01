@@ -385,7 +385,7 @@ export function ErrorBoundaryFallback({ error, resetError, className }: ErrorBou
           {error && process.env.NODE_ENV === 'development' && (
             <details className="text-left mt-4 p-3 bg-muted rounded text-xs">
               <summary className="cursor-pointer font-medium">Error Details</summary>
-              <pre className="mt-2 overflow-auto">{error.message}</pre>
+              <pre className="mt-2 overflow-auto">{error instanceof Error ? error.message : String(error)}</pre>
             </details>
           )}
         </div>

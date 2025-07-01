@@ -30,7 +30,7 @@ export class StorageCleanupService {
         .lt('expires_at', new Date().toISOString());
 
       if (error) {
-        errors.push(`Failed to fetch expired files: ${error.message}`);
+        errors.push(`Failed to fetch expired files: ${error instanceof Error ? error.message : String(error)}`);
         return { totalCleaned: 0, errors };
       }
 
@@ -57,7 +57,7 @@ export class StorageCleanupService {
             .remove(filePaths);
 
           if (storageError) {
-            errors.push(`Failed to delete files from bucket ${bucketId}: ${storageError.message}`);
+            errors.push(`Failed to delete files from bucket ${bucketId}: ${storageError instanceof Error ? storageError.message : String(storageError)}`);
             continue;
           }
 
@@ -69,19 +69,19 @@ export class StorageCleanupService {
             .in('id', fileIds);
 
           if (metadataError) {
-            errors.push(`Failed to delete metadata for bucket ${bucketId}: ${metadataError.message}`);
+            errors.push(`Failed to delete metadata for bucket ${bucketId}: ${metadataError instanceof Error ? metadataError.message : String(metadataError)}`);
             continue;
           }
 
           totalCleaned += (files as any[]).length;
           console.log(`Cleaned up ${(files as any[]).length} expired files from bucket ${bucketId}`);
         } catch (error) {
-          errors.push(`Error processing bucket ${bucketId}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+          errors.push(`Error processing bucket ${bucketId}: ${error instanceof Error ? error.message : String(error)}`);
         }
       }
 
     } catch (error) {
-      errors.push(`General cleanup error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      errors.push(`General cleanup error: ${error instanceof Error ? error.message : String(error)}`);
     }
 
     return { totalCleaned, errors };
@@ -111,7 +111,7 @@ export class StorageCleanupService {
           .list('', { limit: 1000 });
 
         if (storageError) {
-          errors.push(`Failed to list files in bucket ${bucketId}: ${storageError.message}`);
+          errors.push(`Failed to list files in bucket ${bucketId}: ${storageError instanceof Error ? storageError.message : String(storageError)}`);
           continue;
         }
 
@@ -126,7 +126,7 @@ export class StorageCleanupService {
           .eq('bucket_id', bucketId);
 
         if (metadataError) {
-          errors.push(`Failed to get metadata for bucket ${bucketId}: ${metadataError.message}`);
+          errors.push(`Failed to get metadata for bucket ${bucketId}: ${metadataError instanceof Error ? metadataError.message : String(metadataError)}`);
           continue;
         }
 
@@ -147,7 +147,7 @@ export class StorageCleanupService {
             .remove(orphanedPaths);
 
           if (deleteError) {
-            errors.push(`Failed to delete orphaned files from bucket ${bucketId}: ${deleteError.message}`);
+            errors.push(`Failed to delete orphaned files from bucket ${bucketId}: ${deleteError instanceof Error ? deleteError.message : String(deleteError)}`);
           } else {
             totalCleaned += orphanedFiles.length;
             console.log(`Cleaned up ${orphanedFiles.length} orphaned files from bucket ${bucketId}`);
@@ -155,7 +155,7 @@ export class StorageCleanupService {
         }
 
       } catch (error) {
-        errors.push(`Error processing orphaned files in bucket ${bucketId}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        errors.push(`Error processing orphaned files in bucket ${bucketId}: ${error instanceof Error ? error.message : String(error)}`);
       }
     }
 
@@ -190,7 +190,7 @@ export class StorageCleanupService {
         .eq('bucket_id', 'temp'); // Only clean temp files
 
       if (error) {
-        errors.push(`Failed to fetch large old files: ${error.message}`);
+        errors.push(`Failed to fetch large old files: ${error instanceof Error ? error.message : String(error)}`);
         return { totalCleaned: 0, errors };
       }
 
@@ -204,14 +204,14 @@ export class StorageCleanupService {
           await serverStorageService.deleteFile(file.bucket_id as any, file.file_path);
           totalCleaned++;
         } catch (error) {
-          errors.push(`Failed to delete large file ${file.file_path}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+          errors.push(`Failed to delete large file ${file.file_path}: ${error instanceof Error ? error.message : String(error)}`);
         }
       }
 
       console.log(`Cleaned up ${totalCleaned} large old files`);
 
     } catch (error) {
-      errors.push(`General large file cleanup error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      errors.push(`General large file cleanup error: ${error instanceof Error ? error.message : String(error)}`);
     }
 
     return { totalCleaned, errors };
@@ -239,7 +239,7 @@ export class StorageCleanupService {
         .select('bucket_id, file_size, expires_at');
 
       if (error) {
-        throw new Error(`Failed to get file stats: ${error.message}`);
+        throw new Error(`Failed to get file stats: ${error instanceof Error ? error.message : String(error)}`);
       }
 
       const stats = {
@@ -277,7 +277,7 @@ export class StorageCleanupService {
 
       return stats;
     } catch (error) {
-      throw new Error(`Failed to calculate storage stats: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(`Failed to calculate storage stats: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
 

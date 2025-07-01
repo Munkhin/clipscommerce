@@ -28,7 +28,7 @@ export default function SettingsComponent() {
       setSuccessMessage('Settings saved successfully');
       setTimeout(() => setSuccessMessage(null), 3000);
     } catch (err: any) {
-      setError(err.message || 'An error occurred while saving your settings');
+      setError(err instanceof Error ? err.message : String(err) || 'An error occurred while saving your settings');
     } finally {
       setIsUpdating(false);
     }

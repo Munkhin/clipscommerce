@@ -127,7 +127,7 @@ export class SupabaseStorageService {
       });
 
     if (error) {
-      throw new Error(`Upload failed: ${error.message}`);
+      throw new Error(`Upload failed: ${error instanceof Error ? error.message : String(error)}`);
     }
 
     // Save file metadata
@@ -175,7 +175,7 @@ export class SupabaseStorageService {
           url: '',
           path: '',
           metadata: {} as FileMetadata,
-          error: result.reason.message || 'Upload failed'
+          error: result.reason instanceof Error ? result.reason.message : String(result.reason) || 'Upload failed'
         };
       }
     });
@@ -202,7 +202,7 @@ export class SupabaseStorageService {
       .remove([filePath]);
 
     if (error) {
-      throw new Error(`Delete failed: ${error.message}`);
+      throw new Error(`Delete failed: ${error instanceof Error ? error.message : String(error)}`);
     }
 
     // Delete metadata
@@ -229,7 +229,7 @@ export class SupabaseStorageService {
       .createSignedUrl(filePath, expiresIn);
 
     if (error) {
-      throw new Error(`Failed to create signed URL: ${error.message}`);
+      throw new Error(`Failed to create signed URL: ${error instanceof Error ? error.message : String(error)}`);
     }
 
     return data.signedUrl;
@@ -370,7 +370,7 @@ export class SupabaseStorageService {
       .single();
 
     if (error) {
-      throw new Error(`Failed to save file metadata: ${error.message}`);
+      throw new Error(`Failed to save file metadata: ${error instanceof Error ? error.message : String(error)}`);
     }
 
     return data;
@@ -385,7 +385,7 @@ export class SupabaseStorageService {
       .single();
 
     if (error && error.code !== 'PGRST116') { // PGRST116 is "not found"
-      throw new Error(`Failed to get file metadata: ${error.message}`);
+      throw new Error(`Failed to get file metadata: ${error instanceof Error ? error.message : String(error)}`);
     }
 
     return data;
@@ -399,7 +399,7 @@ export class SupabaseStorageService {
       .eq('file_path', filePath);
 
     if (error) {
-      throw new Error(`Failed to delete file metadata: ${error.message}`);
+      throw new Error(`Failed to delete file metadata: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
 
@@ -413,7 +413,7 @@ export class SupabaseStorageService {
       .single();
 
     if (error && error.code !== 'PGRST116') {
-      throw new Error(`Failed to find file by hash: ${error.message}`);
+      throw new Error(`Failed to find file by hash: ${error instanceof Error ? error.message : String(error)}`);
     }
 
     return data;
@@ -501,7 +501,7 @@ export class SupabaseStorageService {
       .lt('expires_at', new Date().toISOString());
 
     if (error) {
-      throw new Error(`Failed to get expired files: ${error.message}`);
+      throw new Error(`Failed to get expired files: ${error instanceof Error ? error.message : String(error)}`);
     }
 
     if (!expiredFiles || expiredFiles.length === 0) {
@@ -536,7 +536,7 @@ export class SupabaseStorageService {
       .eq('user_id', currentUserId);
 
     if (error) {
-      throw new Error(`Failed to get file stats: ${error.message}`);
+      throw new Error(`Failed to get file stats: ${error instanceof Error ? error.message : String(error)}`);
     }
 
     const stats = {

@@ -1,5 +1,5 @@
 import { SupabaseClient } from '@supabase/supabase-js';
-import { Platform } from '../../types/niche_types';
+import { Platform } from '../../../deliverables/types/deliverables_types';
 import { EventEmitter } from 'events';
 
 export interface ContentFeatures {
@@ -122,15 +122,15 @@ export class ContentOptimizationTrainer extends EventEmitter {
     ]);
 
     // Platform-specific hashtag patterns
-    this.hashtagPatterns.set('TikTok', [
+    this.hashtagPatterns.set(Platform.TIKTOK, [
       '#fyp', '#foryou', '#viral', '#trending', '#tiktok'
     ]);
 
-    this.hashtagPatterns.set('Instagram', [
+    this.hashtagPatterns.set(Platform.INSTAGRAM, [
       '#instagood', '#photooftheday', '#love', '#beautiful', '#happy'
     ]);
 
-    this.hashtagPatterns.set('YouTube', [
+    this.hashtagPatterns.set(Platform.YOUTUBE, [
       '#youtube', '#subscribe', '#viral', '#trending'
     ]);
 
@@ -707,7 +707,7 @@ export class ContentOptimizationTrainer extends EventEmitter {
   private analyzePlatformSpecificTiming(): Map<Platform, any> {
     const platformTiming = new Map<Platform, any>();
     
-    ['TikTok', 'Instagram', 'YouTube'].forEach(platform => {
+    [Platform.TIKTOK, Platform.INSTAGRAM, Platform.YOUTUBE].forEach(platform => {
       const platformData = this.trainingData.filter(data => data.features.platform === platform);
       const timeAnalysis = new Map<number, number[]>();
       
@@ -750,10 +750,10 @@ export class ContentOptimizationTrainer extends EventEmitter {
 
   private selectCallToAction(platform: Platform): string {
     const platformCTAs = {
-      'TikTok': 'Follow for more! 🔥',
-      'Instagram': 'Double tap if you agree! ❤️',
-      'YouTube': 'Subscribe for more content!',
-      'Facebook': 'Share your thoughts below!',
+      [Platform.TIKTOK]: 'Follow for more! 🔥',
+      [Platform.INSTAGRAM]: 'Double tap if you agree! ❤️',
+      [Platform.YOUTUBE]: 'Subscribe for more content!',
+      [Platform.FACEBOOK]: 'Share your thoughts below!',
       'Twitter': 'Retweet if you agree!',
       'LinkedIn': 'What are your thoughts on this?'
     };
@@ -763,10 +763,10 @@ export class ContentOptimizationTrainer extends EventEmitter {
 
   private getOptimalLength(platform: Platform): number {
     const platformLengths = {
-      'TikTok': 150,
-      'Instagram': 200,
-      'YouTube': 300,
-      'Facebook': 250,
+      [Platform.TIKTOK]: 150,
+      [Platform.INSTAGRAM]: 200,
+      [Platform.YOUTUBE]: 300,
+      [Platform.FACEBOOK]: 250,
       'Twitter': 280,
       'LinkedIn': 400
     };

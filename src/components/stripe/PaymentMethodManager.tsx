@@ -68,12 +68,12 @@ function AddPaymentMethodForm({ onSuccess, onCancel }: AddPaymentMethodFormProps
       });
 
       if (confirmError) {
-        throw new Error(confirmError.message);
+        throw new Error(confirmError instanceof Error ? confirmError.message : String(confirmError));
       }
 
       onSuccess();
     } catch (err: any) {
-      setError(err.message || 'Failed to add payment method');
+      setError(err instanceof Error ? err.message : String(err) || 'Failed to add payment method');
     } finally {
       setIsLoading(false);
     }
@@ -145,7 +145,7 @@ export default function PaymentMethodManager({ className = '' }: PaymentMethodMa
       const methods = await stripeService.getPaymentMethods();
       setPaymentMethods(methods);
     } catch (err: any) {
-      setError(err.message || 'Failed to load payment methods');
+      setError(err instanceof Error ? err.message : String(err) || 'Failed to load payment methods');
     } finally {
       setIsLoading(false);
     }

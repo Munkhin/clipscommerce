@@ -5,7 +5,6 @@
  * Each niche has specific characteristics, audience preferences, and optimization strategies.
  */
 
-export type Platform = 'TikTok' | 'Instagram' | 'YouTube' | 'Facebook' | 'Twitter' | 'LinkedIn';
 
 export enum ContentNiche {
   FITNESS = 'fitness',

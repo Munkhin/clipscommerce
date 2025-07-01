@@ -1,6 +1,6 @@
 import { SchedulerService } from '../SchedulerService';
 import { Post } from '../../types/schedule';
-import { Platform } from '../../types/platform';
+import { Platform } from '../../app/deliverables/types/deliverables_types';
 
 // Mock the entire SchedulerService module
 jest.mock('../SchedulerService');

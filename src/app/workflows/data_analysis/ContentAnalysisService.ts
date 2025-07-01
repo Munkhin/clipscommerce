@@ -95,7 +95,7 @@ export class ContentAnalysisService {
         videoUrl: request.videoUrl,
         currentHashtags: request.currentHashtags,
         topic: request.topic,
-        platform: request.platform as 'TikTok' | 'Instagram' | 'YouTube', // Adjust type as needed
+        platform: request.platform, // Platform type already validated
       };
       results.contentOptimization = await this.contentOptimizationEngine.optimizeContent(optimizationInput);
       

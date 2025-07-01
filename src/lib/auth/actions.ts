@@ -41,7 +41,7 @@ export const signUpAction = async (prevState: unknown, formData: FormData): Prom
     });
 
     if (signUpError) {
-      return { error: signUpError.message };
+      return { error: signUpError instanceof Error ? signUpError.message : String(signUpError) };
     }
 
     // If we have a user, ensure their profile is created
@@ -95,7 +95,7 @@ export const signInAction = async (prevState: unknown, formData: FormData): Prom
     });
 
     if (error) {
-      return { error: error.message };
+      return { error: error instanceof Error ? error.message : String(error) };
     }
 
     return { success: true };
@@ -120,7 +120,7 @@ export const forgotPasswordAction = async (prevState: unknown, formData: FormDat
     });
 
     if (error) {
-      return { error: error.message };
+      return { error: error instanceof Error ? error.message : String(error) };
     }
 
     return { success: true };
@@ -189,7 +189,7 @@ export const signOutAction = async (): Promise<ActionResult> => {
   try {
     const { error } = await supabase.auth.signOut();
     if (error) {
-      return { error: error.message };
+      return { error: error instanceof Error ? error.message : String(error) };
     }
     return { success: true };
   } catch (error: unknown) {

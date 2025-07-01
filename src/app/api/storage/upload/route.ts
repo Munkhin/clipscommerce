@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
     
     const failed = results
       .filter((result): result is PromiseRejectedResult => result.status === 'rejected')
-      .map(result => result.reason.message || 'Upload failed');
+      .map(result => result.reason instanceof Error ? result.reason.message : String(result.reason) || 'Upload failed');
 
     return NextResponse.json({
       success: true,

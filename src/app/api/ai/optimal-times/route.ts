@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { SchedulingService } from '@/lib/services/schedulingService';
 import { Post, PostStatusType } from '@/types/schedule';
-import { Platform } from '@/types/platform';
+import { Platform } from '@/app/deliverables/types/deliverables_types';
 import { Platform as DeliverablePlatform } from '@/app/workflows/deliverables/types/deliverables_types';
 
 // Mock dependencies for the SchedulingService

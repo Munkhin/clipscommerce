@@ -1,5 +1,5 @@
 import { SupabaseClient } from '@supabase/supabase-js';
-import { Platform } from '../../types/niche_types';
+import { Platform } from '../../../deliverables/types/deliverables_types';
 import { EventEmitter } from 'events';
 
 export interface SentimentFeatures {

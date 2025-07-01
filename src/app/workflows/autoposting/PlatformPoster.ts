@@ -158,7 +158,7 @@ export class TikTokPoster implements PlatformPoster {
         }
       };
     } catch (error) {
-      throw new Error(`Failed to schedule TikTok post: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(`Failed to schedule TikTok post: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
   
@@ -196,7 +196,7 @@ export class TikTokPoster implements PlatformPoster {
     } catch (error) {
       return {
         status: 'failed',
-        error: `Failed to get post status: ${error instanceof Error ? error.message : 'Unknown error'}`
+        error: `Failed to get post status: ${error instanceof Error ? error.message : String(error)}`
       };
     }
   }
@@ -228,7 +228,7 @@ export class TikTokPoster implements PlatformPoster {
             postId,
             status: {
               status: 'failed' as const,
-              error: `Batch status check failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+              error: `Batch status check failed: ${error instanceof Error ? error.message : String(error)}`
             }
           };
         }
@@ -397,7 +397,7 @@ export class InstagramPoster implements PlatformPoster {
         }
       };
     } catch (error) {
-      throw new Error(`Failed to schedule Instagram post: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(`Failed to schedule Instagram post: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
   
@@ -426,7 +426,7 @@ export class InstagramPoster implements PlatformPoster {
     } catch (error) {
       return {
         status: 'failed',
-        error: `Failed to get post status: ${error instanceof Error ? error.message : 'Unknown error'}`
+        error: `Failed to get post status: ${error instanceof Error ? error.message : String(error)}`
       };
     }
   }
@@ -456,7 +456,7 @@ export class InstagramPoster implements PlatformPoster {
             postId,
             status: {
               status: 'failed' as const,
-              error: `Batch status check failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+              error: `Batch status check failed: ${error instanceof Error ? error.message : String(error)}`
             }
           };
         }
@@ -628,7 +628,7 @@ export class YouTubePoster implements PlatformPoster {
         }
       };
     } catch (error) {
-      throw new Error(`Failed to schedule YouTube post: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(`Failed to schedule YouTube post: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
   
@@ -663,7 +663,7 @@ export class YouTubePoster implements PlatformPoster {
     } catch (error) {
       return {
         status: 'failed',
-        error: `Failed to get post status: ${error instanceof Error ? error.message : 'Unknown error'}`
+        error: `Failed to get post status: ${error instanceof Error ? error.message : String(error)}`
       };
     }
   }
@@ -694,7 +694,7 @@ export class YouTubePoster implements PlatformPoster {
             postId,
             status: {
               status: 'failed' as const,
-              error: `Batch status check failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+              error: `Batch status check failed: ${error instanceof Error ? error.message : String(error)}`
             }
           };
         }

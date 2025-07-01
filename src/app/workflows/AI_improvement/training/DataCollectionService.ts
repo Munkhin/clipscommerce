@@ -47,13 +47,13 @@ export class TrainingDataCollectionService {
   // Convert analysis platform to scanner platform string
   private convertToScannerPlatform(platform: Platform): ScannerPlatform {
     switch (platform) {
-      case 'TikTok':
+      case Platform.TIKTOK:
         return 'tiktok';
-      case 'Instagram':
+      case Platform.INSTAGRAM:
         return 'instagram';
-      case 'Facebook':
+      case Platform.FACEBOOK:
         return 'facebook';
-      case 'YouTube':
+      case Platform.YOUTUBE:
         return 'youtube';
       case 'Twitter':
         return 'twitter';
@@ -496,17 +496,17 @@ export class TrainingDataCollectionService {
     recommendations: string[]
   ): void {
     const platformExpectations = {
-      'TikTok': {
+      [Platform.TIKTOK]: {
         minViews: 100,
         viewsToLikesRatio: 0.05, // 5% like rate is reasonable
         commentsImportant: true
       },
-      'Instagram': {
+      [Platform.INSTAGRAM]: {
         minViews: 50,
         viewsToLikesRatio: 0.03, // 3% like rate
         savesImportant: true
       },
-      'YouTube': {
+      [Platform.YOUTUBE]: {
         minViews: 10,
         viewsToLikesRatio: 0.02, // 2% like rate
         commentsImportant: true

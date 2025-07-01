@@ -322,7 +322,7 @@ export class TextAnalyzer {
       // Handle API errors
       if (error.status) {
         throw new ApiError(
-          `API error during ${operation}: ${error.message}`,
+          `API error during ${operation}: ${error instanceof Error ? error.message : String(error)}`,
           error.status,
           { 
             code: error.code,
@@ -333,13 +333,13 @@ export class TextAnalyzer {
       
       // If we have a fallback, use it
       if (fallback) {
-        console.warn(`Falling back to alternative implementation after error: ${error.message}`);
+        console.warn(`Falling back to alternative implementation after error: ${error instanceof Error ? error.message : String(error)}`);
         return fallback();
       }
       
       // Otherwise, rethrow with more context
       throw new TextAnalyzerError(
-        `Error during ${operation}: ${error.message}`,
+        `Error during ${operation}: ${error instanceof Error ? error.message : String(error)}`,
         'ANALYSIS_ERROR',
         { originalError: error }
       );

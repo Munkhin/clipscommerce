@@ -36,7 +36,7 @@ export default function ConfirmPage() {
 
         if (error) {
           setStatus('error');
-          setMessage(error.message);
+          setMessage(error instanceof Error ? error.message : String(error));
           return;
         }
 

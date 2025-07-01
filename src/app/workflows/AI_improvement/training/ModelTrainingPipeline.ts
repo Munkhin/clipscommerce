@@ -1,6 +1,7 @@
 import { EventEmitter } from 'events';
 import { SupabaseClient } from '@supabase/supabase-js';
-import { Platform, ContentNiche } from '../types/niche_types';
+import { Platform } from '../../deliverables/types/deliverables_types';
+import { ContentNiche } from '../types/niche_types';
 import { PostMetrics } from '../../data_analysis/types/analysis_types';
 
 export interface TrainingConfig {

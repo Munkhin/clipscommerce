@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { createClient } from '@supabase/supabase-js';
-import { Platform } from '../../data_analysis/types/analysis_types';
+import { Platform } from '../../deliverables/types/deliverables_types';
 import { TrainingDataCollectionService, DataCollectionConfig } from '../training/DataCollectionService';
 
 interface CollectionOptions {
@@ -87,7 +87,7 @@ function parseArguments(): CollectionOptions {
   }
 
   // Validate platforms
-  const validPlatforms: Platform[] = ['Instagram', 'TikTok', 'YouTube'];
+  const validPlatforms: Platform[] = [Platform.INSTAGRAM, Platform.TIKTOK, Platform.YOUTUBE];
   for (const platform of options.platforms) {
     if (!validPlatforms.includes(platform)) {
       console.error(`❌ Invalid platform: ${platform}. Valid platforms: ${validPlatforms.join(', ')}`);

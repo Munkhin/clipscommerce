@@ -8,7 +8,7 @@ import path from 'path';
 dotenv.config({ path: path.join(process.cwd(), '.env.local') });
 
 import { createClient } from '@supabase/supabase-js';
-import { Platform } from '../types/niche_types';
+import { Platform } from '../../deliverables/types/deliverables_types';
 
 // Configuration
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
@@ -71,7 +71,7 @@ function parseArguments(): ValidationOptions {
 
   return {
     userId: options.userId || 'default-user',
-    platforms: options.platforms || ['TikTok', 'Instagram', 'YouTube'],
+    platforms: options.platforms || [Platform.TIKTOK, Platform.INSTAGRAM, Platform.YOUTUBE],
     minPostsPerPlatform: options.minPostsPerPlatform || 50,
     minEngagementThreshold: options.minEngagementThreshold || 10,
     checkDataQuality: options.checkDataQuality ?? true,
