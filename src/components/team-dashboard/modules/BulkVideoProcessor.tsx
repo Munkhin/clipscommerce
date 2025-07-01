@@ -32,7 +32,7 @@ import {
   Settings
 } from 'lucide-react';
 
-interface VideoFile {
+export interface BulkVideoFile {
   id: string;
   name: string;
   size: number;
@@ -49,10 +49,10 @@ interface VideoFile {
   outputUrl?: string;
 }
 
-interface ProcessingQueue {
+export interface ProcessingQueue {
   id: string;
   name: string;
-  videos: VideoFile[];
+  videos: BulkVideoFile[];
   status: 'idle' | 'processing' | 'paused' | 'completed';
   priority: 'low' | 'normal' | 'high' | 'urgent';
   concurrentLimit: number;
@@ -60,7 +60,7 @@ interface ProcessingQueue {
   estimatedCompletion?: Date;
 }
 
-interface ProcessingStats {
+export interface ProcessingStats {
   totalVideos: number;
   completedVideos: number;
   failedVideos: number;
@@ -88,7 +88,7 @@ export function BulkVideoProcessor() {
 
   // Initialize sample data
   useEffect(() => {
-    const sampleVideos: VideoFile[] = Array.from({ length: 2500 }, (_, i) => ({
+    const sampleVideos: BulkVideoFile[] = Array.from({ length: 2500 }, (_, i) => ({
       id: `video-${i + 1}`,
       name: `video_${String(i + 1).padStart(4, '0')}.mp4`,
       size: Math.random() * 100 * 1024 * 1024, // Random size up to 100MB
@@ -254,7 +254,7 @@ export function BulkVideoProcessor() {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const getStatusIcon = (status: VideoFile['status']) => {
+  const getStatusIcon = (status: BulkVideoFile['status']) => {
     switch (status) {
       case 'queued': return <Clock className="w-4 h-4 text-gray-500" />;
       case 'processing': return <Loader2 className="w-4 h-4 text-blue-500 animate-spin" />;
