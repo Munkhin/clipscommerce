@@ -1,9 +1,11 @@
-import { createClient } from '../supabase/server';
+import { createClient } from '@/lib/supabase/server';
 import { serverStorageService } from './supabase-storage';
 import * as cron from 'node-cron';
 
 export class StorageCleanupService {
-  private supabase: any;
+  private async getSupabase() {
+    return await createClient();
+  }
 
   /**
    * Clean up expired files
@@ -20,7 +22,8 @@ export class StorageCleanupService {
         this.supabase = await createClient();
       }
       // Get all expired files
-      const { data: expiredFiles, error } = await this.supabase
+      const supabase = await this.getSupabase();
+      const { data: expiredFiles, error } = await supabase
         .from('file_metadata')
         .select('*')
         .not('expires_at', 'is', null)
@@ -49,7 +52,7 @@ export class StorageCleanupService {
         try {
           // Delete from storage
           const filePaths = (files as any[]).map((f: any) => f.file_path);
-          const { error: storageError } = await this.supabase.storage
+          const { error: storageError } = await supabase.storage
             .from(bucketId)
             .remove(filePaths);
 
@@ -60,7 +63,7 @@ export class StorageCleanupService {
 
           // Delete metadata
           const fileIds = (files as any[]).map((f: any) => f.id);
-          const { error: metadataError } = await this.supabase
+          const { error: metadataError } = await supabase
             .from('file_metadata')
             .delete()
             .in('id', fileIds);
@@ -102,7 +105,8 @@ export class StorageCleanupService {
     for (const bucketId of buckets) {
       try {
         // Get all files in bucket
-        const { data: storageFiles, error: storageError } = await this.supabase.storage
+        const supabase = await this.getSupabase();
+        const { data: storageFiles, error: storageError } = await supabase.storage
           .from(bucketId)
           .list('', { limit: 1000 });
 
@@ -116,7 +120,7 @@ export class StorageCleanupService {
         }
 
         // Get all file metadata for this bucket
-        const { data: metadataFiles, error: metadataError } = await this.supabase
+        const { data: metadataFiles, error: metadataError } = await supabase
           .from('file_metadata')
           .select('file_path')
           .eq('bucket_id', bucketId);
@@ -129,16 +133,16 @@ export class StorageCleanupService {
         const metadataPaths = new Set(metadataFiles?.map((f: any) => f.file_path) || []);
         
         // Find orphaned files (in storage but not in metadata)
-        const orphanedFiles = (storageFiles as any[]).filter((file: any) => {
+        const orphanedFiles = storageFiles?.filter((file: any) => {
           const filePath = file.name;
           return !metadataPaths.has(filePath) && !file.name.endsWith('/'); // Exclude folders
-        });
+        }) || [];
 
         if (orphanedFiles.length > 0) {
           const orphanedPaths = orphanedFiles.map((f: any) => f.name);
           
           // Delete orphaned files
-          const { error: deleteError } = await this.supabase.storage
+          const { error: deleteError } = await supabase.storage
             .from(bucketId)
             .remove(orphanedPaths);
 
@@ -177,7 +181,8 @@ export class StorageCleanupService {
       cutoffDate.setDate(cutoffDate.getDate() - dayThreshold);
 
       // Get large old files
-      const { data: largeFiles, error } = await this.supabase
+      const supabase = await this.getSupabase();
+      const { data: largeFiles, error } = await supabase
         .from('file_metadata')
         .select('*')
         .gt('file_size', sizeThreshold)
@@ -228,7 +233,8 @@ export class StorageCleanupService {
       }
 
       // Get all file metadata
-      const { data: allFiles, error } = await this.supabase
+      const supabase = await this.getSupabase();
+      const { data: allFiles, error } = await supabase
         .from('file_metadata')
         .select('bucket_id, file_size, expires_at');
 
