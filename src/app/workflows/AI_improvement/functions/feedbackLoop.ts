@@ -1,5 +1,5 @@
 ﻿import { PostMetrics } from '../../data_collection/functions/types';
-import { Platform } from '../../deliverables/types/deliverables_types';
+import { Platform, PlatformEnum } from '../../deliverables/types/deliverables_types';
 import { 
   AnalysisResult, 
   PerformanceTrends, 
@@ -197,19 +197,19 @@ export class AIImprovementFeedbackLoop {
       
       for (const post of postMetrics) {
         const feature: ContentPerformanceFeature = {
-          postId: post.id,
-          platform: post.platform,
+          postId: String(post.id),
+          platform: post.platform as Platform,
           contentType: this.inferContentType(post),
-          engagementRate: post.engagementRate,
-          likeRatio: post.likes / Math.max(post.views, 1),
-          commentRatio: post.comments / Math.max(post.views, 1),
-          shareRatio: post.shares / Math.max(post.views, 1),
-          hashtags: post.hashtags || [],
-          caption: post.caption || '',
-          publishTime: post.timestamp,
-          audienceReach: post.views,
-          impressions: post.views * 1.2, // Estimated
-          sentiment: this.analyzeSentiment(post.caption || ''),
+          engagementRate: Number(post.engagementRate) || 0,
+          likeRatio: Number(post.likes) / Math.max(Number(post.views) || 1, 1),
+          commentRatio: Number(post.comments) / Math.max(Number(post.views) || 1, 1),
+          shareRatio: Number(post.shares) / Math.max(Number(post.views) || 1, 1),
+          hashtags: (post.hashtags as string[]) || [],
+          caption: (post.caption as string) || '',
+          publishTime: post.timestamp as Date,
+          audienceReach: Number(post.views) || 0,
+          impressions: (Number(post.views) || 0) * 1.2, // Estimated
+          sentiment: this.analyzeSentiment((post.caption as string) || ''),
           viralityScore: this.calculateViralityScore(post),
           qualityScore: this.calculateQualityScore(post),
         };
@@ -259,7 +259,7 @@ export class AIImprovementFeedbackLoop {
         for (const competitor of competitorAnalysis.data) {
           const insight: CompetitorInsight = {
             competitorId: competitor.competitorId,
-            platform: Platform.TIKTOK, // Default, should be extracted from data
+            platform: PlatformEnum.TIKTOK, // Default, should be extracted from data
             strategy: competitor.contentAnalysis.commonTopics.join(', '),
             performanceMetrics: {
               averageEngagement: competitor.engagementMetrics.averageEngagementRate,
@@ -395,8 +395,12 @@ export class AIImprovementFeedbackLoop {
 
   private inferContentType(post: PostMetrics): 'video' | 'image' | 'carousel' | 'story' | 'reel' {
     // Infer content type based on available metadata
-    if (post.metadata?.duration) return 'video';
-    if (post.metadata?.isShort) return 'reel';
+    const metadata = post.metadata as any;
+    if (metadata && typeof metadata === 'object') {
+      const meta = metadata as Record<string, unknown>;
+      if (meta.duration && typeof meta.duration === 'number') return 'video';
+      if (meta.isShort && typeof meta.isShort === 'boolean') return 'reel';
+    }
     return 'image'; // Default
   }
 
@@ -416,19 +420,31 @@ export class AIImprovementFeedbackLoop {
 
   private calculateViralityScore(post: PostMetrics): number {
     // Calculate virality based on engagement velocity and reach
-    const engagementVelocity = (post.likes + post.comments + post.shares) / Math.max(post.views, 1);
-    const shareRatio = post.shares / Math.max(post.views, 1);
-    const timeDecay = Math.exp(-((Date.now() - post.timestamp.getTime()) / (24 * 60 * 60 * 1000))); // Decay over days
+    const likes = Number(post.likes) || 0;
+    const comments = Number(post.comments) || 0;
+    const shares = Number(post.shares) || 0;
+    const views = Number(post.views) || 1;
+    const timestamp = post.timestamp as Date;
+    
+    const engagementVelocity = (likes + comments + shares) / Math.max(views, 1);
+    const shareRatio = shares / Math.max(views, 1);
+    const timeDecay = Math.exp(-((Date.now() - timestamp.getTime()) / (24 * 60 * 60 * 1000))); // Decay over days
     
     return Math.min(1, (engagementVelocity * 10 + shareRatio * 50) * timeDecay);
   }
 
   private calculateQualityScore(post: PostMetrics): number {
     // Calculate content quality based on multiple factors
-    const engagementQuality = post.engagementRate / 100;
-    const commentToLikeRatio = post.comments / Math.max(post.likes, 1);
-    const captionQuality = (post.caption?.length || 0) > 50 ? 0.8 : 0.5;
-    const hashtagQuality = (post.hashtags?.length || 0) > 3 ? 0.8 : 0.5;
+    const engagementRate = Number(post.engagementRate) || 0;
+    const comments = Number(post.comments) || 0;
+    const likes = Number(post.likes) || 1;
+    const caption = String(post.caption || '');
+    const hashtags = Array.isArray(post.hashtags) ? post.hashtags : [];
+    
+    const engagementQuality = engagementRate / 100;
+    const commentToLikeRatio = comments / Math.max(likes, 1);
+    const captionQuality = caption.length > 50 ? 0.8 : 0.5;
+    const hashtagQuality = hashtags.length > 3 ? 0.8 : 0.5;
     
     return (engagementQuality + commentToLikeRatio + captionQuality + hashtagQuality) / 4;
   }
@@ -501,7 +517,7 @@ export class AIImprovementFeedbackLoop {
         confidence: 0.8,
         expectedImprovement: 15,
         userId,
-        platform: Platform.TIKTOK, // Default
+        platform: PlatformEnum.TIKTOK, // Default
       });
 
       if (commonHashtags.length > 0) {
@@ -512,7 +528,7 @@ export class AIImprovementFeedbackLoop {
           confidence: 0.7,
           expectedImprovement: 12,
           userId,
-          platform: Platform.TIKTOK,
+          platform: PlatformEnum.TIKTOK,
         });
       }
     }
@@ -546,7 +562,7 @@ export class AIImprovementFeedbackLoop {
         confidence: 0.75,
         expectedImprovement: 20,
         userId,
-        platform: Platform.TIKTOK,
+        platform: PlatformEnum.TIKTOK,
       }];
     }
 
@@ -582,7 +598,7 @@ export class AIImprovementFeedbackLoop {
         confidence: 0.65,
         expectedImprovement: 10,
         userId,
-        platform: Platform.TIKTOK,
+        platform: PlatformEnum.TIKTOK,
       }];
     }
 
@@ -614,7 +630,7 @@ export class AIImprovementFeedbackLoop {
         confidence: 0.7,
         expectedImprovement: 18,
         userId,
-        platform: Platform.TIKTOK,
+        platform: PlatformEnum.TIKTOK,
       });
     }
 
@@ -726,7 +742,7 @@ export class AIImprovementFeedbackLoop {
     for (let i = 0; i < 20; i++) {
       const feature: ContentPerformanceFeature = {
         postId: `post_${i}`,
-        platform: i % 2 === 0 ? Platform.TIKTOK : Platform.INSTAGRAM,
+        platform: i % 2 === 0 ? PlatformEnum.TIKTOK : PlatformEnum.INSTAGRAM,
         contentType: ['video', 'image', 'reel'][i % 3] as any,
         engagementRate: Math.random() * 15 + 5,
         likeRatio: Math.random() * 0.1 + 0.05,
@@ -752,7 +768,7 @@ export class AIImprovementFeedbackLoop {
         userId: `user_${i % 10}`,
         action: ['like', 'comment', 'share', 'view'][i % 4] as any,
         postId: `post_${i % 20}`,
-        platform: i % 2 === 0 ? Platform.TIKTOK : Platform.INSTAGRAM,
+        platform: i % 2 === 0 ? PlatformEnum.TIKTOK : PlatformEnum.INSTAGRAM,
         timestamp: Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000,
       };
 
@@ -764,7 +780,7 @@ export class AIImprovementFeedbackLoop {
     for (let i = 0; i < 5; i++) {
       const insight: CompetitorInsight = {
         competitorId: `competitor_${i}`,
-        platform: Platform.TIKTOK,
+        platform: PlatformEnum.TIKTOK,
         strategy: `Strategy ${i}: Focus on trending topics`,
         performanceMetrics: {
           averageEngagement: Math.random() * 10 + 5,
