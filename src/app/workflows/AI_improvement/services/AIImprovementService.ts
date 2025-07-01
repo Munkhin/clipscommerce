@@ -327,7 +327,7 @@ export class AIImprovementService {
         platform: platform as Platform,
         avgRate: rates.reduce((sum, rate) => sum + rate, 0) / rates.length,
       }))
-      .sort((a, b) => b.avgRate - a.avgRate)[0]?.platform || PlatformEnum.TIKTOK;
+      .sort((a, b) => b.avgRate - a.avgRate)[0]?.platform || PlatformEnum.TIKTOK as Platform;
 
     // Calculate improvement trend (mock)
     const improvementTrend = Math.random() * 20 - 5; // -5% to +15%
@@ -376,12 +376,12 @@ export class AIImprovementService {
       likeRatio: Number(postMetrics.likes) / Math.max(Number(postMetrics.views) || 1, 1),
       commentRatio: Number(postMetrics.comments) / Math.max(Number(postMetrics.views) || 1, 1),
       shareRatio: Number(postMetrics.shares) / Math.max(Number(postMetrics.views) || 1, 1),
-      hashtags: Array.isArray(postMetrics.hashtags) ? postMetrics.hashtags : [],
-      caption: String(postMetrics.caption || ''),
-      publishTime: postMetrics.timestamp instanceof Date ? postMetrics.timestamp : new Date(postMetrics.timestamp || Date.now()),
+      hashtags: (postMetrics.hashtags as string[]) || [],
+      caption: (postMetrics.caption as string) || '',
+      publishTime: postMetrics.timestamp as Date,
       audienceReach: Number(postMetrics.views) || 0,
       impressions: (Number(postMetrics.views) || 0) * 1.2, // Estimated
-      sentiment: this.analyzeSentimentSimple(String(postMetrics.caption || '')),
+      sentiment: this.analyzeSentimentSimple((postMetrics.caption as string) || ''),
       viralityScore: this.calculateViralityScore(postMetrics),
       qualityScore: this.calculateQualityScore(postMetrics),
     };
@@ -549,7 +549,7 @@ export class AIImprovementService {
     const dayOfWeek = publishTime.getDay();
 
     // Platform-specific optimal times
-    const optimalTimes: Record<Platform, number[]> = {
+    const optimalTimes: Record<string, number[]> = {
       [PlatformEnum.TIKTOK]: [18, 19, 20, 21], // 6-9 PM
       [PlatformEnum.INSTAGRAM]: [11, 12, 17, 18, 19], // 11-12 PM, 5-7 PM
       [PlatformEnum.YOUTUBE]: [14, 15, 20, 21], // 2-3 PM, 8-9 PM
@@ -581,7 +581,7 @@ export class AIImprovementService {
 
   private calculatePlatformScore(platform: Platform, contentType?: string): number {
     // Platform-specific content type preferences
-    const preferences: Record<Platform, Record<string, number>> = {
+    const preferences: Record<string, Record<string, number>> = {
       [PlatformEnum.TIKTOK]: { video: 100, reel: 90, image: 30 },
       [PlatformEnum.INSTAGRAM]: { reel: 100, image: 80, video: 70, carousel: 85 },
       [PlatformEnum.YOUTUBE]: { video: 100, image: 20 },
@@ -591,7 +591,7 @@ export class AIImprovementService {
     };
 
     const platformPrefs = preferences[platform];
-    return contentType ? (platformPrefs[contentType as keyof typeof platformPrefs] || 50) : 75;
+    return contentType ? (platformPrefs?.[contentType] || 50) : 75;
   }
 
   private generateEngagementRecommendations(factors: {
@@ -716,9 +716,12 @@ ${variants.map(v => `- ${v.name}: ${v.description} (${v.weight}% traffic)`).join
   }
 
   private inferContentType(post: PostMetrics): 'video' | 'image' | 'carousel' | 'story' | 'reel' {
-    const metadata = post.metadata as any;
-    if (metadata && typeof metadata === 'object' && metadata.duration) return 'video';
-    if (metadata && typeof metadata === 'object' && metadata.isShort) return 'reel';
+    const metadata = post.metadata;
+    if (metadata && typeof metadata === 'object') {
+      const meta = metadata as Record<string, unknown>;
+      if (meta.duration && typeof meta.duration === 'number') return 'video';
+      if (meta.isShort && typeof meta.isShort === 'boolean') return 'reel';
+    }
     return 'image';
   }
 
@@ -747,7 +750,7 @@ ${variants.map(v => `- ${v.name}: ${v.description} (${v.weight}% traffic)`).join
   }
 
   private getOptimalLength(platform: Platform): number {
-    const lengths: Record<Platform, number> = {
+    const lengths: Record<string, number> = {
       [PlatformEnum.TIKTOK]: 150,
       [PlatformEnum.INSTAGRAM]: 125,
       [PlatformEnum.YOUTUBE]: 200,
@@ -759,7 +762,7 @@ ${variants.map(v => `- ${v.name}: ${v.description} (${v.weight}% traffic)`).join
   }
 
   private getOptimalHashtagCount(platform: Platform): number {
-    const counts: Record<Platform, number> = {
+    const counts: Record<string, number> = {
       [PlatformEnum.TIKTOK]: 5,
       [PlatformEnum.INSTAGRAM]: 8,
       [PlatformEnum.YOUTUBE]: 3,
@@ -771,7 +774,7 @@ ${variants.map(v => `- ${v.name}: ${v.description} (${v.weight}% traffic)`).join
   }
 
   private getTrendingHashtags(platform: Platform): string[] {
-    const trending: Record<Platform, string[]> = {
+    const trending: Record<string, string[]> = {
       [PlatformEnum.TIKTOK]: ['#fyp', '#viral', '#trending'],
       [PlatformEnum.INSTAGRAM]: ['#instagood', '#photooftheday', '#love'],
       [PlatformEnum.YOUTUBE]: ['#youtube', '#subscribe', '#viral'],
