@@ -1,4 +1,4 @@
-import { Platform } from '../../deliverables/types/deliverables_types';
+import { Platform, PlatformEnum } from '../../deliverables/types/deliverables_types';
 import { PostMetrics } from '../../data_collection/functions/types';
 import { 
   AIImprovementFeedbackLoop,
@@ -327,7 +327,7 @@ export class AIImprovementService {
         platform: platform as Platform,
         avgRate: rates.reduce((sum, rate) => sum + rate, 0) / rates.length,
       }))
-      .sort((a, b) => b.avgRate - a.avgRate)[0]?.platform || Platform.TIKTOK;
+      .sort((a, b) => b.avgRate - a.avgRate)[0]?.platform || PlatformEnum.TIKTOK;
 
     // Calculate improvement trend (mock)
     const improvementTrend = Math.random() * 20 - 5; // -5% to +15%
@@ -369,19 +369,19 @@ export class AIImprovementService {
 
     // Convert PostMetrics to ContentPerformanceFeature
     const feature: ContentPerformanceFeature = {
-      postId: postMetrics.id,
-      platform: postMetrics.platform,
+      postId: String(postMetrics.id),
+      platform: postMetrics.platform as Platform,
       contentType: this.inferContentType(postMetrics),
-      engagementRate: postMetrics.engagementRate,
-      likeRatio: postMetrics.likes / Math.max(postMetrics.views, 1),
-      commentRatio: postMetrics.comments / Math.max(postMetrics.views, 1),
-      shareRatio: postMetrics.shares / Math.max(postMetrics.views, 1),
-      hashtags: postMetrics.hashtags || [],
-      caption: postMetrics.caption || '',
-      publishTime: postMetrics.timestamp,
-      audienceReach: postMetrics.views,
-      impressions: postMetrics.views * 1.2, // Estimated
-      sentiment: this.analyzeSentimentSimple(postMetrics.caption || ''),
+      engagementRate: Number(postMetrics.engagementRate) || 0,
+      likeRatio: Number(postMetrics.likes) / Math.max(Number(postMetrics.views) || 1, 1),
+      commentRatio: Number(postMetrics.comments) / Math.max(Number(postMetrics.views) || 1, 1),
+      shareRatio: Number(postMetrics.shares) / Math.max(Number(postMetrics.views) || 1, 1),
+      hashtags: Array.isArray(postMetrics.hashtags) ? postMetrics.hashtags : [],
+      caption: String(postMetrics.caption || ''),
+      publishTime: postMetrics.timestamp instanceof Date ? postMetrics.timestamp : new Date(postMetrics.timestamp || Date.now()),
+      audienceReach: Number(postMetrics.views) || 0,
+      impressions: (Number(postMetrics.views) || 0) * 1.2, // Estimated
+      sentiment: this.analyzeSentimentSimple(String(postMetrics.caption || '')),
       viralityScore: this.calculateViralityScore(postMetrics),
       qualityScore: this.calculateQualityScore(postMetrics),
     };
@@ -549,13 +549,13 @@ export class AIImprovementService {
     const dayOfWeek = publishTime.getDay();
 
     // Platform-specific optimal times
-    const optimalTimes = {
-      [Platform.TIKTOK]: [18, 19, 20, 21], // 6-9 PM
-      [Platform.INSTAGRAM]: [11, 12, 17, 18, 19], // 11-12 PM, 5-7 PM
-      [Platform.YOUTUBE]: [14, 15, 20, 21], // 2-3 PM, 8-9 PM
-      [Platform.FACEBOOK]: [9, 13, 15], // 9 AM, 1 PM, 3 PM
-      [Platform.TWITTER]: [9, 12, 17], // 9 AM, 12 PM, 5 PM
-      [Platform.LINKEDIN]: [8, 9, 12, 17], // 8-9 AM, 12 PM, 5 PM
+    const optimalTimes: Record<Platform, number[]> = {
+      [PlatformEnum.TIKTOK]: [18, 19, 20, 21], // 6-9 PM
+      [PlatformEnum.INSTAGRAM]: [11, 12, 17, 18, 19], // 11-12 PM, 5-7 PM
+      [PlatformEnum.YOUTUBE]: [14, 15, 20, 21], // 2-3 PM, 8-9 PM
+      [PlatformEnum.FACEBOOK]: [9, 13, 15], // 9 AM, 1 PM, 3 PM
+      [PlatformEnum.TWITTER]: [9, 12, 17], // 9 AM, 12 PM, 5 PM
+      [PlatformEnum.LINKEDIN]: [8, 9, 12, 17], // 8-9 AM, 12 PM, 5 PM
     };
 
     const platformOptimal = optimalTimes[platform] || [12, 18];
@@ -581,13 +581,13 @@ export class AIImprovementService {
 
   private calculatePlatformScore(platform: Platform, contentType?: string): number {
     // Platform-specific content type preferences
-    const preferences = {
-      [Platform.TIKTOK]: { video: 100, reel: 90, image: 30 },
-      [Platform.INSTAGRAM]: { reel: 100, image: 80, video: 70, carousel: 85 },
-      [Platform.YOUTUBE]: { video: 100, image: 20 },
-      [Platform.FACEBOOK]: { video: 80, image: 70, carousel: 75 },
-      [Platform.TWITTER]: { image: 70, video: 60 },
-      [Platform.LINKEDIN]: { image: 80, video: 70, carousel: 60 },
+    const preferences: Record<Platform, Record<string, number>> = {
+      [PlatformEnum.TIKTOK]: { video: 100, reel: 90, image: 30 },
+      [PlatformEnum.INSTAGRAM]: { reel: 100, image: 80, video: 70, carousel: 85 },
+      [PlatformEnum.YOUTUBE]: { video: 100, image: 20 },
+      [PlatformEnum.FACEBOOK]: { video: 80, image: 70, carousel: 75 },
+      [PlatformEnum.TWITTER]: { image: 70, video: 60 },
+      [PlatformEnum.LINKEDIN]: { image: 80, video: 70, carousel: 60 },
     };
 
     const platformPrefs = preferences[platform];
@@ -716,8 +716,9 @@ ${variants.map(v => `- ${v.name}: ${v.description} (${v.weight}% traffic)`).join
   }
 
   private inferContentType(post: PostMetrics): 'video' | 'image' | 'carousel' | 'story' | 'reel' {
-    if (post.metadata?.duration) return 'video';
-    if (post.metadata?.isShort) return 'reel';
+    const metadata = post.metadata as any;
+    if (metadata && typeof metadata === 'object' && metadata.duration) return 'video';
+    if (metadata && typeof metadata === 'object' && metadata.isShort) return 'reel';
     return 'image';
   }
 
@@ -727,49 +728,56 @@ ${variants.map(v => `- ${v.name}: ${v.description} (${v.weight}% traffic)`).join
   }
 
   private calculateViralityScore(post: PostMetrics): number {
-    const engagementVelocity = (post.likes + post.comments + post.shares) / Math.max(post.views, 1);
-    const shareRatio = post.shares / Math.max(post.views, 1);
+    const likes = Number(post.likes) || 0;
+    const comments = Number(post.comments) || 0;
+    const shares = Number(post.shares) || 0;
+    const views = Number(post.views) || 1;
+    const engagementVelocity = (likes + comments + shares) / Math.max(views, 1);
+    const shareRatio = shares / Math.max(views, 1);
     return Math.min(1, engagementVelocity * 10 + shareRatio * 50);
   }
 
   private calculateQualityScore(post: PostMetrics): number {
-    const engagementQuality = post.engagementRate / 100;
-    const commentToLikeRatio = post.comments / Math.max(post.likes, 1);
+    const engagementRate = Number(post.engagementRate) || 0;
+    const comments = Number(post.comments) || 0;
+    const likes = Number(post.likes) || 1;
+    const engagementQuality = engagementRate / 100;
+    const commentToLikeRatio = comments / Math.max(likes, 1);
     return (engagementQuality + commentToLikeRatio) / 2;
   }
 
   private getOptimalLength(platform: Platform): number {
-    const lengths = {
-      [Platform.TIKTOK]: 150,
-      [Platform.INSTAGRAM]: 125,
-      [Platform.YOUTUBE]: 200,
-      [Platform.FACEBOOK]: 250,
-      [Platform.TWITTER]: 280,
-      [Platform.LINKEDIN]: 300,
+    const lengths: Record<Platform, number> = {
+      [PlatformEnum.TIKTOK]: 150,
+      [PlatformEnum.INSTAGRAM]: 125,
+      [PlatformEnum.YOUTUBE]: 200,
+      [PlatformEnum.FACEBOOK]: 250,
+      [PlatformEnum.TWITTER]: 280,
+      [PlatformEnum.LINKEDIN]: 300,
     };
     return lengths[platform] || 150;
   }
 
   private getOptimalHashtagCount(platform: Platform): number {
-    const counts = {
-      [Platform.TIKTOK]: 5,
-      [Platform.INSTAGRAM]: 8,
-      [Platform.YOUTUBE]: 3,
-      [Platform.FACEBOOK]: 3,
-      [Platform.TWITTER]: 2,
-      [Platform.LINKEDIN]: 3,
+    const counts: Record<Platform, number> = {
+      [PlatformEnum.TIKTOK]: 5,
+      [PlatformEnum.INSTAGRAM]: 8,
+      [PlatformEnum.YOUTUBE]: 3,
+      [PlatformEnum.FACEBOOK]: 3,
+      [PlatformEnum.TWITTER]: 2,
+      [PlatformEnum.LINKEDIN]: 3,
     };
     return counts[platform] || 5;
   }
 
   private getTrendingHashtags(platform: Platform): string[] {
-    const trending = {
-      [Platform.TIKTOK]: ['#fyp', '#viral', '#trending'],
-      [Platform.INSTAGRAM]: ['#instagood', '#photooftheday', '#love'],
-      [Platform.YOUTUBE]: ['#youtube', '#subscribe', '#viral'],
-      [Platform.FACEBOOK]: ['#facebook', '#social', '#community'],
-      [Platform.TWITTER]: ['#twitter', '#trending', '#viral'],
-      [Platform.LINKEDIN]: ['#linkedin', '#professional', '#career'],
+    const trending: Record<Platform, string[]> = {
+      [PlatformEnum.TIKTOK]: ['#fyp', '#viral', '#trending'],
+      [PlatformEnum.INSTAGRAM]: ['#instagood', '#photooftheday', '#love'],
+      [PlatformEnum.YOUTUBE]: ['#youtube', '#subscribe', '#viral'],
+      [PlatformEnum.FACEBOOK]: ['#facebook', '#social', '#community'],
+      [PlatformEnum.TWITTER]: ['#twitter', '#trending', '#viral'],
+      [PlatformEnum.LINKEDIN]: ['#linkedin', '#professional', '#career'],
     };
     return trending[platform] || [];
   }
