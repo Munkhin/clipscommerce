@@ -71,7 +71,7 @@ function parseArguments(): ValidationOptions {
 
   return {
     userId: options.userId || 'default-user',
-    platforms: options.platforms || [Platform.TIKTOK, Platform.INSTAGRAM, Platform.YOUTUBE],
+    platforms: options.platforms || ['TIKTOK', 'INSTAGRAM', 'YOUTUBE'],
     minPostsPerPlatform: options.minPostsPerPlatform || 50,
     minEngagementThreshold: options.minEngagementThreshold || 10,
     checkDataQuality: options.checkDataQuality ?? true,
