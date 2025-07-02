@@ -12,5 +12,5 @@ export class ChartGenerator {
   }
 }
 
-// Re-export ChartData for external use
-export { ChartData } from './types/index'; 
+// Export types directly
+export type { ChartData, ChartOptions } from './types/index'; 
