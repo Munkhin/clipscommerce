@@ -553,9 +553,6 @@ export class AIImprovementService {
       [PlatformEnum.TIKTOK]: [18, 19, 20, 21], // 6-9 PM
       [PlatformEnum.INSTAGRAM]: [11, 12, 17, 18, 19], // 11-12 PM, 5-7 PM
       [PlatformEnum.YOUTUBE]: [14, 15, 20, 21], // 2-3 PM, 8-9 PM
-      [PlatformEnum.FACEBOOK]: [9, 13, 15], // 9 AM, 1 PM, 3 PM
-      [PlatformEnum.TWITTER]: [9, 12, 17], // 9 AM, 12 PM, 5 PM
-      [PlatformEnum.LINKEDIN]: [8, 9, 12, 17], // 8-9 AM, 12 PM, 5 PM
     };
 
     const platformOptimal = optimalTimes[platform] || [12, 18];
@@ -585,9 +582,6 @@ export class AIImprovementService {
       [PlatformEnum.TIKTOK]: { video: 100, reel: 90, image: 30 },
       [PlatformEnum.INSTAGRAM]: { reel: 100, image: 80, video: 70, carousel: 85 },
       [PlatformEnum.YOUTUBE]: { video: 100, image: 20 },
-      [PlatformEnum.FACEBOOK]: { video: 80, image: 70, carousel: 75 },
-      [PlatformEnum.TWITTER]: { image: 70, video: 60 },
-      [PlatformEnum.LINKEDIN]: { image: 80, video: 70, carousel: 60 },
     };
 
     const platformPrefs = preferences[platform];
@@ -754,9 +748,6 @@ ${variants.map(v => `- ${v.name}: ${v.description} (${v.weight}% traffic)`).join
       [PlatformEnum.TIKTOK]: 150,
       [PlatformEnum.INSTAGRAM]: 125,
       [PlatformEnum.YOUTUBE]: 200,
-      [PlatformEnum.FACEBOOK]: 250,
-      [PlatformEnum.TWITTER]: 280,
-      [PlatformEnum.LINKEDIN]: 300,
     };
     return lengths[platform] || 150;
   }
@@ -766,9 +757,6 @@ ${variants.map(v => `- ${v.name}: ${v.description} (${v.weight}% traffic)`).join
       [PlatformEnum.TIKTOK]: 5,
       [PlatformEnum.INSTAGRAM]: 8,
       [PlatformEnum.YOUTUBE]: 3,
-      [PlatformEnum.FACEBOOK]: 3,
-      [PlatformEnum.TWITTER]: 2,
-      [PlatformEnum.LINKEDIN]: 3,
     };
     return counts[platform] || 5;
   }
@@ -778,9 +766,6 @@ ${variants.map(v => `- ${v.name}: ${v.description} (${v.weight}% traffic)`).join
       [PlatformEnum.TIKTOK]: ['#fyp', '#viral', '#trending'],
       [PlatformEnum.INSTAGRAM]: ['#instagood', '#photooftheday', '#love'],
       [PlatformEnum.YOUTUBE]: ['#youtube', '#subscribe', '#viral'],
-      [PlatformEnum.FACEBOOK]: ['#facebook', '#social', '#community'],
-      [PlatformEnum.TWITTER]: ['#twitter', '#trending', '#viral'],
-      [PlatformEnum.LINKEDIN]: ['#linkedin', '#professional', '#career'],
     };
     return trending[platform] || [];
   }
