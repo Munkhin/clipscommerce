@@ -48,11 +48,11 @@ export class TrainingDataCollectionService {
   private convertToScannerPlatform(platform: Platform): ScannerPlatform {
     switch (platform) {
       case 'TikTok':
-        return 'tiktok';
+        return 'TIKTOK';
       case 'Instagram':
-        return 'instagram';
+        return 'INSTAGRAM';
       case 'YouTube':
-        return 'youtube';
+        return 'YOUTUBE';
       default:
         throw new Error(`Unsupported platform: ${platform}`);
     }
