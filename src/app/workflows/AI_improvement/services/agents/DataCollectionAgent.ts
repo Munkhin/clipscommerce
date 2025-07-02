@@ -450,21 +450,6 @@ export class DataCollectionAgent {
         '/channels',
         '/playlistItems'
       ],
-      [PlatformEnum.FACEBOOK]: [
-        '/posts',
-        '/insights',
-        '/page_insights'
-      ],
-      [PlatformEnum.TWITTER]: [
-        '/tweets/search/recent',
-        '/users/by/username',
-        '/tweets/counts/recent'
-      ],
-      [PlatformEnum.LINKEDIN]: [
-        '/shares',
-        '/posts',
-        '/ugcPosts'
-      ],
     };
     
     return endpointMap[platform] || [];
@@ -478,9 +463,6 @@ export class DataCollectionAgent {
       [PlatformEnum.TIKTOK]: 100,
       [PlatformEnum.INSTAGRAM]: 200,
       [PlatformEnum.YOUTUBE]: 10000,
-      [PlatformEnum.FACEBOOK]: 200,
-      [PlatformEnum.TWITTER]: 300,
-      [PlatformEnum.LINKEDIN]: 100,
     };
     
     const platformRate = baseRates[platform] || 100;
