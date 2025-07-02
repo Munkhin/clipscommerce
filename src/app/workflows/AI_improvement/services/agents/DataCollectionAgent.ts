@@ -1,5 +1,6 @@
-import { Platform, PlatformEnum } from '../../../deliverables/types/deliverables_types';
+import { Platform, PlatformEnum } from '@/app/workflows/deliverables/types/deliverables_types';
 import { ContentNiche, getNicheCharacteristics } from '../../types/niche_types';
+import { extractErrorMessage } from '@/lib/errors/errorHandling';
 
 export interface DataCollectionTask {
   type: 'optimize_collection' | 'validate_quality' | 'discover_sources' | 'monitor_gaps';
@@ -131,8 +132,8 @@ export class DataCollectionAgent {
       }
 
       console.log(`✅ Task ${task.type} completed successfully`);
-    } catch (error) {
-      console.error(`❌ Task ${task.type} failed:`, error);
+    } catch (error: unknown) {
+      console.error(`❌ Task ${task.type} failed:`, extractErrorMessage(error));
       throw error;
     } finally {
       this.currentTask = null;

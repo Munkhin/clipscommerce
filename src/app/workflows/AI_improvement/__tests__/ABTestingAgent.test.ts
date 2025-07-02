@@ -131,7 +131,7 @@ describe('ABTestingAgent', () => {
     const initialPerformance = await agent.getPerformance();
     const task: ABTestingTask = {
       type: 'create_experiment',
-      experimentDetails: { name: 'FailExp', platform: Platform.FACEBOOK, baseContent: {caption:'c', hashtags:[]}, variationType:'caption', targetMetric:'likes', userId:'u2' }
+      experimentDetails: { name: 'FailExp', platform: 'facebook', baseContent: {caption:'c', hashtags:[]}, variationType:'caption', targetMetric:'likes', userId:'u2' }
     };
     
     await expect(agent.executeTask(task)).rejects.toThrow('Service create failure');
@@ -232,7 +232,7 @@ describe('ABTestingAgent', () => {
     });
 
     it('should handle different platforms consistently', async () => {
-      const platforms = [Platform.TIKTOK, Platform.INSTAGRAM, Platform.YOUTUBE, Platform.LINKEDIN];
+      const platforms = ['tiktok', 'instagram', 'youtube', 'linkedin'];
       
       for (const platform of platforms) {
         const task: ABTestingTask = {

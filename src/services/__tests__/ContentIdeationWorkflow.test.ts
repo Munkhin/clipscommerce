@@ -1,6 +1,6 @@
 import { ContentIdeationWorkflow } from '../contentIdeationWorkflow';
 import { generateContent, GenerateContentResponse } from '../contentGeneration';
-import { Platform } from '../../app/workflows/deliverables/types/deliverables_types';
+import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
 
 jest.mock('../contentGeneration');
 
@@ -68,7 +68,7 @@ describe('ContentIdeationWorkflow', () => {
     it('should generate ideation results and rank by novelty', async () => {
       const mockRequests = Array.from({ length: 5 }).map((_, idx) => ({
         baseCaption: `Hello world ${idx}`,
-        platform: Platform.INSTAGRAM,
+        platform: 'instagram',
       }));
       const results = await workflow.executeBulk(mockRequests);
       expect(results.length).toBeLessThanOrEqual(5);
@@ -76,9 +76,9 @@ describe('ContentIdeationWorkflow', () => {
 
     it('should handle different platforms in bulk requests', async () => {
       const mockRequests = [
-        { baseCaption: 'TikTok content', platform: Platform.TIKTOK },
-        { baseCaption: 'Instagram content', platform: Platform.INSTAGRAM },
-        { baseCaption: 'YouTube content', platform: Platform.YOUTUBE },
+        { baseCaption: 'TikTok content', platform: 'tiktok' },
+        { baseCaption: 'Instagram content', platform: 'instagram' },
+        { baseCaption: 'YouTube content', platform: 'youtube' },
       ];
       
       const results = await workflow.executeBulk(mockRequests);
@@ -94,7 +94,7 @@ describe('ContentIdeationWorkflow', () => {
     it('should handle large batch sizes efficiently', async () => {
       const largeBatch = Array.from({ length: 50 }).map((_, idx) => ({
         baseCaption: `Content idea ${idx}`,
-        platform: Platform.TIKTOK,
+        platform: 'tiktok',
       }));
 
       const startTime = Date.now();
@@ -107,9 +107,9 @@ describe('ContentIdeationWorkflow', () => {
 
     it('should rank results by novelty score', async () => {
       const mockRequests = [
-        { baseCaption: 'Common fitness tip', platform: Platform.INSTAGRAM },
-        { baseCaption: 'Unique workout hack', platform: Platform.INSTAGRAM },
-        { baseCaption: 'Standard meal prep', platform: Platform.INSTAGRAM },
+        { baseCaption: 'Common fitness tip', platform: 'instagram' },
+        { baseCaption: 'Unique workout hack', platform: 'instagram' },
+        { baseCaption: 'Standard meal prep', platform: 'instagram' },
       ];
 
       const results = await workflow.executeBulk(mockRequests);
@@ -125,9 +125,9 @@ describe('ContentIdeationWorkflow', () => {
 
     it('should filter low-quality content', async () => {
       const mockRequests = [
-        { baseCaption: 'High quality content with good length and engagement potential', platform: Platform.INSTAGRAM },
-        { baseCaption: 'LowQuality content that should be filtered', platform: Platform.INSTAGRAM },
-        { baseCaption: 'Another good content', platform: Platform.INSTAGRAM },
+        { baseCaption: 'High quality content with good length and engagement potential', platform: 'instagram' },
+        { baseCaption: 'LowQuality content that should be filtered', platform: 'instagram' },
+        { baseCaption: 'Another good content', platform: 'instagram' },
       ];
 
       // Create a workflow with a filtering mechanism (e.g., minNoveltyScore)
@@ -157,7 +157,7 @@ describe('ContentIdeationWorkflow', () => {
       
       const mockRequests = Array.from({ length: 10 }).map((_, idx) => ({
         baseCaption: `Concurrent test ${idx}`,
-        platform: Platform.INSTAGRAM,
+        platform: 'instagram',
       }));
 
       const results = await workflowWithLimit.executeBulk(mockRequests);
@@ -171,7 +171,7 @@ describe('ContentIdeationWorkflow', () => {
         const testWorkflow = new ContentIdeationWorkflow(limit);
         const mockRequests = Array.from({ length: 6 }).map((_, idx) => ({
           baseCaption: `Limit test ${idx}`,
-          platform: Platform.TIKTOK,
+          platform: 'tiktok',
         }));
 
         const results = await testWorkflow.executeBulk(mockRequests);
@@ -183,9 +183,9 @@ describe('ContentIdeationWorkflow', () => {
   describe('content quality assessment', () => {
     it('should rank results by novelty score', async () => {
       const mockRequests = [
-        { baseCaption: 'Common fitness tip', platform: Platform.INSTAGRAM },
-        { baseCaption: 'Unique workout hack', platform: Platform.INSTAGRAM },
-        { baseCaption: 'Standard meal prep', platform: Platform.INSTAGRAM },
+        { baseCaption: 'Common fitness tip', platform: 'instagram' },
+        { baseCaption: 'Unique workout hack', platform: 'instagram' },
+        { baseCaption: 'Standard meal prep', platform: 'instagram' },
       ];
 
       const results = await workflow.executeBulk(mockRequests);
@@ -197,9 +197,9 @@ describe('ContentIdeationWorkflow', () => {
 
     it('should filter low-quality content', async () => {
       const mockRequests = [
-        { baseCaption: '', platform: Platform.INSTAGRAM }, // Empty caption
-        { baseCaption: 'a', platform: Platform.INSTAGRAM }, // Too short
-        { baseCaption: 'High quality content with good length and engagement potential', platform: Platform.INSTAGRAM },
+        { baseCaption: '', platform: 'instagram' }, // Empty caption
+        { baseCaption: 'a', platform: 'instagram' }, // Too short
+        { baseCaption: 'High quality content with good length and engagement potential', platform: 'instagram' },
       ];
 
       const results = await workflow.executeBulk(mockRequests);
@@ -212,7 +212,7 @@ describe('ContentIdeationWorkflow', () => {
     it('should handle invalid platform values', async () => {
       const mockRequests = [
         { baseCaption: 'Valid content', platform: 'invalid_platform' as any },
-        { baseCaption: 'Another content', platform: Platform.INSTAGRAM },
+        { baseCaption: 'Another content', platform: 'instagram' },
       ];
 
       const results = await workflow.executeBulk(mockRequests);
@@ -223,8 +223,8 @@ describe('ContentIdeationWorkflow', () => {
       const malformedRequests = [
         null,
         undefined,
-        { baseCaption: 'Valid content', platform: Platform.INSTAGRAM },
-        { platform: Platform.TIKTOK }, // Missing baseCaption
+        { baseCaption: 'Valid content', platform: 'instagram' },
+        { platform: 'tiktok' }, // Missing baseCaption
         { baseCaption: 'Missing platform' },
       ];
 
@@ -237,7 +237,7 @@ describe('ContentIdeationWorkflow', () => {
 
       const mockRequests = Array.from({ length: 3 }).map((_, idx) => ({
         baseCaption: `Network test ${idx}`,
-        platform: Platform.INSTAGRAM,
+        platform: 'instagram',
       }));
 
       try {
@@ -254,7 +254,7 @@ describe('ContentIdeationWorkflow', () => {
 
       const timeoutTestRequests = Array.from({ length: 3 }).map((_, idx) => ({
         baseCaption: `Timeout test ${idx}`,
-        platform: Platform.INSTAGRAM,
+        platform: 'instagram',
       }));
 
       const resultsPromise = workflow.executeBulk(timeoutTestRequests);
@@ -268,7 +268,7 @@ describe('ContentIdeationWorkflow', () => {
     it('should handle memory efficiently with large datasets', async () => {
       const largeDataset = Array.from({ length: 100 }).map((_, idx) => ({
         baseCaption: `Memory test content ${idx} with some additional text to make it longer`,
-        platform: Platform.YOUTUBE,
+        platform: 'youtube',
       }));
 
       const initialMemory = process.memoryUsage().heapUsed;
@@ -283,7 +283,7 @@ describe('ContentIdeationWorkflow', () => {
     it('should process requests in reasonable time', async () => {
       const timeTestRequests = Array.from({ length: 20 }).map((_, idx) => ({
         baseCaption: `Performance test ${idx}`,
-        platform: Platform.TIKTOK,
+        platform: 'tiktok',
       }));
 
       const startTime = Date.now();
@@ -298,10 +298,10 @@ describe('ContentIdeationWorkflow', () => {
   describe('state management', () => {
     it('should maintain consistent state across operations', async () => {
       const firstBatch = [
-        { baseCaption: 'First batch content', platform: Platform.INSTAGRAM },
+        { baseCaption: 'First batch content', platform: 'instagram' },
       ];
       const secondBatch = [
-        { baseCaption: 'Second batch content', platform: Platform.TIKTOK },
+        { baseCaption: 'Second batch content', platform: 'tiktok' },
       ];
 
       const firstResults = await workflow.executeBulk(firstBatch);
@@ -317,7 +317,7 @@ describe('ContentIdeationWorkflow', () => {
       const concurrentRequests = Array.from({ length: 5 }).map((_, idx) => 
         workflow.executeBulk([{
           baseCaption: `Concurrent state test ${idx}`,
-          platform: Platform.INSTAGRAM,
+          platform: 'instagram',
         }])
       );
 
@@ -329,8 +329,8 @@ describe('ContentIdeationWorkflow', () => {
     });
 
     it('should reset state properly between operations', async () => {
-      const initialRequest = [{ baseCaption: 'Initial content', platform: Platform.TIKTOK }];
-      const resetRequest = [{ baseCaption: 'Reset content', platform: Platform.YOUTUBE }];
+      const initialRequest = [{ baseCaption: 'Initial content', platform: 'tiktok' }];
+      const resetRequest = [{ baseCaption: 'Reset content', platform: 'youtube' }];
 
       await workflow.executeBulk(initialRequest);
       const resetResults = await workflow.executeBulk(resetRequest);
@@ -343,8 +343,8 @@ describe('ContentIdeationWorkflow', () => {
   describe('AI integration', () => {
     it('should handle AI service responses correctly', async () => {
       const aiTestRequests = [
-        { baseCaption: 'AI-powered content creation', platform: Platform.INSTAGRAM },
-        { baseCaption: 'Machine learning content optimization', platform: Platform.TIKTOK },
+        { baseCaption: 'AI-powered content creation', platform: 'instagram' },
+        { baseCaption: 'Machine learning content optimization', platform: 'tiktok' },
       ];
 
       const results = await workflow.executeBulk(aiTestRequests);
@@ -365,7 +365,7 @@ describe('ContentIdeationWorkflow', () => {
 
       const timeoutTestRequests = Array.from({ length: 3 }).map((_, idx) => ({
         baseCaption: `Timeout test content ${idx}`,
-        platform: Platform.YOUTUBE,
+        platform: 'youtube',
       }));
 
       const startTime = Date.now();
@@ -378,8 +378,8 @@ describe('ContentIdeationWorkflow', () => {
 
     it('should validate AI-generated content quality', async () => {
       const qualityTestRequests = [
-        { baseCaption: 'Generate high-quality engaging content', platform: Platform.INSTAGRAM },
-        { baseCaption: 'Create viral-worthy content ideas', platform: Platform.TIKTOK },
+        { baseCaption: 'Generate high-quality engaging content', platform: 'instagram' },
+        { baseCaption: 'Create viral-worthy content ideas', platform: 'tiktok' },
       ];
 
       const results = await workflow.executeBulk(qualityTestRequests);
@@ -401,7 +401,7 @@ describe('ContentIdeationWorkflow', () => {
       mockGenerateContent.mockRejectedValueOnce(new Error('Service Unavailable'));
 
       const unavailabilityTestRequests = [
-        { baseCaption: 'Service unavailable test', platform: Platform.INSTAGRAM },
+        { baseCaption: 'Service unavailable test', platform: 'instagram' },
       ];
 
       try {
@@ -417,9 +417,9 @@ describe('ContentIdeationWorkflow', () => {
   describe('enhanced content quality assessment', () => {
     it('should assess content engagement potential', async () => {
       const engagementTestRequests = [
-        { baseCaption: 'Boring standard content', platform: Platform.INSTAGRAM },
-        { baseCaption: 'Exciting viral-worthy content with trending hashtags!', platform: Platform.TIKTOK },
-        { baseCaption: 'Educational valuable content for audience', platform: Platform.YOUTUBE },
+        { baseCaption: 'Boring standard content', platform: 'instagram' },
+        { baseCaption: 'Exciting viral-worthy content with trending hashtags!', platform: 'tiktok' },
+        { baseCaption: 'Educational valuable content for audience', platform: 'youtube' },
       ];
 
       const results = await workflow.executeBulk(engagementTestRequests);
@@ -436,8 +436,8 @@ describe('ContentIdeationWorkflow', () => {
 
     it('should evaluate content originality', async () => {
       const originalityTestRequests = [
-        { baseCaption: 'Common generic content everyone posts', platform: Platform.INSTAGRAM },
-        { baseCaption: 'Unique innovative approach to content creation', platform: Platform.TIKTOK },
+        { baseCaption: 'Common generic content everyone posts', platform: 'instagram' },
+        { baseCaption: 'Unique innovative approach to content creation', platform: 'tiktok' },
       ];
 
       const results = await workflow.executeBulk(originalityTestRequests);
@@ -454,9 +454,9 @@ describe('ContentIdeationWorkflow', () => {
 
     it('should assess platform-specific optimization', async () => {
       const platformOptimizationRequests = [
-        { baseCaption: 'Instagram-optimized visual content', platform: Platform.INSTAGRAM },
-        { baseCaption: 'TikTok-optimized short-form video idea', platform: Platform.TIKTOK },
-        { baseCaption: 'YouTube-optimized long-form educational content', platform: Platform.YOUTUBE },
+        { baseCaption: 'Instagram-optimized visual content', platform: 'instagram' },
+        { baseCaption: 'TikTok-optimized short-form video idea', platform: 'tiktok' },
+        { baseCaption: 'YouTube-optimized long-form educational content', platform: 'youtube' },
       ];
 
       const results = await workflow.executeBulk(platformOptimizationRequests);
@@ -473,9 +473,9 @@ describe('ContentIdeationWorkflow', () => {
 
     it('should filter content based on quality thresholds', async () => {
       const qualityThresholdRequests = [
-        { baseCaption: 'a', platform: Platform.INSTAGRAM }, // Very low quality
-        { baseCaption: 'ok content', platform: Platform.TIKTOK }, // Medium quality
-        { baseCaption: 'Exceptional high-quality content with great engagement potential and unique value proposition', platform: Platform.YOUTUBE }, // High quality
+        { baseCaption: 'a', platform: 'instagram' }, // Very low quality
+        { baseCaption: 'ok content', platform: 'tiktok' }, // Medium quality
+        { baseCaption: 'Exceptional high-quality content with great engagement potential and unique value proposition', platform: 'youtube' }, // High quality
       ];
 
       const results = await workflow.executeBulk(qualityThresholdRequests);
@@ -494,7 +494,7 @@ describe('ContentIdeationWorkflow', () => {
   describe('workflow integration', () => {
     it('should integrate with external content services', async () => {
       const integrationTestRequests = [
-        { baseCaption: 'Integration test content', platform: Platform.INSTAGRAM },
+        { baseCaption: 'Integration test content', platform: 'instagram' },
       ];
 
       const results = await workflow.executeBulk(integrationTestRequests);
@@ -505,7 +505,7 @@ describe('ContentIdeationWorkflow', () => {
 
     it('should handle workflow chaining', async () => {
       const firstStageRequests = [
-        { baseCaption: 'First stage content', platform: Platform.TIKTOK },
+        { baseCaption: 'First stage content', platform: 'tiktok' },
       ];
       
       const firstResults = await workflow.executeBulk(firstStageRequests);
@@ -513,7 +513,7 @@ describe('ContentIdeationWorkflow', () => {
       if (firstResults.length > 0) {
         const secondStageRequests = firstResults.map(result => ({
           baseCaption: result.ideation.captions[0].variation,
-          platform: Platform.YOUTUBE,
+          platform: 'youtube',
         }));
         
         const secondResults = await workflow.executeBulk(secondStageRequests);
@@ -523,8 +523,8 @@ describe('ContentIdeationWorkflow', () => {
 
     it('should maintain workflow state consistency', async () => {
       const consistencyTestRequests = [
-        { baseCaption: 'Consistency test 1', platform: Platform.INSTAGRAM },
-        { baseCaption: 'Consistency test 2', platform: Platform.TIKTOK },
+        { baseCaption: 'Consistency test 1', platform: 'instagram' },
+        { baseCaption: 'Consistency test 2', platform: 'tiktok' },
       ];
 
       const results1 = await workflow.executeBulk(consistencyTestRequests);
@@ -538,7 +538,7 @@ describe('ContentIdeationWorkflow', () => {
     it('should handle extremely long captions', async () => {
       const longCaption = 'A'.repeat(10000);
       const longCaptionRequests = [
-        { baseCaption: longCaption, platform: Platform.INSTAGRAM },
+        { baseCaption: longCaption, platform: 'instagram' },
       ];
 
       const results = await workflow.executeBulk(longCaptionRequests);
@@ -547,8 +547,8 @@ describe('ContentIdeationWorkflow', () => {
 
     it('should handle special characters and emojis', async () => {
       const specialCharRequests = [
-        { baseCaption: '🚀 Special chars: @#$%^&*()_+ 中文 العربية', platform: Platform.TIKTOK },
-        { baseCaption: 'Emojis: 😀😃😄😁😆😅😂🤣', platform: Platform.INSTAGRAM },
+        { baseCaption: '🚀 Special chars: @#$%^&*()_+ 中文 العربية', platform: 'tiktok' },
+        { baseCaption: 'Emojis: 😀😃😄😁😆😅😂🤣', platform: 'instagram' },
       ];
 
       const results = await workflow.executeBulk(specialCharRequests);
@@ -557,7 +557,7 @@ describe('ContentIdeationWorkflow', () => {
 
     it('should handle zero concurrency limit', async () => {
       const zeroConcurrencyWorkflow = new ContentIdeationWorkflow(0);
-      const requests = [{ baseCaption: 'Zero concurrency test', platform: Platform.INSTAGRAM }];
+      const requests = [{ baseCaption: 'Zero concurrency test', platform: 'instagram' }];
 
       const results = await zeroConcurrencyWorkflow.executeBulk(requests);
       expect(Array.isArray(results)).toBe(true);
@@ -565,7 +565,7 @@ describe('ContentIdeationWorkflow', () => {
 
     it('should handle negative concurrency limit', async () => {
       const negativeConcurrencyWorkflow = new ContentIdeationWorkflow(-1);
-      const requests = [{ baseCaption: 'Negative concurrency test', platform: Platform.TIKTOK }];
+      const requests = [{ baseCaption: 'Negative concurrency test', platform: 'tiktok' }];
 
       const results = await negativeConcurrencyWorkflow.executeBulk(requests);
       expect(Array.isArray(results)).toBe(true);

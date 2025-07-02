@@ -7,6 +7,29 @@ export interface GlobalTypes {
 export * from './platform';
 export * from './api';
 export * from './user';
+export * from './schedule';
+export * from './analytics';
+export * from './log';
+
+// Export Post and Analytics types from platform clients
+export interface Post {
+  id: string;
+  platform: string;
+  content?: string;
+  mediaUrl?: string;
+  publishedAt?: Date;
+}
+
+export interface Analytics {
+  views: number;
+  likes: number;
+  comments: number;
+  shares: number;
+  engagementRate?: number;
+}
+
+// Re-export LogContext for correlation middleware
+export type { LogContext } from './log';
 
 // Generic utility types
 export type ID = string;

@@ -1,5 +1,5 @@
 import { SupabaseClient } from '@supabase/supabase-js';
-import { Platform } from '../../../deliverables/types/deliverables_types';
+import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
 import { EventEmitter } from 'events';
 
 export interface EvaluationMetrics {
@@ -186,7 +186,7 @@ export class ModelEvaluator extends EventEmitter {
       
       return result;
       
-    } catch (error) {
+    } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : String(error);
       this.emit('evaluationError', { modelName, error: errorMessage });
       throw error;

@@ -15,6 +15,14 @@ interface ErrorContext {
   platform?: string;
   contentId?: string;
   retryAttempt?: number;
+  processId?: string;
+  processingTime?: number;
+  queueLength?: number;
+  operationId?: string;
+  attempt?: number;
+  maxRetries?: number;
+  isLastAttempt?: boolean;
+  nextDelay?: number;
   additionalData?: Record<string, any>;
 }
 

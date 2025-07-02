@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { createClient } from '@/lib/supabase/server';
 import { AuthTokenManagerService } from '../../../../workflows/data_collection/lib/auth-token-manager.service';
-import { PlatformEnum } from '../../../../workflows/deliverables/types/deliverables_types';
+import { PlatformEnum } from '@/app/workflows/deliverables/types/deliverables_types';
 import { PlatformClientIdentifier } from '../../../../workflows/data_collection/lib/auth.types';
+import { extractErrorMessage } from '@/lib/errors/errorHandling';
 
 
 export async function GET(request: NextRequest) {
@@ -67,7 +68,7 @@ export async function GET(request: NextRequest) {
 
     if (credentials && credentials.accessToken) {
       // Successful authentication - set up secure user session
-      const supabase = await createClient();
+      const supabase = createClient(cookies());
       const { data: { user } } = await supabase.auth.getUser();
 
       if (!user) {
@@ -112,17 +113,17 @@ export async function GET(request: NextRequest) {
         // Redirect to dashboard with success status
         const successUrl = new URL('/dashboard?platform=tiktok&status=success', request.url);
         return NextResponse.redirect(successUrl);
-      } catch (dbError) {
-        console.error('Database error during TikTok OAuth callback:', dbError);
+      } catch (dbError: unknown) {
+        console.error('Database error during TikTok OAuth callback:', extractErrorMessage(dbError));
         return NextResponse.redirect(new URL('/oauth-error?error=database_error', request.url));
       }
     } else {
       return NextResponse.redirect(new URL('/oauth-error?error=token_exchange_failed', request.url));
-    }
-  } catch (error) {
+    } 
+  } catch (error: unknown) {
     // Log the error for debugging (without exposing sensitive details)
     console.error('TikTok OAuth callback error:', {
-      error: error instanceof Error ? error.message : 'Unknown error',
+      error: extractErrorMessage(error),
       code: code ? 'present' : 'missing',
       state: state ? 'present' : 'missing'
     });

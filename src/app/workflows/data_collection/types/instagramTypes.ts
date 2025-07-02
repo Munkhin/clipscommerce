@@ -1,4 +1,4 @@
-import { Platform } from '../../../deliverables/types/deliverables_types';
+import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
 
 /**
  * Represents the structure of a raw Instagram post stored in the database.

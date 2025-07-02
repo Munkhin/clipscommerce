@@ -1,4 +1,4 @@
-import { Platform } from '../app/workflows/deliverables/types/deliverables_types';
+import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
 import { CompetitorApiIntegrator } from '../app/workflows/competitor_tactics/functions/CompetitorApiIntegrator';
 import { TacticExtractor } from '../app/workflows/competitor_tactics/functions/TacticExtractor';
 import { TaxonomyMapper } from '../app/workflows/competitor_tactics/functions/TaxonomyMapper';

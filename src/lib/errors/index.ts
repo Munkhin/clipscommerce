@@ -3,6 +3,9 @@ export * from './errorReporting';
 export * from './errorNotification';
 export * from './errorAnalytics';
 
+// Enhanced error handling utilities
+export * from './errorHandling';
+
 // Error boundaries
 export { GlobalErrorBoundary, withGlobalErrorBoundary } from '../../components/errors/GlobalErrorBoundary';
 export { DashboardErrorBoundary, withDashboardErrorBoundary } from '../../components/errors/DashboardErrorBoundary';
@@ -22,10 +25,10 @@ export const handleAsyncError = async <T>(
 ): Promise<T | undefined> => {
   try {
     return await promise;
-  } catch (error) {
+  } catch (error: unknown) {
     const { reportError, ErrorCategory, ErrorSeverity } = await import('./errorReporting');
     
-    reportError(error as Error, {
+    reportError(error instanceof Error ? error : new Error(String(error)), {
       category: ErrorCategory.API,
       severity: ErrorSeverity.NORMAL,
       component: context?.component,

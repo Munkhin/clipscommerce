@@ -1,4 +1,4 @@
-import { Platform } from '../../app/workflows/deliverables/types/deliverables_types';
+import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
 import { Post, PostMetrics } from "@/types/schedule";
 import { AnalyticsFilter, EngagementMetrics, PerformanceMetrics, AudienceDemographics, PlatformComparison, ContentPerformance, TrendAnalysis, AnalyticsReport } from "@/types/analytics";
 import { PlatformApiFactory } from "./platformApis/factory";

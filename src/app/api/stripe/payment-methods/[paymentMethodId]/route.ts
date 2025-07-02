@@ -9,7 +9,7 @@ export async function DELETE(
   { params }: { params: { paymentMethodId: string } }
 ) {
   try {
-    const supabase = await createClient();
+    const supabase = createClient(cookies());
     
     // Verify authentication
     const { data: { user }, error: authError } = await supabase.auth.getUser();

@@ -1,4 +1,4 @@
-import { PlatformEnum, Platform } from '../../../deliverables/types/deliverables_types'; // Updated import path
+import { PlatformEnum, Platform } from '@/app/workflows/deliverables/types/deliverables_types';
 
 export interface Niche {
   id: string;
@@ -245,7 +245,7 @@ agent.addSample(
     views: 10000,
     likes: 1000
   },
-  Platform.TikTok,
+  'tiktok',
   comedyNiche.id
 );
 
@@ -258,7 +258,7 @@ agent.addSample(
     createdAt: new Date('2023-01-01'), // Old
     likes: 50
   },
-  Platform.Instagram,
+  'instagram',
   comedyNiche.id
 );
 
@@ -270,7 +270,7 @@ agent.addSample(
     createdAt: new Date(), // Recent
     // No uploader, caption, or specific engagement stats, but contentUrl and timestamp are critical
   },
-  Platform.TikTok,
+  'tiktok',
   diyNiche.id
 );
 
@@ -281,6 +281,6 @@ agent.getCollectedSamples().forEach(s => {
   console.log('  Sample: ' + s.id + ', Platform: ' + s.platform + ', Niche: ' + s.nicheId + ', Quality: ' + s.overallQualityScore.toFixed(2));
 });
 
-console.log('Avg Quality for Comedy on TikTok: ' + agent.getAverageQualityScore(Platform.TikTok, comedyNiche.id).toFixed(2));
-console.log('Avg Quality for DIY on TikTok: ' + agent.getAverageQualityScore(Platform.TikTok, diyNiche.id).toFixed(2));
+console.log('Avg Quality for Comedy on TikTok: ' + agent.getAverageQualityScore('tiktok', comedyNiche.id).toFixed(2));
+console.log('Avg Quality for DIY on TikTok: ' + agent.getAverageQualityScore('tiktok', diyNiche.id).toFixed(2));
 */ 

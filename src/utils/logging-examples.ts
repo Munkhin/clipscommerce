@@ -28,12 +28,14 @@ export function structuredLoggingExamples() {
   // Error logging with context
   try {
     throw new Error('Database timeout');
-  } catch (error) {
-    logger.error('Failed to save user data', error as Error, {
-      userId: '12345',
-      operation: 'save',
-      retryAttempt: 1,
-    });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      logger.error('Failed to save user data', error, {
+        userId: '12345',
+        operation: 'save',
+        retryAttempt: 1,
+      });
+    }
   }
 }
 
@@ -138,17 +140,21 @@ export function childLoggerExample() {
 export function errorLoggingExamples() {
   try {
     throw new Error('Something went wrong');
-  } catch (error) {
+  } catch (error: unknown) {
     // Simple error logging
-    logger.error('Operation failed', error as Error);
+    if (error instanceof Error) {
+      logger.error('Operation failed', error);
+    }
     
     // Error logging with additional context
-    logger.error('Database operation failed', error as Error, {
-      operation: 'SELECT',
-      table: 'users',
-      userId: '123',
-      queryTime: 5000,
-    });
+    if (error instanceof Error) {
+      logger.error('Database operation failed', error, {
+        operation: 'SELECT',
+        table: 'users',
+        userId: '123',
+        queryTime: 5000,
+      });
+    }
   }
 
   // Handling different error types

@@ -116,8 +116,8 @@ async function verifyToken(token: string, salt: string): Promise<TokenPayload | 
     
     // Use timingSafeEqual to prevent timing attacks
     const isSignatureValid = timingSafeEqual(
-      new Uint8Array(Buffer.from(signature, 'hex')),
-      new Uint8Array(Buffer.from(expectedSignature, 'hex'))
+      Buffer.from(signature, 'hex'),
+      Buffer.from(expectedSignature, 'hex')
     );
 
     if (!isSignatureValid) return null;

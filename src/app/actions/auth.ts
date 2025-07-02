@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase/server';
 
 export async function signIn(email: string, password: string) {
   const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+  const supabase = await createClient(cookieStore);
   
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
@@ -22,7 +22,7 @@ export async function signIn(email: string, password: string) {
 
 export async function signUp(email: string, password: string) {
   const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+  const supabase = await createClient(cookieStore);
   
   const { data, error } = await supabase.auth.signUp({
     email,
@@ -38,7 +38,7 @@ export async function signUp(email: string, password: string) {
 
 export async function resetPassword(email: string) {
   const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+  const supabase = await createClient(cookieStore);
   
   const { error } = await supabase.auth.resetPasswordForEmail(email);
   

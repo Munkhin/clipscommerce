@@ -16,7 +16,7 @@ export interface Tier {
 
 // Fetch all pricing tiers with their benefits
 export async function getPricingTiers(): Promise<Tier[]> {
-  const supabase = await createClient();
+  const supabase = createClient(cookies());
   
   try {
     const { data, error } = await supabase
@@ -58,7 +58,7 @@ export async function getPricingTiers(): Promise<Tier[]> {
 export async function upsertPricingTier(
   tier: Omit<Tier, 'benefits'>
 ): Promise<Database['public']['Tables']['pricing_tiers']['Row']> {
-  const supabase = await createClient();
+  const supabase = createClient(cookies());
   
   try {
     const { data, error } = await supabase
@@ -89,7 +89,7 @@ export async function addTierBenefit(
   tierId: string, 
   description: string
 ): Promise<Database['public']['Tables']['tier_benefits']['Row']> {
-  const supabase = await createClient();
+  const supabase = createClient(cookies());
   
   try {
     const { data, error } = await supabase

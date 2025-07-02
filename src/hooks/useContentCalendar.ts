@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { addDays, startOfWeek, endOfWeek, eachDayOfInterval, isSameDay, format, addWeeks, subWeeks } from 'date-fns';
-import { Platform } from '../app/workflows/deliverables/types/deliverables_types';
+import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
 import { Post, PostStatus } from '@/types/schedule';
 
 interface CalendarDay {

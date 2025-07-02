@@ -56,7 +56,7 @@ async function main() {
   
   const config: ApiConfig = {
     baseUrl: 'https://open.tiktokapis.com',
-    platform: Platform.TIKTOK,
+    platform: 'tiktok',
     version: 'v2',
     rateLimit: { requests: 10, perSeconds: 1 },
     credentials: {

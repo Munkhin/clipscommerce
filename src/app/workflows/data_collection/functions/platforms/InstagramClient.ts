@@ -1,7 +1,8 @@
 // difficult: Instagram Graph API client implementation
 import { BasePlatformClient } from './BasePlatformClient';
 import { PostMetrics, InstagramMediaProductType, PaginatedResponse, Pagination } from '../types';
-import { Platform } from '../../../deliverables/types/deliverables_types';
+import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
+import { extractErrorMessage } from '@/lib/errors/errorHandling';
 
 // Helper function to extract hashtags from caption
 function extractHashtags(caption: string | undefined): string[] {
@@ -70,7 +71,7 @@ export class InstagramClient extends BasePlatformClient {
   ].join(',');
   
   constructor(accessToken: string) {
-    super(accessToken, Platform.INSTAGRAM);
+    super(accessToken, 'instagram');
   }
 
   async getPostMetrics(postId: string, mediaProductType?: InstagramMediaProductType): Promise<PostMetrics> {
@@ -277,7 +278,7 @@ export class InstagramClient extends BasePlatformClient {
     
     return {
       id: media.id,
-      platform: Platform.INSTAGRAM,
+      platform: 'instagram',
       views: videoViews || impressions,
       likes,
       comments,
@@ -338,10 +339,10 @@ export class InstagramClient extends BasePlatformClient {
         maxPages,
         maxResultsPerPage
       );
-    } catch (error) {
-      console.error('Error in getUserPosts:', error);
-      throw error;
-    }
+    } catch (error: unknown) {
+        console.error('Error in getUserPosts:', extractErrorMessage(error));
+        throw error;
+      }
   }
   
   async getReels(
@@ -362,8 +363,8 @@ export class InstagramClient extends BasePlatformClient {
         maxPages,
         maxResultsPerPage
       );
-    } catch (error) {
-      console.error('Error in getReels:', error);
+    } catch (error: unknown) {
+      console.error('Error in getReels:', extractErrorMessage(error));
       throw error;
     }
   }

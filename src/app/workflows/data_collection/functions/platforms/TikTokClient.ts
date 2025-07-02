@@ -1,7 +1,8 @@
 // difficult: TikTok API client implementation
 import { BasePlatformClient } from './BasePlatformClient';
 import { PostMetrics, PaginatedResponse, Pagination } from '../types';
-import { Platform } from '../../../deliverables/types/deliverables_types';
+import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
+import { extractErrorMessage } from '@/lib/errors/errorHandling';
 
 interface TikTokVideo {
   id: string;
@@ -55,7 +56,7 @@ export class TikTokClient extends BasePlatformClient {
   private readonly API_BASE = 'https://open.tiktokapis.com/v2';
   
   constructor(accessToken: string) {
-    super(accessToken, Platform.TIKTOK);
+    super(accessToken, 'tiktok');
   }
 
   async getPostMetrics(postId: string): Promise<PostMetrics> {
@@ -122,9 +123,9 @@ export class TikTokClient extends BasePlatformClient {
         );
 
         if (!response.ok) {
-          const error = await response.json().catch(() => ({}));
+          const errorData = await response.json().catch(() => ({}));
           throw new Error(
-            `TikTok API error (${response.status}): ${error.error?.message || response.statusText}`
+            `TikTok API error (${response.status}): ${extractErrorMessage(errorData)}`
           );
         }
 
@@ -190,9 +191,9 @@ export class TikTokClient extends BasePlatformClient {
     );
     
     if (!response.ok) {
-      const error = await response.json().catch(() => ({}));
+      const errorData = await response.json().catch(() => ({}));
       throw new Error(
-        `TikTok batch API error (${response.status}): ${error.error?.message || response.statusText}`
+        `TikTok batch API error (${response.status}): ${extractErrorMessage(errorData)}`
       );
     }
     
@@ -256,7 +257,7 @@ export class TikTokClient extends BasePlatformClient {
     
     return {
       id: video.id,
-      platform: Platform.TIKTOK,
+      platform: 'tiktok',
       views: video.view_count || 0,
       likes,
       comments,

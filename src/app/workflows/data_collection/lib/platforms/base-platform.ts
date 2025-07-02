@@ -1,35 +1,21 @@
 import { IAuthTokenManager } from '../auth.types';
-import { ApiConfig, ApiRateLimit, ApiResponse, HeaderValue } from './types';
+import { ApiConfig, ApiRateLimit, ApiResponse, HeaderValue, Platform, PlatformPost, PlatformPostMetrics } from './types';
 import { ApiError, RateLimitError } from '../utils/errors';
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import logger from '@/utils/logger';
-
-// Define core types that are used by platform clients
-export interface Post {
-  id: string;
-  platform: string;
-  content: string;
-  mediaUrl?: string;
-  publishedAt: Date;
-  metrics?: Analytics;
-}
-
-export interface Analytics {
-  views: number;
-  likes: number;
-  comments: number;
-  shares: number;
-  engagementRate: number;
-}
-
-export type HeaderValue = string | number | boolean;
+import logger from '../../../../../utils/logger';
+import { DISPLAY_PLATFORM_MAP, PlatformEnum } from '../../../../../types/platform';
+import { Post, Analytics } from '../../../../../types';
 
 // Export ApiResponse for compatibility
 export type { ApiResponse } from './types';
 
+// Re-export types from global types for backward compatibility
+export type { Post, Analytics } from '../../../../../types';
+
 export abstract class BasePlatformClient {
   protected readonly client: AxiosInstance;
   protected rateLimit: ApiRateLimit | null = null;
+  protected readonly platform: Platform = PlatformEnum.TIKTOK; // Default platform, should be overridden by subclasses
 
   constructor(
     protected readonly config: ApiConfig,
@@ -42,7 +28,11 @@ export abstract class BasePlatformClient {
     });
 
     this.client.interceptors.request.use(async (config) => {
-      const token = await this.authTokenManager.getToken();
+      const identifier = this.userId ? { 
+        platform: this.platform as any, 
+        userId: this.userId 
+      } : undefined;
+      const token = await this.authTokenManager.getToken(identifier);
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
@@ -95,7 +85,7 @@ export abstract class BasePlatformClient {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         throw new ApiError(
-          'TIKTOK', // platform will be set by subclass - using TIKTOK as default
+          DISPLAY_PLATFORM_MAP[this.platform] || 'tiktok', // Convert platform enum to lowercase
           error.response?.status?.toString() || '500',
           error.response?.statusText || 'Unknown API Error',
           error.response?.status || 500,

@@ -31,7 +31,7 @@ describe('DataCollectionService', () => {
   describe('initialization', () => {
     const mockPlatformAuths: PlatformAuth[] = [
       {
-        platform: Platform.TIKTOK,
+        platform: 'tiktok',
         credentials: {
           accessToken: 'tiktok-token',
           refreshToken: 'tiktok-refresh',
@@ -39,7 +39,7 @@ describe('DataCollectionService', () => {
         }
       },
       {
-        platform: Platform.INSTAGRAM,
+        platform: 'instagram',
         credentials: {
           accessToken: 'instagram-token',
           refreshToken: 'instagram-refresh',
@@ -53,7 +53,7 @@ describe('DataCollectionService', () => {
 
       expect(PlatformClientFactory.createClient).toHaveBeenCalledTimes(2);
       expect(PlatformClientFactory.createClient).toHaveBeenCalledWith(
-        Platform.TIKTOK,
+        'tiktok',
         { ...mockPlatformAuths[0].credentials, strategy: AuthStrategy.OAUTH2 },
         expect.objectContaining({
           baseUrl: '',
@@ -62,7 +62,7 @@ describe('DataCollectionService', () => {
         })
       );
       expect(PlatformClientFactory.createClient).toHaveBeenCalledWith(
-        Platform.INSTAGRAM,
+        'instagram',
         { ...mockPlatformAuths[1].credentials, strategy: AuthStrategy.OAUTH2 },
         expect.objectContaining({
           baseUrl: '',
@@ -102,7 +102,7 @@ describe('DataCollectionService', () => {
 
     it('should handle initialization with missing credentials', async () => {
       const invalidAuth: PlatformAuth = {
-        platform: Platform.TIKTOK,
+        platform: 'tiktok',
         credentials: {
           accessToken: '', // Empty token
         }
@@ -126,11 +126,11 @@ describe('DataCollectionService', () => {
   describe('getPostMetrics', () => {
     const mockPlatformAuths: PlatformAuth[] = [
       {
-        platform: Platform.TIKTOK,
+        platform: 'tiktok',
         credentials: { accessToken: 'tiktok-token' }
       },
       {
-        platform: Platform.INSTAGRAM,
+        platform: 'instagram',
         credentials: { accessToken: 'instagram-token' }
       }
     ];
@@ -227,7 +227,7 @@ describe('DataCollectionService', () => {
   describe('getUserActivity', () => {
     const mockPlatformAuths: PlatformAuth[] = [
       {
-        platform: Platform.TIKTOK,
+        platform: 'tiktok',
         credentials: { accessToken: 'tiktok-token' }
       }
     ];
@@ -297,7 +297,7 @@ describe('DataCollectionService', () => {
       await service.initialize([
         ...mockPlatformAuths,
         {
-          platform: Platform.INSTAGRAM,
+          platform: 'instagram',
           credentials: { accessToken: 'instagram-token' }
         }
       ]);
@@ -321,7 +321,7 @@ describe('DataCollectionService', () => {
   describe('getPlatformClient', () => {
     const mockPlatformAuths: PlatformAuth[] = [
       {
-        platform: Platform.TIKTOK,
+        platform: 'tiktok',
         credentials: { accessToken: 'tiktok-token' }
       }
     ];
@@ -367,7 +367,7 @@ describe('DataCollectionService', () => {
     it('should handle concurrent initialization attempts', async () => {
       const mockPlatformAuths: PlatformAuth[] = [
         {
-          platform: Platform.TIKTOK,
+          platform: 'tiktok',
           credentials: { accessToken: 'tiktok-token' }
         }
       ];
@@ -390,7 +390,7 @@ describe('DataCollectionService', () => {
 
       const mockPlatformAuths: PlatformAuth[] = [
         {
-          platform: Platform.TIKTOK,
+          platform: 'tiktok',
           credentials: { accessToken: 'tiktok-token' }
         }
       ];
@@ -418,7 +418,7 @@ describe('DataCollectionService', () => {
     it('should handle large post metrics requests efficiently', async () => {
       const mockPlatformAuths: PlatformAuth[] = [
         {
-          platform: Platform.TIKTOK,
+          platform: 'tiktok',
           credentials: { accessToken: 'tiktok-token' }
         }
       ];
@@ -461,7 +461,7 @@ describe('DataCollectionService', () => {
     it('should handle memory efficiently with large datasets', async () => {
       const mockPlatformAuths: PlatformAuth[] = [
         {
-          platform: Platform.TIKTOK,
+          platform: 'tiktok',
           credentials: { accessToken: 'tiktok-token' }
         }
       ];
@@ -476,7 +476,7 @@ describe('DataCollectionService', () => {
         postsCount: 10000,
         engagementRate: 0.08,
         lastActiveDate: new Date(),
-        platform: Platform.TIKTOK,
+        platform: 'tiktok',
         profileViews: 50000000,
         totalLikes: 100000000
       };

@@ -1,5 +1,5 @@
 import { generateContent, GenerateContentRequest, GenerateContentResponse } from '../contentGeneration';
-import { Platform } from '../../app/workflows/deliverables/types/deliverables_types';
+import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
 import * as nlpModule from '../../app/workflows/AI_improvement/functions/nlp';
 
 // Mock the NLP module
@@ -54,7 +54,7 @@ describe('contentGeneration', () => {
           'Include call-to-action',
         ],
         expectedEngagementIncrease: 0.15,
-        platform: Platform.TIKTOK,
+        platform: 'tiktok',
       },
     };
 
@@ -66,7 +66,7 @@ describe('contentGeneration', () => {
       const request: GenerateContentRequest = {
         caption: 'Test caption for content generation',
         hashtags: ['#test', '#content'],
-        platform: Platform.TIKTOK,
+        platform: 'tiktok',
         targetAudience: 'young adults',
       };
 
@@ -89,7 +89,7 @@ describe('contentGeneration', () => {
     it('should generate content with minimal parameters', async () => {
       const request: GenerateContentRequest = {
         caption: 'Minimal test caption',
-        platform: Platform.INSTAGRAM,
+        platform: 'instagram',
       };
 
       const result = await generateContent(request);
@@ -109,7 +109,7 @@ describe('contentGeneration', () => {
     });
 
     it('should handle different platforms correctly', async () => {
-      const platforms = [Platform.TIKTOK, Platform.INSTAGRAM, Platform.YOUTUBE, Platform.LINKEDIN];
+      const platforms = ['tiktok', 'instagram', 'youtube', 'linkedin'];
 
       for (const platform of platforms) {
         const request: GenerateContentRequest = {
@@ -130,7 +130,7 @@ describe('contentGeneration', () => {
     it('should handle empty caption gracefully', async () => {
       const request: GenerateContentRequest = {
         caption: '',
-        platform: Platform.TIKTOK,
+        platform: 'tiktok',
       };
 
       const result = await generateContent(request);
@@ -138,7 +138,7 @@ describe('contentGeneration', () => {
       expect(mockSuggestCaptionsAndHashtags).toHaveBeenCalledWith({
         caption: '',
         hashtags: [],
-        platform: Platform.TIKTOK,
+        platform: 'tiktok',
         targetAudience: undefined,
       });
 
@@ -149,7 +149,7 @@ describe('contentGeneration', () => {
       const longCaption = 'A'.repeat(2000); // Very long caption
       const request: GenerateContentRequest = {
         caption: longCaption,
-        platform: Platform.YOUTUBE,
+        platform: 'youtube',
         hashtags: ['#long', '#content'],
       };
 
@@ -158,7 +158,7 @@ describe('contentGeneration', () => {
       expect(mockSuggestCaptionsAndHashtags).toHaveBeenCalledWith({
         caption: longCaption,
         hashtags: ['#long', '#content'],
-        platform: Platform.YOUTUBE,
+        platform: 'youtube',
         targetAudience: undefined,
       });
 
@@ -169,7 +169,7 @@ describe('contentGeneration', () => {
       const specialCaption = 'Test with émojis 🚀 and spëcial chars @#$%';
       const request: GenerateContentRequest = {
         caption: specialCaption,
-        platform: Platform.INSTAGRAM,
+        platform: 'instagram',
       };
 
       const result = await generateContent(request);
@@ -177,7 +177,7 @@ describe('contentGeneration', () => {
       expect(mockSuggestCaptionsAndHashtags).toHaveBeenCalledWith({
         caption: specialCaption,
         hashtags: [],
-        platform: Platform.INSTAGRAM,
+        platform: 'instagram',
         targetAudience: undefined,
       });
 
@@ -189,7 +189,7 @@ describe('contentGeneration', () => {
       const request: GenerateContentRequest = {
         caption: 'Test with many hashtags',
         hashtags: manyHashtags,
-        platform: Platform.TIKTOK,
+        platform: 'tiktok',
       };
 
       const result = await generateContent(request);
@@ -197,7 +197,7 @@ describe('contentGeneration', () => {
       expect(mockSuggestCaptionsAndHashtags).toHaveBeenCalledWith({
         caption: request.caption,
         hashtags: manyHashtags,
-        platform: Platform.TIKTOK,
+        platform: 'tiktok',
         targetAudience: undefined,
       });
 
@@ -218,7 +218,7 @@ describe('contentGeneration', () => {
       for (const audience of audiences) {
         const request: GenerateContentRequest = {
           caption: `Content for ${audience}`,
-          platform: Platform.INSTAGRAM,
+          platform: 'instagram',
           targetAudience: audience,
         };
 
@@ -239,7 +239,7 @@ describe('contentGeneration', () => {
 
       const request: GenerateContentRequest = {
         caption: 'Test caption',
-        platform: Platform.TIKTOK,
+        platform: 'tiktok',
       };
 
       await expect(generateContent(request)).rejects.toThrow('NLP service unavailable');
@@ -254,7 +254,7 @@ describe('contentGeneration', () => {
 
       const request: GenerateContentRequest = {
         caption: 'Test caption',
-        platform: Platform.INSTAGRAM,
+        platform: 'instagram',
       };
 
       const result = await generateContent(request);
@@ -268,7 +268,7 @@ describe('contentGeneration', () => {
       const request: GenerateContentRequest = {
         caption: 'Preserve parameters test',
         hashtags: ['#preserve', '#test'],
-        platform: Platform.LINKEDIN,
+        platform: 'linkedin',
         targetAudience: 'business professionals',
       };
 
@@ -277,7 +277,7 @@ describe('contentGeneration', () => {
       expect(mockSuggestCaptionsAndHashtags).toHaveBeenCalledWith({
         caption: 'Preserve parameters test',
         hashtags: ['#preserve', '#test'],
-        platform: Platform.LINKEDIN,
+        platform: 'linkedin',
         targetAudience: 'business professionals',
       });
     });
@@ -285,7 +285,7 @@ describe('contentGeneration', () => {
     it('should handle concurrent requests', async () => {
       const requests = Array.from({ length: 10 }, (_, i) => ({
         caption: `Concurrent test ${i}`,
-        platform: Platform.TIKTOK,
+        platform: 'tiktok',
       }));
 
       const promises = requests.map(request => generateContent(request));
@@ -305,7 +305,7 @@ describe('contentGeneration', () => {
     it('should handle undefined hashtags array', async () => {
       const request: GenerateContentRequest = {
         caption: 'Test without hashtags',
-        platform: Platform.YOUTUBE,
+        platform: 'youtube',
         hashtags: undefined,
       };
 
@@ -314,7 +314,7 @@ describe('contentGeneration', () => {
       expect(mockSuggestCaptionsAndHashtags).toHaveBeenCalledWith({
         caption: 'Test without hashtags',
         hashtags: [],
-        platform: Platform.YOUTUBE,
+        platform: 'youtube',
         targetAudience: undefined,
       });
     });
@@ -334,7 +334,7 @@ describe('contentGeneration', () => {
 
       const request: GenerateContentRequest = {
         caption: 'Performance test',
-        platform: Platform.TIKTOK,
+        platform: 'tiktok',
       };
 
       const startTime = Date.now();

@@ -1,4 +1,4 @@
-import { Platform } from '../../../deliverables/types/deliverables_types';
+import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
 import { PlatformClient, ApiConfig as PlatformSpecificApiConfig } from './types'; // Renamed ApiConfig
 import { TikTokClient } from './tiktok-client';
 import { InstagramClient } from './instagram-client';
@@ -31,11 +31,11 @@ export class PlatformClientFactory {
     // full ApiConfig required by BasePlatformClient's super() call, using platformSpecificConfig.
     // Their constructors will need to be updated to accept: (platformSpecificConfig, authTokenManager, userId)
     switch (platform) {
-      case Platform.TIKTOK:
+      case 'tiktok':
         return new TikTokClient(platformSpecificConfig, authTokenManager, userId);
-      case Platform.INSTAGRAM:
+      case 'instagram':
         return new InstagramClient(platformSpecificConfig, authTokenManager, userId);
-      case Platform.YOUTUBE:
+      case 'youtube':
         return new YouTubeClient(
           platformSpecificConfig as PlatformSpecificApiConfig,
           authTokenManager as IAuthTokenManager,

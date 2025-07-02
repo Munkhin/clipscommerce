@@ -25,7 +25,7 @@ const updatePostSchema = z.object({
 // GET - List user posts with filtering and pagination
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await createClient();
+    const supabase = createClient(cookies());
     
     // Verify authentication
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -162,7 +162,7 @@ export async function GET(request: NextRequest) {
 // POST - Create/sync new post
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient();
+    const supabase = createClient(cookies());
     
     // Verify authentication
     const { data: { user }, error: authError } = await supabase.auth.getUser();

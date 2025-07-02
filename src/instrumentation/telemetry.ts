@@ -190,7 +190,7 @@ class TelemetryManager {
         // getNodeAutoInstrumentations({
         //   '@opentelemetry/instrumentation-http': {
         //     enabled: true,
-        //     ignoreIncomingRequestHook: (req: any) => {
+        //     ignoreIncomingRequestHook: (req: {url?: string}) => {
         //       // Ignore health checks and static assets
         //       const url = req.url || '';
         //       return (
@@ -258,13 +258,14 @@ class TelemetryManager {
         const result = await fn(span);
         span.setStatus({ code: SpanStatusCode.OK });
         return result;
-      } catch (error) {
-        span.recordException(error as Error);
+      } catch (error: unknown) {
+        const err = error instanceof Error ? error : new Error(String(error));
+        span.recordException(err);
         span.setStatus({ 
           code: SpanStatusCode.ERROR, 
-          message: (error as Error).message 
+          message: err.message 
         });
-        throw error;
+        throw err;
       } finally {
         span.end();
       }

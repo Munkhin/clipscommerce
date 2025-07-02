@@ -49,7 +49,7 @@ export class SupabaseStorageService {
   private supabase;
   
   constructor(isServer = false) {
-    this.supabase = isServer ? createServerClient() : createClient();
+    this.supabase = isServer ? createServerClient(cookies()) : createClient(cookies());
   }
 
   /**
@@ -428,7 +428,7 @@ export class SupabaseStorageService {
   }
 
   private generateFileHash(buffer: Buffer): string {
-    return crypto.createHash('sha256').update(new Uint8Array(buffer)).digest('hex');
+    return crypto.createHash('sha256').update(buffer).digest('hex');
   }
 
   private isImageFile(mimeType: string): boolean {
@@ -547,10 +547,10 @@ export class SupabaseStorageService {
 
     if (files) {
       stats.totalFiles = files.length;
-      stats.totalSize = files.reduce((sum, file) => sum + file.file_size, 0);
+      stats.totalSize = files.reduce((sum: number, file: {file_size: number}) => sum + file.file_size, 0);
 
       // Group by bucket
-      files.forEach(file => {
+      files.forEach((file: {bucket_id: string, file_size: number}) => {
         const bucket = file.bucket_id as BucketName;
         if (!stats.byBucket[bucket]) {
           stats.byBucket[bucket] = { count: 0, size: 0 };

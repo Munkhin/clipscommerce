@@ -1,5 +1,5 @@
 import { DataCollectionAgent, DataCollectionTask, DataQualityMetrics, CollectionStrategy, DataGap } from '../DataCollectionAgent';
-import { Platform } from '../../../../deliverables/types/deliverables_types';
+import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
 import { ContentNiche } from '../../../types/niche_types';
 
 // Mock the niche characteristics function

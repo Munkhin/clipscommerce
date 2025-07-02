@@ -12,7 +12,7 @@ interface RouteParams {
 
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
-    const supabase = await createClient();
+    const supabase = createClient(cookies());
 
     // Check authentication
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -46,7 +46,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
 
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
-    const supabase = await createClient();
+    const supabase = createClient(cookies());
 
     const { bucket, path } = params;
     const filePath = path.join('/');

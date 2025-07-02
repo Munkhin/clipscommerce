@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
   }
 
   const { user } = guardResult.context!;
-  const supabase = await createClient();
+  const supabase = createClient(cookies());
 
   try {
     // Fetch all social credentials for the user

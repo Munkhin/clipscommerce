@@ -1,5 +1,5 @@
 import { Post } from '../types/schedule';
-import { Platform } from '../app/workflows/deliverables/types/deliverables_types';
+import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
 import logger from '../utils/logger';
 
 // Defining ScheduleOptions locally based on its usage
@@ -48,12 +48,14 @@ export class SchedulerService {
       await new Promise(resolve => setTimeout(resolve, 500));
       
       return true;
-    } catch (error) {
-      logger.error('Failed to schedule post', error as Error, {
-        postId: post.id || 'new',
-        platforms: post.platforms,
-        scheduledTime: post.scheduledTime.toISOString(),
-      });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        logger.error('Failed to schedule post', error, {
+          postId: post.id || 'new',
+          platforms: post.platforms,
+          scheduledTime: post.scheduledTime.toISOString(),
+        });
+      }
       throw error;
     }
   }

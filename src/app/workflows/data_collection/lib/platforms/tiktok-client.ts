@@ -1,7 +1,8 @@
-import { BasePlatformClient, Post, Analytics } from './base-platform';
+import { BasePlatformClient } from './base-platform';
+import { Post, Analytics } from '../../../../../types';
 import { ApiConfig, ApiResponse, PlatformPostMetrics, PlatformUserActivity, PlatformPost, PlatformComment, ApiRateLimit } from './types';
 import { IAuthTokenManager } from '../auth.types';
-import { Platform, PlatformEnum } from '../../../deliverables/types/deliverables_types';
+import { Platform, PlatformEnum } from '@/app/workflows/deliverables/types/deliverables_types';
 import { ApiError, PlatformError, RateLimitError } from '../utils/errors';
 import {
   TikTokVideoData,

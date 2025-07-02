@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach, afterEach } from '@jest/globals';
-import { Platform } from '../../../deliverables/types/deliverables_types';
+import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
 import { DataCollectionOptimizationAgent, Niche, DataSample, EngagementStats } from '../services/agents/DataCollectionOptimizationAgent';
 
 // Access constants like MIN_QUALITY_SCORE and RECENCY_THRESHOLD_DAYS if they were exported
@@ -37,10 +37,10 @@ describe('DataCollectionOptimizationAgent', () => {
     nicheCounts.forEach(nc => expect(nc.count).toBe(0));
 
     const internalCounts = agent['sampleCounts'];
-    expect(internalCounts.has(Platform.TIKTOK as Platform)).toBe(true);
-    expect(internalCounts.get(Platform.TIKTOK as Platform)?.get(testNiche.id)).toBe(0);
-    expect(internalCounts.has(Platform.INSTAGRAM as Platform)).toBe(true);
-    expect(internalCounts.get(Platform.INSTAGRAM as Platform)?.get(testNiche.id)).toBe(0);
+    expect(internalCounts.has('tiktok')).toBe(true);
+    expect(internalCounts.get('tiktok')?.get(testNiche.id)).toBe(0);
+    expect(internalCounts.has('instagram')).toBe(true);
+    expect(internalCounts.get('instagram')?.get(testNiche.id)).toBe(0);
   });
 
   test('should add a new niche and initialize its counts to 0 for all platforms', () => {
@@ -53,9 +53,9 @@ describe('DataCollectionOptimizationAgent', () => {
     agent.addNiche(niche2);
 
     expect(agent.getAllNiches()).toContainEqual(niche2);
-    expect(agent.getSampleCount(Platform.TIKTOK as Platform, 'test-niche-2')).toBe(0);
-    expect(agent.getSampleCount(Platform.INSTAGRAM as Platform, 'test-niche-2')).toBe(0);
-    expect(agent.getAverageQualityScore(Platform.TIKTOK as Platform, 'test-niche-2')).toBe(0);
+    expect(agent.getSampleCount('tiktok', 'test-niche-2')).toBe(0);
+    expect(agent.getSampleCount('instagram', 'test-niche-2')).toBe(0);
+    expect(agent.getAverageQualityScore('tiktok', 'test-niche-2')).toBe(0);
   });
 
   test('should warn and not add a duplicate niche', () => {
@@ -69,18 +69,18 @@ describe('DataCollectionOptimizationAgent', () => {
   test('should increment sample count for a niche on a specific platform using incrementSampleCount method', () => {
     // This method is now used internally by addSample if quality check passes.
     // Direct use might be less common but should still work.
-    agent.incrementSampleCount(Platform.TIKTOK as Platform, testNiche.id, 10);
-    expect(agent.getSampleCount(Platform.TIKTOK as Platform, testNiche.id)).toBe(10);
-    expect(agent.getSampleCount(Platform.INSTAGRAM as Platform, testNiche.id)).toBe(0);
+    agent.incrementSampleCount('tiktok', testNiche.id, 10);
+    expect(agent.getSampleCount('tiktok', testNiche.id)).toBe(10);
+    expect(agent.getSampleCount('instagram', testNiche.id)).toBe(0);
 
-    agent.incrementSampleCount(Platform.TIKTOK as Platform, testNiche.id); // Increment by default 1
-    expect(agent.getSampleCount(Platform.TIKTOK as Platform, testNiche.id)).toBe(11);
+    agent.incrementSampleCount('tiktok', testNiche.id); // Increment by default 1
+    expect(agent.getSampleCount('tiktok', testNiche.id)).toBe(11);
   });
 
   test('should not increment count for a non-existent niche and log an error via incrementSampleCount', () => {
     const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-    agent.incrementSampleCount(Platform.TIKTOK as Platform, 'non-existent-niche', 5);
-    expect(agent.getSampleCount(Platform.TIKTOK as Platform, 'non-existent-niche')).toBe(0);
+    agent.incrementSampleCount('tiktok', 'non-existent-niche', 5);
+    expect(agent.getSampleCount('tiktok', 'non-existent-niche')).toBe(0);
     expect(consoleErrorSpy).toHaveBeenCalledWith('Cannot increment count: Niche with id non-existent-niche does not exist.');
     consoleErrorSpy.mockRestore();
   });
@@ -89,17 +89,17 @@ describe('DataCollectionOptimizationAgent', () => {
     const nicheX: Niche = { id: 'nX', name: 'Niche X', description: '', keywords: [] };
     agent.addNiche(nicheX);
     // Simulating sample additions that passed quality checks
-    agent.incrementSampleCount(Platform.TIKTOK as Platform, testNiche.id, 100); 
-    agent.incrementSampleCount(Platform.INSTAGRAM as Platform, testNiche.id, 50);
-    agent.incrementSampleCount(Platform.TIKTOK as Platform, nicheX.id, 75);
+    agent.incrementSampleCount('tiktok', testNiche.id, 100); 
+    agent.incrementSampleCount('instagram', testNiche.id, 50);
+    agent.incrementSampleCount('tiktok', nicheX.id, 75);
 
     const overallCounts = agent.getOverallSampleCounts();
 
     expect(overallCounts).toEqual(expect.arrayContaining([
-      { platform: Platform.TIKTOK as Platform, nicheId: testNiche.id, nicheName: testNiche.name, count: 100 },
-      { platform: Platform.INSTAGRAM as Platform, nicheId: testNiche.id, nicheName: testNiche.name, count: 50 },
-      { platform: Platform.TIKTOK as Platform, nicheId: nicheX.id, nicheName: nicheX.name, count: 75 },
-      { platform: Platform.INSTAGRAM as Platform, nicheId: nicheX.id, nicheName: nicheX.name, count: 0 },
+      { platform: 'tiktok', nicheId: testNiche.id, nicheName: testNiche.name, count: 100 },
+      { platform: 'instagram', nicheId: testNiche.id, nicheName: testNiche.name, count: 50 },
+      { platform: 'tiktok', nicheId: nicheX.id, nicheName: nicheX.name, count: 75 },
+      { platform: 'instagram', nicheId: nicheX.id, nicheName: nicheX.name, count: 0 },
     ]));
   });
 
@@ -133,24 +133,24 @@ describe('DataCollectionOptimizationAgent', () => {
     };
 
     test('should add a high-quality sample successfully', () => {
-      const sample = agent.addSample(highQualityRawData, Platform.TIKTOK as Platform, testNiche.id);
+      const sample = agent.addSample(highQualityRawData, 'tiktok', testNiche.id);
       expect(sample).not.toBeNull();
       expect(sample?.id).toBe(highQualityRawData.id);
-      expect(sample?.platform).toBe(Platform.TIKTOK as Platform);
+      expect(sample?.platform).toBe('tiktok');
       expect(sample?.nicheId).toBe(testNiche.id);
       expect(sample?.overallQualityScore).toBeGreaterThanOrEqual(MIN_QUALITY_SCORE_TEST);
-      expect(agent.getSampleCount(Platform.TIKTOK as Platform, testNiche.id)).toBe(1);
+      expect(agent.getSampleCount('tiktok', testNiche.id)).toBe(1);
       expect(agent.getCollectedSamples().length).toBe(1);
       expect(agent.getCollectedSamples()[0]).toEqual(sample);
-      expect(agent.getAverageQualityScore(Platform.TIKTOK as Platform, testNiche.id)).toBeCloseTo(sample?.overallQualityScore || 0);
+      expect(agent.getAverageQualityScore('tiktok', testNiche.id)).toBeCloseTo(sample?.overallQualityScore || 0);
     });
 
     test('should reject a sample with missing critical metadata (low completeness)', () => {
-      const sample = agent.addSample(lowQualityRawData_incomplete, Platform.INSTAGRAM as Platform, testNiche.id);
+      const sample = agent.addSample(lowQualityRawData_incomplete, 'instagram', testNiche.id);
       expect(sample).toBeNull();
-      expect(agent.getSampleCount(Platform.INSTAGRAM as Platform, testNiche.id)).toBe(0);
+      expect(agent.getSampleCount('instagram', testNiche.id)).toBe(0);
       expect(agent.getCollectedSamples().length).toBe(0);
-      expect(agent.getAverageQualityScore(Platform.INSTAGRAM as Platform, testNiche.id)).toBe(0);
+      expect(agent.getAverageQualityScore('instagram', testNiche.id)).toBe(0);
     });
 
     test('should reject an old sample (low recency) even if other metadata is complete', () => {
@@ -162,11 +162,11 @@ describe('DataCollectionOptimizationAgent', () => {
         createdAt: lowQualityRawData_old.createdAt, // Use the old date
         engagementStats: { views: 1000 }
       };
-      const sample = agent.addSample(oldButOtherwiseCompleteRawData, Platform.TIKTOK as Platform, testNiche.id);
+      const sample = agent.addSample(oldButOtherwiseCompleteRawData, 'tiktok', testNiche.id);
       // Expected score: Completeness=1 (0.6), Relevance=true (0.2), Recency=false (0)
       // Total = (1*0.6 + 1*0.2 + 0*0.2)*100 = 80. This is < MIN_QUALITY_SCORE_TEST (95).
       expect(sample).toBeNull();
-      expect(agent.getSampleCount(Platform.TIKTOK as Platform, testNiche.id)).toBe(0);
+      expect(agent.getSampleCount('tiktok', testNiche.id)).toBe(0);
       expect(agent.getCollectedSamples().length).toBe(0);
     });
 
@@ -182,7 +182,7 @@ describe('DataCollectionOptimizationAgent', () => {
         id: 'id1', 
         contentUrl: 'url1', 
         createdAt: baseTime 
-      }, Platform.TIKTOK as Platform, testNiche.id);
+      }, 'tiktok', testNiche.id);
       
       if (sample) {
         expect(sample.metadataCompletenessScore).toBe(1); // 3/3
@@ -200,7 +200,7 @@ describe('DataCollectionOptimizationAgent', () => {
         uploader: 'test',
         caption: 'test caption',
         engagementStats: { views: 1000, likes: 100 }
-      }, Platform.TIKTOK as Platform, testNiche.id);
+      }, 'tiktok', testNiche.id);
       
       // Sample should be null due to missing contentUrl (critical field)
       expect(sample).toBeNull();
@@ -213,7 +213,7 @@ describe('DataCollectionOptimizationAgent', () => {
         uploader: 'test',
         caption: 'test caption',
         engagementStats: { views: 1000, likes: 100 }
-      }, Platform.TIKTOK as Platform, testNiche.id);
+      }, 'tiktok', testNiche.id);
       
       if (sample) {
         expect(sample.metadataCompletenessScore).toBe(1); // All critical fields present
@@ -230,22 +230,22 @@ describe('DataCollectionOptimizationAgent', () => {
       const tempAgent = new DataCollectionOptimizationAgent(); 
       tempAgent.addNiche(testNiche);
 
-      let sample = tempAgent.addSample({ ...highQualityRawData, createdAt: recentDate }, Platform.TIKTOK as Platform, testNiche.id);
+      let sample = tempAgent.addSample({ ...highQualityRawData, createdAt: recentDate }, 'tiktok', testNiche.id);
       expect(sample?.isRecent).toBe(true);
 
-      sample = tempAgent.addSample({ ...highQualityRawData, createdAt: oldDate }, Platform.TIKTOK as Platform, testNiche.id);
+      sample = tempAgent.addSample({ ...highQualityRawData, createdAt: oldDate }, 'tiktok', testNiche.id);
       expect(sample?.isRecent).toBe(false);
     });
 
     test('overallQualityScore should reflect component scores and weights', () => {
       // Scenario 1: Perfect sample (Completeness=1 (score 0.6), Relevant=true (score 0.2), Recent=true (score 0.2))
       // Score = (1*0.6 + 1*0.2 + 1*0.2)*100 = 100
-      let sample = agent.addSample(highQualityRawData, Platform.TIKTOK as Platform, testNiche.id);
+      let sample = agent.addSample(highQualityRawData, 'tiktok', testNiche.id);
       expect(sample?.overallQualityScore).toBeCloseTo(100);
       // Reset for next calc if needed, or use a temp agent
       agent['collectedSamples'] = []; 
-      agent['sampleCounts'].get(Platform.TIKTOK as Platform)?.set(testNiche.id, 0);
-      agent['nicheQualityStats'].get(Platform.TIKTOK as Platform)?.set(testNiche.id, { totalScoreSum: 0, acceptedSamplesCount: 0 });
+      agent['sampleCounts'].get('tiktok')?.set(testNiche.id, 0);
+      agent['nicheQualityStats'].get('tiktok')?.set(testNiche.id, { totalScoreSum: 0, acceptedSamplesCount: 0 });
 
       // Scenario 2: Metadata complete, Relevant, but Old (Completeness=1 (0.6), Relevant=true (0.2), Recent=false (0))
       // Score = (1*0.6 + 1*0.2 + 0*0.2)*100 = 80
@@ -253,13 +253,13 @@ describe('DataCollectionOptimizationAgent', () => {
         ...highQualityRawData,
         createdAt: new Date(baseTime.getTime() - (RECENCY_THRESHOLD_DAYS_TEST + 2) * 24 * 60 * 60 * 1000) // Make it old
       };
-      sample = agent.addSample(oldButCompleteData, Platform.TIKTOK as Platform, testNiche.id); 
+      sample = agent.addSample(oldButCompleteData, 'tiktok', testNiche.id); 
       expect(sample).toBeNull(); // Should be rejected as 80 < 95
       
       // To verify the score calculation for a rejected sample, we can use a temp agent or manually calculate
       const tempAgent = new DataCollectionOptimizationAgent();
       tempAgent.addNiche(testNiche);
-      const rejectedSample = tempAgent.addSample(oldButCompleteData, Platform.TIKTOK as Platform, testNiche.id);
+      const rejectedSample = tempAgent.addSample(oldButCompleteData, 'tiktok', testNiche.id);
       // The sample is null, but we can infer the score logic was applied.
       // Let's create a DataSample object as the agent would internally before rejection to check score:
       const internalEvalSample: Partial<DataSample> = {
@@ -274,15 +274,15 @@ describe('DataCollectionOptimizationAgent', () => {
     });
 
     test('getAverageQualityScore should calculate correctly after adding multiple samples', () => {
-      agent.addSample(highQualityRawData, Platform.TIKTOK as Platform, testNiche.id);
+      agent.addSample(highQualityRawData, 'tiktok', testNiche.id);
       const sample2Data = { ...highQualityRawData, id: 's2', contentUrl: 'http://another.url/vid' }; // Score 100
-      agent.addSample(sample2Data, Platform.TIKTOK as Platform, testNiche.id);
-      expect(agent.getAverageQualityScore(Platform.TIKTOK as Platform, testNiche.id)).toBeCloseTo(100);
+      agent.addSample(sample2Data, 'tiktok', testNiche.id);
+      expect(agent.getAverageQualityScore('tiktok', testNiche.id)).toBeCloseTo(100);
     });
 
     test('addSample should return null and log error for non-existent niche', () => {
       const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-      const sample = agent.addSample(highQualityRawData, Platform.TIKTOK as Platform, 'non-existent-niche-id');
+      const sample = agent.addSample(highQualityRawData, 'tiktok', 'non-existent-niche-id');
       expect(sample).toBeNull();
       expect(consoleErrorSpy).toHaveBeenCalledWith('Cannot add sample: Niche with id non-existent-niche-id does not exist.');
       consoleErrorSpy.mockRestore();
@@ -290,8 +290,8 @@ describe('DataCollectionOptimizationAgent', () => {
 
     test('getAverageQualityScore should return 0 if no samples or niche does not exist', () => {
         // testNiche has been added but no samples for Instagram yet
-        expect(agent.getAverageQualityScore(Platform.INSTAGRAM as Platform, testNiche.id)).toBe(0);
-        expect(agent.getAverageQualityScore(Platform.TIKTOK as Platform, 'fake-niche')).toBe(0);
+        expect(agent.getAverageQualityScore('instagram', testNiche.id)).toBe(0);
+        expect(agent.getAverageQualityScore('tiktok', 'fake-niche')).toBe(0);
     });
   });
 }); 

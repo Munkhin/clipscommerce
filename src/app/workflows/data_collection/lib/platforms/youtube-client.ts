@@ -1,19 +1,36 @@
-import { BasePlatformClient, Post, Analytics } from './base-platform';
+import { BasePlatformClient } from './base-platform';
+import { Post, Analytics } from '../../../../../types';
 import { ApiConfig, ApiResponse, PlatformComment, PlatformPostMetrics, PlatformUserActivity, PlatformPost, ApiRateLimit } from './types';
 import { YouTubeCommentThreadListResponseSchema, YouTubeCommentThread, YouTubeChannelListResponseSchema, YouTubeChannelListResponse, YouTubeVideoListResponseSchema, YouTubeVideoListResponse, YouTubeVideo, YouTubeCommentThreadListResponse, YouTubeChannel } from './youtube.types';
-import { Platform, PlatformEnum } from '../../../deliverables/types/deliverables_types';
+import { Platform, PlatformEnum } from '@/app/workflows/deliverables/types/deliverables_types';
 import { IAuthTokenManager } from '../auth.types';
 import { ApiError, PlatformError, RateLimitError } from '../utils/errors';
 
 export class YouTubeClient extends BasePlatformClient {
-  public readonly platform: Platform = PlatformEnum.YOUTUBE;
+  protected readonly platform: Platform = PlatformEnum.YOUTUBE;
 
-  constructor(config: Partial<ApiConfig> = {}, authTokenManager: IAuthTokenManager, userId?: string) {
+  constructor(config: ApiConfig, authTokenManager: IAuthTokenManager, userId?: string) {
     super(config, authTokenManager, userId);
   }
 
   protected handleRateLimit(headers: any): void {
-    this.log('info', 'YouTube does not provide standard rate limit headers. Quota is managed via the Google Cloud Console.');
+    // YouTube API uses quota system, not traditional rate limiting headers
+    // Check for quota exceeded errors in the response
+    if (headers['x-ratelimit-quota-remaining']) {
+      const remaining = parseInt(headers['x-ratelimit-quota-remaining'], 10);
+      const limit = parseInt(headers['x-ratelimit-quota-limit'] || '10000', 10);
+      const reset = parseInt(headers['x-ratelimit-quota-reset'] || '0', 10);
+      
+      this.rateLimit = {
+        limit,
+        remaining,
+        reset: reset || Date.now() + (24 * 60 * 60 * 1000) // Default to 24 hours if no reset time
+      };
+      
+      this.log('info', `YouTube quota updated: ${remaining}/${limit} remaining`);
+    } else {
+      this.log('debug', 'YouTube quota headers not found. Quota is managed via Google Cloud Console.');
+    }
   }
 
   async fetchPosts(query: string): Promise<Post[]> {

@@ -9,7 +9,8 @@ import {
   PlatformUserActivity,
   PlatformComment,
 } from "../types";
-import { PlatformEnum } from "../../../../deliverables/types/deliverables_types";
+import { PlatformEnum } from '@/app/workflows/deliverables/types/deliverables_types';
+import { extractErrorMessage } from '@/lib/errors/errorHandling';
 
 interface TikTokApiErrorResponse {
   error: {
@@ -22,7 +23,7 @@ interface TikTokApiErrorResponse {
 
 export class TikTokClient extends BasePlatformClient {
   protected client: AxiosInstance;
-  protected readonly platform: Platform = PlatformEnum.TIKTOK;
+  protected readonly platform: Platform = 'tiktok';
   private static readonly DEFAULT_CONFIG: ApiConfig = {
     baseUrl: "https://open.tiktokapis.com",
     version: "v2",
@@ -190,8 +191,8 @@ export class TikTokClient extends BasePlatformClient {
     try {
       this.log('info', `Fetching TikTok posts with query: ${query}`);
       return []; // Placeholder implementation
-    } catch (error) {
-      this.log('error', 'Failed to fetch TikTok posts', error);
+    } catch (error: unknown) {
+      this.log('error', 'Failed to fetch TikTok posts', extractErrorMessage(error));
       return [];
     }
   }

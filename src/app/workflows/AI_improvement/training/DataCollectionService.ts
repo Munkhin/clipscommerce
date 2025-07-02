@@ -1,6 +1,6 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { Platform, PostMetrics } from '../../data_analysis/types/analysis_types';
-import { Platform as ScannerPlatform } from '../../deliverables/types/deliverables_types';
+import { Platform as ScannerPlatform } from '@/app/workflows/deliverables/types/deliverables_types';
 import { EnhancedScannerService } from '../../data_collection/functions/EnhancedScannerService';
 import { CacheSystem, createDevCacheSystem } from '../../data_collection/functions/cache/CacheSystem';
 
@@ -490,17 +490,17 @@ export class TrainingDataCollectionService {
     recommendations: string[]
   ): void {
     const platformExpectations = {
-      [Platform.TIKTOK]: {
+      ['tiktok']: {
         minViews: 100,
         viewsToLikesRatio: 0.05, // 5% like rate is reasonable
         commentsImportant: true
       },
-      [Platform.INSTAGRAM]: {
+      ['instagram']: {
         minViews: 50,
         viewsToLikesRatio: 0.03, // 3% like rate
         savesImportant: true
       },
-      [Platform.YOUTUBE]: {
+      ['youtube']: {
         minViews: 10,
         viewsToLikesRatio: 0.02, // 2% like rate
         commentsImportant: true

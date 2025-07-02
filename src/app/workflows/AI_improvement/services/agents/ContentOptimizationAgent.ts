@@ -1,6 +1,6 @@
 import { aiImprovementService } from '../AIImprovementService';
 import { ContentNiche } from '../../types/niche_types';
-import { Platform } from '../../../deliverables/types/deliverables_types';
+import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
 // import { MetricsTracker } from '@/lib/utils/metrics';
 // import { EnhancedCache } from '@/lib/utils/caching';
 
@@ -459,8 +459,8 @@ export class ContentOptimizationAgent {
           throw new Error(`Unknown task type: ${exhaustiveCheck}`);
       }
       console.log(`✅ Task ${task.type} completed successfully`);
-    } catch (error) {
-      console.error(`❌ Task ${task.type} failed:`, error);
+    } catch (error: unknown) {
+      console.error(`❌ Task ${task.type} failed:`, extractErrorMessage(error));
       // Potentially update agent performance score based on failure
       this.performanceScore = Math.max(0.1, this.performanceScore - 0.1);
       throw error;

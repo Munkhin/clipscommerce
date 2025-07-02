@@ -3,8 +3,9 @@ import { InstagramApiMediaNode, InstagramApiUserNode } from '../../../types/inst
 import { 
   BasePlatformClient, Post, Analytics
 } from '../base-platform';
-import { Platform, PlatformEnum } from '../../../../deliverables/types/deliverables_types';
+import { Platform, PlatformEnum } from '@/app/workflows/deliverables/types/deliverables_types';
 import { ApiConfig, ApiCredentials, ApiResponse, PlatformPost, PlatformPostMetrics, PlatformUserActivity, PlatformComment } from '../types';
+import { extractErrorMessage } from '@/lib/errors/errorHandling';
 
 const INSTAGRAM_GRAPH_API_VERSION = 'v19.0';
 
@@ -107,7 +108,7 @@ export class InstagramClient extends BasePlatformClient {
     try {
       const axiosResponse = await this.client.get<T>(endpoint, { params, ...options });
       return { data: axiosResponse.data };
-    } catch (error) {
+    } catch (error: unknown) {
       let apiResponseError: ApiResponse<T>['error'];
       const operationDescription = `InstagramClient.get for endpoint '${endpoint}'`;
 
@@ -129,13 +130,13 @@ export class InstagramClient extends BasePlatformClient {
         } else {
           apiResponseError = {
             code: axiosErr.code || 'NETWORK_ERROR',
-            message: axiosErr.message,
+            message: extractErrorMessage(axiosErr),
           };
         }
       } else {
         apiResponseError = {
           code: 'UNKNOWN_CLIENT_ERROR',
-          message: (error as Error).message || 'An unknown error occurred',
+          message: extractErrorMessage(error),
         };
       }
 

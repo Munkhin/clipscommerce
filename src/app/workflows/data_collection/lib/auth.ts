@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { IAuthTokenManager, PlatformClientIdentifier, PlatformCredentials, AuthStrategy, OAuth2Credentials, ApiKeyCredentials } from './auth.types';
-import { Platform } from '../../../deliverables/types/deliverables_types';
+import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
 
 export class SupabaseAuthTokenManager implements IAuthTokenManager {
   private supabase;
@@ -123,17 +123,17 @@ export class SupabaseAuthTokenManager implements IAuthTokenManager {
       let clientSecret: string | undefined;
 
       switch (identifier.platform) {
-        case Platform.TIKTOK:
+        case 'tiktok':
           refreshUrl = 'https://open-api.tiktok.com/oauth/refresh_token/';
           clientId = process.env.TIKTOK_CLIENT_ID;
           clientSecret = process.env.TIKTOK_CLIENT_SECRET;
           break;
-        case Platform.INSTAGRAM:
+        case 'instagram':
           refreshUrl = 'https://graph.instagram.com/refresh_access_token';
           clientId = process.env.INSTAGRAM_CLIENT_ID;
           clientSecret = process.env.INSTAGRAM_CLIENT_SECRET;
           break;
-        case Platform.YOUTUBE:
+        case 'youtube':
           refreshUrl = 'https://oauth2.googleapis.com/token';
           clientId = process.env.YOUTUBE_CLIENT_ID;
           clientSecret = process.env.YOUTUBE_CLIENT_SECRET;
@@ -192,19 +192,19 @@ export class SupabaseAuthTokenManager implements IAuthTokenManager {
     const baseRedirectUri = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
     switch (platform) {
-      case Platform.TIKTOK:
+      case 'tiktok':
         baseUrl = 'https://www.tiktok.com/auth/authorize/';
         clientId = process.env.TIKTOK_CLIENT_ID;
         redirectUri = `${baseRedirectUri}/api/oauth/tiktok/callback`;
         scopes = 'user.info.basic,video.list';
         break;
-      case Platform.INSTAGRAM:
+      case 'instagram':
         baseUrl = 'https://api.instagram.com/oauth/authorize';
         clientId = process.env.INSTAGRAM_CLIENT_ID;
         redirectUri = `${baseRedirectUri}/api/oauth/instagram/callback`;
         scopes = 'user_profile,user_media';
         break;
-      case Platform.YOUTUBE:
+      case 'youtube':
         baseUrl = 'https://accounts.google.com/o/oauth2/v2/auth';
         clientId = process.env.YOUTUBE_CLIENT_ID;
         redirectUri = `${baseRedirectUri}/api/oauth/youtube/callback`;
@@ -238,19 +238,19 @@ export class SupabaseAuthTokenManager implements IAuthTokenManager {
     const baseRedirectUri = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
     switch (platform) {
-      case Platform.TIKTOK:
+      case 'tiktok':
         tokenUrl = 'https://open-api.tiktok.com/oauth/access_token/';
         clientId = process.env.TIKTOK_CLIENT_ID;
         clientSecret = process.env.TIKTOK_CLIENT_SECRET;
         redirectUri = `${baseRedirectUri}/api/oauth/tiktok/callback`;
         break;
-      case Platform.INSTAGRAM:
+      case 'instagram':
         tokenUrl = 'https://api.instagram.com/oauth/access_token';
         clientId = process.env.INSTAGRAM_CLIENT_ID;
         clientSecret = process.env.INSTAGRAM_CLIENT_SECRET;
         redirectUri = `${baseRedirectUri}/api/oauth/instagram/callback`;
         break;
-      case Platform.YOUTUBE:
+      case 'youtube':
         tokenUrl = 'https://oauth2.googleapis.com/token';
         clientId = process.env.YOUTUBE_CLIENT_ID;
         clientSecret = process.env.YOUTUBE_CLIENT_SECRET;

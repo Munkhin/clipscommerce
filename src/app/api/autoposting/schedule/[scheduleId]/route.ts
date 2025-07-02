@@ -19,7 +19,7 @@ interface RouteParams {
 // GET - Get specific scheduled post
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
-    const supabase = await createClient();
+    const supabase = createClient(cookies());
     
     // Verify authentication
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -55,7 +55,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 // PATCH - Update scheduled post
 export async function PATCH(request: NextRequest, { params }: RouteParams) {
   try {
-    const supabase = await createClient();
+    const supabase = createClient(cookies());
     
     // Verify authentication
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -191,7 +191,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
 // DELETE - Delete/cancel scheduled post
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
-    const supabase = await createClient();
+    const supabase = createClient(cookies());
     
     // Verify authentication
     const { data: { user }, error: authError } = await supabase.auth.getUser();

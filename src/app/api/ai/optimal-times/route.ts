@@ -8,7 +8,7 @@ import { Platform as DeliverablePlatform } from '@/app/workflows/deliverables/ty
 // Mock dependencies for the SchedulingService
 const mockDependencies = {
   getPosts: async (filter: { limit?: number; platforms?: Platform[] }): Promise<Post[]> => {
-    const supabase = await createClient();
+    const supabase = createClient(cookies());
     const { data: { user } } = await supabase.auth.getUser();
     
     if (!user) return [];
@@ -104,7 +104,7 @@ const mockDependencies = {
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await createClient();
+    const supabase = createClient(cookies());
     
     // Verify authentication
     const { data: { user }, error: authError } = await supabase.auth.getUser();

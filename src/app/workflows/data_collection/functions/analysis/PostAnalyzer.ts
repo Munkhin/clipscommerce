@@ -1,9 +1,10 @@
 // Optimized Post Analytics Module with improved performance strategies
 import { Platform, PostMetrics } from '../types';
-import { PlatformEnum } from '../../../deliverables/types/deliverables_types';
+import { PlatformEnum } from '@/app/workflows/deliverables/types/deliverables_types';
 import { formatInTimeZone, toZonedTime, getTimezoneOffset } from 'date-fns-tz';
 import { format, isValid, differenceInMilliseconds, addMinutes } from 'date-fns';
 import { HashtagAnalyzer, HashtagPerformanceResult, HashtagAnalysisOptions } from './HashtagAnalyzer';
+import { extractErrorMessage } from '@/lib/errors/errorHandling';
 
 // Enhanced cache with LRU eviction and compression
 interface CacheEntry<T> {
@@ -432,8 +433,8 @@ export class OptimizedPostAnalyzer {
           const slot = timeSlots.get(key);
           slot.engagement += this.precomputed.engagementScores.get(post.id as string) || 0;
           slot.count++;
-        } catch (error) {
-          console.warn(`Error processing post ${post.id}:`, error);
+        } catch (error: unknown) {
+          console.warn(`Error processing post ${post.id}:`, extractErrorMessage(error));
         }
       });
 

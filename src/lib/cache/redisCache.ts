@@ -3,6 +3,8 @@
  * Provides caching for client lists, payment histories, and other frequently accessed data
  */
 
+import { createCacheError, extractErrorMessage, logError, safeCacheValue, safeCacheKey, isError } from '@/lib/errors/errorHandling';
+
 export interface CacheConfig {
   host: string;
   port: number;
@@ -33,7 +35,7 @@ export interface CacheStats {
 export class RedisCache {
   private static instance: RedisCache;
   private config: CacheConfig;
-  private client: unknown; // Redis client
+  private client: Map<string, string> | null = null; // Redis client simulation
   private isConnected = false;
   private stats: CacheStats = {
     hits: 0,
@@ -80,7 +82,9 @@ export class RedisCache {
       
       console.log('[CACHE] Redis cache initialized');
     } catch (error) {
-      console.error('[CACHE] Failed to initialize Redis client:', error);
+      const cacheError = createCacheError(error, 'set', 'init');
+      logError(cacheError);
+      console.error('[CACHE] Failed to initialize Redis client:', cacheError.message);
       this.isConnected = false;
     }
   }
@@ -120,28 +124,34 @@ export class RedisCache {
       };
 
       // Store in cache
-      (this.client as Map<string, string>).set(cacheKey, JSON.stringify(entry));
+      if (this.client) {
+        this.client.set(cacheKey, JSON.stringify(entry));
 
-      // Update tag index
-      tags.forEach(tag => {
-        if (!this.tagIndex.has(tag)) {
-          this.tagIndex.set(tag, new Set());
-        }
-        this.tagIndex.get(tag)!.add(cacheKey);
-      });
+        // Update tag index
+        tags.forEach(tag => {
+          if (!this.tagIndex.has(tag)) {
+            this.tagIndex.set(tag, new Set());
+          }
+          this.tagIndex.get(tag)!.add(cacheKey);
+        });
 
-      // Set expiration (simulated)
-      setTimeout(() => {
-        (this.client as Map<string, string>).delete(cacheKey);
-        this.removeFromTagIndex(cacheKey, tags);
-      }, ttl * 1000);
+        // Set expiration (simulated)
+        setTimeout(() => {
+          if (this.client) {
+            this.client.delete(cacheKey);
+            this.removeFromTagIndex(cacheKey, tags);
+          }
+        }, ttl * 1000);
+      }
 
       this.stats.sets++;
       console.log(`[CACHE] Set key: ${key} with TTL: ${ttl}s`);
-    } catch (error) {
+    } catch (error: unknown) {
       this.stats.errors++;
-      console.error('[CACHE] Error setting cache:', error);
-      throw error;
+      const cacheError = createCacheError(error, 'set', key, tags);
+      logError(cacheError);
+      console.error('[CACHE] Error setting cache:', cacheError.message);
+      throw cacheError;
     }
   }
 
@@ -155,14 +165,14 @@ export class RedisCache {
       }
 
       const cacheKey = this.generateKey(key);
-      const cached = (this.client as Map<string, string>).get(cacheKey);
+      const cached = this.client?.get(cacheKey);
 
       if (!cached) {
         this.stats.misses++;
         return null;
       }
 
-      const entry: CacheEntry<T> = JSON.parse(cached);
+      const entry: CacheEntry<T> = safeCacheValue<CacheEntry<T>>(JSON.parse(cached)) || { data: null as T, timestamp: 0, ttl: 0, tags: [] };
 
       // Check if expired
       if (Date.now() - entry.timestamp > entry.ttl * 1000) {
@@ -176,10 +186,12 @@ export class RedisCache {
       
       console.log(`[CACHE] Hit for key: ${key}`);
       return entry.data;
-    } catch (error) {
+    } catch (error: unknown) {
       this.stats.errors++;
       this.stats.misses++;
-      console.error('[CACHE] Error getting cache:', error);
+      const cacheError = createCacheError(error, 'get', key);
+      logError(cacheError);
+      console.error('[CACHE] Error getting cache:', cacheError.message);
       return null;
     }
   }
@@ -194,21 +206,23 @@ export class RedisCache {
       }
 
       const cacheKey = this.generateKey(key);
-      const cached = (this.client as Map<string, string>).get(cacheKey);
+      const cached = this.client?.get(cacheKey);
 
       if (cached) {
-        const entry: CacheEntry = JSON.parse(cached);
+        const entry: CacheEntry = safeCacheValue<CacheEntry>(JSON.parse(cached)) || { data: null, timestamp: 0, ttl: 0, tags: [] };
         this.removeFromTagIndex(cacheKey, entry.tags);
       }
 
-      (this.client as Map<string, string>).delete(cacheKey);
+      this.client?.delete(cacheKey);
       this.stats.deletes++;
       
       console.log(`[CACHE] Deleted key: ${key}`);
-    } catch (error) {
+    } catch (error: unknown) {
       this.stats.errors++;
-      console.error('[CACHE] Error deleting cache:', error);
-      throw error;
+      const cacheError = createCacheError(error, 'delete', key);
+      logError(cacheError);
+      console.error('[CACHE] Error deleting cache:', cacheError.message);
+      throw cacheError;
     }
   }
 
@@ -224,10 +238,12 @@ export class RedisCache {
       const regex = new RegExp(pattern.replace('*', '.*'));
       let deletedCount = 0;
 
-      for (const key of (this.client as Map<string, string>).keys()) {
-        if (regex.test(key)) {
-          (this.client as Map<string, string>).delete(key);
-          deletedCount++;
+      if (this.client) {
+        for (const key of this.client.keys()) {
+          if (regex.test(key)) {
+            this.client.delete(key);
+            deletedCount++;
+          }
         }
       }
 
@@ -235,10 +251,12 @@ export class RedisCache {
       console.log(`[CACHE] Deleted ${deletedCount} keys matching pattern: ${pattern}`);
       
       return deletedCount;
-    } catch (error) {
+    } catch (error: unknown) {
       this.stats.errors++;
-      console.error('[CACHE] Error deleting by pattern:', error);
-      throw error;
+      const cacheError = createCacheError(error, 'pattern', pattern);
+      logError(cacheError);
+      console.error('[CACHE] Error deleting by pattern:', cacheError.message);
+      throw cacheError;
     }
   }
 
@@ -262,7 +280,7 @@ export class RedisCache {
 
       let deletedCount = 0;
       for (const key of keysToDelete) {
-        (this.client as Map<string, string>).delete(key);
+        this.client?.delete(key);
         deletedCount++;
       }
 
@@ -275,10 +293,12 @@ export class RedisCache {
       console.log(`[CACHE] Invalidated ${deletedCount} keys by tags: ${tags.join(', ')}`);
       
       return deletedCount;
-    } catch (error) {
+    } catch (error: unknown) {
       this.stats.errors++;
-      console.error('[CACHE] Error invalidating by tags:', error);
-      throw error;
+      const cacheError = createCacheError(error, 'tags', undefined, tags);
+      logError(cacheError);
+      console.error('[CACHE] Error invalidating by tags:', cacheError.message);
+      throw cacheError;
     }
   }
 
@@ -292,10 +312,12 @@ export class RedisCache {
       }
 
       const cacheKey = this.generateKey(key);
-      return (this.client as Map<string, string>).has(cacheKey);
+      return this.client?.has(cacheKey) || false;
     } catch (error) {
       this.stats.errors++;
-      console.error('[CACHE] Error checking existence:', error);
+      const cacheError = createCacheError(error, 'get', key);
+      logError(cacheError);
+      console.error('[CACHE] Error checking existence:', cacheError.message);
       return false;
     }
   }
@@ -323,8 +345,10 @@ export class RedisCache {
       await this.set(key, data, options);
       
       return data;
-    } catch (error) {
-      console.error('[CACHE] Error in getOrSet:', error);
+    } catch (error: unknown) {
+      const cacheError = createCacheError(error, 'get', key);
+      logError(cacheError);
+      console.error('[CACHE] Error in getOrSet:', cacheError.message);
       // Fallback to factory function
       return await factory();
     }
@@ -346,10 +370,12 @@ export class RedisCache {
       await this.set(key, newValue, { ttl: this.config.defaultTTL });
       
       return newValue;
-    } catch (error) {
+    } catch (error: unknown) {
       this.stats.errors++;
-      console.error('[CACHE] Error incrementing:', error);
-      throw error;
+      const cacheError = createCacheError(error, 'set', key);
+      logError(cacheError);
+      console.error('[CACHE] Error incrementing:', cacheError.message);
+      throw cacheError;
     }
   }
 
@@ -370,14 +396,16 @@ export class RedisCache {
         throw new Error('Redis client not connected');
       }
 
-      (this.client as Map<string, string>).clear();
+      this.client?.clear();
       this.tagIndex.clear();
       
       console.log('[CACHE] Cleared all cache');
-    } catch (error) {
+    } catch (error: unknown) {
       this.stats.errors++;
-      console.error('[CACHE] Error clearing cache:', error);
-      throw error;
+      const cacheError = createCacheError(error, 'clear');
+      logError(cacheError);
+      console.error('[CACHE] Error clearing cache:', cacheError.message);
+      throw cacheError;
     }
   }
 
@@ -390,9 +418,11 @@ export class RedisCache {
         return 0;
       }
 
-      return (this.client as Map<string, string>).size;
-    } catch (error) {
-      console.error('[CACHE] Error getting cache size:', error);
+      return this.client?.size || 0;
+    } catch (error: unknown) {
+      const cacheError = createCacheError(error, 'get', 'size');
+      logError(cacheError);
+      console.error('[CACHE] Error getting cache size:', cacheError.message);
       return 0;
     }
   }
@@ -430,11 +460,13 @@ export class RedisCache {
           size: await this.size()
         }
       };
-    } catch (error) {
-             return {
-         status: 'unhealthy',
-         details: { error: error instanceof Error ? error.message : 'Unknown error' }
-       };
+    } catch (error: unknown) {
+      const cacheError = createCacheError(error, 'get', 'health_check');
+      logError(cacheError);
+      return {
+        status: 'unhealthy',
+        details: { error: cacheError.message }
+      };
     }
   }
 
@@ -468,12 +500,15 @@ export class RedisCache {
     try {
       if (this.client && this.isConnected) {
         // In production, you would call client.disconnect()
-        (this.client as Map<string, string>).clear();
+        this.client.clear();
+        this.client = null;
         this.isConnected = false;
         console.log('[CACHE] Disconnected from Redis');
       }
-    } catch (error) {
-      console.error('[CACHE] Error disconnecting:', error);
+    } catch (error: unknown) {
+      const cacheError = createCacheError(error, 'clear', 'disconnect');
+      logError(cacheError);
+      console.error('[CACHE] Error disconnecting:', cacheError.message);
     }
   }
 }
@@ -598,4 +633,45 @@ export class CacheHelpers {
 }
 
 // Export singleton instance
-export const redisCache = RedisCache.getInstance(); 
+export const redisCache = RedisCache.getInstance();
+
+// Error type guard and handling utilities
+function isError(error: unknown): error is Error {
+  return error instanceof Error;
+}
+
+function getErrorMessage(error: unknown): string {
+  if (isError(error)) {
+    return error.message;
+  }
+  if (typeof error === 'string') {
+    return error;
+  }
+  return 'Unknown error occurred';
+}
+
+function createCacheError(error: unknown, operation: string, key?: string, tags?: string[]): Error {
+  const message = getErrorMessage(error);
+  const errorMsg = `Cache ${operation} failed${key ? ` for key: ${key}` : ''}${tags ? ` with tags: ${tags.join(', ')}` : ''}: ${message}`;
+  
+  if (isError(error)) {
+    const cacheError = new Error(errorMsg);
+    cacheError.stack = error.stack;
+    return cacheError;
+  }
+  
+  return new Error(errorMsg);
+}
+
+function logError(error: Error): void {
+  console.error('[CACHE] Error:', error.message);
+}
+
+function safeCacheValue<T>(value: unknown): T | null {
+  try {
+    return value as T;
+  } catch (error: unknown) {
+    console.warn('[CACHE] Failed to parse cache value:', getErrorMessage(error));
+    return null;
+  }
+} 

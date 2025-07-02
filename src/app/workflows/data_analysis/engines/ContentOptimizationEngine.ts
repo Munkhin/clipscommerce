@@ -1,7 +1,7 @@
 import { EnhancedTextAnalyzer } from '@/lib/ai/enhancedTextAnalyzer';
 import { MetricsTracker } from '@/lib/utils/metrics';
 import { EnhancedCache } from '@/lib/utils/caching';
-import { Platform } from '../../deliverables/types/deliverables_types';
+import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
 import crypto from 'crypto';
 
 export interface ContentOptimizationInput {
@@ -249,7 +249,7 @@ Return only the optimized caption, no explanations.`;
       
       // Fallback to basic optimization
       const cta = platform === 'TikTok' ? 'Follow for more!' : 
-                  platform === Platform.INSTAGRAM ? 'Double tap if you agree! 👍' : 
+                  platform === 'instagram' ? 'Double tap if you agree! 👍' : 
                   'Subscribe for more content!';
       return text.includes(cta) ? text : `${text}\n\n${cta}`;
     }
@@ -593,8 +593,8 @@ Return hashtags in a comma-separated list without explanations.`;
     // Platform-specific adjustments
     const platformMultiplier = {
       'TikTok': 1.2,
-      [Platform.INSTAGRAM]: 1.0,
-      [Platform.YOUTUBE]: 0.8
+      ['instagram']: 1.0,
+      ['youtube']: 0.8
     }[input.platform] || 1.0;
     
     const finalMultiplier = improvementFactor * platformMultiplier;
@@ -621,8 +621,8 @@ Return hashtags in a comma-separated list without explanations.`;
     // Platform-specific optimal lengths
     const optimalLengths = {
       'TikTok': 100,
-      [Platform.INSTAGRAM]: 150,
-      [Platform.YOUTUBE]: 200
+      ['instagram']: 150,
+      ['youtube']: 200
     };
     
     const optimalLength = optimalLengths[platform as keyof typeof optimalLengths] || 150;
@@ -632,7 +632,7 @@ Return hashtags in a comma-separated list without explanations.`;
       Math.max(0.1, 1 - Math.abs(captionLength - optimalLength) / optimalLength) : 0;
     
     // Hashtag score (0-1)
-    const optimalHashtagCount = platform === Platform.INSTAGRAM ? 10 : 5;
+    const optimalHashtagCount = platform === 'instagram' ? 10 : 5;
     const hashtagScore = hashtagCount > 0 ? 
       Math.max(0.1, 1 - Math.abs(hashtagCount - optimalHashtagCount) / optimalHashtagCount) : 0;
     
@@ -653,8 +653,8 @@ Return hashtags in a comma-separated list without explanations.`;
     if (caption) {
       const platformLimits = {
         'TikTok': 300,
-        [Platform.INSTAGRAM]: 2200,
-        [Platform.YOUTUBE]: 5000
+        ['instagram']: 2200,
+        ['youtube']: 5000
       };
       
       const limit = platformLimits[platform as keyof typeof platformLimits] || 300;

@@ -5,7 +5,7 @@ import { createClient } from '@/lib/supabase/server';
 
 export async function getUserSettings() {
   const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+  const supabase = await createClient(cookieStore);
   
   const { data: { user } } = await supabase.auth.getUser();
   
@@ -29,7 +29,7 @@ export async function getUserSettings() {
 
 export async function updateNotificationSettings(settings: Record<string, any>) {
   const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+  const supabase = await createClient(cookieStore);
   
   const { data: { user } } = await supabase.auth.getUser();
   

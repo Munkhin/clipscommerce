@@ -24,6 +24,8 @@ export interface PostStatusResult {
   publishedAt?: Date;
 }
 
+import { createStructuredError, StructuredError } from '../../../lib/errors/errorHandling';
+
 export interface PlatformPoster {
   platform: string;
   validateContent(content: any): Promise<ContentValidationResult>;
@@ -123,7 +125,7 @@ export class TikTokPoster implements PlatformPoster {
     // Validate content first
     const validation = await this.validateContent(content);
     if (!validation.isValid) {
-      throw new Error(`Content validation failed: ${validation.errors?.join(', ')}`);
+      throw createStructuredError(new Error(`Content validation failed: ${validation.errors?.join(', ')}`), { code: 'CONTENT_VALIDATION_FAILED' });
     }
     
     // Check rate limiting

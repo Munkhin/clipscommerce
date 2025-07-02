@@ -1,4 +1,4 @@
-import { Platform, PlatformEnum } from '../../deliverables/types/deliverables_types';
+import { Platform, PlatformEnum } from '@/app/workflows/deliverables/types/deliverables_types';
 import { PostMetrics } from '../../data_collection/functions/types';
 import { Beta } from 'jstat'; // Use jstat for Beta distribution (if not available, mock below)
 

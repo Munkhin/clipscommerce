@@ -5,7 +5,7 @@ import { InstagramClient } from '../platforms/instagram-client';
 import { BasePlatformClient } from '../platforms/base-platform';
 import { ApiConfig } from '../platforms/types';
 import { IAuthTokenManager, AuthStrategy, OAuth2Credentials } from '../auth.types';
-import { Platform } from '../../../deliverables/types/deliverables_types';
+import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
 import { PlatformError, RateLimitError, ApiError } from '../utils/errors';
 
 // Mock the retryWithBackoff function
@@ -37,7 +37,7 @@ describe('Platform Clients Integration Tests', () => {
 
   describe('BasePlatformClient', () => {
     class TestPlatformClient extends BasePlatformClient {
-      protected readonly platform = Platform.YOUTUBE;
+      protected readonly platform = 'youtube';
       
       protected handleRateLimit(headers: Record<string, any>): void {
         // Test implementation
@@ -76,7 +76,7 @@ describe('Platform Clients Integration Tests', () => {
         'Authorization': 'Bearer mock-access-token'
       });
       expect(mockAuthTokenManager.getValidCredentials).toHaveBeenCalledWith({
-        platform: Platform.YOUTUBE,
+        platform: 'youtube',
         userId: 'test-user'
       });
     });
@@ -367,7 +367,7 @@ describe('Platform Clients Integration Tests', () => {
     it('should handle rate limit errors correctly', async () => {
       const client = new YouTubeClient(config, mockAuthTokenManager, 'test-user');
       
-      const rateLimitError = new RateLimitError(Platform.YOUTUBE, 5000, 'Rate limit exceeded');
+      const rateLimitError = new RateLimitError('youtube', 5000, 'Rate limit exceeded');
       ((client as any).client.request as jest.Mock).mockRejectedValue(rateLimitError);
 
       const result = await client.getPostMetrics('video123');
@@ -378,7 +378,7 @@ describe('Platform Clients Integration Tests', () => {
     it('should handle API errors correctly', async () => {
       const client = new TikTokClient(config, mockAuthTokenManager, 'test-user');
       
-      const apiError = new ApiError(Platform.TIKTOK, 'INVALID_REQUEST', 'Invalid request', 400);
+      const apiError = new ApiError('tiktok', 'INVALID_REQUEST', 'Invalid request', 400);
       ((client as any).client.request as jest.Mock).mockRejectedValue(apiError);
 
       const result = await client.getPostMetrics('video123');

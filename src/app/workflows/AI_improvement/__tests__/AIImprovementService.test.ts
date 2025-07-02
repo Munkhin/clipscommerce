@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, jest } from '@jest/globals';
-import { Platform } from '../../deliverables/types/deliverables_types';
+import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
 import { AIImprovementService } from '../services/AIImprovementService';
 import { PostMetrics } from '../../data_collection/functions/types';
 import { featureStore } from '../functions/feedbackLoop';
@@ -35,7 +35,7 @@ describe('AIImprovementService', () => {
       const request = {
         caption: 'Check out this amazing content!',
         hashtags: ['#test', '#content'],
-        platform: Platform.TIKTOK,
+        platform: 'tiktok',
         targetAudience: 'general',
         userId: 'test-user',
       };
@@ -57,7 +57,7 @@ describe('AIImprovementService', () => {
     it('should analyze sentiment correctly', async () => {
       const positiveRequest = {
         caption: 'I love this amazing content! It\'s fantastic!',
-        platform: Platform.INSTAGRAM,
+        platform: 'instagram',
         userId: 'test-user',
       };
 
@@ -69,7 +69,7 @@ describe('AIImprovementService', () => {
     it('should analyze tone correctly', async () => {
       const excitedRequest = {
         caption: 'OMG this is AMAZING!!! So excited!!!',
-        platform: Platform.TIKTOK,
+        platform: 'tiktok',
         userId: 'test-user',
       };
 
@@ -84,7 +84,7 @@ describe('AIImprovementService', () => {
       const request = {
         caption: 'Great content with good engagement potential',
         hashtags: ['#viral', '#trending', '#content'],
-        platform: Platform.TIKTOK,
+        platform: 'tiktok',
         publishTime: new Date('2024-01-15T19:00:00Z'), // Optimal time
         contentType: 'video' as const,
       };
@@ -107,14 +107,14 @@ describe('AIImprovementService', () => {
       const optimalTimeRequest = {
         caption: 'Test content',
         hashtags: ['#test'],
-        platform: Platform.TIKTOK,
+        platform: 'tiktok',
         publishTime: new Date('2024-01-15T19:00:00Z'), // 7 PM - optimal for TikTok
       };
 
       const poorTimeRequest = {
         caption: 'Test content',
         hashtags: ['#test'],
-        platform: Platform.TIKTOK,
+        platform: 'tiktok',
         publishTime: new Date('2024-01-15T03:00:00Z'), // 3 AM - poor timing
       };
 
@@ -130,7 +130,7 @@ describe('AIImprovementService', () => {
       const request = {
         name: 'Caption Length Test',
         description: 'Testing short vs long captions',
-        platform: Platform.INSTAGRAM,
+        platform: 'instagram',
         baseContent: {
           caption: 'Original caption for testing',
           hashtags: ['#test', '#experiment'],
@@ -157,7 +157,7 @@ describe('AIImprovementService', () => {
       const captionRequest = {
         name: 'Caption Test',
         description: 'Testing caption variations',
-        platform: Platform.TIKTOK,
+        platform: 'tiktok',
         baseContent: {
           caption: 'Base caption',
           hashtags: ['#test'],
@@ -181,7 +181,7 @@ describe('AIImprovementService', () => {
       featureStore.contentPerformance = [
         {
           postId: 'post1',
-          platform: Platform.TIKTOK,
+          platform: 'tiktok',
           contentType: 'video',
           engagementRate: 15.5,
           likeRatio: 0.08,
@@ -198,7 +198,7 @@ describe('AIImprovementService', () => {
         },
         {
           postId: 'post2',
-          platform: Platform.INSTAGRAM,
+          platform: 'instagram',
           contentType: 'image',
           engagementRate: 8.2,
           likeRatio: 0.05,
@@ -223,7 +223,7 @@ describe('AIImprovementService', () => {
           confidence: 0.85,
           expectedImprovement: 12,
           userId: 'test-user',
-          platform: Platform.TIKTOK,
+          platform: 'tiktok',
         },
       ];
     });
@@ -247,7 +247,7 @@ describe('AIImprovementService', () => {
       const result = await service.getPerformanceInsights('test-user');
       
       // TikTok should be top performing based on sample data (15.5% vs 8.2%)
-      expect(result.overallPerformance.topPerformingPlatform).toBe(Platform.TIKTOK);
+      expect(result.overallPerformance.topPerformingPlatform).toBe('tiktok');
     });
   });
 
@@ -255,7 +255,7 @@ describe('AIImprovementService', () => {
     it('should record post performance correctly', async () => {
       const postMetrics: PostMetrics = {
         id: 'test-post-123',
-        platform: Platform.TIKTOK,
+        platform: 'tiktok',
         views: 10000,
         likes: 800,
         comments: 50,
@@ -272,7 +272,7 @@ describe('AIImprovementService', () => {
       // Check if the post was added to feature store
       const recordedPost = featureStore.contentPerformance.find(p => p.postId === 'test-post-123');
       expect(recordedPost).toBeDefined();
-      expect(recordedPost?.platform).toBe(Platform.TIKTOK);
+      expect(recordedPost?.platform).toBe('tiktok');
       expect(recordedPost?.engagementRate).toBe(8.75);
     });
   });
@@ -309,7 +309,7 @@ describe('AIImprovementService', () => {
           confidence: 0.7,
           expectedImprovement: 10,
           userId: 'test-user',
-          platform: Platform.TIKTOK,
+          platform: 'tiktok',
         },
       ];
     });
@@ -352,7 +352,7 @@ describe('AIImprovementService', () => {
     it('should handle empty content gracefully', async () => {
       const request = {
         caption: '',
-        platform: Platform.TIKTOK,
+        platform: 'tiktok',
         userId: 'test-user',
       };
 
@@ -391,7 +391,7 @@ describe('A/B Testing Functions', () => {
     const experimentData = {
       name: 'Test Experiment',
       description: 'Testing caption variations',
-      platform: Platform.TIKTOK,
+      platform: 'tiktok',
       status: 'draft' as const,
       variants: [
         {
@@ -443,7 +443,7 @@ describe('NLP Functions', () => {
     
     const variations = generateCaptionVariations(
       'Check out this amazing content!',
-      Platform.TIKTOK,
+      'tiktok',
       'general'
     );
     

@@ -1,7 +1,8 @@
 // difficult: YouTube Data API v3 client implementation
 import { BasePlatformClient } from './BasePlatformClient';
 import { PostMetrics, PaginatedResponse, Pagination } from '../types';
-import { Platform } from '../../../deliverables/types/deliverables_types';
+import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
+import { extractErrorMessage } from '@/lib/errors/errorHandling';
 
 interface YouTubeVideo {
   id: string;
@@ -104,7 +105,7 @@ export class YouTubeClient extends BasePlatformClient {
   }>();
 
   constructor(accessToken: string) {
-    super(accessToken, Platform.YOUTUBE);
+    super(accessToken, 'youtube');
   }
   
   /**
@@ -145,8 +146,8 @@ export class YouTubeClient extends BasePlatformClient {
           cursor: undefined
         }
       };
-    } catch (error) {
-      console.error('Error fetching user posts:', error);
+    } catch (error: unknown) {
+      console.error('Error fetching user posts:', extractErrorMessage(error));
       throw error;
     }
   }
@@ -192,8 +193,8 @@ export class YouTubeClient extends BasePlatformClient {
       this.setCache(cacheKey, metrics);
       
       return metrics;
-    } catch (error) {
-      console.error('Error fetching video metrics:', error);
+    } catch (error: unknown) {
+      console.error('Error fetching video metrics:', extractErrorMessage(error));
       throw error;
     }
   }
@@ -331,7 +332,7 @@ export class YouTubeClient extends BasePlatformClient {
 
     return {
       id: video.id,
-      platform: Platform.YOUTUBE,
+      platform: 'youtube',
       views,
       likes,
       comments,

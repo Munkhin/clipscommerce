@@ -25,7 +25,7 @@ export const TimeRangeSchema = z.object({
 });
 export type TimeRange = z.infer<typeof TimeRangeSchema>;
 
-export const PlatformSchema = z.enum(['TikTok', 'Instagram', 'YouTube', 'Facebook', 'Twitter', 'LinkedIn']); // New, more specific
+export const PlatformSchema = z.enum(['tiktok', 'instagram', 'youtube', 'facebook', 'twitter', 'linkedin']); // New, more specific  
 export type Platform = z.infer<typeof PlatformSchema>;
 
 export const BaseAnalysisRequestSchema = z.object({

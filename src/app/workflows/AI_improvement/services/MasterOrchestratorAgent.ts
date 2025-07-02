@@ -1,4 +1,4 @@
-import { PlatformEnum } from '../../deliverables/types/deliverables_types';
+import { PlatformEnum } from '@/app/workflows/deliverables/types/deliverables_types';
 import { ContentNiche } from '../types/niche_types';
 import { AIImprovementService } from './AIImprovementService';
 import { DataCollectionAgent, DataGap } from './agents/DataCollectionAgent';
@@ -230,7 +230,7 @@ export class MasterOrchestratorAgent {
           console.log('Triggering periodic data gap monitoring for DataCollectionAgent.');
           // This task assignment will be handled more formally in makeOrchestrationDecision if needed
           // For now, let's assume this might prompt the agent internally or through a task.
-          // A more direct way: await dataCollector.executeTask({ type: 'monitor_gaps', niche: ContentNiche.FITNESS, platform: Platform.TIKTOK, priority: 'low', requirements: {} as any });
+          // A more direct way: await dataCollector.executeTask({ type: 'monitor_gaps', niche: ContentNiche.FITNESS, platform: 'tiktok', priority: 'low', requirements: {} as any });
           // However, tasking agents should ideally be part of the decision logic.
           this.lastDataGapCheckTime = new Date(); 
         }

@@ -35,7 +35,7 @@ async function checkDatabase(): Promise<{ status: 'healthy' | 'unhealthy'; respo
   const startTime = Date.now();
   
   try {
-    const supabase = await createClient();
+    const supabase = createClient(cookies());
     
     // Test basic database connectivity with a simple query
     const { data, error } = await supabase

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
 import logger from '../utils/logger';
+import { LogContext } from '../types';
 
 // Correlation ID header names
 export const CORRELATION_ID_HEADER = 'x-correlation-id';
@@ -152,8 +153,10 @@ export const withCorrelationContext = <T extends any[]>(
     
     try {
       return await fn(...args);
-    } catch (error) {
-      logger.error('Server Component Error', error as Error, context);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        logger.error('Server Component Error', error, context);
+      }
       throw error;
     }
   };
@@ -193,7 +196,7 @@ export const withApiCorrelationContext = (handler: any) => {
       return result;
     } catch (error) {
       const duration = Date.now() - startTime;
-      logger.error('API Handler Error', error as Error, {
+      logger.error('API Handler Error', error instanceof Error ? error : new Error(String(error)), {
         ...context,
         method: req.method,
         url: req.url,

@@ -9,6 +9,20 @@ export interface QueuedContent {
     hashtags?: string[];
     scheduledTime: Date;
     status: 'pending' | 'scheduled' | 'posted' | 'failed';
+    retryCount?: number;
+    userId?: string;
+    sessionId?: string;
+    requestId?: string;
+    priority?: 'low' | 'normal' | 'high' | 'urgent';
+    postId?: string;
+    recoveryStrategy?: string;
+    timestamp?: string;
+    platform?: string;
+    error?: string;
+    originalError?: string;
+    errorId?: string;
+    retryable?: boolean;
+    recoveryAttempted?: boolean;
   };
 }
 
@@ -29,10 +43,13 @@ export class ContentQueue {
     return this.queue.filter(item => item.metadata.status === 'pending').slice(0, limit);
   }
 
-  updateStatus(id: string, status: QueuedContent['metadata']['status']): void {
+  updateStatus(id: string, status: QueuedContent['metadata']['status'], additionalMetadata?: Partial<QueuedContent['metadata']>): void {
     const item = this.queue.find(q => q.id === id);
     if (item) {
       item.metadata.status = status;
+      if (additionalMetadata) {
+        Object.assign(item.metadata, additionalMetadata);
+      }
     }
   }
 

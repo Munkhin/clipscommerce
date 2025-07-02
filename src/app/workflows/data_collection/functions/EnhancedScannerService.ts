@@ -6,7 +6,7 @@ import { OptimizedPostAnalyzer } from './analysis/PostAnalyzer';
 import { CacheSystem } from './cache/CacheSystem';
 import { MonitoringSystem } from './monitoring/MonitoringSystem';
 import EventEmitter from 'events';
-import { Platform as DeliverablePlatform } from '../../deliverables/types/deliverables_types';
+import { Platform as DeliverablePlatform } from '@/app/workflows/deliverables/types/deliverables_types';
 import { retryWithBackoff } from '../../../shared_infra';
 import PlatformFactory from '../lib/platforms/consolidated/PlatformFactory';
 import { TikTokClient } from '../lib/platforms/TikTokClient';

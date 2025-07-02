@@ -21,7 +21,7 @@ export async function GET(request: Request) {
 
   // Handle email confirmation
   if (code) {
-    const supabase = await createClient();
+    const supabase = createClient(cookies());
     
     try {
       const { error: authError } = await supabase.auth.exchangeCodeForSession(code);

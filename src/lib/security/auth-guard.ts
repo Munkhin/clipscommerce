@@ -108,7 +108,7 @@ export async function authGuard(
     let profile: any = null;
 
     if (requireAuth) {
-      const supabase = await createClient();
+      const supabase = createClient(cookies());
       const { data: { user: authUser }, error: authError } = await supabase.auth.getUser();
 
       if (authError || !authUser) {
@@ -139,7 +139,7 @@ export async function authGuard(
 
         if (profileError) {
           if (logAccess) {
-            logger.error('Failed to fetch user profile', profileError as Error, {
+            logger.error('Failed to fetch user profile', profileError instanceof Error ? profileError : new Error(String(profileError)), {
               userId: user.id,
               path: request.nextUrl.pathname
             });
@@ -275,9 +275,9 @@ export async function authGuard(
       }
     };
 
-  } catch (error) {
+  } catch (error: unknown) {
     if (logAccess) {
-      logger.error('Auth guard error', error as Error, {
+      logger.error('Auth guard error', error instanceof Error ? error : new Error(String(error)), {
         path: request.nextUrl.pathname,
         method: request.method
       });

@@ -1,10 +1,11 @@
 import { BasePlatformClient, Post, Analytics } from './base-platform';
 import { ApiConfig, PlatformComment, ApiResponse } from './types';
 import { IAuthTokenManager } from '../auth.types';
-import { Platform } from '../../../../deliverables/types/deliverables_types';
+import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
+import { PlatformEnum } from '../../../../../types/platform';
 
 export class InstagramClient extends BasePlatformClient {
-  protected readonly platform: Platform = Platform.INSTAGRAM;
+  protected readonly platform: Platform = PlatformEnum.INSTAGRAM;
 
   constructor(
     platformConfigFromFactory: ApiConfig,

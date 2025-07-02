@@ -55,6 +55,7 @@ import { useUsageLimits } from '@/hooks/useUsageLimits';
 import { useFeatureUsage } from '@/hooks/useFeatureUsage';
 import { LoginPromptPopup } from '@/components/dashboard/LoginPromptPopup';
 import { SubscriptionPromptPopup } from '@/components/dashboard/SubscriptionPromptPopup';
+import { WelcomeModal } from '@/components/dashboard/welcome-modal';
 import { AutopostScheduler } from '@/components/dashboard/autopost/AutopostScheduler';
 
 export default function DashboardPage() {
@@ -182,7 +183,7 @@ export default function DashboardPage() {
     {
       id: 'revenue',
       title: 'Revenue',
-      value: `$${realtimeData.revenue.toLocaleString()}`,
+      value: `${realtimeData.revenue.toLocaleString()}`,
       change: `+${realtimeData.revenueGrowth.toFixed(1)}%`,
       trend: 'up',
       icon: DollarSign,
@@ -308,6 +309,7 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen">
+      <WelcomeModal />
       {!isAuthenticated && <LoginPromptPopup isOpen={showLoginPrompt} onClose={closeLoginPrompt} feature={currentFeature} />}
       {!hasFeatureAccess('analytics') && isAuthenticated && <SubscriptionPromptPopup isOpen={showSubscriptionPrompt} onClose={closeSubscriptionPrompt} featureName={currentFeature || 'analytics'} />}
 

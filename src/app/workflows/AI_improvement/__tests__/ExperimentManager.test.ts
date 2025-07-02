@@ -1,5 +1,5 @@
 import { ExperimentManager } from '../functions/abTesting';
-import { Platform } from '../../deliverables/types/deliverables_types';
+import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
 
 // Mock Supabase client
 const mockSupabase = {
@@ -30,7 +30,7 @@ describe('ExperimentManager', () => {
       const experimentData = {
         name: 'Test A/B Experiment',
         description: 'Testing caption variations',
-        platform: Platform.TIKTOK,
+        platform: 'tiktok',
         status: 'draft' as const,
         variants: [
           {
@@ -67,7 +67,7 @@ describe('ExperimentManager', () => {
       const invalidExperimentData = {
         name: 'Invalid Experiment',
         description: 'Missing variants',
-        platform: Platform.TIKTOK,
+        platform: 'tiktok',
         status: 'draft' as const,
         variants: [], // Invalid: no variants
         startDate: new Date(),
@@ -86,7 +86,7 @@ describe('ExperimentManager', () => {
       const invalidWeightsData = {
         name: 'Invalid Weights Experiment',
         description: 'Wrong weights',
-        platform: Platform.TIKTOK,
+        platform: 'tiktok',
         status: 'draft' as const,
         variants: [
           {
@@ -124,7 +124,7 @@ describe('ExperimentManager', () => {
         experiment_id: 'exp-123',
         name: 'Original Name',
         description: 'Original Description',
-        platform: Platform.TIKTOK,
+        platform: 'tiktok',
         status: 'draft',
         variants: [],
         target_metric: 'likes',
@@ -163,7 +163,7 @@ describe('ExperimentManager', () => {
         experiment_id: 'exp-456',
         name: 'Test Experiment',
         description: 'Test Description',
-        platform: Platform.INSTAGRAM,
+        platform: 'instagram',
         status: 'running',
         variants: [
           { id: 'a', name: 'A', description: 'Variant A', config: {}, weight: 50 },
@@ -191,7 +191,7 @@ describe('ExperimentManager', () => {
       expect(experiment).toBeTruthy();
       expect(experiment?.id).toBe('exp-456');
       expect(experiment?.name).toBe('Test Experiment');
-      expect(experiment?.platform).toBe(Platform.INSTAGRAM);
+      expect(experiment?.platform).toBe('instagram');
     });
 
     it('should return null for non-existent experiment', async () => {
@@ -238,7 +238,7 @@ describe('ExperimentManager', () => {
 
       const postMetrics = {
         id: 'post-123',
-        platform: Platform.TIKTOK,
+        platform: 'tiktok',
         url: 'https://example.com',
         caption: 'Test post',
         hashtags: ['#test'],
@@ -281,7 +281,7 @@ describe('ExperimentManager', () => {
 
       const postMetrics = {
         id: 'post-456',
-        platform: Platform.TIKTOK,
+        platform: 'tiktok',
         metrics: { likes: 50, comments: 10, shares: 2, views: 500, saves: 5, engagementRate: 0.134 }
       } as any;
 
@@ -301,7 +301,7 @@ describe('ExperimentManager', () => {
       const mockExperiment = {
         experiment_id: 'exp-analysis',
         name: 'Analysis Test',
-        platform: Platform.TIKTOK,
+        platform: 'tiktok',
         status: 'running',
         variants: [
           { id: 'a', name: 'A', description: 'Variant A', config: {}, weight: 50 },

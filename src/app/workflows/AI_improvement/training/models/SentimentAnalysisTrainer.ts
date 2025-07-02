@@ -1,6 +1,7 @@
 import { SupabaseClient } from '@supabase/supabase-js';
-import { Platform } from '../../../deliverables/types/deliverables_types';
+import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
 import { EventEmitter } from 'events';
+import { createTrainingError, extractErrorMessage, logError, isError } from '@/lib/errors/errorHandling';
 
 export interface SentimentFeatures {
   // Text features
@@ -175,9 +176,11 @@ export class SentimentAnalysisTrainer extends EventEmitter {
       this.emit('progress', { phase: 'data_loading', progress: 100, message: `Loaded ${this.trainingData.length} sentiment samples` });
       this.emit('dataLoaded', { sampleCount: this.trainingData.length });
 
-    } catch (error) {
-      this.emit('error', { phase: 'data_loading', error: error.message });
-      throw error;
+    } catch (error: unknown) {
+      const structuredError = createTrainingError(error, 'data_loading', 50);
+      logError(structuredError, { userId, platforms, lookbackDays });
+      this.emit('error', { phase: 'data_loading', error: structuredError.message });
+      throw structuredError;
     }
   }
 
@@ -192,7 +195,7 @@ export class SentimentAnalysisTrainer extends EventEmitter {
       wordCount: words.length,
       sentenceCount: sentences.length,
       avgWordsPerSentence: words.length / Math.max(sentences.length, 1),
-      avgWordLength: words.reduce((sum, word) => sum + word.length, 0) / Math.max(words.length, 1),
+      avgWordLength: words.reduce((sum: number, word: string) => sum + word.length, 0) / Math.max(words.length, 1),
       
       // Lexical features
       positiveWordCount: words.filter(word => this.positiveWords.has(word)).length,
@@ -328,9 +331,11 @@ export class SentimentAnalysisTrainer extends EventEmitter {
         testSize: testData.length
       });
 
-    } catch (error) {
-      this.emit('error', { phase: 'training', error: error.message });
-      throw error;
+    } catch (error: unknown) {
+      const structuredError = createTrainingError(error, 'training', this.isTraining ? 50 : 0);
+      logError(structuredError, { trainingDataSize: this.trainingData.length });
+      this.emit('error', { phase: 'training', error: structuredError.message });
+      throw structuredError;
     } finally {
       this.isTraining = false;
     }
@@ -358,11 +363,11 @@ export class SentimentAnalysisTrainer extends EventEmitter {
     const classStats = Object.entries(classData).map(([sentiment, data]) => ({
       sentiment,
       count: data.length,
-      avgPositiveWords: data.reduce((sum, d) => sum + d.features.positiveWordCount, 0) / data.length,
-      avgNegativeWords: data.reduce((sum, d) => sum + d.features.negativeWordCount, 0) / data.length,
-      avgEmotionalWords: data.reduce((sum, d) => sum + d.features.emotionalWordCount, 0) / data.length,
-      avgExclamations: data.reduce((sum, d) => sum + d.features.exclamationCount, 0) / data.length,
-      avgCapsRatio: data.reduce((sum, d) => sum + d.features.capsRatio, 0) / data.length
+      avgPositiveWords: data.reduce((sum: number, d: TrainingData) => sum + d.features.positiveWordCount, 0) / data.length,
+      avgNegativeWords: data.reduce((sum: number, d: TrainingData) => sum + d.features.negativeWordCount, 0) / data.length,
+      avgEmotionalWords: data.reduce((sum: number, d: TrainingData) => sum + d.features.emotionalWordCount, 0) / data.length,
+      avgExclamations: data.reduce((sum: number, d: TrainingData) => sum + d.features.exclamationCount, 0) / data.length,
+      avgCapsRatio: data.reduce((sum: number, d: TrainingData) => sum + d.features.capsRatio, 0) / data.length
     }));
 
     return {
@@ -382,7 +387,7 @@ export class SentimentAnalysisTrainer extends EventEmitter {
           return { sentiment: stat.sentiment, score };
         });
         
-        const bestMatch = scores.reduce((best, current) => 
+        const bestMatch = scores.reduce((best: {sentiment: string, score: number}, current: {sentiment: string, score: number}) => 
           current.score > best.score ? current : best
         );
         
@@ -519,7 +524,7 @@ export class SentimentAnalysisTrainer extends EventEmitter {
       wordCount: words.length,
       sentenceCount: sentences.length,
       avgWordsPerSentence: words.length / Math.max(sentences.length, 1),
-      avgWordLength: words.reduce((sum, word) => sum + word.length, 0) / Math.max(words.length, 1),
+      avgWordLength: words.reduce((sum: number, word: string) => sum + word.length, 0) / Math.max(words.length, 1),
       
       positiveWordCount: words.filter(word => this.positiveWords.has(word)).length,
       negativeWordCount: words.filter(word => this.negativeWords.has(word)).length,
@@ -593,8 +598,8 @@ export class SentimentAnalysisTrainer extends EventEmitter {
     
     // Calculate regression metrics for sentiment scores
     const scoreErrors = predictions.map(p => p.predictedScore - p.actualScore);
-    const sentimentScoreMSE = scoreErrors.reduce((sum, error) => sum + error * error, 0) / scoreErrors.length;
-    const sentimentScoreMAE = scoreErrors.reduce((sum, error) => sum + Math.abs(error), 0) / scoreErrors.length;
+    const sentimentScoreMSE = scoreErrors.reduce((sum: number, error: number) => sum + error * error, 0) / scoreErrors.length;
+    const sentimentScoreMAE = scoreErrors.reduce((sum: number, error: number) => sum + Math.abs(error), 0) / scoreErrors.length;
     
     return {
       accuracy,
@@ -650,12 +655,12 @@ export class SentimentAnalysisTrainer extends EventEmitter {
   // Helper methods
   private countPositiveEmojis(text: string): number {
     const positiveEmojis = ['😊', '😃', '😄', '😁', '😆', '😍', '🥰', '😘', '🤗', '😎', '🤩', '🥳', '👍', '👌', '✨', '🎉', '❤️', '💕', '🔥'];
-    return positiveEmojis.reduce((count, emoji) => count + (text.split(emoji).length - 1), 0);
+    return positiveEmojis.reduce((count: number, emoji: string) => count + (text.split(emoji).length - 1), 0);
   }
 
   private countNegativeEmojis(text: string): number {
     const negativeEmojis = ['😢', '😭', '😞', '😔', '😟', '😕', '🙁', '😤', '😠', '😡', '🤬', '😰', '😨', '😱', '👎', '💔', '😷', '🤢', '🤮'];
-    return negativeEmojis.reduce((count, emoji) => count + (text.split(emoji).length - 1), 0);
+    return negativeEmojis.reduce((count: number, emoji: string) => count + (text.split(emoji).length - 1), 0);
   }
 
   private calculateEngagementRate(metrics: any): number {
@@ -809,11 +814,11 @@ export class SentimentAnalysisTrainer extends EventEmitter {
     }
 
     const avgFeatures = {
-      positiveWordCount: emotionData.reduce((sum, d) => sum + d.features.positiveWordCount, 0) / emotionData.length,
-      negativeWordCount: emotionData.reduce((sum, d) => sum + d.features.negativeWordCount, 0) / emotionData.length,
-      emotionalWordCount: emotionData.reduce((sum, d) => sum + d.features.emotionalWordCount, 0) / emotionData.length,
-      exclamationCount: emotionData.reduce((sum, d) => sum + d.features.exclamationCount, 0) / emotionData.length,
-      capsRatio: emotionData.reduce((sum, d) => sum + d.features.capsRatio, 0) / emotionData.length
+      positiveWordCount: emotionData.reduce((sum: number, d: TrainingData) => sum + d.features.positiveWordCount, 0) / emotionData.length,
+      negativeWordCount: emotionData.reduce((sum: number, d: TrainingData) => sum + d.features.negativeWordCount, 0) / emotionData.length,
+      emotionalWordCount: emotionData.reduce((sum: number, d: TrainingData) => sum + d.features.emotionalWordCount, 0) / emotionData.length,
+      exclamationCount: emotionData.reduce((sum: number, d: TrainingData) => sum + d.features.exclamationCount, 0) / emotionData.length,
+      capsRatio: emotionData.reduce((sum: number, d: TrainingData) => sum + d.features.capsRatio, 0) / emotionData.length
     };
 
     return { avgFeatures, count: emotionData.length };

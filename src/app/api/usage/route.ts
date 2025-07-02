@@ -24,7 +24,7 @@ const MONTHLY_LIMITS: TierLimits = {
 // GET /api/usage - Get current usage for user
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await createClient();
+    const supabase = createClient(cookies());
     const { data: { session } } = await supabase.auth.getSession();
     
     if (!session) {
@@ -77,7 +77,7 @@ export async function GET(request: NextRequest) {
 // POST /api/usage - Track new usage
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient();
+    const supabase = createClient(cookies());
     const { data: { session } } = await supabase.auth.getSession();
     
     if (!session) {

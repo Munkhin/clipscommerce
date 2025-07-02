@@ -5,7 +5,7 @@
 import { Platform, ScanResult, ScanOptions, PostMetrics, ScanStatus } from './types';
 import { EnhancedScannerService } from './EnhancedScannerService';
 import { EventEmitter } from 'events';
-import { Platform as DeliverablePlatform } from '../../deliverables/types/deliverables_types';
+import { Platform as DeliverablePlatform } from '@/app/workflows/deliverables/types/deliverables_types';
 
 export class ScannerServiceAdapter {
   private readonly enhancedService: EnhancedScannerService;

@@ -1,6 +1,16 @@
 import { createClient } from '@/lib/supabase/server';
 import { serverStorageService } from './supabase-storage';
 import * as cron from 'node-cron';
+import { createStorageError, extractErrorMessage, logError, isError } from '@/lib/errors/errorHandling';
+
+interface FileMetadata {
+  id: string;
+  bucket_id: string;
+  file_path: string;
+  file_size: number;
+  expires_at?: string;
+  created_at: string;
+}
 
 export class StorageCleanupService {
   private async getSupabase() {
@@ -19,7 +29,7 @@ export class StorageCleanupService {
 
     try {
       if (!this.supabase) {
-        this.supabase = await createClient();
+        this.supabase = await createClient(cookies());
       }
       // Get all expired files
       const supabase = await this.getSupabase();
@@ -30,7 +40,9 @@ export class StorageCleanupService {
         .lt('expires_at', new Date().toISOString());
 
       if (error) {
-        errors.push(`Failed to fetch expired files: ${error instanceof Error ? error.message : String(error)}`);
+        const storageError = createStorageError(error, 'cleanup', undefined, undefined, { operation: 'fetch_expired' });
+        logError(storageError);
+        errors.push(`Failed to fetch expired files: ${storageError.message}`);
         return { totalCleaned: 0, errors };
       }
 
@@ -39,49 +51,57 @@ export class StorageCleanupService {
       }
 
       // Group files by bucket for efficient deletion
-      const filesByBucket = expiredFiles.reduce((acc: Record<string, any[]>, file: any) => {
+      const filesByBucket = expiredFiles.reduce((acc: Record<string, FileMetadata[]>, file: FileMetadata) => {
         if (!acc[file.bucket_id]) {
           acc[file.bucket_id] = [];
         }
         acc[file.bucket_id].push(file);
         return acc;
-      }, {} as Record<string, any[]>);
+      }, {} as Record<string, FileMetadata[]>);
 
       // Delete files from each bucket
       for (const [bucketId, files] of Object.entries(filesByBucket)) {
         try {
           // Delete from storage
-          const filePaths = (files as any[]).map((f: any) => f.file_path);
+          const filePaths = files.map((f: FileMetadata) => f.file_path);
           const { error: storageError } = await supabase.storage
             .from(bucketId)
             .remove(filePaths);
 
           if (storageError) {
-            errors.push(`Failed to delete files from bucket ${bucketId}: ${storageError instanceof Error ? storageError.message : String(storageError)}`);
+            const cleanupError = createStorageError(storageError, 'cleanup', bucketId, filePaths.join(', '));
+            logError(cleanupError);
+            errors.push(`Failed to delete files from bucket ${bucketId}: ${cleanupError.message}`);
             continue;
           }
 
           // Delete metadata
-          const fileIds = (files as any[]).map((f: any) => f.id);
+          const fileIds = files.map((f: FileMetadata) => f.id);
           const { error: metadataError } = await supabase
             .from('file_metadata')
             .delete()
             .in('id', fileIds);
 
           if (metadataError) {
-            errors.push(`Failed to delete metadata for bucket ${bucketId}: ${metadataError instanceof Error ? metadataError.message : String(metadataError)}`);
+            const cleanupError = createStorageError(metadataError, 'cleanup', bucketId, undefined, { operation: 'delete_metadata' });
+            logError(cleanupError);
+            errors.push(`Failed to delete metadata for bucket ${bucketId}: ${cleanupError.message}`);
             continue;
           }
 
-          totalCleaned += (files as any[]).length;
-          console.log(`Cleaned up ${(files as any[]).length} expired files from bucket ${bucketId}`);
+          totalCleaned += files.length;
+          console.log(`Cleaned up ${files.length} expired files from bucket ${bucketId}`);
         } catch (error) {
-          errors.push(`Error processing bucket ${bucketId}: ${error instanceof Error ? error.message : String(error)}`);
+          const storageError = createStorageError(error, 'cleanup', bucketId);
+          logError(storageError);
+          errors.push(`Error processing bucket ${bucketId}: ${storageError.message}`);
         }
       }
 
     } catch (error) {
-      errors.push(`General cleanup error: ${error instanceof Error ? error.message : String(error)}`);
+      const storageError = createStorageError(error, 'cleanup');
+      logError(storageError);
+      errors.push(`General cleanup error: ${storageError.message}`);
     }
 
     return { totalCleaned, errors };
@@ -98,9 +118,7 @@ export class StorageCleanupService {
     let totalCleaned = 0;
     const buckets = ['avatars', 'videos', 'thumbnails', 'documents', 'temp'];
 
-    if (!this.supabase) {
-      this.supabase = await createClient();
-    }
+    const supabase = await this.getSupabase();
 
     for (const bucketId of buckets) {
       try {
@@ -111,7 +129,9 @@ export class StorageCleanupService {
           .list('', { limit: 1000 });
 
         if (storageError) {
-          errors.push(`Failed to list files in bucket ${bucketId}: ${storageError instanceof Error ? storageError.message : String(storageError)}`);
+          const cleanupError = createStorageError(storageError, 'list', bucketId);
+          logError(cleanupError);
+          errors.push(`Failed to list files in bucket ${bucketId}: ${cleanupError.message}`);
           continue;
         }
 
@@ -126,20 +146,22 @@ export class StorageCleanupService {
           .eq('bucket_id', bucketId);
 
         if (metadataError) {
-          errors.push(`Failed to get metadata for bucket ${bucketId}: ${metadataError instanceof Error ? metadataError.message : String(metadataError)}`);
+          const cleanupError = createStorageError(metadataError, 'list', bucketId, undefined, { operation: 'fetch_metadata' });
+          logError(cleanupError);
+          errors.push(`Failed to get metadata for bucket ${bucketId}: ${cleanupError.message}`);
           continue;
         }
 
-        const metadataPaths = new Set(metadataFiles?.map((f: any) => f.file_path) || []);
+        const metadataPaths = new Set(metadataFiles?.map((f: {file_path: string}) => f.file_path) || []);
         
         // Find orphaned files (in storage but not in metadata)
-        const orphanedFiles = storageFiles?.filter((file: any) => {
+        const orphanedFiles = storageFiles?.filter((file: {name: string}) => {
           const filePath = file.name;
           return !metadataPaths.has(filePath) && !file.name.endsWith('/'); // Exclude folders
         }) || [];
 
         if (orphanedFiles.length > 0) {
-          const orphanedPaths = orphanedFiles.map((f: any) => f.name);
+          const orphanedPaths = orphanedFiles.map((f: {name: string}) => f.name);
           
           // Delete orphaned files
           const { error: deleteError } = await supabase.storage
@@ -147,7 +169,9 @@ export class StorageCleanupService {
             .remove(orphanedPaths);
 
           if (deleteError) {
-            errors.push(`Failed to delete orphaned files from bucket ${bucketId}: ${deleteError instanceof Error ? deleteError.message : String(deleteError)}`);
+            const cleanupError = createStorageError(deleteError, 'delete', bucketId, orphanedPaths.join(', '));
+            logError(cleanupError);
+            errors.push(`Failed to delete orphaned files from bucket ${bucketId}: ${cleanupError.message}`);
           } else {
             totalCleaned += orphanedFiles.length;
             console.log(`Cleaned up ${orphanedFiles.length} orphaned files from bucket ${bucketId}`);
@@ -155,7 +179,9 @@ export class StorageCleanupService {
         }
 
       } catch (error) {
-        errors.push(`Error processing orphaned files in bucket ${bucketId}: ${error instanceof Error ? error.message : String(error)}`);
+        const storageError = createStorageError(error, 'cleanup', bucketId, undefined, { operation: 'orphaned_files' });
+        logError(storageError);
+        errors.push(`Error processing orphaned files in bucket ${bucketId}: ${storageError.message}`);
       }
     }
 
@@ -174,7 +200,7 @@ export class StorageCleanupService {
 
     try {
       if (!this.supabase) {
-        this.supabase = await createClient();
+        this.supabase = await createClient(cookies());
       }
 
       const cutoffDate = new Date();
@@ -190,7 +216,9 @@ export class StorageCleanupService {
         .eq('bucket_id', 'temp'); // Only clean temp files
 
       if (error) {
-        errors.push(`Failed to fetch large old files: ${error instanceof Error ? error.message : String(error)}`);
+        const storageError = createStorageError(error, 'cleanup', 'temp', undefined, { operation: 'fetch_large_files' });
+        logError(storageError);
+        errors.push(`Failed to fetch large old files: ${storageError.message}`);
         return { totalCleaned: 0, errors };
       }
 
@@ -204,14 +232,18 @@ export class StorageCleanupService {
           await serverStorageService.deleteFile(file.bucket_id as any, file.file_path);
           totalCleaned++;
         } catch (error) {
-          errors.push(`Failed to delete large file ${file.file_path}: ${error instanceof Error ? error.message : String(error)}`);
+          const storageError = createStorageError(error, 'delete', file.bucket_id, file.file_path);
+          logError(storageError);
+          errors.push(`Failed to delete large file ${file.file_path}: ${storageError.message}`);
         }
       }
 
       console.log(`Cleaned up ${totalCleaned} large old files`);
 
     } catch (error) {
-      errors.push(`General large file cleanup error: ${error instanceof Error ? error.message : String(error)}`);
+      const storageError = createStorageError(error, 'cleanup', undefined, undefined, { operation: 'large_files' });
+      logError(storageError);
+      errors.push(`General large file cleanup error: ${storageError.message}`);
     }
 
     return { totalCleaned, errors };
@@ -229,7 +261,7 @@ export class StorageCleanupService {
   }> {
     try {
       if (!this.supabase) {
-        this.supabase = await createClient();
+        this.supabase = await createClient(cookies());
       }
 
       // Get all file metadata
@@ -239,7 +271,9 @@ export class StorageCleanupService {
         .select('bucket_id, file_size, expires_at');
 
       if (error) {
-        throw new Error(`Failed to get file stats: ${error instanceof Error ? error.message : String(error)}`);
+        const storageError = createStorageError(error, 'stats');
+        logError(storageError);
+        throw storageError;
       }
 
       const stats = {
@@ -252,10 +286,10 @@ export class StorageCleanupService {
 
       if (allFiles) {
         stats.totalFiles = allFiles.length;
-        stats.totalSize = allFiles.reduce((sum: number, file: any) => sum + file.file_size, 0);
+        stats.totalSize = allFiles.reduce((sum: number, file: FileMetadata) => sum + file.file_size, 0);
 
         // Group by bucket
-        allFiles.forEach((file: any) => {
+        allFiles.forEach((file: FileMetadata) => {
           const bucket = file.bucket_id;
           if (!stats.byBucket[bucket]) {
             stats.byBucket[bucket] = { count: 0, size: 0 };
@@ -277,7 +311,9 @@ export class StorageCleanupService {
 
       return stats;
     } catch (error) {
-      throw new Error(`Failed to calculate storage stats: ${error instanceof Error ? error.message : String(error)}`);
+      const storageError = createStorageError(error, 'stats');
+      logError(storageError);
+      throw storageError;
     }
   }
 
@@ -335,7 +371,9 @@ export class StorageCleanupService {
       try {
         await this.runFullCleanup();
       } catch (error) {
-        console.error('Scheduled cleanup failed:', error);
+        const storageError = createStorageError(error, 'cleanup', undefined, undefined, { scheduled: true });
+        logError(storageError);
+        console.error('Scheduled cleanup failed:', storageError.message);
       }
     });
 
@@ -345,7 +383,9 @@ export class StorageCleanupService {
       try {
         await this.cleanupExpiredFiles();
       } catch (error) {
-        console.error('Scheduled expired files cleanup failed:', error);
+        const storageError = createStorageError(error, 'cleanup', undefined, undefined, { scheduled: true, operation: 'expired_files' });
+        logError(storageError);
+        console.error('Scheduled expired files cleanup failed:', storageError.message);
       }
     });
 

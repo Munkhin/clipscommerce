@@ -299,7 +299,7 @@ export class EnhancedTextAnalyzer {
         if (this.cache.has(cacheKey)) {
           this.metrics.increment('cacheHits');
           const cachedResult = await this.cache.getOrCompute(cacheKey, async () => {
-            throw new Error('Should not get here - cache hit already verified');
+            throw new TextAnalyzerError('Internal logic error: Cache hit verification failed', 'INTERNAL_CACHE_ERROR');
           });
           results.push(cachedResult);
           continue;

@@ -14,7 +14,7 @@ jest.mock('../services/AIImprovementService', () => {
       getContentOptimization: jest.fn().mockResolvedValue({
         sentiment: { sentiment: 'neutral', score: 0, confidence: 0.5, emotions: {}, keywords: [] },
         tone: { tone: 'neutral', confidence: 0.5, characteristics: [] },
-        optimization: { originalText: '', optimizedText: '', improvements: ['mock improvement'], expectedEngagementIncrease: 10, platform: Platform.TIKTOK },
+        optimization: { originalText: '', optimizedText: '', improvements: ['mock improvement'], expectedEngagementIncrease: 10, platform: 'tiktok' },
         captionVariations: [],
         hashtagRecommendations: [],
         aiSuggestions: [],
@@ -29,7 +29,7 @@ describe('ContentOptimizationAgent', () => {
   let PlatformEnum: any; 
 
   beforeEach(async () => { // Made async for dynamic import
-    PlatformEnum = (await import('../../deliverables/types/deliverables_types')).Platform;
+    PlatformEnum = (await import('@/app/workflows/deliverables/types/deliverables_types')).Platform;
     agent = new ContentOptimizationAgent();
     jest.clearAllMocks();
   });

@@ -5,7 +5,7 @@ import { URL } from 'url';
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient();
+    const supabase = createClient(cookies());
 
     // Check authentication
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await createClient();
+    const supabase = createClient(cookies());
 
     // Check authentication
     const { data: { user }, error: authError } = await supabase.auth.getUser();

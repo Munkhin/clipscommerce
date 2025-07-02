@@ -17,7 +17,7 @@ const startTrainingSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient();
+    const supabase = createClient(cookies());
     
     // Verify authentication
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -93,7 +93,7 @@ export async function POST(request: NextRequest) {
 }
 
 async function assessTrainingDataQuality(userId: string, platforms: string[]) {
-  const supabase = await createClient();
+  const supabase = createClient(cookies());
   
   let totalPosts = 0;
   let validPosts = 0;
@@ -196,7 +196,7 @@ async function assessTrainingDataQuality(userId: string, platforms: string[]) {
 }
 
 async function startTrainingProcess(sessionId: string, userId: string, config: z.infer<typeof startTrainingSchema>) {
-  const supabase = await createClient();
+  const supabase = createClient(cookies());
 
   try {
     // Update status to collecting_data
@@ -242,7 +242,7 @@ async function startTrainingProcess(sessionId: string, userId: string, config: z
 }
 
 async function updateTrainingProgress(sessionId: string, status: string, progress: number, phase: string) {
-  const supabase = await createClient();
+  const supabase = createClient(cookies());
   
   await supabase
     .from('model_training_sessions')
@@ -256,7 +256,7 @@ async function updateTrainingProgress(sessionId: string, status: string, progres
 }
 
 async function storeTrainedModel(userId: string, modelType: string, platforms: string[], sessionId: string) {
-  const supabase = await createClient();
+  const supabase = createClient(cookies());
   
   // Mock model performance metrics
   const mockMetrics = {
@@ -315,7 +315,7 @@ function calculateEstimatedDuration(totalPosts: number, modelCount: number): str
 // GET endpoint to check training status
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await createClient();
+    const supabase = createClient(cookies());
     const { searchParams } = new URL(request.url);
     const sessionId = searchParams.get('session_id');
 

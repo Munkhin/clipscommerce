@@ -2,6 +2,7 @@ import { SupabaseClient } from '@supabase/supabase-js';
 import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
 import { PostMetrics } from '@/types/schedule';
 import { EventEmitter } from 'events';
+import { extractErrorMessage } from '@/lib/errors/errorHandling';
 
 export interface EngagementFeatures {
   // Content features
@@ -125,8 +126,8 @@ export class EngagementPredictionTrainer extends EventEmitter {
       this.emit('progress', { phase: 'data_loading', progress: 100, message: `Loaded ${this.trainingData.length} training samples` });
       this.emit('dataLoaded', { sampleCount: this.trainingData.length });
 
-    } catch (error: any) {
-      this.emit('error', { phase: 'data_loading', error: error.message });
+    } catch (error: unknown) {
+      this.emit('error', { phase: 'data_loading', error: extractErrorMessage(error) });
       throw error;
     }
   }
@@ -224,8 +225,8 @@ export class EngagementPredictionTrainer extends EventEmitter {
         testSize: testData.length
       });
 
-    } catch (error: any) {
-      this.emit('error', { phase: 'training', error: error.message });
+    } catch (error: unknown) {
+      this.emit('error', { phase: 'training', error: extractErrorMessage(error) });
       throw error;
     } finally {
       this.isTraining = false;

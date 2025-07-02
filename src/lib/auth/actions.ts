@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import logger from '@/utils/logger';
+import { createAuthError, extractErrorMessage, logError, isError } from '@/lib/errors/errorHandling';
 
 type ActionResult = {
   error?: string;
@@ -24,7 +25,7 @@ export const signUpAction = async (prevState: unknown, formData: FormData): Prom
     return { error: "Password must be at least 6 characters long" };
   }
 
-  const supabase = createClient();
+  const supabase = createClient(cookies());
   
   try {
     // First, sign up the user with Supabase Auth
@@ -41,7 +42,9 @@ export const signUpAction = async (prevState: unknown, formData: FormData): Prom
     });
 
     if (signUpError) {
-      return { error: signUpError instanceof Error ? signUpError.message : String(signUpError) };
+      const authError = createAuthError(signUpError, 'signup', undefined, email);
+      logError(authError);
+      return { error: authError.message };
     }
 
     // If we have a user, ensure their profile is created
@@ -55,7 +58,9 @@ export const signUpAction = async (prevState: unknown, formData: FormData): Prom
         });
 
       if (profileError) {
-        logger.error('Error creating user profile', profileError as Error, {
+        const authError = createAuthError(profileError, 'signup', authData.user.id, authData.user.email);
+        logError(authError);
+        logger.error('Error creating user profile', isError(profileError) ? profileError : new Error(extractErrorMessage(profileError)), {
           userId: authData.user.id,
           email: authData.user.email,
         });
@@ -69,12 +74,15 @@ export const signUpAction = async (prevState: unknown, formData: FormData): Prom
       data: authData 
     };
   } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : "An error occurred during sign up";
-    logger.error('Signup error', error as Error, {
+    const authError = createAuthError(error, 'signup', undefined, email, {
+      hasFullName: Boolean(fullName)
+    });
+    logError(authError);
+    logger.error('Signup error', isError(error) ? error : new Error(extractErrorMessage(error)), {
       email,
       hasFullName: Boolean(fullName),
     });
-    return { error: errorMessage };
+    return { error: authError.message };
   }
 };
 
@@ -86,7 +94,7 @@ export const signInAction = async (prevState: unknown, formData: FormData): Prom
     return { error: "Email and password are required" };
   }
 
-  const supabase = createClient();
+  const supabase = createClient(cookies());
   
   try {
     const { error } = await supabase.auth.signInWithPassword({
@@ -95,13 +103,16 @@ export const signInAction = async (prevState: unknown, formData: FormData): Prom
     });
 
     if (error) {
-      return { error: error instanceof Error ? error.message : String(error) };
+      const authError = createAuthError(error, 'signin', undefined, email);
+      logError(authError);
+      return { error: authError.message };
     }
 
     return { success: true };
   } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : "An error occurred during sign in";
-    return { error: errorMessage };
+    const authError = createAuthError(error, 'signin', undefined, email);
+    logError(authError);
+    return { error: authError.message };
   }
 };
 
@@ -112,7 +123,7 @@ export const forgotPasswordAction = async (prevState: unknown, formData: FormDat
     return { error: "Email is required" };
   }
 
-  const supabase = createClient();
+  const supabase = createClient(cookies());
   
   try {
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
@@ -120,13 +131,16 @@ export const forgotPasswordAction = async (prevState: unknown, formData: FormDat
     });
 
     if (error) {
-      return { error: error instanceof Error ? error.message : String(error) };
+      const authError = createAuthError(error, 'reset', undefined, email);
+      logError(authError);
+      return { error: authError.message };
     }
 
     return { success: true };
   } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : "An error occurred";
-    return { error: errorMessage };
+    const authError = createAuthError(error, 'reset', undefined, email);
+    logError(authError);
+    return { error: authError.message };
   }
 };
 
@@ -151,7 +165,7 @@ export const resetPasswordAction = async (prevState: unknown, formData: FormData
     return { error: "Invalid or expired reset token" };
   }
 
-  const supabase = createClient();
+  const supabase = createClient(cookies());
   
   try {
     // First verify the token
@@ -175,32 +189,36 @@ export const resetPasswordAction = async (prevState: unknown, formData: FormData
 
     return { success: true };
   } catch (error: unknown) {
-    console.error("Error resetting password:", error);
-    const errorMessage = error instanceof Error ? error.message : "An error occurred while resetting your password. Please try again.";
+    const authError = createAuthError(error, 'reset', undefined, undefined, { token: Boolean(token) });
+    logError(authError);
+    console.error("Error resetting password:", authError);
     return { 
-      error: errorMessage
+      error: authError.message || "An error occurred while resetting your password. Please try again."
     };
   }
 };
 
 export const signOutAction = async (): Promise<ActionResult> => {
-  const supabase = createClient();
+  const supabase = createClient(cookies());
   
   try {
     const { error } = await supabase.auth.signOut();
     if (error) {
-      return { error: error instanceof Error ? error.message : String(error) };
+      const authError = createAuthError(error, 'signout');
+      logError(authError);
+      return { error: authError.message };
     }
     return { success: true };
   } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : "An error occurred during sign out";
-    return { error: errorMessage };
+    const authError = createAuthError(error, 'signout');
+    logError(authError);
+    return { error: authError.message };
   }
 };
 
 export const checkUserSubscription = async (userId: string): Promise<boolean> => {
   // Placeholder implementation - replace with actual subscription check logic
-  const supabase = createClient();
+  const supabase = createClient(cookies());
   
   try {
     // Check if user has an active subscription
@@ -211,13 +229,17 @@ export const checkUserSubscription = async (userId: string): Promise<boolean> =>
       .single();
     
     if (error) {
-      logger.error('Error checking subscription status', error as Error, { userId });
+      const authError = createAuthError(error, 'verify', userId);
+      logError(authError);
+      logger.error('Error checking subscription status', isError(error) ? error : new Error(extractErrorMessage(error)), { userId });
       return false;
     }
     
     return data?.subscription_status === 'active';
   } catch (error: unknown) {
-    logger.error('Error checking user subscription', error as Error, { userId });
+    const authError = createAuthError(error, 'verify', userId);
+    logError(authError);
+    logger.error('Error checking user subscription', isError(error) ? error : new Error(extractErrorMessage(error)), { userId });
     return false;
   }
 };

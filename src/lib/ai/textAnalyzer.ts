@@ -101,7 +101,7 @@ const withRetry = async <T>(
     try {
       return await fn();
     } catch (error: any) {
-      lastError = error;
+      lastError = error instanceof Error ? error : new Error(String(error));
       
       if (!isRetryableError(error) || attempt === config.maxRetries) {
         break;
@@ -120,7 +120,7 @@ const withRetry = async <T>(
     }
   }
   
-  throw lastError;
+  throw lastError || new Error('Unknown error in withRetry');
 };
 
 // Interfaces for text analysis results
@@ -636,7 +636,7 @@ export class TextAnalyzer {
       try {
         return await fn();
       } catch (error) {
-        lastError = error as Error;
+        lastError = error instanceof Error ? error : new Error(String(error));
         
         // Don't retry on 4xx errors (except 429 - Too Many Requests)
         const status = (error as any).status;

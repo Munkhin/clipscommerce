@@ -1,6 +1,7 @@
 import { SupabaseClient } from '@supabase/supabase-js';
-import { Platform, PlatformEnum } from '../../../deliverables/types/deliverables_types';
+import { Platform, PlatformEnum } from '@/app/workflows/deliverables/types/deliverables_types';
 import { EventEmitter } from 'events';
+import { createTrainingError, extractErrorMessage, logError, isError } from '@/lib/errors/errorHandling';
 
 export interface ContentFeatures {
   // Original content
@@ -172,10 +173,11 @@ export class ContentOptimizationTrainer extends EventEmitter {
       this.emit('progress', { phase: 'data_loading', progress: 100, message: `Loaded ${this.trainingData.length} optimization samples` });
       this.emit('dataLoaded', { sampleCount: this.trainingData.length });
 
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      this.emit('error', { phase: 'data_loading', error: errorMessage });
-      throw error;
+    } catch (error: unknown) {
+      const structuredError = createTrainingError(error, 'data_loading', 50);
+      logError(structuredError, { userId, platforms, lookbackDays });
+      this.emit('error', { phase: 'data_loading', error: structuredError.message });
+      throw structuredError;
     }
   }
 
@@ -270,10 +272,11 @@ export class ContentOptimizationTrainer extends EventEmitter {
         trainingSize: this.trainingData.length
       });
 
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      this.emit('error', { phase: 'training', error: errorMessage });
-      throw error;
+    } catch (error: unknown) {
+      const structuredError = createTrainingError(error, 'training', this.isTraining ? 50 : 0);
+      logError(structuredError, { trainingDataSize: this.trainingData.length });
+      this.emit('error', { phase: 'training', error: structuredError.message });
+      throw structuredError;
     } finally {
       this.isTraining = false;
     }
@@ -446,7 +449,7 @@ export class ContentOptimizationTrainer extends EventEmitter {
     const platformPatterns = this.model.hashtagOptimizer.platformPatterns.get(platform) || [];
     
     // Remove low-performing hashtags
-    const goodHashtags = hashtags.filter(tag => {
+    const goodHashtags = hashtags.filter((tag: string) => {
       const perf = performance.get(tag);
       return !perf || perf.avgEngagement > 0;
     });
@@ -707,7 +710,7 @@ export class ContentOptimizationTrainer extends EventEmitter {
   private analyzePlatformSpecificTiming(): Map<Platform, any> {
     const platformTiming = new Map<Platform, any>();
     
-    [Platform.TIKTOK, Platform.INSTAGRAM, Platform.YOUTUBE].forEach(platform => {
+    ['tiktok', 'instagram', 'youtube'].forEach(platform => {
       const platformData = this.trainingData.filter(data => data.features.platform === platform);
       const timeAnalysis = new Map<number, number[]>();
       

@@ -87,49 +87,49 @@ function withLazyLoading<C extends React.ComponentType<any>>(
 
 // Lazy-loaded components
 export const LazyClientImportWizard = withLazyLoading(
-  () => import('../team-dashboard/ClientImportWizard').then(m => ({ default: m.ClientImportWizard })),
+  () => import('../team-dashboard/ClientImportWizard'),
   <GenericSkeleton title="Loading Import Wizard..." rows={5} />,
   'LazyClientImportWizard'
 );
 
 export const LazyWorkflowTemplateManager = withLazyLoading(
-  () => import('../team-dashboard/WorkflowTemplateManager').then(m => ({ default: m.WorkflowTemplateManager })),
+  () => import('../team-dashboard/WorkflowTemplateManager'),
   <GenericSkeleton title="Loading Workflow Manager..." rows={4} />,
   'LazyWorkflowTemplateManager'
 );
 
 export const LazyPerformanceMonitoringDashboard = withLazyLoading(
-  () => import('../team-dashboard/PerformanceMonitoringDashboard').then(m => ({ default: m.PerformanceMonitoringDashboard })),
+  () => import('../team-dashboard/PerformanceMonitoringDashboard'),
   <ChartSkeleton />,
   'LazyPerformanceMonitoringDashboard'
 );
 
 export const LazyTeamAnalyticsOverview = withLazyLoading(
-  () => import('../team-dashboard/TeamAnalyticsOverview').then(m => ({ default: m.TeamAnalyticsOverview })),
+  () => import('../team-dashboard/TeamAnalyticsOverview'),
   <DashboardSkeleton />,
   'LazyTeamAnalyticsOverview'
 );
 
 export const LazyBulkOperationsPanel = withLazyLoading(
-  () => import('../team-dashboard/BulkOperationsPanel').then(m => ({ default: m.BulkOperationsPanel })),
+  () => import('../team-dashboard/BulkOperationsPanel'),
   <GenericSkeleton title="Loading Bulk Operations..." rows={6} />,
   'LazyBulkOperationsPanel'
 );
 
 export const LazyAdvancedClientFilters = withLazyLoading(
-  () => import('../team-dashboard/AdvancedClientFilters').then(m => ({ default: m.AdvancedClientFilters })),
+  () => import('../team-dashboard/AdvancedClientFilters'),
   <GenericSkeleton title="Loading Filters..." rows={3} />,
   'LazyAdvancedClientFilters'
 );
 
 export const LazyClientDetailView = withLazyLoading(
-  () => import('../team-dashboard/ClientDetailView').then(m => ({ default: m.ClientDetailView })),
+  () => import('../team-dashboard/ClientDetailView'),
   <GenericSkeleton title="Loading Client Details..." rows={8} />,
   'LazyClientDetailView'
 );
 
 export const LazyWorkflowScheduler = withLazyLoading(
-  () => import('../team-dashboard/WorkflowScheduler').then(m => ({ default: m.WorkflowScheduler })),
+  () => import('../team-dashboard/WorkflowScheduler'),
   <GenericSkeleton title="Loading Scheduler..." rows={5} />,
   'LazyWorkflowScheduler'
 );

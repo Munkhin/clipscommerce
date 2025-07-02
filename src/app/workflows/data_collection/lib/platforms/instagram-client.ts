@@ -3,7 +3,7 @@
 
 import { BasePlatformClient, HeaderValue, Post, Analytics } from './base-platform';
 import { ApiConfig, ApiResponse, PlatformPostMetrics, PlatformUserActivity, ApiRateLimit } from './types';
-import { Platform, PlatformEnum } from '../../../deliverables/types/deliverables_types';
+import { Platform, PlatformEnum } from '@/app/workflows/deliverables/types/deliverables_types';
 import { IAuthTokenManager } from '../auth.types';
 import { ApiError, PlatformError, RateLimitError } from '../utils/errors';
 
@@ -18,7 +18,7 @@ export class InstagramClient extends BasePlatformClient {
     }
   };
 
-  constructor(config: Partial<ApiConfig>, authTokenManager: IAuthTokenManager, userId?: string) {
+  constructor(config: ApiConfig, authTokenManager: IAuthTokenManager, userId?: string) {
     super({ ...InstagramClient.DEFAULT_CONFIG, ...config }, authTokenManager, userId);
   }
 
@@ -189,6 +189,32 @@ export class InstagramClient extends BasePlatformClient {
   // Implementation of abstract methods from BasePlatformClient
 
   /**
+   * Upload content to Instagram (implements BasePlatformClient abstract method)
+   */
+  async uploadContent(content: any): Promise<Post> {
+    try {
+      this.log('info', 'Uploading content to Instagram', content);
+      
+      // Use the comprehensive upload method and transform the response
+      const result = await this.uploadContentComprehensive(content);
+      if (result.error || !result.data) {
+        throw new Error(result.error?.message || 'Failed to upload content');
+      }
+
+      return {
+        id: result.data.id,
+        platform: this.platform.toString(),
+        content: content.description || content.title || '',
+        mediaUrl: content.mediaUrl,
+        publishedAt: new Date()
+      };
+    } catch (error: any) {
+      this.log('error', 'Failed to upload content to Instagram', error);
+      throw error;
+    }
+  }
+
+  /**
    * Fetch posts from Instagram
    */
   async fetchPosts(query: string): Promise<Post[]> {
@@ -246,9 +272,9 @@ export class InstagramClient extends BasePlatformClient {
   }
 
   /**
-   * Upload content to Instagram
+   * Upload content to Instagram (comprehensive version)
    */
-  public async uploadContent(content: {
+  public async uploadContentComprehensive(content: {
     title?: string;
     description?: string;
     mediaUrl?: string;

@@ -30,7 +30,7 @@ export default function ReportsPage() {
       const result = await reportsService.getFullReport(
         {
           userId: 'test-user-id', // Replace with actual user ID
-          platform: platform as "TikTok" | "Instagram" | "YouTube" | "Facebook" | "Twitter" | "LinkedIn",
+          platform: platform as "tiktok" | "instagram" | "youtube" | "facebook" | "twitter" | "linkedin",
           timeRange: {
             start: dateRange.from.toISOString(),
             end: dateRange.to.toISOString(),

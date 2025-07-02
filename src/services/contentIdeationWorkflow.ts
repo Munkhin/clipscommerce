@@ -1,6 +1,6 @@
 import { generateContent, GenerateContentResponse } from './contentGeneration';
 import { getCompetitorTactics } from './competitorTactics';
-import { Platform } from '../app/workflows/deliverables/types/deliverables_types';
+import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
 import { v4 as uuidv4 } from 'uuid';
 
 interface IdeationContentDetails {

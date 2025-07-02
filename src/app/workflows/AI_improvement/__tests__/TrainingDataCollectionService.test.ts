@@ -1,5 +1,5 @@
 import { TrainingDataCollectionService, DataCollectionConfig } from '../training/DataCollectionService';
-import { Platform } from '../../deliverables/types/deliverables_types';
+import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
 import { PostMetrics } from '../../data_analysis/types/analysis_types';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { EnhancedScannerService } from '../../data_collection/functions/EnhancedScannerService';

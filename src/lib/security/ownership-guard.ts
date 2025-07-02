@@ -34,7 +34,7 @@ export async function verifyResourceOwnership(
   } = options;
 
   try {
-    const supabase = await createClient();
+    const supabase = createClient(cookies());
 
     // Get user profile for role and team information
     const { data: profile, error: profileError } = await supabase
@@ -44,7 +44,7 @@ export async function verifyResourceOwnership(
       .single();
 
     if (profileError) {
-      logger.error('Failed to fetch user profile for ownership check', profileError as Error, {
+      logger.error('Failed to fetch user profile for ownership check', profileError instanceof Error ? profileError : new Error(String(profileError)), {
         userId: user.id,
         resourceId,
         table
@@ -82,7 +82,7 @@ export async function verifyResourceOwnership(
         };
       }
       
-      logger.error('Database error during ownership check', resourceError as Error, {
+      logger.error('Database error during ownership check', resourceError instanceof Error ? resourceError : new Error(String(resourceError)), {
         userId: user.id,
         resourceId,
         table
@@ -124,8 +124,8 @@ export async function verifyResourceOwnership(
       )
     };
 
-  } catch (error) {
-    logger.error('Ownership verification error', error as Error, {
+  } catch (error: unknown) {
+    logger.error('Ownership verification error', error instanceof Error ? error : new Error(String(error)), {
       userId: user.id,
       resourceId,
       table

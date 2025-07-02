@@ -8,7 +8,7 @@ import { createClient } from '@/lib/supabase/server';
 // Auth-related actions
 export async function signOut() {
   const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+  const supabase = await createClient(cookieStore);
   
   const { error } = await supabase.auth.signOut();
   
@@ -21,7 +21,7 @@ export async function signOut() {
 
 export async function getCurrentUser() {
   const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+  const supabase = await createClient(cookieStore);
   
   const { data: { user }, error } = await supabase.auth.getUser();
   
@@ -36,7 +36,7 @@ export async function getCurrentUser() {
 // Profile-related actions
 export async function updateProfile(formData: FormData) {
   const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+  const supabase = await createClient(cookieStore);
   
   const { data: { user } } = await supabase.auth.getUser();
   
@@ -66,7 +66,7 @@ export async function updateProfile(formData: FormData) {
 // Subscription-related actions
 export async function getSubscriptionStatus() {
   const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+  const supabase = await createClient(cookieStore);
   
   const { data: { user } } = await supabase.auth.getUser();
   
@@ -86,7 +86,7 @@ export async function getSubscriptionStatus() {
 // Content-related actions
 export async function saveContent(formData: FormData) {
   const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+  const supabase = await createClient(cookieStore);
   
   const { data: { user } } = await supabase.auth.getUser();
   
@@ -118,7 +118,7 @@ export async function saveContent(formData: FormData) {
 // Settings-related actions
 export async function updateSettings(formData: FormData) {
   const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+  const supabase = await createClient(cookieStore);
   
   const { data: { user } } = await supabase.auth.getUser();
   
@@ -151,7 +151,7 @@ export async function updateSettings(formData: FormData) {
 // Social credentials actions
 export async function saveSocialCredentials(formData: FormData) {
   const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+  const supabase = await createClient(cookieStore);
   
   const { data: { user } } = await supabase.auth.getUser();
   

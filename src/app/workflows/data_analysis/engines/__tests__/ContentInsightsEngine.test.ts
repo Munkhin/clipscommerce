@@ -68,7 +68,7 @@ describe('ContentInsightsEngine', () => {
     });
 
     it('should handle different platforms consistently', async () => {
-      const platforms = [Platform.TIKTOK, Platform.INSTAGRAM, Platform.YOUTUBE, Platform.LINKEDIN];
+      const platforms = ['tiktok', 'instagram', 'youtube', 'linkedin'];
       
       for (const platform of platforms) {
         const request = { ...mockRequest, platform };
@@ -244,7 +244,7 @@ describe('ContentInsightsEngine', () => {
     });
 
     it('should handle different platforms with consistent structure', async () => {
-      const platforms = [Platform.TIKTOK, Platform.INSTAGRAM, Platform.YOUTUBE, Platform.LINKEDIN];
+      const platforms = ['tiktok', 'instagram', 'youtube', 'linkedin'];
       
       for (const platform of platforms) {
         const request = { ...mockRequest, platform };
@@ -404,7 +404,7 @@ describe('ContentInsightsEngine', () => {
     it('should be ready for analytics API integration', async () => {
       const result = await engine.getDetailedPlatformAnalytics({
         userId: 'analytics-test-user',
-        platform: Platform.YOUTUBE,
+        platform: 'youtube',
         correlationId: 'analytics-test'
       });
 
