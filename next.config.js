@@ -1,5 +1,5 @@
 const path = require('path');
-const { withPlausibleProxy } = require('next-plausible');
+// const { withPlausibleProxy } = require('next-plausible'); // Temporarily disabled
 
 // Safely import bundle analyzer
 let withBundleAnalyzer;
@@ -209,6 +209,7 @@ const nextConfig = {
   },
 };
 
-const optimizedNextConfig = withBundleAnalyzer(withPlausibleProxy()(nextConfig));
+const optimizedNextConfig = withBundleAnalyzer(nextConfig);
+// const optimizedNextConfig = withBundleAnalyzer(withPlausibleProxy()(nextConfig)); // Temporarily disabled
 
 module.exports = optimizedNextConfig;
