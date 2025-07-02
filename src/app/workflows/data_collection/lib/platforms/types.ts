@@ -38,6 +38,8 @@ export interface ApiResponse<T> {
   rateLimit?: ApiRateLimit;
 }
 
+export type HeaderValue = string | number | boolean;
+
 export interface PlatformPostMetrics {
   id: string;
   views: number;

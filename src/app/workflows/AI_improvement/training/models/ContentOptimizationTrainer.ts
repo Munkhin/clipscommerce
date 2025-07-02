@@ -1,5 +1,5 @@
 import { SupabaseClient } from '@supabase/supabase-js';
-import { Platform } from '../../../deliverables/types/deliverables_types';
+import { Platform, PlatformEnum } from '../../../deliverables/types/deliverables_types';
 import { EventEmitter } from 'events';
 
 export interface ContentFeatures {
@@ -122,15 +122,15 @@ export class ContentOptimizationTrainer extends EventEmitter {
     ]);
 
     // Platform-specific hashtag patterns
-    this.hashtagPatterns.set(Platform.TIKTOK, [
+    this.hashtagPatterns.set(PlatformEnum.TIKTOK, [
       '#fyp', '#foryou', '#viral', '#trending', '#tiktok'
     ]);
 
-    this.hashtagPatterns.set(Platform.INSTAGRAM, [
+    this.hashtagPatterns.set(PlatformEnum.INSTAGRAM, [
       '#instagood', '#photooftheday', '#love', '#beautiful', '#happy'
     ]);
 
-    this.hashtagPatterns.set(Platform.YOUTUBE, [
+    this.hashtagPatterns.set(PlatformEnum.YOUTUBE, [
       '#youtube', '#subscribe', '#viral', '#trending'
     ]);
 
@@ -750,12 +750,12 @@ export class ContentOptimizationTrainer extends EventEmitter {
 
   private selectCallToAction(platform: Platform): string {
     const platformCTAs = {
-      [Platform.TIKTOK]: 'Follow for more! 🔥',
-      [Platform.INSTAGRAM]: 'Double tap if you agree! ❤️',
-      [Platform.YOUTUBE]: 'Subscribe for more content!',
-      [Platform.FACEBOOK]: 'Share your thoughts below!',
-      'Twitter': 'Retweet if you agree!',
-      'LinkedIn': 'What are your thoughts on this?'
+      'tiktok': 'Follow for more! 🔥',
+      'instagram': 'Double tap if you agree! ❤️',
+      'youtube': 'Subscribe for more content!',
+      'facebook': 'Share your thoughts below!',
+      'twitter': 'Retweet if you agree!',
+      'linkedin': 'What are your thoughts on this?'
     };
     
     return platformCTAs[platform] || 'Let me know what you think!';
@@ -763,12 +763,12 @@ export class ContentOptimizationTrainer extends EventEmitter {
 
   private getOptimalLength(platform: Platform): number {
     const platformLengths = {
-      [Platform.TIKTOK]: 150,
-      [Platform.INSTAGRAM]: 200,
-      [Platform.YOUTUBE]: 300,
-      [Platform.FACEBOOK]: 250,
-      'Twitter': 280,
-      'LinkedIn': 400
+      'tiktok': 150,
+      'instagram': 200,
+      'youtube': 300,
+      'facebook': 250,
+      'twitter': 280,
+      'linkedin': 400
     };
     
     return platformLengths[platform] || 200;

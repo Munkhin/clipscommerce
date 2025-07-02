@@ -42,7 +42,7 @@ import {
   HardDrive,
   AlertCircle,
   Calendar,
-  FileSize
+  Database
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { BucketName, FileMetadata } from '@/lib/storage/supabase-storage';
@@ -227,7 +227,7 @@ export function FileManager({
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
-                <FileSize className="h-8 w-8 text-green-500" />
+                <Database className="h-8 w-8 text-green-500" />
                 <div>
                   <p className="text-sm text-muted-foreground">Total Size</p>
                   <p className="text-2xl font-bold">{formatBytes(stats.totalSize)}</p>

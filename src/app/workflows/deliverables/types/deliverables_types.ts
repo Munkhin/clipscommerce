@@ -1,10 +1,12 @@
-// Platform types for social media platforms
-export type Platform = 'TIKTOK' | 'INSTAGRAM' | 'YOUTUBE';
+// Re-export the standardized platform types
+export { Platform, PlatformEnum, PlatformDisplay } from '../../../../types/platform';
 
-export enum PlatformEnum {
-  TIKTOK = 'TIKTOK',
-  INSTAGRAM = 'INSTAGRAM',
-  YOUTUBE = 'YOUTUBE'
+// Legacy enum for backward compatibility - this will be deprecated
+export enum LegacyPlatform {
+  TIKTOK = "TikTok",
+  INSTAGRAM = "Instagram", 
+  FACEBOOK = "Facebook",
+  YOUTUBE = "YouTube",
 }
 
 // Add other stubs as needed

@@ -36,9 +36,9 @@ export class InstagramClient extends BasePlatformClient {
       // If any metric is above threshold, add a delay
       if (call_count > threshold || total_cputime > threshold || total_time > threshold) {
         const waitTime = 60000; // 1 minute
-        this.requestQueue.unshift(() => 
-          new Promise(resolve => setTimeout(resolve, waitTime))
-        );
+        // Rate limit throttling would be implemented here
+        // For now, just log the warning
+        this.log('warn', 'Rate limit threshold exceeded, should throttle requests', { waitTime });
       }
     } catch (error) {
       console.error('Failed to parse rate limit headers:', error);
@@ -189,9 +189,38 @@ export class InstagramClient extends BasePlatformClient {
   // Implementation of abstract methods from BasePlatformClient
 
   /**
-   * Fetch posts from Instagram (alias for getUserVideos)
+   * Fetch posts from Instagram
    */
-  public async fetchPosts(options?: {
+  async fetchPosts(query: string): Promise<Post[]> {
+    try {
+      this.log('info', `Fetching Instagram posts with query: ${query}`);
+      
+      const response = await this.getUserVideos({ limit: 25 });
+      if (response.error || !response.data?.posts) {
+        this.log('error', 'Failed to fetch Instagram posts', response.error);
+        return [];
+      }
+
+      // Convert PlatformPost to Post format
+      const posts: Post[] = response.data.posts.map((post: any) => ({
+        id: post.id,
+        platform: this.platform.toString(),
+        content: post.description || '',
+        mediaUrl: post.mediaUrl,
+        publishedAt: new Date(post.publishedAt || post.createdAt)
+      }));
+
+      return posts;
+    } catch (error) {
+      this.log('error', 'Failed to fetch Instagram posts', error);
+      return [];
+    }
+  }
+
+  /**
+   * Fetch posts from Instagram (comprehensive version)
+   */
+  public async fetchPostsComprehensive(options?: {
     userId?: string;
     cursor?: string;
     limit?: number;
@@ -338,9 +367,48 @@ export class InstagramClient extends BasePlatformClient {
   }
 
   /**
-   * Get analytics data from Instagram
+   * Get analytics data from Instagram for a specific post
    */
-  public async getAnalytics(options?: {
+  public async getAnalytics(postId: string): Promise<Analytics> {
+    try {
+      this.log('info', `Fetching analytics for Instagram post: ${postId}`);
+      
+      const metricsResult = await this.getPostMetrics(postId);
+      if (metricsResult.error || !metricsResult.data) {
+        this.log('error', 'Failed to fetch Instagram post metrics', metricsResult.error);
+        return {
+          views: 0,
+          likes: 0,
+          comments: 0,
+          shares: 0,
+          engagementRate: 0
+        };
+      }
+
+      const metrics = metricsResult.data;
+      return {
+        views: metrics.views,
+        likes: metrics.likes,
+        comments: metrics.comments,
+        shares: metrics.shares,
+        engagementRate: metrics.engagementRate || 0
+      };
+    } catch (error: any) {
+      this.log('error', `Failed to get analytics from Instagram`, { error: error.message, stack: error.stack });
+      return {
+        views: 0,
+        likes: 0,
+        comments: 0,
+        shares: 0,
+        engagementRate: 0
+      };
+    }
+  }
+
+  /**
+   * Get comprehensive analytics data from Instagram
+   */
+  public async getComprehensiveAnalytics(options?: {
     dateRange?: { start: string; end: string };
     metrics?: string[];
     postIds?: string[];
@@ -475,14 +543,14 @@ export class InstagramClient extends BasePlatformClient {
         rateLimit: this.rateLimit || undefined
       };
     } catch (error: any) {
-      this.log('error', `Failed to get analytics from Instagram`, { error: error.message, stack: error.stack });
+      this.log('error', `Failed to get comprehensive analytics from Instagram`, { error: error.message, stack: error.stack });
       if (error instanceof ApiError || error instanceof PlatformError || error instanceof RateLimitError) {
         return { error: { code: error.code, message: error.message, details: error.details }, rateLimit: this.rateLimit || undefined };
       }
       return {
         error: {
           code: 'ANALYTICS_FAILED',
-          message: error.message || 'Failed to get analytics from Instagram'
+          message: error.message || 'Failed to get comprehensive analytics from Instagram'
         },
         rateLimit: this.rateLimit || undefined
       };

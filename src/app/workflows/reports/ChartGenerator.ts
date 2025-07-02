@@ -1,4 +1,4 @@
-import { ChartData, ChartOptions } from './types/index';
+import { ChartData, ChartOptions } from './types';
 
 export class ChartGenerator {
   generateChart(data: ChartData, options: ChartOptions): string {

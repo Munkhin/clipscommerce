@@ -1,5 +1,5 @@
 import { IAuthTokenManager } from '../auth.types';
-import { ApiConfig, ApiRateLimit, ApiResponse } from './types';
+import { ApiConfig, ApiRateLimit, ApiResponse, HeaderValue } from './types';
 import { ApiError, RateLimitError } from '../utils/errors';
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import logger from '@/utils/logger';
@@ -61,7 +61,7 @@ export abstract class BasePlatformClient {
             const retryAfter = error.response.headers['retry-after'];
             const waitTime = retryAfter ? parseInt(retryAfter, 10) * 1000 : this.getRetryDelay();
             await new Promise((resolve) => setTimeout(resolve, waitTime));
-            return this.client.request(error.config);
+            return this.client.request(error.config || {});
           }
         }
         return Promise.reject(error);
@@ -95,7 +95,7 @@ export abstract class BasePlatformClient {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         throw new ApiError(
-          'unknown', // platform will be set by subclass
+          'TIKTOK', // platform will be set by subclass - using TIKTOK as default
           error.response?.status?.toString() || '500',
           error.response?.statusText || 'Unknown API Error',
           error.response?.status || 500,
@@ -110,3 +110,6 @@ export abstract class BasePlatformClient {
   abstract uploadContent(content: any): Promise<Post>;
   abstract getAnalytics(postId: string): Promise<Analytics>;
 }
+
+// Export HeaderValue for external use - ApiResponse already exported above
+export type { HeaderValue } from './types';

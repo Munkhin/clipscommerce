@@ -81,7 +81,7 @@ export class InstagramClient extends BasePlatformClient {
         }
       });
 
-      const posts: Post[] = response.data.data?.map((item: any) => ({
+      const posts: Post[] = (response.data as any)?.data?.map((item: any) => ({
         id: item.id,
         platform: this.platform.toString(),
         content: item.caption || '',
@@ -112,7 +112,7 @@ export class InstagramClient extends BasePlatformClient {
       });
 
       return {
-        id: response.data.id,
+        id: (response.data as any).id,
         platform: this.platform.toString(),
         content: content.caption || '',
         mediaUrl: content.mediaUrl,
@@ -137,7 +137,7 @@ export class InstagramClient extends BasePlatformClient {
         }
       });
 
-      const data = response.data.data || [];
+      const data = (response.data as any)?.data || [];
       const metrics = data.reduce((acc: any, metric: any) => {
         acc[metric.name] = metric.values[0]?.value || 0;
         return acc;

@@ -8,7 +8,8 @@ import {
 import { collectReportData } from './ReportDataCollector';
 import { generateInsights } from './InsightsEngine';
 import { ReportGenerator, ReportOptions } from './ReportGenerator';
-import { ChartGenerator, ChartData } from './ChartGenerator';
+import { ChartGenerator } from './ChartGenerator';
+import type { ChartData } from './ChartGenerator';
 import { TextSummaryEngine } from './TextSummaryEngine';
 import { TikTokClient } from '../data_collection/lib/platforms/TikTokClient';
 import { InstagramClient } from '../data_collection/lib/platforms/InstagramClient';
@@ -169,3 +170,6 @@ export class ReportsAnalysisService {
     return report;
   }
 }
+
+// Export types for external use
+export type { ChartData } from './ChartGenerator';

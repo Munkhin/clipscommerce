@@ -17,8 +17,9 @@ export class InstagramClient extends BasePlatformClient {
   protected handleRateLimit(headers: any): void {
     if (headers && headers['x-ratelimit-remaining'] && headers['x-ratelimit-reset']) {
       this.rateLimit = {
+        limit: parseInt(headers['x-ratelimit-limit'], 10) || 1000,
         remaining: parseInt(headers['x-ratelimit-remaining'], 10),
-        reset: new Date(parseInt(headers['x-ratelimit-reset'], 10) * 1000),
+        reset: parseInt(headers['x-ratelimit-reset'], 10) * 1000,
       };
     }
   }
@@ -38,13 +39,10 @@ export class InstagramClient extends BasePlatformClient {
 
       const posts: Post[] = (response.data.data || []).map((item: any): Post => ({
         id: item.id,
-        title: item.caption ? item.caption.substring(0, 100) : 'Instagram Post',
+        platform: this.platform.toString(),
         content: item.caption || '',
-        createdAt: new Date(item.timestamp),
-        author: {
-          id: item.username || 'unknown',
-          name: item.username || 'Instagram User'
-        }
+        mediaUrl: item.media_url,
+        publishedAt: new Date(item.timestamp)
       }));
 
       this.log('debug', `[InstagramClient] Successfully fetched ${posts.length} posts`);
@@ -83,13 +81,10 @@ export class InstagramClient extends BasePlatformClient {
 
       const post: Post = {
         id: publishResponse.data.id,
-        title: content.caption ? content.caption.substring(0, 100) : 'Instagram Post',
+        platform: this.platform.toString(),
         content: content.caption || '',
-        createdAt: new Date(),
-        author: {
-          id: 'current_user',
-          name: 'Current User'
-        }
+        mediaUrl: content.mediaUrl,
+        publishedAt: new Date()
       };
 
       this.log('debug', `[InstagramClient] Successfully uploaded content with ID: ${post.id}`);
@@ -113,11 +108,17 @@ export class InstagramClient extends BasePlatformClient {
       });
 
       const metrics = response.data.data || [];
+      const views = this.getMetricValue(metrics, 'impressions') || 0;
+      const likes = this.getMetricValue(metrics, 'likes') || 0;
+      const comments = this.getMetricValue(metrics, 'comments') || 0;
+      const shares = this.getMetricValue(metrics, 'shares') || 0;
+      
       const analytics: Analytics = {
-        views: this.getMetricValue(metrics, 'impressions') || 0,
-        likes: this.getMetricValue(metrics, 'likes') || 0,
-        comments: this.getMetricValue(metrics, 'comments') || 0,
-        shares: this.getMetricValue(metrics, 'shares') || 0
+        views,
+        likes,
+        comments,
+        shares,
+        engagementRate: views > 0 ? ((likes + comments + shares) / views) * 100 : 0
       };
 
       this.log('debug', `[InstagramClient] Successfully fetched analytics for post ${postId}`, analytics);
@@ -125,7 +126,7 @@ export class InstagramClient extends BasePlatformClient {
     } catch (error) {
       this.log('error', `[InstagramClient] Failed to fetch analytics for post ${postId}`, { error });
       // Return default analytics instead of throwing error
-      return { views: 0, likes: 0, comments: 0, shares: 0 };
+      return { views: 0, likes: 0, comments: 0, shares: 0, engagementRate: 0 };
     }
   }
 

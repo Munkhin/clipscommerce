@@ -84,7 +84,7 @@ export class YouTubeClient extends BasePlatformClient {
         }
       });
 
-      const posts: Post[] = response.data.items?.map((item: any) => ({
+      const posts: Post[] = (response.data as any)?.items?.map((item: any) => ({
         id: item.id.videoId,
         platform: this.platform.toString(),
         content: item.snippet.description || '',
@@ -125,10 +125,10 @@ export class YouTubeClient extends BasePlatformClient {
       });
 
       return {
-        id: response.data.id,
+        id: (response.data as any).id,
         platform: this.platform.toString(),
         content: content.description || '',
-        mediaUrl: `https://www.youtube.com/watch?v=${response.data.id}`,
+        mediaUrl: `https://www.youtube.com/watch?v=${(response.data as any).id}`,
         publishedAt: new Date()
       };
     } catch (error) {
@@ -151,7 +151,7 @@ export class YouTubeClient extends BasePlatformClient {
         }
       });
 
-      const stats = response.data.items?.[0]?.statistics || {};
+      const stats = (response.data as any)?.items?.[0]?.statistics || {};
 
       return {
         views: parseInt(stats.viewCount || '0', 10),

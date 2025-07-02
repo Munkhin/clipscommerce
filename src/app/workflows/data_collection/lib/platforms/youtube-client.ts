@@ -34,13 +34,10 @@ export class YouTubeClient extends BasePlatformClient {
 
       const posts: Post[] = (response.data.items || []).map((item: any): Post => ({
         id: item.id.videoId,
-        title: item.snippet.title,
+        platform: this.platform.toString(),
         content: item.snippet.description,
-        createdAt: new Date(item.snippet.publishedAt),
-        author: {
-          id: item.snippet.channelId,
-          name: item.snippet.channelTitle
-        }
+        mediaUrl: `https://www.youtube.com/watch?v=${item.id.videoId}`,
+        publishedAt: new Date(item.snippet.publishedAt)
       }));
 
       this.log('debug', `[YouTubeClient] Successfully fetched ${posts.length} posts`);
@@ -78,13 +75,10 @@ export class YouTubeClient extends BasePlatformClient {
 
       const post: Post = {
         id: response.data.id,
-        title: response.data.snippet.title,
+        platform: this.platform.toString(),
         content: response.data.snippet.description,
-        createdAt: new Date(),
-        author: {
-          id: 'current_user',
-          name: 'Current User'
-        }
+        mediaUrl: `https://www.youtube.com/watch?v=${response.data.id}`,
+        publishedAt: new Date()
       };
 
       this.log('debug', `[YouTubeClient] Successfully uploaded content with ID: ${post.id}`);
@@ -112,15 +106,21 @@ export class YouTubeClient extends BasePlatformClient {
       const videoData = response.data.items?.[0];
       if (!videoData) {
         this.log('warn', `[YouTubeClient] No data found for video ${postId}`);
-        return { views: 0, likes: 0, comments: 0, shares: 0 };
+        return { views: 0, likes: 0, comments: 0, shares: 0, engagementRate: 0 };
       }
 
       const stats = videoData.statistics;
+      const views = parseInt(stats.viewCount || '0', 10);
+      const likes = parseInt(stats.likeCount || '0', 10);
+      const comments = parseInt(stats.commentCount || '0', 10);
+      const shares = 0; // YouTube API doesn't provide share count directly
+      
       const analytics: Analytics = {
-        views: parseInt(stats.viewCount || '0', 10),
-        likes: parseInt(stats.likeCount || '0', 10),
-        comments: parseInt(stats.commentCount || '0', 10),
-        shares: 0 // YouTube API doesn't provide share count directly
+        views,
+        likes,
+        comments,
+        shares,
+        engagementRate: views > 0 ? ((likes + comments) / views) * 100 : 0
       };
 
       this.log('debug', `[YouTubeClient] Successfully fetched analytics for post ${postId}`, analytics);
@@ -128,7 +128,7 @@ export class YouTubeClient extends BasePlatformClient {
     } catch (error) {
       this.log('error', `[YouTubeClient] Failed to fetch analytics for post ${postId}`, { error });
       // Return default analytics instead of throwing error
-      return { views: 0, likes: 0, comments: 0, shares: 0 };
+      return { views: 0, likes: 0, comments: 0, shares: 0, engagementRate: 0 };
     }
   }
 }

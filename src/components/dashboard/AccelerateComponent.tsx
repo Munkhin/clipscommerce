@@ -70,9 +70,11 @@ const initialVideos: Video[] = [];
 
 interface SortableVideoCardProps {
   video: Video;
+  onRetry?: (videoId: string) => void;
+  onRemove?: (videoId: string) => void;
 }
 
-function SortableVideoCard({ video }: SortableVideoCardProps) {
+function SortableVideoCard({ video, onRetry, onRemove }: SortableVideoCardProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: video.id });
 
   const style = {
@@ -140,8 +142,8 @@ function SortableVideoCard({ video }: SortableVideoCardProps) {
           <UploadError
             fileName={video.title}
             errorType="processing"
-            onRetry={() => handleRetryVideo(video.id)}
-            onRemove={() => handleRemoveVideo(video.id)}
+            onRetry={onRetry ? () => onRetry(video.id) : undefined}
+            onRemove={onRemove ? () => onRemove(video.id) : undefined}
             className="mt-2"
           />
         )}
@@ -667,6 +669,7 @@ export default function AccelerateComponent() {
           {/* Show empty state when no videos */}
           {videos.length === 0 && (
             <NoVideosEmpty
+              title="No videos uploaded yet"
               onUpload={handleAddVideos}
               className="bg-gray-900/50 backdrop-blur-sm border border-gray-700 rounded-lg"
             />
@@ -711,7 +714,12 @@ export default function AccelerateComponent() {
                     <div className="p-6 space-y-4 min-h-[400px]">
                       <SortableContext items={getVideosByColumn(column.id).map(v => v.id)} strategy={verticalListSortingStrategy}>
                         {getVideosByColumn(column.id).map((video) => (
-                          <SortableVideoCard key={video.id} video={video} />
+                          <SortableVideoCard 
+                            key={video.id} 
+                            video={video} 
+                            onRetry={handleRetryVideo}
+                            onRemove={handleRemoveVideo}
+                          />
                         ))}
                       </SortableContext>
                       

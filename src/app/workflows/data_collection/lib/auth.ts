@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import { IAuthTokenManager, PlatformClientIdentifier, PlatformCredentials, AuthStrategy } from './auth.types';
+import { IAuthTokenManager, PlatformClientIdentifier, PlatformCredentials, AuthStrategy, OAuth2Credentials, ApiKeyCredentials } from './auth.types';
 import { Platform } from '../../../deliverables/types/deliverables_types';
 
 export class SupabaseAuthTokenManager implements IAuthTokenManager {
@@ -70,7 +70,7 @@ export class SupabaseAuthTokenManager implements IAuthTokenManager {
       expiresAt: expiresAt,
       tokenType: 'bearer',
       strategy: AuthStrategy.OAUTH2,
-    };
+    } as OAuth2Credentials;
   }
 
   async storeCredentials(identifier: PlatformClientIdentifier, credentials: PlatformCredentials): Promise<void> {
@@ -79,11 +79,13 @@ export class SupabaseAuthTokenManager implements IAuthTokenManager {
     let expiresAt: number | undefined;
 
     if (credentials.strategy === AuthStrategy.OAUTH2) {
-      accessToken = credentials.accessToken;
-      refreshToken = credentials.refreshToken;
-      expiresAt = credentials.expiresAt;
+      const oauth2Creds = credentials as OAuth2Credentials;
+      accessToken = oauth2Creds.accessToken;
+      refreshToken = oauth2Creds.refreshToken;
+      expiresAt = oauth2Creds.expiresAt;
     } else if (credentials.strategy === AuthStrategy.API_KEY) {
-      accessToken = credentials.apiKey;
+      const apiKeyCreds = credentials as ApiKeyCredentials;
+      accessToken = apiKeyCreds.apiKey;
     }
 
     const { error } = await this.supabase
