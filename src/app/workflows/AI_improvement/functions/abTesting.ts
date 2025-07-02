@@ -823,9 +823,6 @@ function generateTrendingHashtags(platform: Platform): string[] {
     [PlatformEnum.TIKTOK]: ['#fyp', '#viral', '#trending', '#foryou', '#tiktok'],
     [PlatformEnum.INSTAGRAM]: ['#instagood', '#photooftheday', '#love', '#beautiful', '#happy'],
     [PlatformEnum.YOUTUBE]: ['#youtube', '#subscribe', '#viral', '#trending', '#shorts'],
-    [PlatformEnum.FACEBOOK]: ['#facebook', '#social', '#community', '#share', '#connect'],
-    [PlatformEnum.TWITTER]: ['#twitter', '#trending', '#viral', '#news', '#social'],
-    [PlatformEnum.LINKEDIN]: ['#linkedin', '#professional', '#career', '#business', '#networking'],
   };
 
   return trendingByPlatform[platform] || ['#trending', '#viral'];
