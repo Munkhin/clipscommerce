@@ -1,5 +1,5 @@
 import { BasePlatformClient } from './base-platform';
-import { Post, Analytics } from '../../../../../types';
+import { Post, Analytics } from '@/types';
 import { ApiConfig, ApiResponse, ApiRateLimit } from './types';
 import { IAuthTokenManager } from '../auth.types';
 import { Platform, PlatformEnum } from '@/app/workflows/deliverables/types/deliverables_types';

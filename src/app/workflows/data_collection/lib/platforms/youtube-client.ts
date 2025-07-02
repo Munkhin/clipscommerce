@@ -1,5 +1,5 @@
 import { BasePlatformClient } from './base-platform';
-import { Post, Analytics } from '../../../../../types';
+import { Post, Analytics } from '@/types';
 import { ApiConfig, ApiResponse, PlatformComment, PlatformPostMetrics, PlatformUserActivity, PlatformPost, ApiRateLimit } from './types';
 import { YouTubeCommentThreadListResponseSchema, YouTubeCommentThread, YouTubeChannelListResponseSchema, YouTubeChannelListResponse, YouTubeVideoListResponseSchema, YouTubeVideoListResponse, YouTubeVideo, YouTubeCommentThreadListResponse, YouTubeChannel } from './youtube.types';
 import { Platform, PlatformEnum } from '@/app/workflows/deliverables/types/deliverables_types';

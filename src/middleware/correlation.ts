@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
 import logger from '../utils/logger';
-import { LogContext } from '../types';
+import { LogContext } from '@/types';
 
 // Correlation ID header names
 export const CORRELATION_ID_HEADER = 'x-correlation-id';
