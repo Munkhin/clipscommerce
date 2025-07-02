@@ -602,7 +602,7 @@ export class ContentOptimizationAgent {
   private createBanditContext(task: ContentOptimizationTask): BanditContext {
     const now = new Date();
     return {
-      platform: task.platform || 'instagram',
+      platform: task.platform || 'INSTAGRAM',
       contentType: task.parameters?.contentType || 'text',
       audienceSegment: task.parameters?.audienceSegment || 'general',
       timeOfDay: now.getHours(),
@@ -685,12 +685,12 @@ export class ContentOptimizationAgent {
     
     // Normalize metrics to 0-1 scale (platform-specific)
     const platformNorms = {
-      tiktok: { likes: 100, comments: 20, shares: 10, ctr: 0.05 },
-      instagram: { likes: 50, comments: 10, shares: 5, ctr: 0.03 },
-      youtube: { likes: 20, comments: 5, shares: 2, ctr: 0.08 }
+      TIKTOK: { likes: 100, comments: 20, shares: 10, ctr: 0.05 },
+      INSTAGRAM: { likes: 50, comments: 10, shares: 5, ctr: 0.03 },
+      YOUTUBE: { likes: 20, comments: 5, shares: 2, ctr: 0.08 }
     };
     
-    const norms = platformNorms[context.platform as keyof typeof platformNorms] || platformNorms.instagram;
+    const norms = platformNorms[context.platform as keyof typeof platformNorms] || platformNorms.INSTAGRAM;
     
     const normalizedLikes = Math.min(metrics.likes / norms.likes, 1);
     const normalizedComments = Math.min(metrics.comments / norms.comments, 1);
@@ -787,7 +787,7 @@ export class ContentOptimizationAgent {
     
     // Create bandit context from the first variation (assuming similar context)
     const context: BanditContext = {
-      platform: variations[0].context?.platform || 'instagram',
+      platform: variations[0].context?.platform || 'INSTAGRAM',
       contentType: 'text',
       audienceSegment: 'general',
       timeOfDay: new Date().getHours(),
