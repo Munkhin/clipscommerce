@@ -47,18 +47,12 @@ export class TrainingDataCollectionService {
   // Convert analysis platform to scanner platform string
   private convertToScannerPlatform(platform: Platform): ScannerPlatform {
     switch (platform) {
-      case Platform.TIKTOK:
+      case 'TikTok':
         return 'tiktok';
-      case Platform.INSTAGRAM:
+      case 'Instagram':
         return 'instagram';
-      case Platform.FACEBOOK:
-        return 'facebook';
-      case Platform.YOUTUBE:
+      case 'YouTube':
         return 'youtube';
-      case 'Twitter':
-        return 'twitter';
-      case 'LinkedIn':
-        return 'linkedin';
       default:
         throw new Error(`Unsupported platform: ${platform}`);
     }
