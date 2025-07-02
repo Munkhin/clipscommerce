@@ -465,9 +465,6 @@ function expandCaption(caption: string, platform: Platform): string {
     [PlatformEnum.TIKTOK]: ' What do you think? Drop a comment below! 👇',
     [PlatformEnum.INSTAGRAM]: ' Double tap if you agree! Share your thoughts in the comments ✨',
     [PlatformEnum.YOUTUBE]: ' Let me know what you think in the comments and don\'t forget to subscribe!',
-    [PlatformEnum.FACEBOOK]: ' What\'s your experience with this? Share your story!',
-    [PlatformEnum.TWITTER]: ' What are your thoughts? Retweet if you agree!',
-    [PlatformEnum.LINKEDIN]: ' I\'d love to hear your professional perspective on this.',
   };
 
   return caption + (platformExpansions[platform] || ' Let me know your thoughts!');
@@ -480,12 +477,9 @@ function adjustToneForPlatform(caption: string, platform: Platform): string {
     [PlatformEnum.TIKTOK]: 'excited',
     [PlatformEnum.INSTAGRAM]: 'casual',
     [PlatformEnum.YOUTUBE]: 'professional',
-    [PlatformEnum.FACEBOOK]: 'casual',
-    [PlatformEnum.TWITTER]: 'casual',
-    [PlatformEnum.LINKEDIN]: 'professional',
   };
 
-  const targetTone = platformTones[platform];
+  const targetTone = platformTones[platform] || 'casual';
   
   if (currentTone.tone === targetTone) return caption;
 
@@ -506,9 +500,6 @@ function addPlatformSpecificEmojis(caption: string, platform: Platform): string 
     [PlatformEnum.TIKTOK]: ['🔥', '✨', '💯', '🚀', '⚡'],
     [PlatformEnum.INSTAGRAM]: ['✨', '💕', '🌟', '💫', '🦋'],
     [PlatformEnum.YOUTUBE]: ['🎬', '📹', '🎥', '👍', '🔔'],
-    [PlatformEnum.FACEBOOK]: ['👍', '❤️', '😊', '🎉', '👏'],
-    [PlatformEnum.TWITTER]: ['🧵', '💭', '🔥', '📢', '⚡'],
-    [PlatformEnum.LINKEDIN]: ['💼', '🚀', '💡', '📈', '🎯'],
   };
 
   const emojis = platformEmojis[platform] || ['✨'];
@@ -522,9 +513,6 @@ function addCallToAction(caption: string, platform: Platform): string {
     [PlatformEnum.TIKTOK]: 'Follow for more! 👆',
     [PlatformEnum.INSTAGRAM]: 'Save this post! 📌',
     [PlatformEnum.YOUTUBE]: 'Subscribe for more content! 🔔',
-    [PlatformEnum.FACEBOOK]: 'Share with friends! 👥',
-    [PlatformEnum.TWITTER]: 'Retweet to spread the word! 🔄',
-    [PlatformEnum.LINKEDIN]: 'Connect with me for more insights! 🤝',
   };
 
   return caption + '\n\n' + (platformCTAs[platform] || 'Engage with this content!');
@@ -554,9 +542,6 @@ function calculateExpectedPerformance(
     [PlatformEnum.TIKTOK]: 1.2,
     [PlatformEnum.INSTAGRAM]: 1.1,
     [PlatformEnum.YOUTUBE]: 1.0,
-    [PlatformEnum.FACEBOOK]: 0.9,
-    [PlatformEnum.TWITTER]: 0.95,
-    [PlatformEnum.LINKEDIN]: 0.85,
   };
 
   performance *= platformMultipliers[platform] || 1;
@@ -583,9 +568,6 @@ function getTrendingHashtagsForPlatform(platform: Platform): string[] {
     [PlatformEnum.TIKTOK]: ['#fyp', '#viral', '#trending', '#foryou', '#tiktok'],
     [PlatformEnum.INSTAGRAM]: ['#instagood', '#photooftheday', '#love', '#beautiful', '#happy'],
     [PlatformEnum.YOUTUBE]: ['#youtube', '#subscribe', '#viral', '#trending', '#shorts'],
-    [PlatformEnum.FACEBOOK]: ['#facebook', '#social', '#community', '#share', '#connect'],
-    [PlatformEnum.TWITTER]: ['#twitter', '#trending', '#viral', '#news', '#social'],
-    [PlatformEnum.LINKEDIN]: ['#linkedin', '#professional', '#career', '#business', '#networking'],
   };
 
   return trending[platform] || [];
@@ -601,9 +583,6 @@ function getHighPerformingHashtags(platform: Platform): string[] {
       [PlatformEnum.TIKTOK]: ['#fyp', '#viral', '#trending', '#foryou', '#content'],
       [PlatformEnum.INSTAGRAM]: ['#instagood', '#photooftheday', '#love', '#beautiful', '#content'],
       [PlatformEnum.YOUTUBE]: ['#youtube', '#subscribe', '#viral', '#trending', '#content'],
-      [PlatformEnum.FACEBOOK]: ['#facebook', '#social', '#community', '#share', '#content'],
-      [PlatformEnum.TWITTER]: ['#twitter', '#trending', '#viral', '#news', '#content'],
-      [PlatformEnum.LINKEDIN]: ['#linkedin', '#professional', '#career', '#business', '#content'],
     };
     return defaultHashtags[platform] || ['#content', '#trending', '#viral'];
   }
@@ -679,9 +658,6 @@ function getOptimalLengthForPlatform(platform: Platform): number {
     [PlatformEnum.TIKTOK]: 150,
     [PlatformEnum.INSTAGRAM]: 125,
     [PlatformEnum.YOUTUBE]: 200,
-    [PlatformEnum.FACEBOOK]: 250,
-    [PlatformEnum.TWITTER]: 280,
-    [PlatformEnum.LINKEDIN]: 300,
   };
 
   return optimalLengths[platform] || 150;
@@ -713,10 +689,10 @@ function getPlatformOptimizations(text: string, platform: Platform): {
       }
       break;
     
-    case PlatformEnum.LINKEDIN:
-      if (!text.match(/\b(professional|business|career|industry)\b/i)) {
-        improvements.push('Consider adding professional context');
-        expectedIncrease += 3;
+    case PlatformEnum.YOUTUBE:
+      if (!text.includes('subscribe')) {
+        improvements.push('Consider adding subscribe call-to-action');
+        expectedIncrease += 4;
       }
       break;
   }
