@@ -9,7 +9,7 @@ dotenv.config({ path: path.join(process.cwd(), '.env.local') });
 
 import { TrainingOrchestrator } from '../training/TrainingOrchestrator';
 import { createClient } from '@supabase/supabase-js';
-import { Platform } from '../../data_analysis/types/analysis_types';
+import { Platform } from '../../deliverables/types/deliverables_types';
 
 // Configuration
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
@@ -84,7 +84,7 @@ function parseArguments(): CLIOptions {
   return {
     command,
     userId: options.userId || 'default-user',
-    platforms: options.platforms || ['TikTok', 'Instagram', 'YouTube'],
+    platforms: options.platforms || ['TIKTOK', 'INSTAGRAM', 'YOUTUBE'],
     lookbackDays: options.lookbackDays || 90,
     minPostsPerPlatform: options.minPostsPerPlatform || 50,
     minEngagementThreshold: options.minEngagementThreshold || 10,
