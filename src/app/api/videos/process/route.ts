@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/lib/supabase/server';
 import { cookies } from 'next/headers';
 
 interface VideoProcessingRequest {
@@ -27,7 +27,7 @@ interface VideoProcessingResponse {
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
+    const supabase = await createClient(cookies());
     
     // Get current user
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -158,7 +158,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
+    const supabase = await createClient(cookies());
     
     // Get current user
     const { data: { user }, error: authError } = await supabase.auth.getUser();

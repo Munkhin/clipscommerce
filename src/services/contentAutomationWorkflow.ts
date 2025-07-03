@@ -91,7 +91,7 @@ export class ContentAutomationWorkflow {
           content: {
             videoUrl: req.videoUrl,
             caption: optimization.data!.optimizedVideoContent!.optimizedCaption ?? req.caption,
-            hashtags: optimization.data!.optimizedVideoContent!.trendingHashtags?.map((h) => h.tag) ?? req.hashtags,
+            hashtags: optimization.data!.optimizedVideoContent!.trendingHashtags?.map((h: {tag: string}) => h.tag) ?? req.hashtags,
           },
           platforms: [req.platform.toLowerCase() as any],
           scheduleTime: req.scheduleTime,

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, jest } from '@jest/globals';
-import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
+import { Platform } from '@/types/platform';
 import { AIImprovementService } from '../services/AIImprovementService';
 import { PostMetrics } from '../../data_collection/functions/types';
 import { featureStore } from '../functions/feedbackLoop';

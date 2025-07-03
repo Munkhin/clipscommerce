@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 import { SupabaseClient } from '@supabase/supabase-js';
-import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
+import { Platform } from '@/types/platform';
 import { PostMetrics } from '../../data_analysis/types/analysis_types';
 import { ModelTrainingPipeline, TrainingConfig, TrainingProgress, TrainingResult } from './ModelTrainingPipeline';
 import { TrainingDataCollectionService, DataCollectionConfig, DataQualityReport } from './DataCollectionService';

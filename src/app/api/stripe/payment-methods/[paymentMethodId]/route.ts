@@ -1,15 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { cookies } from 'next/headers';
 import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { paymentMethodId: string } }
+  { params }: { params: Promise<{ paymentMethodId: string }> }
 ) {
   try {
-    const supabase = createClient(cookies());
+    const supabase = await createClient(cookies());
     
     // Verify authentication
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -17,7 +18,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { paymentMethodId } = params;
+    const { paymentMethodId } = await params;
 
     // Verify payment method belongs to the user
     const paymentMethod = await stripe.paymentMethods.retrieve(paymentMethodId);

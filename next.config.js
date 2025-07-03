@@ -89,12 +89,15 @@ const nextConfig = {
     // Path aliases
     config.resolve.alias = {
       ...config.resolve.alias,
+      '@': path.resolve(__dirname, 'src'),
       '@/app': path.resolve(__dirname, 'src/app'),
       '@/components': path.resolve(__dirname, 'src/components'),
       '@/styles': path.resolve(__dirname, 'src/styles'),
       '@/lib': path.resolve(__dirname, 'src/lib'),
       '@/hooks': path.resolve(__dirname, 'src/hooks'),
       '@/providers': path.resolve(__dirname, 'src/providers'),
+      '@/types': path.resolve(__dirname, 'src/types'),
+      '@/utils': path.resolve(__dirname, 'src/utils'),
     };
 
     // Fix for Supabase realtime-js critical dependency warning

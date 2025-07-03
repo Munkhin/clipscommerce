@@ -1,7 +1,7 @@
 import { EnhancedTextAnalyzer } from '@/lib/ai/enhancedTextAnalyzer';
 import { MetricsTracker } from '@/lib/utils/metrics';
 import { EnhancedCache } from '@/lib/utils/caching';
-import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
+import { Platform } from '@/types/platform';
 import crypto from 'crypto';
 
 export interface ContentOptimizationInput {
@@ -116,7 +116,7 @@ export class ContentOptimizationEngine {
       }
 
       // Engagement prediction based on historical data
-      if (input.userEngagementData) {
+      if (input.userEngagementData && optimizedCaption) {
         engagementPrediction = await this.predictEngagement(input, optimizedCaption, suggestedHashtags);
       }
 
@@ -591,11 +591,21 @@ Return hashtags in a comma-separated list without explanations.`;
     }
     
     // Platform-specific adjustments
-    const platformMultiplier = {
+    const platformMultipliers: Record<string, number> = {
       'TikTok': 1.2,
-      ['instagram']: 1.0,
-      ['youtube']: 0.8
-    }[input.platform] || 1.0;
+      'tiktok': 1.2,
+      'instagram': 1.0,
+      'Instagram': 1.0,
+      'youtube': 0.8,
+      'YouTube': 0.8,
+      'facebook': 1.0,
+      'Facebook': 1.0,
+      'twitter': 0.9,
+      'Twitter': 0.9,
+      'linkedin': 0.7,
+      'LinkedIn': 0.7
+    };
+    const platformMultiplier = platformMultipliers[input.platform] || 1.0;
     
     const finalMultiplier = improvementFactor * platformMultiplier;
     

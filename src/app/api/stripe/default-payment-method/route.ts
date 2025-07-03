@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { cookies } from 'next/headers';
 import Stripe from 'stripe';
 import { z } from 'zod';
 
@@ -11,7 +12,7 @@ const setDefaultPaymentMethodSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = createClient(cookies());
+    const supabase = await createClient(cookies());
     
     // Verify authentication
     const { data: { user }, error: authError } = await supabase.auth.getUser();

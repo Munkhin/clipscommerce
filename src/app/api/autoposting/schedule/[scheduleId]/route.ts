@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { cookies } from 'next/headers';
 import { z } from 'zod';
 
 const updateScheduleSchema = z.object({
@@ -11,15 +12,15 @@ const updateScheduleSchema = z.object({
 });
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     scheduleId: string;
-  };
+  }>;
 }
 
 // GET - Get specific scheduled post
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
-    const supabase = createClient(cookies());
+    const supabase = await createClient(cookies());
     
     // Verify authentication
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -27,7 +28,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { scheduleId } = params;
+    const { scheduleId } = await params;
 
     // Get scheduled post
     const { data: post, error } = await supabase
@@ -55,7 +56,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 // PATCH - Update scheduled post
 export async function PATCH(request: NextRequest, { params }: RouteParams) {
   try {
-    const supabase = createClient(cookies());
+    const supabase = await createClient(cookies());
     
     // Verify authentication
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -63,7 +64,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { scheduleId } = params;
+    const { scheduleId } = await params;
     const body = await request.json();
     const validatedData = updateScheduleSchema.parse(body);
 
@@ -191,7 +192,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
 // DELETE - Delete/cancel scheduled post
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
-    const supabase = createClient(cookies());
+    const supabase = await createClient(cookies());
     
     // Verify authentication
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -199,7 +200,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { scheduleId } = params;
+    const { scheduleId } = await params;
 
     // Get current scheduled post
     const { data: currentPost, error: fetchError } = await supabase

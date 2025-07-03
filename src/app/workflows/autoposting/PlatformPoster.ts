@@ -641,10 +641,7 @@ export class YouTubePoster implements PlatformPoster {
       
       if (ageMs < 2 * 60 * 1000) {
         return {
-          status: 'processing',
-          platformSpecificData: {
-            processingProgress: Math.min(90, (ageMs / (2 * 60 * 1000)) * 100)
-          }
+          status: 'processing'
         };
       } else if (ageMs < 5 * 60 * 1000) {
         return { status: 'scheduled' };

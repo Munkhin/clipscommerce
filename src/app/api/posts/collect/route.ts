@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { cookies } from 'next/headers';
 import { z } from 'zod';
 
 // Validation schema for post collection request
@@ -16,7 +17,7 @@ const collectPostsSchema = z.object({
 // POST - Start post collection process
 export async function POST(request: NextRequest) {
   try {
-    const supabase = createClient(cookies());
+    const supabase = await createClient(cookies());
     
     // Verify authentication
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -107,7 +108,7 @@ export async function POST(request: NextRequest) {
 // GET - Check collection status
 export async function GET(request: NextRequest) {
   try {
-    const supabase = createClient(cookies());
+    const supabase = await createClient(cookies());
     
     // Verify authentication
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -167,7 +168,7 @@ interface SocialCredentials {
 }
 
 async function verifyPlatformCredentials(userId: string, platforms: string[]) {
-  const supabase = createClient(cookies());
+  const supabase = await createClient(cookies());
   
   const credentialChecks = await Promise.all(
     platforms.map(async (platform) => {
@@ -321,7 +322,7 @@ async function collectPlatformPosts(
 }
 
 async function storePosts(posts: Record<string, unknown>[]) {
-  const supabase = createClient(cookies());
+  const supabase = await createClient(cookies());
 
   try {
     // Insert posts in batches to avoid hitting limits

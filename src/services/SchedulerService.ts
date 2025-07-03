@@ -1,5 +1,5 @@
 import { Post } from '../types/schedule';
-import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
+import { Platform } from '@/types/platform';
 import logger from '../utils/logger';
 
 // Defining ScheduleOptions locally based on its usage

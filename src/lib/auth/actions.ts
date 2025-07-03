@@ -1,7 +1,8 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/supabase/server";
+import { cookies } from "next/headers";
 import logger from '@/utils/logger';
 import { createAuthError, extractErrorMessage, logError, isError } from '@/lib/errors/errorHandling';
 
@@ -25,7 +26,7 @@ export const signUpAction = async (prevState: unknown, formData: FormData): Prom
     return { error: "Password must be at least 6 characters long" };
   }
 
-  const supabase = createClient(cookies());
+  const supabase = await createClient(cookies());
   
   try {
     // First, sign up the user with Supabase Auth
@@ -94,7 +95,7 @@ export const signInAction = async (prevState: unknown, formData: FormData): Prom
     return { error: "Email and password are required" };
   }
 
-  const supabase = createClient(cookies());
+  const supabase = await createClient(cookies());
   
   try {
     const { error } = await supabase.auth.signInWithPassword({
@@ -123,7 +124,7 @@ export const forgotPasswordAction = async (prevState: unknown, formData: FormDat
     return { error: "Email is required" };
   }
 
-  const supabase = createClient(cookies());
+  const supabase = await createClient(cookies());
   
   try {
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
@@ -165,7 +166,7 @@ export const resetPasswordAction = async (prevState: unknown, formData: FormData
     return { error: "Invalid or expired reset token" };
   }
 
-  const supabase = createClient(cookies());
+  const supabase = await createClient(cookies());
   
   try {
     // First verify the token
@@ -199,7 +200,7 @@ export const resetPasswordAction = async (prevState: unknown, formData: FormData
 };
 
 export const signOutAction = async (): Promise<ActionResult> => {
-  const supabase = createClient(cookies());
+  const supabase = await createClient(cookies());
   
   try {
     const { error } = await supabase.auth.signOut();
@@ -218,7 +219,7 @@ export const signOutAction = async (): Promise<ActionResult> => {
 
 export const checkUserSubscription = async (userId: string): Promise<boolean> => {
   // Placeholder implementation - replace with actual subscription check logic
-  const supabase = createClient(cookies());
+  const supabase = await createClient(cookies());
   
   try {
     // Check if user has an active subscription

@@ -1,5 +1,5 @@
 import { generateContent, GenerateContentRequest, GenerateContentResponse } from '../contentGeneration';
-import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
+import { Platform } from '@/types/platform';
 import * as nlpModule from '../../app/workflows/AI_improvement/functions/nlp';
 
 // Mock the NLP module

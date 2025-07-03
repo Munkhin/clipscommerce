@@ -2,13 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { SchedulingService } from '@/lib/services/schedulingService';
 import { Post, PostStatusType } from '@/types/schedule';
-import { Platform } from '@/app/deliverables/types/deliverables_types';
-import { Platform as DeliverablePlatform } from '@/app/workflows/deliverables/types/deliverables_types';
+import { Platform } from '@/types/platform';
+import { cookies } from 'next/headers';
 
 // Mock dependencies for the SchedulingService
 const mockDependencies = {
   getPosts: async (filter: { limit?: number; platforms?: Platform[] }): Promise<Post[]> => {
-    const supabase = createClient(cookies());
+    const supabase = await createClient(cookies());
     const { data: { user } } = await supabase.auth.getUser();
     
     if (!user) return [];
@@ -104,7 +104,7 @@ const mockDependencies = {
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = createClient(cookies());
+    const supabase = await createClient(cookies());
     
     // Verify authentication
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -120,7 +120,7 @@ export async function GET(request: NextRequest) {
 
     if (platform) {
       // Get optimal times for specific platform
-      const optimalTimes = await schedulingService.getOptimalTimes(platform as DeliverablePlatform, timezone);
+      const optimalTimes = await schedulingService.getOptimalTimes(platform as Platform, timezone);
       
       // Convert to simple time strings
       const timeStrings = optimalTimes.map(window => {
@@ -142,7 +142,7 @@ export async function GET(request: NextRequest) {
 
       for (const plt of platforms) {
         try {
-          const optimalTimes = await schedulingService.getOptimalTimes(plt as DeliverablePlatform, timezone);
+          const optimalTimes = await schedulingService.getOptimalTimes(plt as Platform, timezone);
           allOptimalTimes[plt] = optimalTimes.map(window => {
             const hour = window.startTime.getHours().toString().padStart(2, '0');
             const minute = window.startTime.getMinutes().toString().padStart(2, '0');

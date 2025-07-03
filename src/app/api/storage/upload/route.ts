@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { cookies } from 'next/headers';
 import { serverStorageService, BucketName, FileMetadata } from '@/lib/storage/supabase-storage';
 import { URL } from 'url';
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = createClient(cookies());
+    const supabase = await createClient(cookies());
 
     // Check authentication
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -77,7 +78,7 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = createClient(cookies());
+    const supabase = await createClient(cookies());
 
     // Check authentication
     const { data: { user }, error: authError } = await supabase.auth.getUser();

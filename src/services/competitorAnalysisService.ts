@@ -1,4 +1,4 @@
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/lib/supabase/client';
 
 export interface CompetitorContent {
   id: string;
@@ -34,7 +34,7 @@ export class CompetitorAnalysisService {
   private supabase;
 
   constructor() {
-    this.supabase = createClientComponentClient();
+    this.supabase = createClient();
   }
 
   async getTopCompetitors(options: CompetitorAnalysisOptions = {}): Promise<{

@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { TikTokClient } from '@/app/workflows/data_collection/lib/platforms/TikTokClient';
 import { SupabaseAuthTokenManager } from '@/app/workflows/data_collection/lib/auth';
 import { ApiConfig } from '@/app/workflows/data_collection/lib/platforms/types';
-import { PlatformEnum } from '@/app/workflows/deliverables/types/deliverables_types';
+import { PlatformEnum } from '@/types/platform';
 import { authGuard, createSecureErrorResponse } from '@/lib/security/auth-guard';
 import logger from '@/utils/logger';
 

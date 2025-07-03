@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
+import { cookies } from 'next/headers';
 import { type NextRequest, NextResponse } from 'next/server';
 import { authGuard } from '@/lib/security/auth-guard';
 import logger from '@/utils/logger';
@@ -32,7 +33,7 @@ export async function GET(request: NextRequest) {
   }
 
   const { user } = guardResult.context!;
-  const supabase = createClient(cookies());
+  const supabase = await createClient(cookies());
 
   try {
     // Fetch all social credentials for the user

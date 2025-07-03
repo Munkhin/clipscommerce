@@ -1,6 +1,6 @@
 import { BaseAnalysisRequest, VideoOptimizationAnalysisData, AnalysisResult, DetailedPlatformMetrics } from '../types/analysis_types';
 import { ContentInsightsService } from '@/services/contentInsightsService';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/lib/supabase/client';
 
 export class ContentInsightsEngine {
   private contentInsightsService: ContentInsightsService;
@@ -8,7 +8,7 @@ export class ContentInsightsEngine {
 
   constructor() {
     this.contentInsightsService = new ContentInsightsService();
-    this.supabase = createClientComponentClient();
+    this.supabase = createClient();
   }
 
   async getTopPerformingContentInsights(

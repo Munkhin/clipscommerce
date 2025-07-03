@@ -113,12 +113,13 @@ export class ContentQueue {
 
     // Insert based on priority
     const priority = content.metadata.priority || 'normal';
-    const priorityValues = { urgent: 4, high: 3, normal: 2, low: 1 };
-    const itemPriority = priorityValues[priority];
+    const priorityValues: Record<string, number> = { urgent: 4, high: 3, normal: 2, low: 1 };
+    const itemPriority = priorityValues[priority] || priorityValues['normal'];
 
     let insertIndex = this.queue.length;
     for (let i = 0; i < this.queue.length; i++) {
-      const existingPriority = priorityValues[(this.queue[i].metadata as any).priority || 'normal'];
+      const queueItemPriority = (this.queue[i].metadata as any)?.priority || 'normal';
+      const existingPriority = priorityValues[queueItemPriority] || priorityValues['normal'];
       if (itemPriority > existingPriority) {
         insertIndex = i;
         break;

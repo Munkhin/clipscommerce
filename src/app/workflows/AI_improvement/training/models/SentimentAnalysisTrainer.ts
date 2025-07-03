@@ -1,5 +1,5 @@
 import { SupabaseClient } from '@supabase/supabase-js';
-import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
+import { Platform } from '@/types/platform';
 import { EventEmitter } from 'events';
 import { createTrainingError, extractErrorMessage, logError, isError } from '@/lib/errors/errorHandling';
 
@@ -120,7 +120,7 @@ export class SentimentAnalysisTrainer extends EventEmitter {
       'good', 'great', 'happy', 'incredible', 'love', 'perfect', 'wonderful',
       'outstanding', 'superb', 'marvelous', 'delightful', 'fabulous', 'terrific'
     ];
-    positiveWordsList.forEach(word => this.positiveWords.add(word));
+    positiveWordsList.forEach((word: string) => this.positiveWords.add(word));
 
     // Negative words
     const negativeWordsList = [
@@ -128,7 +128,7 @@ export class SentimentAnalysisTrainer extends EventEmitter {
       'disappointing', 'annoying', 'frustrating', 'sad', 'angry', 'upset',
       'pathetic', 'useless', 'boring', 'stupid', 'ridiculous', 'outrageous'
     ];
-    negativeWordsList.forEach(word => this.negativeWords.add(word));
+    negativeWordsList.forEach((word: string) => this.negativeWords.add(word));
 
     // Emotional words with categories
     const emotionalWordsList = [
@@ -146,7 +146,7 @@ export class SentimentAnalysisTrainer extends EventEmitter {
       'very', 'extremely', 'incredibly', 'absolutely', 'completely', 'totally',
       'really', 'quite', 'rather', 'pretty', 'so', 'too', 'highly', 'deeply'
     ];
-    intensifiersList.forEach(word => this.intensifiers.add(word));
+    intensifiersList.forEach((word: string) => this.intensifiers.add(word));
   }
 
   async loadTrainingData(userId: string, platforms: Platform[], lookbackDays: number = 90): Promise<void> {
@@ -187,7 +187,7 @@ export class SentimentAnalysisTrainer extends EventEmitter {
   private async extractSentimentFeatures(post: any): Promise<TrainingData> {
     const text = post.caption || '';
     const words = text.toLowerCase().split(/\s+/);
-    const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+    const sentences = text.split(/[.!?]+/).filter((s: string) => s.trim().length > 0);
     
     // Extract text features
     const features: SentimentFeatures = {
@@ -198,10 +198,10 @@ export class SentimentAnalysisTrainer extends EventEmitter {
       avgWordLength: words.reduce((sum: number, word: string) => sum + word.length, 0) / Math.max(words.length, 1),
       
       // Lexical features
-      positiveWordCount: words.filter(word => this.positiveWords.has(word)).length,
-      negativeWordCount: words.filter(word => this.negativeWords.has(word)).length,
-      emotionalWordCount: words.filter(word => this.emotionalWords.has(word)).length,
-      intensifierCount: words.filter(word => this.intensifiers.has(word)).length,
+      positiveWordCount: words.filter((word: string) => this.positiveWords.has(word)).length,
+      negativeWordCount: words.filter((word: string) => this.negativeWords.has(word)).length,
+      emotionalWordCount: words.filter((word: string) => this.emotionalWords.has(word)).length,
+      intensifierCount: words.filter((word: string) => this.intensifiers.has(word)).length,
       
       // Punctuation features
       exclamationCount: (text.match(/!/g) || []).length,
@@ -421,7 +421,7 @@ export class SentimentAnalysisTrainer extends EventEmitter {
           
           // Check for emotion-specific words
           const emotionWords = features.text.toLowerCase().split(/\s+/)
-            .filter(word => this.emotionalWords.get(word) === emotion);
+            .filter((word: string) => this.emotionalWords.get(word) === emotion);
           score += emotionWords.length * 0.3;
           
           // Check for general sentiment alignment
@@ -517,7 +517,7 @@ export class SentimentAnalysisTrainer extends EventEmitter {
 
   private extractFeaturesFromText(text: string, platform: Platform, contentType: string): SentimentFeatures {
     const words = text.toLowerCase().split(/\s+/);
-    const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+    const sentences = text.split(/[.!?]+/).filter((s: string) => s.trim().length > 0);
     
     return {
       text,
@@ -526,10 +526,10 @@ export class SentimentAnalysisTrainer extends EventEmitter {
       avgWordsPerSentence: words.length / Math.max(sentences.length, 1),
       avgWordLength: words.reduce((sum: number, word: string) => sum + word.length, 0) / Math.max(words.length, 1),
       
-      positiveWordCount: words.filter(word => this.positiveWords.has(word)).length,
-      negativeWordCount: words.filter(word => this.negativeWords.has(word)).length,
-      emotionalWordCount: words.filter(word => this.emotionalWords.has(word)).length,
-      intensifierCount: words.filter(word => this.intensifiers.has(word)).length,
+      positiveWordCount: words.filter((word: string) => this.positiveWords.has(word)).length,
+      negativeWordCount: words.filter((word: string) => this.negativeWords.has(word)).length,
+      emotionalWordCount: words.filter((word: string) => this.emotionalWords.has(word)).length,
+      intensifierCount: words.filter((word: string) => this.intensifiers.has(word)).length,
       
       exclamationCount: (text.match(/!/g) || []).length,
       questionCount: (text.match(/\?/g) || []).length,
@@ -725,7 +725,7 @@ export class SentimentAnalysisTrainer extends EventEmitter {
 
     // Check for emotion-specific words
     const words = text.split(/\s+/);
-    words.forEach(word => {
+    words.forEach((word: string) => {
       const emotion = this.emotionalWords.get(word.toLowerCase());
       if (emotion && emotions.hasOwnProperty(emotion)) {
         emotions[emotion as keyof typeof emotions] += 0.2;

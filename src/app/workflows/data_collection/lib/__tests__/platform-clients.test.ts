@@ -5,7 +5,7 @@ import { InstagramClient } from '../platforms/instagram-client';
 import { BasePlatformClient } from '../platforms/base-platform';
 import { ApiConfig } from '../platforms/types';
 import { IAuthTokenManager, AuthStrategy, OAuth2Credentials } from '../auth.types';
-import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
+import { Platform } from '@/types/platform';
 import { PlatformError, RateLimitError, ApiError } from '../utils/errors';
 
 // Mock the retryWithBackoff function

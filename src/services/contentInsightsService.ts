@@ -1,4 +1,4 @@
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/lib/supabase/client';
 import { TrendingHashtag, DetailedPlatformMetrics, VideoOptimizationAnalysisData } from '@/app/workflows/data_analysis/types/analysis_types';
 
 export interface UserContentAnalysis {
@@ -61,7 +61,7 @@ export class ContentInsightsService {
   private supabase;
 
   constructor() {
-    this.supabase = createClientComponentClient();
+    this.supabase = createClient();
   }
 
   async analyzeUserContent(

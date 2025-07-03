@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
+import { Platform } from '@/types/platform';
 import { QueueItem } from '@/types/schedule';
 
 interface UseContentQueueProps {

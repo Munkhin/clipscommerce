@@ -1,4 +1,4 @@
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/lib/supabase/client';
 
 export interface UserVideo {
   id: string;
@@ -41,7 +41,7 @@ export class UserVideoService {
   private supabase;
 
   constructor() {
-    this.supabase = createClientComponentClient();
+    this.supabase = createClient();
   }
 
   async getUserVideos(userId: string): Promise<{

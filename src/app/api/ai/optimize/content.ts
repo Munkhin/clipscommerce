@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { analyzeSentiment, analyzeTone, suggestCaptionsAndHashtags } from '@/app/workflows/AI_improvement/functions/nlp';
-import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
+import { Platform } from '@/types/platform';
 import { authGuard, createValidator, validators } from '@/lib/security/auth-guard';
 
 const inputValidator = createValidator({

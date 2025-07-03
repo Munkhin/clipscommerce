@@ -123,7 +123,7 @@ export class EngagementPredictionEngine {
       growthRatePercentage: (growthRate * 100).toFixed(2),
       confidence: trendAnalysis.confidence,
       trendsAnalysis: {
-        direction: trendAnalysis.direction,
+        direction: trendAnalysis.direction as 'up' | 'down' | 'stable',
         seasonality: seasonalityAnalysis.pattern,
         recommendation: this.generateGrowthRecommendation(trendAnalysis, seasonalityAnalysis)
       }
@@ -148,7 +148,7 @@ export class EngagementPredictionEngine {
 
     // Analyze video length
     if (features.length) {
-      const optimalLength = platform === 'TikTok' ? 30 : platform === 'Instagram' ? 60 : 120;
+      const optimalLength = platform === 'tiktok' ? 30 : platform === 'instagram' ? 60 : 120;
       const lengthDiff = Math.abs(features.length - optimalLength) / optimalLength;
       qualityScore += Math.max(0, 0.3 - lengthDiff);
     }
@@ -208,30 +208,57 @@ export class EngagementPredictionEngine {
   }
 
   private getPlatformMetrics(platform: Platform) {
-    const metrics = {
-      'TikTok': {
+    const metrics: Record<Platform, {
+      baseEngagementRate: number;
+      likeRate: number;
+      commentRate: number;
+      shareRate: number;
+      trendScore: number;
+    }> = {
+      'tiktok': {
         baseEngagementRate: 0.055,
         likeRate: 0.8,
         commentRate: 0.15,
         shareRate: 0.05,
         trendScore: 0.8
       },
-      'Instagram': {
+      'instagram': {
         baseEngagementRate: 0.035,
         likeRate: 0.9,
         commentRate: 0.08,
         shareRate: 0.02,
         trendScore: 0.7
       },
-      'YouTube': {
+      'youtube': {
         baseEngagementRate: 0.025,
         likeRate: 0.7,
         commentRate: 0.25,
         shareRate: 0.05,
         trendScore: 0.6
+      },
+      'facebook': {
+        baseEngagementRate: 0.030,
+        likeRate: 0.85,
+        commentRate: 0.10,
+        shareRate: 0.03,
+        trendScore: 0.5
+      },
+      'twitter': {
+        baseEngagementRate: 0.045,
+        likeRate: 0.75,
+        commentRate: 0.20,
+        shareRate: 0.05,
+        trendScore: 0.6
+      },
+      'linkedin': {
+        baseEngagementRate: 0.020,
+        likeRate: 0.80,
+        commentRate: 0.15,
+        shareRate: 0.05,
+        trendScore: 0.4
       }
     };
-    return metrics[platform] || metrics['Instagram'];
+    return metrics[platform] || metrics['instagram'];
   }
 
   private calculateViralPotential(featureScores: any, historicalInsights: any, platform: Platform) {
@@ -239,7 +266,7 @@ export class EngagementPredictionEngine {
     const qualityBoost = featureScores.quality * 0.3;
     const engagementBoost = featureScores.engagement * 0.3;
     const historyBoost = historicalInsights.performanceScore * 0.2;
-    const platformBoost = platform === 'TikTok' ? 0.1 : 0.05;
+    const platformBoost = platform === 'tiktok' ? 0.1 : 0.05;
     
     return Math.min(1, baseViral + qualityBoost + engagementBoost + historyBoost + platformBoost);
   }

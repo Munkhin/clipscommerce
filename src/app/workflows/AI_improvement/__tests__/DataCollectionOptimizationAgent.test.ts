@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach, afterEach } from '@jest/globals';
-import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
+import { Platform } from '@/types/platform';
 import { DataCollectionOptimizationAgent, Niche, DataSample, EngagementStats } from '../services/agents/DataCollectionOptimizationAgent';
 
 // Access constants like MIN_QUALITY_SCORE and RECENCY_THRESHOLD_DAYS if they were exported

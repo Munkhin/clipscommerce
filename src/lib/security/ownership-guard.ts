@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { cookies } from 'next/headers';
 import { User } from '@supabase/supabase-js';
 import logger from '@/utils/logger';
 
@@ -34,7 +35,7 @@ export async function verifyResourceOwnership(
   } = options;
 
   try {
-    const supabase = createClient(cookies());
+    const supabase = await createClient(cookies());
 
     // Get user profile for role and team information
     const { data: profile, error: profileError } = await supabase

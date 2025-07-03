@@ -4,7 +4,8 @@ import { Resource } from '@opentelemetry/resources';
 import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
 import { SimpleSpanProcessor, BatchSpanProcessor } from '@opentelemetry/sdk-trace-node';
 import { ConsoleSpanExporter } from '@opentelemetry/sdk-trace-node';
-import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
+// OTLPTraceExporter might not be available, using alternative
+// import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
 import { B3Propagator, B3InjectEncoding } from '@opentelemetry/propagator-b3';
 import { JaegerPropagator } from '@opentelemetry/propagator-jaeger';
 import { CompositePropagator, W3CTraceContextPropagator, W3CBaggagePropagator } from '@opentelemetry/core';
@@ -217,13 +218,13 @@ class TelemetryManager {
         new HttpInstrumentation({
           requestHook: (span, request) => {
             span.setAttributes({
-              'http.request.header.user-agent': (request as any).getHeader?.('user-agent') || '',
-              'http.request.header.x-forwarded-for': (request as any).getHeader?.('x-forwarded-for') || '',
+              'http.request.header.user-agent': (request as any)?.headers?.['user-agent'] || '',
+              'http.request.header.x-forwarded-for': (request as any)?.headers?.['x-forwarded-for'] || '',
             });
           },
           responseHook: (span, response) => {
             span.setAttributes({
-              'http.response.header.content-length': (response as any).getHeader?.('content-length') || '',
+              'http.response.header.content-length': (response as any)?.headers?.['content-length'] || '',
             });
           }
         }),
@@ -293,9 +294,9 @@ class TelemetryManager {
     return {
       traceId: spanContext?.traceId || '',
       spanId: spanContext?.spanId || '',
-      userId: (activeSpan as any)?.getAttribute?.('user.id') as string,
-      sessionId: (activeSpan as any)?.getAttribute?.('session.id') as string,
-      operationId: (activeSpan as any)?.getAttribute?.('operation.id') as string,
+      userId: '', // getAttribute not available on Span
+      sessionId: '', // getAttribute not available on Span
+      operationId: '', // getAttribute not available on Span
     };
   }
 

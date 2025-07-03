@@ -1,9 +1,10 @@
 // src/app/api/autopost/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { cookies } from 'next/headers';
 
 export async function POST(req: NextRequest) {
-  const supabase = createClient(cookies());
+  const supabase = await createClient(cookies());
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
@@ -38,7 +39,7 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
-  const supabase = createClient(cookies());
+  const supabase = await createClient(cookies());
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {

@@ -1,5 +1,5 @@
 ﻿import { PostMetrics } from '../../data_collection/functions/types';
-import { Platform, PlatformEnum } from '@/app/workflows/deliverables/types/deliverables_types';
+import { Platform, PlatformEnum } from '@/types/platform';
 import { 
   AnalysisResult, 
   PerformanceTrends, 

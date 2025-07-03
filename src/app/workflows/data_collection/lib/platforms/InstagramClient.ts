@@ -1,7 +1,7 @@
 import { BasePlatformClient, Post, Analytics } from './base-platform';
 import { ApiConfig, PlatformComment, ApiResponse } from './types';
 import { IAuthTokenManager } from '../auth.types';
-import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
+import { Platform } from '@/types/platform';
 import { PlatformEnum } from '../../../../../types/platform';
 
 export class InstagramClient extends BasePlatformClient {

@@ -719,8 +719,9 @@ export class ErrorRecoveryService {
     
     logger.info('Retrying dead letter queue item', {
       contentId,
-      platform: item.platform,
-      originalReason: item.reason
+      platforms: item.platforms,
+      platform: item.metadata?.platform,
+      originalError: item.metadata?.originalError || item.metadata?.error
     });
     
     // Remove from dead letter queue

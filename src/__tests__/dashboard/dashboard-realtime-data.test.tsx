@@ -2,19 +2,19 @@ import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import DashboardPage from '@/app/dashboard/page';
 import { useAuth } from '@/providers/AuthProvider';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/lib/supabase/client';
 import { useUsageLimits } from '@/hooks/useUsageLimits';
 import { useFeatureUsage } from '@/hooks/useFeatureUsage';
 
 // Mock the dependencies
 jest.mock('@/providers/AuthProvider');
-jest.mock('@supabase/auth-helpers-nextjs');
+jest.mock('@/lib/supabase/client');
 jest.mock('@/hooks/useUsageLimits');
 jest.mock('@/hooks/useFeatureUsage');
 jest.mock('@/app/workflows/reports/ReportsAnalysisService');
 
 const mockAuthProvider = useAuth as jest.MockedFunction<typeof useAuth>;
-const mockSupabaseClient = createClientComponentClient as jest.MockedFunction<typeof createClientComponentClient>;
+const mockSupabaseClient = createClient as jest.MockedFunction<typeof createClient>;
 const mockUsageLimits = useUsageLimits as jest.MockedFunction<typeof useUsageLimits>;
 const mockFeatureUsage = useFeatureUsage as jest.MockedFunction<typeof useFeatureUsage>;
 

@@ -3,7 +3,7 @@ import InstagramClient from './InstagramClient';
 import TikTokClient from './TikTokClient';
 import { YouTubeClient } from '../YouTubeClient';
 import { ApiConfig, ApiCredentials, Platform } from '../types';
-import { PlatformEnum } from '@/app/workflows/deliverables/types/deliverables_types';
+import { PlatformEnum } from '@/types/platform';
 
 /**
  * Factory class for creating platform-specific API clients

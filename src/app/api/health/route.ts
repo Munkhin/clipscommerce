@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { cookies } from 'next/headers';
 import { redisCache } from '@/lib/cache/redisCache';
 
 interface HealthStatus {
@@ -35,7 +36,7 @@ async function checkDatabase(): Promise<{ status: 'healthy' | 'unhealthy'; respo
   const startTime = Date.now();
   
   try {
-    const supabase = createClient(cookies());
+    const supabase = await createClient(cookies());
     
     // Test basic database connectivity with a simple query
     const { data, error } = await supabase

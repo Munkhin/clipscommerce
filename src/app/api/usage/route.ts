@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { cookies } from 'next/headers';
 
 interface UsageRecord {
   user_id: string;
@@ -24,7 +25,7 @@ const MONTHLY_LIMITS: TierLimits = {
 // GET /api/usage - Get current usage for user
 export async function GET(request: NextRequest) {
   try {
-    const supabase = createClient(cookies());
+    const supabase = await createClient(cookies());
     const { data: { session } } = await supabase.auth.getSession();
     
     if (!session) {
@@ -77,7 +78,7 @@ export async function GET(request: NextRequest) {
 // POST /api/usage - Track new usage
 export async function POST(request: NextRequest) {
   try {
-    const supabase = createClient(cookies());
+    const supabase = await createClient(cookies());
     const { data: { session } } = await supabase.auth.getSession();
     
     if (!session) {

@@ -87,7 +87,7 @@ function parseArguments(): CollectionOptions {
   }
 
   // Validate platforms
-  const validPlatforms: Platform[] = ['Instagram', 'TikTok', 'YouTube'];
+  const validPlatforms: Platform[] = ['instagram', 'tiktok', 'youtube'];
   for (const platform of options.platforms) {
     if (!validPlatforms.includes(platform)) {
       console.error(`❌ Invalid platform: ${platform}. Valid platforms: ${validPlatforms.join(', ')}`);

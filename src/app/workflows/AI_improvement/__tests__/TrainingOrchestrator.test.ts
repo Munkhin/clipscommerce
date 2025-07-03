@@ -1,5 +1,5 @@
 import { TrainingOrchestrator } from '../training/TrainingOrchestrator';
-import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
+import { Platform } from '@/types/platform';
 import { createClient } from '@supabase/supabase-js';
 
 // Mock Supabase client

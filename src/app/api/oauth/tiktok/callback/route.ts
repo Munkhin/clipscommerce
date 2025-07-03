@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { createClient } from '@/lib/supabase/server';
 import { AuthTokenManagerService } from '../../../../workflows/data_collection/lib/auth-token-manager.service';
-import { PlatformEnum } from '@/app/workflows/deliverables/types/deliverables_types';
+import { PlatformEnum } from '@/types/platform';
 import { PlatformClientIdentifier } from '../../../../workflows/data_collection/lib/auth.types';
 import { extractErrorMessage } from '@/lib/errors/errorHandling';
 
@@ -68,7 +68,7 @@ export async function GET(request: NextRequest) {
 
     if (credentials && credentials.accessToken) {
       // Successful authentication - set up secure user session
-      const supabase = createClient(cookies());
+      const supabase = await createClient(cookies());
       const { data: { user } } = await supabase.auth.getUser();
 
       if (!user) {

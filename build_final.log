@@ -1,0 +1,233 @@
+
+> build
+> next build
+
+  ▲ Next.js 14.2.30
+  - Environments: .env
+  - Experiments (use with caution):
+    · optimizeCss
+    · scrollRestoration
+
+   Creating an optimized production build ...
+ ⚠ Compiled with warnings
+
+./node_modules/@opentelemetry/instrumentation-connect/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/instrumentation.js
+Critical dependency: the request of a dependency is an expression
+
+Import trace for requested module:
+./node_modules/@opentelemetry/instrumentation-connect/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/instrumentation.js
+./node_modules/@opentelemetry/instrumentation-connect/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/index.js
+./node_modules/@opentelemetry/instrumentation-connect/node_modules/@opentelemetry/instrumentation/build/esm/platform/index.js
+./node_modules/@opentelemetry/instrumentation-connect/node_modules/@opentelemetry/instrumentation/build/esm/index.js
+./node_modules/@opentelemetry/instrumentation-connect/build/src/instrumentation.js
+./node_modules/@opentelemetry/instrumentation-connect/build/src/index.js
+./node_modules/@sentry/node/build/cjs/integrations/tracing/connect.js
+./node_modules/@sentry/node/build/cjs/index.js
+./node_modules/@sentry/nextjs/build/cjs/index.server.js
+./src/app/workflows/autoposting/ErrorHandling.ts
+./src/app/api/autoposting/health/route.ts
+
+./node_modules/@opentelemetry/instrumentation-express/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/instrumentation.js
+Critical dependency: the request of a dependency is an expression
+
+Import trace for requested module:
+./node_modules/@opentelemetry/instrumentation-express/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/instrumentation.js
+./node_modules/@opentelemetry/instrumentation-express/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/index.js
+./node_modules/@opentelemetry/instrumentation-express/node_modules/@opentelemetry/instrumentation/build/esm/platform/index.js
+./node_modules/@opentelemetry/instrumentation-express/node_modules/@opentelemetry/instrumentation/build/esm/index.js
+./node_modules/@opentelemetry/instrumentation-express/build/src/instrumentation.js
+./node_modules/@opentelemetry/instrumentation-express/build/src/index.js
+./node_modules/@sentry/node/build/cjs/integrations/tracing/express.js
+./node_modules/@sentry/node/build/cjs/index.js
+./node_modules/@sentry/nextjs/build/cjs/index.server.js
+./src/app/workflows/autoposting/ErrorHandling.ts
+./src/app/api/autoposting/health/route.ts
+
+./node_modules/@opentelemetry/instrumentation-generic-pool/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/instrumentation.js
+Critical dependency: the request of a dependency is an expression
+
+Import trace for requested module:
+./node_modules/@opentelemetry/instrumentation-generic-pool/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/instrumentation.js
+./node_modules/@opentelemetry/instrumentation-generic-pool/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/index.js
+./node_modules/@opentelemetry/instrumentation-generic-pool/node_modules/@opentelemetry/instrumentation/build/esm/platform/index.js
+./node_modules/@opentelemetry/instrumentation-generic-pool/node_modules/@opentelemetry/instrumentation/build/esm/index.js
+./node_modules/@opentelemetry/instrumentation-generic-pool/build/src/instrumentation.js
+./node_modules/@opentelemetry/instrumentation-generic-pool/build/src/index.js
+./node_modules/@sentry/node/build/cjs/integrations/tracing/genericPool.js
+./node_modules/@sentry/node/build/cjs/index.js
+./node_modules/@sentry/nextjs/build/cjs/index.server.js
+./src/app/workflows/autoposting/ErrorHandling.ts
+./src/app/api/autoposting/health/route.ts
+
+./node_modules/@opentelemetry/instrumentation-hapi/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/instrumentation.js
+Critical dependency: the request of a dependency is an expression
+
+Import trace for requested module:
+./node_modules/@opentelemetry/instrumentation-hapi/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/instrumentation.js
+./node_modules/@opentelemetry/instrumentation-hapi/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/index.js
+./node_modules/@opentelemetry/instrumentation-hapi/node_modules/@opentelemetry/instrumentation/build/esm/platform/index.js
+./node_modules/@opentelemetry/instrumentation-hapi/node_modules/@opentelemetry/instrumentation/build/esm/index.js
+./node_modules/@opentelemetry/instrumentation-hapi/build/src/instrumentation.js
+./node_modules/@opentelemetry/instrumentation-hapi/build/src/index.js
+./node_modules/@sentry/node/build/cjs/integrations/tracing/hapi/index.js
+./node_modules/@sentry/node/build/cjs/index.js
+./node_modules/@sentry/nextjs/build/cjs/index.server.js
+./src/app/workflows/autoposting/ErrorHandling.ts
+./src/app/api/autoposting/health/route.ts
+
+./node_modules/@opentelemetry/instrumentation-ioredis/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/instrumentation.js
+Critical dependency: the request of a dependency is an expression
+
+Import trace for requested module:
+./node_modules/@opentelemetry/instrumentation-ioredis/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/instrumentation.js
+./node_modules/@opentelemetry/instrumentation-ioredis/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/index.js
+./node_modules/@opentelemetry/instrumentation-ioredis/node_modules/@opentelemetry/instrumentation/build/esm/platform/index.js
+./node_modules/@opentelemetry/instrumentation-ioredis/node_modules/@opentelemetry/instrumentation/build/esm/index.js
+./node_modules/@opentelemetry/instrumentation-ioredis/build/src/instrumentation.js
+./node_modules/@opentelemetry/instrumentation-ioredis/build/src/index.js
+./node_modules/@sentry/node/build/cjs/integrations/tracing/redis.js
+./node_modules/@sentry/node/build/cjs/index.js
+./node_modules/@sentry/nextjs/build/cjs/index.server.js
+./src/app/workflows/autoposting/ErrorHandling.ts
+./src/app/api/autoposting/health/route.ts
+
+./node_modules/@opentelemetry/instrumentation-knex/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/instrumentation.js
+Critical dependency: the request of a dependency is an expression
+
+Import trace for requested module:
+./node_modules/@opentelemetry/instrumentation-knex/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/instrumentation.js
+./node_modules/@opentelemetry/instrumentation-knex/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/index.js
+./node_modules/@opentelemetry/instrumentation-knex/node_modules/@opentelemetry/instrumentation/build/esm/platform/index.js
+./node_modules/@opentelemetry/instrumentation-knex/node_modules/@opentelemetry/instrumentation/build/esm/index.js
+./node_modules/@opentelemetry/instrumentation-knex/build/src/instrumentation.js
+./node_modules/@opentelemetry/instrumentation-knex/build/src/index.js
+./node_modules/@sentry/node/build/cjs/integrations/tracing/knex.js
+./node_modules/@sentry/node/build/cjs/index.js
+./node_modules/@sentry/nextjs/build/cjs/index.server.js
+./src/app/workflows/autoposting/ErrorHandling.ts
+./src/app/api/autoposting/health/route.ts
+
+./node_modules/@opentelemetry/instrumentation-lru-memoizer/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/instrumentation.js
+Critical dependency: the request of a dependency is an expression
+
+Import trace for requested module:
+./node_modules/@opentelemetry/instrumentation-lru-memoizer/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/instrumentation.js
+./node_modules/@opentelemetry/instrumentation-lru-memoizer/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/index.js
+./node_modules/@opentelemetry/instrumentation-lru-memoizer/node_modules/@opentelemetry/instrumentation/build/esm/platform/index.js
+./node_modules/@opentelemetry/instrumentation-lru-memoizer/node_modules/@opentelemetry/instrumentation/build/esm/index.js
+./node_modules/@opentelemetry/instrumentation-lru-memoizer/build/src/instrumentation.js
+./node_modules/@opentelemetry/instrumentation-lru-memoizer/build/src/index.js
+./node_modules/@sentry/node/build/cjs/integrations/tracing/lrumemoizer.js
+./node_modules/@sentry/node/build/cjs/index.js
+./node_modules/@sentry/nextjs/build/cjs/index.server.js
+./src/app/workflows/autoposting/ErrorHandling.ts
+./src/app/api/autoposting/health/route.ts
+
+./node_modules/@opentelemetry/instrumentation-mongoose/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/instrumentation.js
+Critical dependency: the request of a dependency is an expression
+
+Import trace for requested module:
+./node_modules/@opentelemetry/instrumentation-mongoose/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/instrumentation.js
+./node_modules/@opentelemetry/instrumentation-mongoose/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/index.js
+./node_modules/@opentelemetry/instrumentation-mongoose/node_modules/@opentelemetry/instrumentation/build/esm/platform/index.js
+./node_modules/@opentelemetry/instrumentation-mongoose/node_modules/@opentelemetry/instrumentation/build/esm/index.js
+./node_modules/@opentelemetry/instrumentation-mongoose/build/src/mongoose.js
+./node_modules/@opentelemetry/instrumentation-mongoose/build/src/index.js
+./node_modules/@sentry/node/build/cjs/integrations/tracing/mongoose.js
+./node_modules/@sentry/node/build/cjs/index.js
+./node_modules/@sentry/nextjs/build/cjs/index.server.js
+./src/app/workflows/autoposting/ErrorHandling.ts
+./src/app/api/autoposting/health/route.ts
+
+./node_modules/@opentelemetry/instrumentation-mysql2/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/instrumentation.js
+Critical dependency: the request of a dependency is an expression
+
+Import trace for requested module:
+./node_modules/@opentelemetry/instrumentation-mysql2/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/instrumentation.js
+./node_modules/@opentelemetry/instrumentation-mysql2/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/index.js
+./node_modules/@opentelemetry/instrumentation-mysql2/node_modules/@opentelemetry/instrumentation/build/esm/platform/index.js
+./node_modules/@opentelemetry/instrumentation-mysql2/node_modules/@opentelemetry/instrumentation/build/esm/index.js
+./node_modules/@opentelemetry/instrumentation-mysql2/build/src/instrumentation.js
+./node_modules/@opentelemetry/instrumentation-mysql2/build/src/index.js
+./node_modules/@sentry/node/build/cjs/integrations/tracing/mysql2.js
+./node_modules/@sentry/node/build/cjs/index.js
+./node_modules/@sentry/nextjs/build/cjs/index.server.js
+./src/app/workflows/autoposting/ErrorHandling.ts
+./src/app/api/autoposting/health/route.ts
+
+./node_modules/@opentelemetry/instrumentation-redis-4/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/instrumentation.js
+Critical dependency: the request of a dependency is an expression
+
+Import trace for requested module:
+./node_modules/@opentelemetry/instrumentation-redis-4/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/instrumentation.js
+./node_modules/@opentelemetry/instrumentation-redis-4/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/index.js
+./node_modules/@opentelemetry/instrumentation-redis-4/node_modules/@opentelemetry/instrumentation/build/esm/platform/index.js
+./node_modules/@opentelemetry/instrumentation-redis-4/node_modules/@opentelemetry/instrumentation/build/esm/index.js
+./node_modules/@opentelemetry/instrumentation-redis-4/build/src/instrumentation.js
+./node_modules/@opentelemetry/instrumentation-redis-4/build/src/index.js
+./node_modules/@sentry/node/build/cjs/integrations/tracing/redis.js
+./node_modules/@sentry/node/build/cjs/index.js
+./node_modules/@sentry/nextjs/build/cjs/index.server.js
+./src/app/workflows/autoposting/ErrorHandling.ts
+./src/app/api/autoposting/health/route.ts
+
+./node_modules/@opentelemetry/instrumentation-undici/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/instrumentation.js
+Critical dependency: the request of a dependency is an expression
+
+Import trace for requested module:
+./node_modules/@opentelemetry/instrumentation-undici/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/instrumentation.js
+./node_modules/@opentelemetry/instrumentation-undici/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/index.js
+./node_modules/@opentelemetry/instrumentation-undici/node_modules/@opentelemetry/instrumentation/build/esm/platform/index.js
+./node_modules/@opentelemetry/instrumentation-undici/node_modules/@opentelemetry/instrumentation/build/esm/index.js
+./node_modules/@opentelemetry/instrumentation-undici/build/src/undici.js
+./node_modules/@opentelemetry/instrumentation-undici/build/src/index.js
+./node_modules/@sentry/node/build/cjs/integrations/node-fetch/index.js
+./node_modules/@sentry/node/build/cjs/index.js
+./node_modules/@sentry/nextjs/build/cjs/index.server.js
+./src/app/workflows/autoposting/ErrorHandling.ts
+./src/app/api/autoposting/health/route.ts
+
+./node_modules/@sentry/node/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/instrumentation.js
+Critical dependency: the request of a dependency is an expression
+
+Import trace for requested module:
+./node_modules/@sentry/node/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/instrumentation.js
+./node_modules/@sentry/node/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/index.js
+./node_modules/@sentry/node/node_modules/@opentelemetry/instrumentation/build/esm/platform/index.js
+./node_modules/@sentry/node/node_modules/@opentelemetry/instrumentation/build/esm/index.js
+./node_modules/@sentry/node/build/cjs/integrations/tracing/postgresjs.js
+./node_modules/@sentry/node/build/cjs/index.js
+./node_modules/@sentry/nextjs/build/cjs/index.server.js
+./src/app/workflows/autoposting/ErrorHandling.ts
+./src/app/api/autoposting/health/route.ts
+
+./node_modules/require-in-the-middle/index.js
+Critical dependency: require function is used in a way in which dependencies cannot be statically extracted
+
+Import trace for requested module:
+./node_modules/require-in-the-middle/index.js
+./node_modules/@sentry/node/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/instrumentation.js
+./node_modules/@sentry/node/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/index.js
+./node_modules/@sentry/node/node_modules/@opentelemetry/instrumentation/build/esm/platform/index.js
+./node_modules/@sentry/node/node_modules/@opentelemetry/instrumentation/build/esm/index.js
+./node_modules/@sentry/node/build/cjs/integrations/tracing/postgresjs.js
+./node_modules/@sentry/node/build/cjs/index.js
+./node_modules/@sentry/nextjs/build/cjs/index.server.js
+./src/app/workflows/autoposting/ErrorHandling.ts
+./src/app/api/autoposting/health/route.ts
+
+   Skipping linting
+   Checking validity of types ...
+Failed to compile.
+
+./src/app/workflows/autoposting/AutoPostAnalytics.ts:132:55
+Type error: Operator '+' cannot be applied to types 'number' and '{ likes: number; comments: number; shares: number; saves?: number | undefined; clicks?: number | undefined; }'.
+
+[0m [90m 130 |[39m     [36mconst[39m since [33m=[39m [36mnew[39m [33mDate[39m([33mDate[39m[33m.[39mnow() [33m-[39m periodDays [33m*[39m [35m24[39m [33m*[39m [35m60[39m [33m*[39m [35m60[39m [33m*[39m [35m1000[39m)[33m;[39m[0m
+[0m [90m 131 |[39m     [36mconst[39m filtered [33m=[39m [36mthis[39m[33m.[39moutcomes[33m.[39mfilter(o [33m=>[39m o[33m.[39mtimestamp [33m>=[39m since)[33m;[39m[0m
+[0m[31m[1m>[22m[39m[90m 132 |[39m     [36mconst[39m totalEngagement [33m=[39m filtered[33m.[39mreduce((a[33m,[39m b) [33m=>[39m a [33m+[39m b[33m.[39mengagement[33m,[39m [35m0[39m)[33m;[39m[0m
+[0m [90m     |[39m                                                       [31m[1m^[22m[39m[0m
+[0m [90m 133 |[39m     [36mconst[39m totalReach [33m=[39m filtered[33m.[39mreduce((a[33m,[39m b) [33m=>[39m a [33m+[39m b[33m.[39mreach[33m,[39m [35m0[39m)[33m;[39m[0m
+[0m [90m 134 |[39m     [36mconst[39m avgROI [33m=[39m filtered[33m.[39mlength [33m?[39m filtered[33m.[39mreduce((a[33m,[39m b) [33m=>[39m a [33m+[39m (b[33m.[39mroi [33m||[39m [35m0[39m)[33m,[39m [35m0[39m) [33m/[39m filtered[33m.[39mlength [33m:[39m [35m0[39m[33m;[39m[0m
+[0m [90m 135 |[39m     [36mreturn[39m {[0m
+Next.js build worker exited with code: 1 and signal: null

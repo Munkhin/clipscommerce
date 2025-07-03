@@ -1,5 +1,6 @@
 import { createClient } from '../server';
 import { Database } from '@/types/supabase';
+import { cookies } from 'next/headers';
 
 type PricingTier = Database['public']['Tables']['pricing_tiers']['Row'] & {
   tier_benefits: Array<{ description: string }>;
@@ -16,7 +17,7 @@ export interface Tier {
 
 // Fetch all pricing tiers with their benefits
 export async function getPricingTiers(): Promise<Tier[]> {
-  const supabase = createClient(cookies());
+  const supabase = await createClient(cookies());
   
   try {
     const { data, error } = await supabase
@@ -58,7 +59,7 @@ export async function getPricingTiers(): Promise<Tier[]> {
 export async function upsertPricingTier(
   tier: Omit<Tier, 'benefits'>
 ): Promise<Database['public']['Tables']['pricing_tiers']['Row']> {
-  const supabase = createClient(cookies());
+  const supabase = await createClient(cookies());
   
   try {
     const { data, error } = await supabase
@@ -89,7 +90,7 @@ export async function addTierBenefit(
   tierId: string, 
   description: string
 ): Promise<Database['public']['Tables']['tier_benefits']['Row']> {
-  const supabase = createClient(cookies());
+  const supabase = await createClient(cookies());
   
   try {
     const { data, error } = await supabase

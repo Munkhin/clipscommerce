@@ -9,11 +9,11 @@ import {
   MOCK_USER_ID,
   MOCK_VIDEO_ID,
 } from '../utils/test-helpers';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/lib/supabase/client';
 
 // Mock Supabase client
-jest.mock('@supabase/auth-helpers-nextjs', () => ({
-  createClientComponentClient: jest.fn(),
+jest.mock('@/lib/supabase/client', () => ({
+  createClient: jest.fn(),
 }));
 
 describe('UserVideoService', () => {
@@ -22,7 +22,7 @@ describe('UserVideoService', () => {
 
   beforeEach(() => {
     mockSupabaseClient = createMockSupabaseClient();
-    (createClientComponentClient as jest.Mock).mockReturnValue(
+    (createClient as jest.Mock).mockReturnValue(
       mockSupabaseClient
     );
 

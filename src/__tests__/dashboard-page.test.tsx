@@ -9,8 +9,8 @@ jest.mock('@/providers/AuthProvider', () => ({
 }));
 
 // Mock the Supabase client
-jest.mock('@supabase/auth-helpers-nextjs', () => ({
-  createClientComponentClient: jest.fn(() => ({
+jest.mock('@/lib/supabase/client', () => ({
+  createClient: jest.fn(() => ({
     from: jest.fn(() => ({
       select: jest.fn(() => ({
         eq: jest.fn(() => Promise.resolve({ data: [], error: null })),

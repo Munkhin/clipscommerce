@@ -3,7 +3,7 @@ import { Platform, ScanResult, ScanOptions, PostMetrics, Competitor, ScanStatus 
 import { OptimizedPostAnalyzer as PostAnalyzer } from './analysis/PostAnalyzer';
 import { Cache } from './utils/Cache';
 import { EventEmitter } from 'events';
-import { Platform as DeliverablePlatform } from '@/app/workflows/deliverables/types/deliverables_types';
+import { Platform as DeliverablePlatform } from '@/types/platform';
 import { retryWithBackoff } from '../../../shared_infra';
 import PlatformFactory from '../lib/platforms/consolidated/PlatformFactory';
 import { TikTokClient } from '../lib/platforms/TikTokClient';

@@ -1,5 +1,5 @@
 import { SupabaseClient } from '@supabase/supabase-js';
-import { Platform, PlatformEnum } from '@/app/workflows/deliverables/types/deliverables_types';
+import { Platform, PlatformEnum } from '@/types/platform';
 import { EventEmitter } from 'events';
 import { createTrainingError, extractErrorMessage, logError, isError } from '@/lib/errors/errorHandling';
 
@@ -305,7 +305,7 @@ export class ContentOptimizationTrainer extends EventEmitter {
     const hashtagPerformance = new Map<string, { usage: number, avgEngagement: number }>();
 
     this.trainingData.forEach(data => {
-      data.features.originalHashtags.forEach(hashtag => {
+      data.features.originalHashtags.forEach((hashtag: string) => {
         const current = hashtagPerformance.get(hashtag) || { usage: 0, avgEngagement: 0 };
         current.usage++;
         current.avgEngagement += data.target.engagementIncrease;
@@ -631,7 +631,7 @@ export class ContentOptimizationTrainer extends EventEmitter {
     this.trainingData
       .filter(data => data.target.engagementIncrease > 0.1)
       .forEach(data => {
-        data.features.originalHashtags.forEach(hashtag => {
+        data.features.originalHashtags.forEach((hashtag: string) => {
           hashtagCounts.set(hashtag, (hashtagCounts.get(hashtag) || 0) + 1);
         });
       });

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
+import { Platform } from '@/types/platform';
 import { Scheduler, OptimalTimeWindow } from '@/lib/ai/scheduling';
 
 interface HistoricalEngagementData {

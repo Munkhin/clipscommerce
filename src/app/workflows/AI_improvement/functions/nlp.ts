@@ -1,4 +1,4 @@
-import { Platform, PlatformEnum } from '@/app/workflows/deliverables/types/deliverables_types';
+import { Platform, PlatformEnum } from '@/types/platform';
 import { featureStore } from './feedbackLoop';
 
 // Core NLP utilities for AI Improvement Workflow

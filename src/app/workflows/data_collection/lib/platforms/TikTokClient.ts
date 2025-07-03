@@ -1,7 +1,7 @@
-import { BasePlatformClient, HeaderValue, ApiResponse as BaseApiResponse, Post, Analytics } from './base-platform';
-import { ApiConfig as PlatformSpecificApiConfig, PlatformComment, ApiResponse } from './types';
+import { BasePlatformClient, Post, Analytics } from './base-platform';
+import { ApiConfig as PlatformSpecificApiConfig, PlatformComment, ApiResponse, HeaderValue, PlatformPostMetrics, PlatformUserActivity, PlatformPost } from './types';
 import { IAuthTokenManager } from '../auth.types';
-import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
+import { Platform } from '@/types/platform';
 import { PlatformEnum } from '../../../../../types/platform';
 import { ApiError, PlatformError, RateLimitError, ValidationError } from '../utils/errors';
 import { z } from 'zod';
@@ -83,7 +83,7 @@ export class TikTokClient extends BasePlatformClient {
 
   private async _callTikTokApi<TRequest, TApiDataField, TFullResponse extends { error: TikTokApiErrorData, data?: TApiDataField } >(
     ...args: any[]
-  ): Promise<BaseApiResponse<TApiDataField>> {
+  ): Promise<ApiResponse<TApiDataField>> {
     // Support both the standard and test/mock signatures
     let endpoint: string;
     let payload: TRequest;
@@ -333,6 +333,50 @@ export class TikTokClient extends BasePlatformClient {
     };
 
     return this.publishVideo(publishParams);
+  }
+
+  async getPostMetrics(postId: string): Promise<ApiResponse<PlatformPostMetrics>> {
+    this.log('warn', 'getPostMetrics is not yet implemented for TikTokClient. Returning stubbed response.', { postId });
+    return Promise.resolve({
+      data: {
+        id: postId,
+        views: 0,
+        likes: 0,
+        comments: 0,
+        shares: 0,
+        timestamp: new Date().toISOString()
+      },
+      rateLimit: this.rateLimit === null ? undefined : this.rateLimit,
+    });
+  }
+
+  async getUserActivity(): Promise<ApiResponse<PlatformUserActivity>> {
+    this.log('warn', 'getUserActivity is not yet implemented for TikTokClient. Returning stubbed response.');
+    return Promise.resolve({
+      data: {
+        followerCount: 0,
+        followingCount: 0,
+        postCount: 0,
+        lastUpdated: new Date().toISOString()
+      },
+      rateLimit: this.rateLimit === null ? undefined : this.rateLimit,
+    });
+  }
+
+  async getUserVideos(options?: {
+    userId?: string;
+    cursor?: string;
+    limit?: number;
+  }): Promise<ApiResponse<{ posts: PlatformPost[]; nextPageCursor?: string; hasMore?: boolean }>> {
+    this.log('warn', 'getUserVideos is not yet implemented for TikTokClient. Returning stubbed response.', { options });
+    return Promise.resolve({
+      data: {
+        posts: [],
+        nextPageCursor: undefined,
+        hasMore: false,
+      },
+      rateLimit: this.rateLimit === null ? undefined : this.rateLimit,
+    });
   }
 
   async getVideoComments(

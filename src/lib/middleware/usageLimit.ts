@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { cookies } from 'next/headers';
 
 interface UsageLimitOptions {
   operationType: 'content_generation' | 'video_optimization' | 'data_analysis' | 'ai_recommendation';
@@ -29,7 +30,7 @@ export class UsageLimitMiddleware {
     options: UsageLimitOptions
   ): Promise<NextResponse | null> {
     try {
-      const supabase = createClient(cookies());
+      const supabase = await createClient(cookies());
       const { data: { session } } = await supabase.auth.getSession();
       
       if (!session) {
@@ -134,7 +135,7 @@ export class UsageLimitMiddleware {
     options: UsageLimitOptions
   ): Promise<void> {
     try {
-      const supabase = createClient(cookies());
+      const supabase = await createClient(cookies());
       
       const usageRecord = {
         user_id: userId,
@@ -203,7 +204,7 @@ export class UsageLimitMiddleware {
     usage_by_operation: Array<{operation_type: string; count: number; cost_units: number}>;
   } | null> {
     try {
-      const supabase = createClient(cookies());
+      const supabase = await createClient(cookies());
       
       // Get user subscription tier
       const { data: profile } = await supabase

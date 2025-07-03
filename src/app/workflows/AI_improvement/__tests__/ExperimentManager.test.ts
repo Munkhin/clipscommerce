@@ -1,5 +1,5 @@
 import { ExperimentManager } from '../functions/abTesting';
-import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
+import { Platform } from '@/types/platform';
 
 // Mock Supabase client
 const mockSupabase = {

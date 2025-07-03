@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/providers/AuthProvider';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/lib/supabase/client';
 
 export function useRole() {
   const { user } = useAuth();
@@ -12,7 +12,7 @@ export function useRole() {
         return;
       }
 
-      const supabase = createClientComponentClient();
+      const supabase = createClient();
       const { data, error } = await supabase
         .from('users')
         .select('role_id')

@@ -3,13 +3,12 @@ import { BasePlatformClient, Post, Analytics } from "../base-platform";
 import {
   ApiConfig,
   ApiResponse,
-  Platform,
   PlatformPost,
   PlatformPostMetrics,
   PlatformUserActivity,
   PlatformComment,
 } from "../types";
-import { PlatformEnum } from '@/app/workflows/deliverables/types/deliverables_types';
+import { Platform, PlatformEnum } from '@/types/platform';
 import { extractErrorMessage } from '@/lib/errors/errorHandling';
 
 interface TikTokApiErrorResponse {
@@ -23,7 +22,7 @@ interface TikTokApiErrorResponse {
 
 export class TikTokClient extends BasePlatformClient {
   protected client: AxiosInstance;
-  protected readonly platform: Platform = 'tiktok';
+  protected readonly platform: Platform = PlatformEnum.TIKTOK;
   private static readonly DEFAULT_CONFIG: ApiConfig = {
     baseUrl: "https://open.tiktokapis.com",
     version: "v2",
@@ -109,7 +108,7 @@ export class TikTokClient extends BasePlatformClient {
     const videos: any[] = response.data?.data?.videos || [];
     const posts: PlatformPost[] = videos.map((v) => ({
       id: v.id,
-      platform: Platform.TIKTOK,
+      platform: PlatformEnum.TIKTOK,
       userId: userId,
       title: v.desc,
       description: v.desc,
@@ -167,7 +166,7 @@ export class TikTokClient extends BasePlatformClient {
       text: c.text,
       likeCount: c.digg_count,
       publishedAt: new Date(c.create_time * 1000).toISOString(),
-      platform: Platform.TIKTOK,
+      platform: PlatformEnum.TIKTOK,
       sourceData: c,
     }));
 

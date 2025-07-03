@@ -1,9 +1,10 @@
 // src/app/api/social-credentials/route.ts
 import { createClient } from '@/lib/supabase/server';
+import { cookies } from 'next/headers';
 import { type NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
-  const supabase = createClient(cookies());
+  const supabase = await createClient(cookies());
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
@@ -40,7 +41,7 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
-  const supabase = createClient(cookies());
+  const supabase = await createClient(cookies());
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {

@@ -585,7 +585,7 @@ export class MLModelPersistenceService {
     if (typeof data === 'string') {
       return crypto.createHash('sha256').update(data, 'utf8').digest('hex');
     } else {
-      return crypto.createHash('sha256').update(data).digest('hex');
+      return crypto.createHash('sha256').update(data as crypto.BinaryLike).digest('hex');
     }
   }
 

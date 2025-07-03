@@ -74,7 +74,12 @@ export abstract class BasePlatformClient {
   }
 
   protected log(level: 'info' | 'warn' | 'error' | 'debug', message: string, data?: any) {
-    logger[level](`[${this.constructor.name}] ${message}`, data || '');
+    const logMessage = `[${this.constructor.name}] ${message}`;
+    if (data) {
+      logger[level](data, logMessage);
+    } else {
+      logger[level](logMessage);
+    }
   }
 
   protected async request<T>(config: AxiosRequestConfig): Promise<AxiosResponse<T>> {

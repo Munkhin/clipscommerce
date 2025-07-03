@@ -1,0 +1,11 @@
+
+> build
+> next build
+
+  ▲ Next.js 14.2.30
+  - Environments: .env
+  - Experiments (use with caution):
+    · optimizeCss
+    · scrollRestoration
+
+   Creating an optimized production build ...

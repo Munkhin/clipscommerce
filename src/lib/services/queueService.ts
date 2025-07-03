@@ -1,4 +1,4 @@
-import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
+import { Platform } from '@/types/platform';
 import { Post, QueueItem } from "@/types/schedule";
 import { PlatformApiFactory, getPlatformClient } from "./platformApis/factory";
 

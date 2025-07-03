@@ -3,7 +3,7 @@
  * Provides caching for client lists, payment histories, and other frequently accessed data
  */
 
-import { createCacheError, extractErrorMessage, logError, safeCacheValue, safeCacheKey, isError } from '@/lib/errors/errorHandling';
+import { extractErrorMessage, logError, safeCacheKey } from '@/lib/errors/errorHandling';
 
 export interface CacheConfig {
   host: string;
@@ -661,10 +661,6 @@ function createCacheError(error: unknown, operation: string, key?: string, tags?
   }
   
   return new Error(errorMsg);
-}
-
-function logError(error: Error): void {
-  console.error('[CACHE] Error:', error.message);
 }
 
 function safeCacheValue<T>(value: unknown): T | null {

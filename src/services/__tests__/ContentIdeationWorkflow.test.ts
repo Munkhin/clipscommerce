@@ -1,6 +1,6 @@
 import { ContentIdeationWorkflow } from '../contentIdeationWorkflow';
 import { generateContent, GenerateContentResponse } from '../contentGeneration';
-import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
+import { Platform } from '@/types/platform';
 
 jest.mock('../contentGeneration');
 

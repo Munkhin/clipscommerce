@@ -2,15 +2,22 @@ import { BasePlatformClient } from './base-platform';
 import { Post, Analytics } from '@/types';
 import { ApiConfig, ApiResponse, PlatformComment, PlatformPostMetrics, PlatformUserActivity, PlatformPost, ApiRateLimit } from './types';
 import { YouTubeCommentThreadListResponseSchema, YouTubeCommentThread, YouTubeChannelListResponseSchema, YouTubeChannelListResponse, YouTubeVideoListResponseSchema, YouTubeVideoListResponse, YouTubeVideo, YouTubeCommentThreadListResponse, YouTubeChannel } from './youtube.types';
-import { Platform, PlatformEnum } from '@/app/workflows/deliverables/types/deliverables_types';
+import { Platform, PlatformEnum } from '@/types/platform';
 import { IAuthTokenManager } from '../auth.types';
 import { ApiError, PlatformError, RateLimitError } from '../utils/errors';
 
 export class YouTubeClient extends BasePlatformClient {
   protected readonly platform: Platform = PlatformEnum.YOUTUBE;
 
-  constructor(config: ApiConfig, authTokenManager: IAuthTokenManager, userId?: string) {
-    super(config, authTokenManager, userId);
+  constructor(config: Partial<ApiConfig>, authTokenManager: IAuthTokenManager, userId?: string) {
+    const fullConfig: ApiConfig = {
+      baseUrl: config.baseUrl || 'https://www.googleapis.com/youtube/v3',
+      version: config.version || 'v3',
+      rateLimit: config.rateLimit || { requests: 100, perSeconds: 100 },
+      timeout: config.timeout || 10000,
+      ...config
+    };
+    super(fullConfig, authTokenManager, userId);
   }
 
   protected handleRateLimit(headers: any): void {

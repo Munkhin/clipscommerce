@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/lib/supabase/server';
 import { cookies } from 'next/headers';
 
 interface CompetitorContent {
@@ -27,7 +27,7 @@ interface CompetitorData {
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
+    const supabase = await createClient(cookies());
     const { searchParams } = new URL(request.url);
     const niche = searchParams.get('niche') || 'general';
     const limit = parseInt(searchParams.get('limit') || '5');

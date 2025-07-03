@@ -1,5 +1,4 @@
-import { Platform } from '@/app/deliverables/types/deliverables_types';
-// Note: PlatformAuth type needs to be defined elsewhere as it was removed from platform.ts
+import { Platform, PlatformAuth } from '@/types/platform';
 import { Post, PostContent, PostStatus } from "@/types/schedule";
 import { PlatformApiClient } from "./base";
 

@@ -1,6 +1,7 @@
 import { createClient as createServerClient } from '@/lib/supabase/server';
 import { createClient } from '@/lib/supabase/client';
 import { StorageError } from '@supabase/storage-js';
+import { cookies } from 'next/headers';
 import crypto from 'crypto';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -49,7 +50,7 @@ export class SupabaseStorageService {
   private supabase;
   
   constructor(isServer = false) {
-    this.supabase = isServer ? createServerClient(cookies()) : createClient(cookies());
+    this.supabase = isServer ? createServerClient(cookies()) : createClient();
   }
 
   /**
@@ -428,7 +429,7 @@ export class SupabaseStorageService {
   }
 
   private generateFileHash(buffer: Buffer): string {
-    return crypto.createHash('sha256').update(buffer).digest('hex');
+    return crypto.createHash('sha256').update(buffer as crypto.BinaryLike).digest('hex');
   }
 
   private isImageFile(mimeType: string): boolean {
@@ -509,7 +510,7 @@ export class SupabaseStorageService {
     }
 
     // Delete files from storage and metadata
-    const deletionPromises = expiredFiles.map(file =>
+    const deletionPromises = expiredFiles.map((file: FileMetadata) =>
       this.deleteFile(file.bucket_id as BucketName, file.file_path, currentUserId)
     );
 

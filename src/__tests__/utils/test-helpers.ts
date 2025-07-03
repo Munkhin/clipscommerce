@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient as createServerClient } from '@/lib/supabase/server';
+import { createClient as createClientClient } from '@/lib/supabase/client';
 
 // Mock data constants
 export const MOCK_USER_ID = 'test-user-123';

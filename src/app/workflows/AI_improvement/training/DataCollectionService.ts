@@ -1,6 +1,6 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { Platform, PostMetrics } from '../../data_analysis/types/analysis_types';
-import { Platform as ScannerPlatform } from '@/app/workflows/deliverables/types/deliverables_types';
+import { Platform as ScannerPlatform } from '@/types/platform';
 import { EnhancedScannerService } from '../../data_collection/functions/EnhancedScannerService';
 import { CacheSystem, createDevCacheSystem } from '../../data_collection/functions/cache/CacheSystem';
 
@@ -46,16 +46,8 @@ export class TrainingDataCollectionService {
 
   // Convert analysis platform to scanner platform string
   private convertToScannerPlatform(platform: Platform): ScannerPlatform {
-    switch (platform) {
-      case 'TikTok':
-        return 'TIKTOK';
-      case 'Instagram':
-        return 'INSTAGRAM';
-      case 'YouTube':
-        return 'YOUTUBE';
-      default:
-        throw new Error(`Unsupported platform: ${platform}`);
-    }
+    // Since both types are the same (lowercase Platform), just return the input
+    return platform;
   }
 
   constructor(

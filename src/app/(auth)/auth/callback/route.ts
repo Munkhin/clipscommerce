@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import { URL } from "url";
 
 export async function GET(request: Request) {
@@ -21,7 +22,7 @@ export async function GET(request: Request) {
 
   // Handle email confirmation
   if (code) {
-    const supabase = createClient(cookies());
+    const supabase = await createClient(cookies());
     
     try {
       const { error: authError } = await supabase.auth.exchangeCodeForSession(code);

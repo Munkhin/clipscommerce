@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from 'next/server';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/lib/supabase/server';
 import { cookies } from 'next/headers';
 import Stripe from 'stripe';
 // import { URL } from 'url'; // Remove this line, use the global URL instead
@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const supabase = createRouteHandlerClient({ cookies });
+    const supabase = await createClient(cookies());
     const { data: { session } } = await supabase.auth.getSession();
 
     if (!session) {

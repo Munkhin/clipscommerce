@@ -1,6 +1,7 @@
 import { aiImprovementService } from '../AIImprovementService';
 import { ContentNiche } from '../../types/niche_types';
-import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
+import { Platform } from '@/types/platform';
+import { extractErrorMessage } from '@/lib/errors/errorHandling';
 // import { MetricsTracker } from '@/lib/utils/metrics';
 // import { EnhancedCache } from '@/lib/utils/caching';
 
@@ -602,7 +603,7 @@ export class ContentOptimizationAgent {
   private createBanditContext(task: ContentOptimizationTask): BanditContext {
     const now = new Date();
     return {
-      platform: task.platform || 'INSTAGRAM',
+      platform: task.platform || 'instagram',
       contentType: task.parameters?.contentType || 'text',
       audienceSegment: task.parameters?.audienceSegment || 'general',
       timeOfDay: now.getHours(),

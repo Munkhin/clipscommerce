@@ -1,4 +1,4 @@
-import { PlatformEnum } from '@/app/workflows/deliverables/types/deliverables_types';
+import { PlatformEnum } from '@/types/platform';
 import { ContentNiche } from '../types/niche_types';
 import { AIImprovementService } from './AIImprovementService';
 import { DataCollectionAgent, DataGap } from './agents/DataCollectionAgent';

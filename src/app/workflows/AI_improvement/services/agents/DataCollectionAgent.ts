@@ -1,4 +1,4 @@
-import { Platform, PlatformEnum } from '@/app/workflows/deliverables/types/deliverables_types';
+import { Platform, PlatformEnum } from '@/types/platform';
 import { ContentNiche, getNicheCharacteristics } from '../../types/niche_types';
 import { extractErrorMessage } from '@/lib/errors/errorHandling';
 
@@ -451,6 +451,24 @@ export class DataCollectionAgent {
         '/channels',
         '/playlistItems'
       ],
+      [PlatformEnum.FACEBOOK]: [
+        '/posts',
+        '/insights',
+        '/feed',
+        '/page_posts'
+      ],
+      [PlatformEnum.TWITTER]: [
+        '/tweets',
+        '/users',
+        '/search/recent',
+        '/trends'
+      ],
+      [PlatformEnum.LINKEDIN]: [
+        '/posts',
+        '/shares',
+        '/companies',
+        '/analytics'
+      ],
     };
     
     return endpointMap[platform] || [];
@@ -464,6 +482,9 @@ export class DataCollectionAgent {
       [PlatformEnum.TIKTOK]: 100,
       [PlatformEnum.INSTAGRAM]: 200,
       [PlatformEnum.YOUTUBE]: 10000,
+      [PlatformEnum.FACEBOOK]: 500,
+      [PlatformEnum.TWITTER]: 300,
+      [PlatformEnum.LINKEDIN]: 1000,
     };
     
     const platformRate = baseRates[platform] || 100;

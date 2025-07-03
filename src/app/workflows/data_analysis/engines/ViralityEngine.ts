@@ -1,6 +1,6 @@
 import { BaseAnalysisRequest, AudioVirality, AnalysisResult } from '../types/analysis_types';
 import { AudioAnalysisService } from '@/services/audioAnalysisService';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/lib/supabase/client';
 
 export class ViralityEngine {
   private audioAnalysisService: AudioAnalysisService;
@@ -8,7 +8,7 @@ export class ViralityEngine {
 
   constructor() {
     this.audioAnalysisService = new AudioAnalysisService();
-    this.supabase = createClientComponentClient();
+    this.supabase = createClient();
   }
 
   async analyzeAudioVirality(

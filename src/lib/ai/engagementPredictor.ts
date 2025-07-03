@@ -1,4 +1,4 @@
-import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
+import { Platform } from '@/types/platform';
 import * as tf from '@tensorflow/tfjs';
 import { Cache } from '../utils/cache';
 

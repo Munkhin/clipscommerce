@@ -3,7 +3,7 @@ import { InstagramApiMediaNode, InstagramApiUserNode } from '../../../types/inst
 import { 
   BasePlatformClient, Post, Analytics
 } from '../base-platform';
-import { Platform, PlatformEnum } from '@/app/workflows/deliverables/types/deliverables_types';
+import { Platform, PlatformEnum } from '@/types/platform';
 import { ApiConfig, ApiCredentials, ApiResponse, PlatformPost, PlatformPostMetrics, PlatformUserActivity, PlatformComment } from '../types';
 import { extractErrorMessage } from '@/lib/errors/errorHandling';
 

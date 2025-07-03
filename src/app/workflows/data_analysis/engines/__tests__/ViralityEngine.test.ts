@@ -1,14 +1,14 @@
 import { ViralityEngine } from '../ViralityEngine';
 import { AudioAnalysisService } from '@/services/audioAnalysisService';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/lib/supabase/client';
 import { BaseAnalysisRequest, Platform } from '../../types/analysis_types';
 
 // Mock dependencies
 jest.mock('@/services/audioAnalysisService');
-jest.mock('@supabase/auth-helpers-nextjs');
+jest.mock('@/lib/supabase/client');
 
 const MockedAudioAnalysisService = AudioAnalysisService as jest.MockedClass<typeof AudioAnalysisService>;
-const mockSupabaseClient = createClientComponentClient as jest.MockedFunction<typeof createClientComponentClient>;
+const mockSupabaseClient = createClient as jest.MockedFunction<typeof createClient>;
 
 describe('ViralityEngine', () => {
   let viralityEngine: ViralityEngine;

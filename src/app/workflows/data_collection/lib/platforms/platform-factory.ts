@@ -1,4 +1,4 @@
-import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
+import { Platform } from '@/types/platform';
 import { PlatformClient, ApiConfig as PlatformSpecificApiConfig } from './types'; // Renamed ApiConfig
 import { TikTokClient } from './tiktok-client';
 import { InstagramClient } from './instagram-client';

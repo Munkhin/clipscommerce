@@ -1,18 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { cookies } from 'next/headers';
 import { serverStorageService, BucketName } from '@/lib/storage/supabase-storage';
 import { URL } from 'url';
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     bucket: BucketName;
     path: string[];
-  };
+  }>;
 }
 
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
-    const supabase = createClient(cookies());
+    const supabase = await createClient(cookies());
 
     // Check authentication
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -20,7 +21,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { bucket, path } = params;
+    const { bucket, path } = await params;
     const filePath = path.join('/');
 
     // Verify file ownership before deletion
@@ -46,9 +47,9 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
 
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
-    const supabase = createClient(cookies());
+    const supabase = await createClient(cookies());
 
-    const { bucket, path } = params;
+    const { bucket, path } = await params;
     const filePath = path.join('/');
     const { searchParams } = new URL(request.url);
     const download = searchParams.get('download') === 'true';

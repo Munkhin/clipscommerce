@@ -29,7 +29,7 @@ export class SentimentAnalysisEngine {
     const patternBasedSentiment = this.analyzePatternBasedSentiment(input.text);
     
     // Try to use the text analyzer for additional context
-    let contextualSentiment = { score: 0, label: 'neutral' as const };
+    let contextualSentiment: { score: number; label: 'positive' | 'negative' | 'neutral' } = { score: 0, label: 'neutral' };
     try {
       const summary = await this.textAnalyzer.summarizeContent(input.text);
       contextualSentiment = this.extractSentimentFromSummary(summary);

@@ -1,7 +1,7 @@
 import { BasePlatformClient, Post, Analytics } from './base-platform';
 import { ApiConfig, PlatformComment, ApiResponse } from './types';
 import { IAuthTokenManager } from '../auth.types';
-import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
+import { Platform } from '@/types/platform';
 
 export class YouTubeClient extends BasePlatformClient {
   protected readonly platform: Platform = 'youtube';
@@ -33,6 +33,50 @@ export class YouTubeClient extends BasePlatformClient {
     console.log('Posting video to YouTube:', params);
     return Promise.resolve({
       id: 'youtube-post-id',
+    });
+  }
+
+  async getPostMetrics(postId: string): Promise<ApiResponse<PlatformPostMetrics>> {
+    this.log('warn', 'getPostMetrics is not yet implemented for YouTubeClient. Returning stubbed response.', { postId });
+    return Promise.resolve({
+      data: {
+        id: postId,
+        views: 0,
+        likes: 0,
+        comments: 0,
+        shares: 0,
+        timestamp: new Date().toISOString()
+      },
+      rateLimit: this.rateLimit === null ? undefined : this.rateLimit,
+    });
+  }
+
+  async getUserActivity(): Promise<ApiResponse<PlatformUserActivity>> {
+    this.log('warn', 'getUserActivity is not yet implemented for YouTubeClient. Returning stubbed response.');
+    return Promise.resolve({
+      data: {
+        followerCount: 0,
+        followingCount: 0,
+        postCount: 0,
+        lastUpdated: new Date().toISOString()
+      },
+      rateLimit: this.rateLimit === null ? undefined : this.rateLimit,
+    });
+  }
+
+  async getUserVideos(options?: {
+    userId?: string;
+    cursor?: string;
+    limit?: number;
+  }): Promise<ApiResponse<{ posts: PlatformPost[]; nextPageCursor?: string; hasMore?: boolean }>> {
+    this.log('warn', 'getUserVideos is not yet implemented for YouTubeClient. Returning stubbed response.', { options });
+    return Promise.resolve({
+      data: {
+        posts: [],
+        nextPageCursor: undefined,
+        hasMore: false,
+      },
+      rateLimit: this.rateLimit === null ? undefined : this.rateLimit,
     });
   }
 

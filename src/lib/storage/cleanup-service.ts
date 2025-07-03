@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
+import { cookies } from 'next/headers';
 import { serverStorageService } from './supabase-storage';
 import * as cron from 'node-cron';
 import { createStorageError, extractErrorMessage, logError, isError } from '@/lib/errors/errorHandling';
@@ -14,7 +15,7 @@ interface FileMetadata {
 
 export class StorageCleanupService {
   private async getSupabase() {
-    return await createClient();
+    return await createClient(cookies());
   }
 
   /**

@@ -12,9 +12,9 @@ import {
   MOCK_USER_ID
 } from '../utils/test-helpers';
 
-// Mock Supabase auth helpers
-jest.mock('@supabase/auth-helpers-nextjs', () => ({
-  createRouteHandlerClient: jest.fn()
+// Mock Supabase client
+jest.mock('@/lib/supabase/server', () => ({
+  createClient: jest.fn()
 }));
 
 // Mock cookies
@@ -22,14 +22,14 @@ jest.mock('next/headers', () => ({
   cookies: jest.fn()
 }));
 
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/lib/supabase/server';
 
 describe('/api/competitors API Route', () => {
   let mockSupabaseClient: any;
 
   beforeEach(() => {
     mockSupabaseClient = createMockSupabaseClient();
-    (createRouteHandlerClient as jest.Mock).mockReturnValue(mockSupabaseClient);
+    (createClient as jest.Mock).mockResolvedValue(mockSupabaseClient);
   });
 
   afterEach(() => {

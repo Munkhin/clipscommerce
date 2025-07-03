@@ -47,7 +47,7 @@ import {
   Briefcase
 } from 'lucide-react';
 import { ReportsAnalysisService } from '@/app/workflows/reports/ReportsAnalysisService';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/lib/supabase/client';
 import { ChartWrapper } from '@/components/ui/chart-wrapper';
 import { LineChartComponent, BarChartComponent } from '@/components/dashboard/charts';
 import UsageTracker from '@/components/dashboard/UsageTracker';
@@ -110,14 +110,14 @@ export default function DashboardPage() {
 
   // Real-time data updates
   useEffect(() => {
-    const supabase = createClientComponentClient();
+    const supabase = createClient();
 
     async function fetchInitialData() {
       const { data, error } = await supabase.from('realtime_metrics').select('*');
       if (error) {
         console.error('Error fetching initial real-time data:', error);
       } else {
-        const initialData = data.reduce((acc, metric) => {
+        const initialData = data.reduce((acc: { revenue: number; revenueGrowth: number; orders: number; ordersGrowth: number; conversion: number; conversionGrowth: number; visitors: number; visitorsGrowth: number }, metric: { metric_name: string; value: number }) => {
           acc[metric.metric_name as keyof typeof acc] = metric.value;
           return acc;
         }, {} as { revenue: number; revenueGrowth: number; orders: number; ordersGrowth: number; conversion: number; conversionGrowth: number; visitors: number; visitorsGrowth: number });
@@ -129,7 +129,7 @@ export default function DashboardPage() {
 
     const channel = supabase
       .channel('realtime-metrics')
-      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'realtime_metrics' }, (payload) => {
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'realtime_metrics' }, (payload: { new: { metric_name: string; value: number } }) => {
         setRealtimeData((prev) => ({
           ...prev,
           [payload.new.metric_name as keyof typeof prev]: payload.new.value,
@@ -148,14 +148,14 @@ export default function DashboardPage() {
       if (!user) return;
       setLoading(true);
       try {
-        const supabase = createClientComponentClient();
+        const supabase = createClient();
         const reportsService = new ReportsAnalysisService(supabase);
         const now = new Date();
         const start = new Date(now.getFullYear(), now.getMonth(), 1);
         const end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
         const result = await reportsService.getReport({
           userId: user.id,
-          platform: 'TikTok',
+          platform: 'tiktok',
           timeRange: { start: start.toISOString(), end: end.toISOString() },
           correlationId: `dashboard-home-${user.id}`,
         });

@@ -1,7 +1,7 @@
 // difficult: Instagram Graph API client implementation
 import { BasePlatformClient } from './BasePlatformClient';
 import { PostMetrics, InstagramMediaProductType, PaginatedResponse, Pagination } from '../types';
-import { Platform } from '@/app/workflows/deliverables/types/deliverables_types';
+import { Platform } from '@/types/platform';
 import { extractErrorMessage } from '@/lib/errors/errorHandling';
 
 // Helper function to extract hashtags from caption

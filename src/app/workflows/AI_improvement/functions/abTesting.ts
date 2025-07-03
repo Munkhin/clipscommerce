@@ -1,4 +1,4 @@
-import { Platform, PlatformEnum } from '@/app/workflows/deliverables/types/deliverables_types';
+import { Platform, PlatformEnum } from '@/types/platform';
 import { PostMetrics } from '../../data_collection/functions/types';
 import { Beta } from 'jstat'; // Use jstat for Beta distribution (if not available, mock below)
 
@@ -819,10 +819,13 @@ function optimizeCaption(caption: string, platform: Platform): string {
 
 function generateTrendingHashtags(platform: Platform): string[] {
   // Mock trending hashtags (in production, fetch from real data)
-  const trendingByPlatform = {
-    [PlatformEnum.TIKTOK]: ['#fyp', '#viral', '#trending', '#foryou', '#tiktok'],
-    [PlatformEnum.INSTAGRAM]: ['#instagood', '#photooftheday', '#love', '#beautiful', '#happy'],
-    [PlatformEnum.YOUTUBE]: ['#youtube', '#subscribe', '#viral', '#trending', '#shorts'],
+  const trendingByPlatform: Record<Platform, string[]> = {
+    tiktok: ['#fyp', '#viral', '#trending', '#foryou', '#tiktok'],
+    instagram: ['#instagood', '#photooftheday', '#love', '#beautiful', '#happy'],
+    youtube: ['#youtube', '#subscribe', '#viral', '#trending', '#shorts'],
+    facebook: ['#facebook', '#social', '#viral', '#trending'],
+    twitter: ['#twitter', '#trending', '#viral', '#hashtag'],
+    linkedin: ['#linkedin', '#professional', '#networking', '#business'],
   };
 
   return trendingByPlatform[platform] || ['#trending', '#viral'];

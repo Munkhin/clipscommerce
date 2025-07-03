@@ -1,4 +1,4 @@
-import { PlatformEnum, Platform } from '@/app/workflows/deliverables/types/deliverables_types';
+import { PlatformEnum, Platform } from '@/types/platform';
 
 export interface Niche {
   id: string;

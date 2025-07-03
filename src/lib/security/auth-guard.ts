@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { cookies } from 'next/headers';
 import { verifyCsrfToken } from '@/lib/csrf';
 import { checkRateLimit } from '@/lib/rate-limit';
 import logger from '@/utils/logger';
@@ -108,7 +109,7 @@ export async function authGuard(
     let profile: any = null;
 
     if (requireAuth) {
-      const supabase = createClient(cookies());
+      const supabase = await createClient(cookies());
       const { data: { user: authUser }, error: authError } = await supabase.auth.getUser();
 
       if (authError || !authUser) {
