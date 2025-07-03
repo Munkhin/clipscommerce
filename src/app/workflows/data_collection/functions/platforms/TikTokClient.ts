@@ -1,7 +1,7 @@
 // difficult: TikTok API client implementation
 import { BasePlatformClient } from './BasePlatformClient';
 import { PostMetrics, PaginatedResponse, Pagination } from '../types';
-import { Platform } from '@/types/platform';
+import { Platform, PlatformEnum } from '@/types/platform';
 import { extractErrorMessage } from '@/lib/errors/errorHandling';
 
 interface TikTokVideo {

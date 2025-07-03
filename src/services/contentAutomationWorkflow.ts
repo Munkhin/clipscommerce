@@ -84,19 +84,20 @@ export class ContentAutomationWorkflow {
         resultError = optimization.error;
       }
 
-      let autopostResult: { id: string; success: boolean; error?: any };
+      let autopostResult: { id: string; success?: boolean; error?: any } = { id: '', success: false };
       if (resultStatus !== 'failed') {
         // 2) Autoposting (fire-and-forget inside autoposting)
         const autopostRequest: AutoPostRequest = {
           content: {
             videoUrl: req.videoUrl,
-            caption: optimization.data!.optimizedVideoContent!.optimizedCaption ?? req.caption,
-            hashtags: optimization.data!.optimizedVideoContent!.trendingHashtags?.map((h: {tag: string}) => h.tag) ?? req.hashtags,
+            caption: optimization.data!.optimizedVideoContent?.optimizedCaption ?? req.caption,
+            hashtags: optimization.data!.trendingHashtags?.map((h: {tag: string}) => h.tag) ?? req.hashtags,
           },
           platforms: [req.platform.toLowerCase() as any],
           scheduleTime: req.scheduleTime,
         };
         autopostResult = await autopost(autopostRequest);
+        autopostResult.success = true; // autopost only returns id, assume success
 
         if (!autopostResult.success) {
           resultStatus = 'failed';
@@ -112,7 +113,7 @@ export class ContentAutomationWorkflow {
       sink.push({
         requestId,
         optimization,
-        autopostId: autopostResult?.id || '' ,
+        autopostId: autopostResult.id || '',
         status: resultStatus,
         error: resultError,
         workflowState,

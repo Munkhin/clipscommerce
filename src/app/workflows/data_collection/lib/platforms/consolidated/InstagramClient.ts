@@ -3,7 +3,7 @@ import { InstagramApiMediaNode, InstagramApiUserNode } from '../../../types/inst
 import { 
   BasePlatformClient, Post, Analytics
 } from '../base-platform';
-import { Platform, PlatformEnum } from '@/types/platform';
+import { Platform } from '@/types/platform';
 import { ApiConfig, ApiCredentials, ApiResponse, PlatformPost, PlatformPostMetrics, PlatformUserActivity, PlatformComment } from '../types';
 import { extractErrorMessage } from '@/lib/errors/errorHandling';
 
@@ -20,7 +20,7 @@ interface InstagramApiErrorResponse {
 }
 
 export class InstagramClient extends BasePlatformClient {
-  protected readonly platform: Platform = PlatformEnum.INSTAGRAM;
+  protected readonly platform: Platform = 'instagram';
 
   private static readonly DEFAULT_CONFIG: ApiConfig = {
     baseUrl: 'https://graph.instagram.com',
@@ -52,9 +52,6 @@ export class InstagramClient extends BasePlatformClient {
     this.setupInterceptors();
   }
 
-  protected handleRateLimit(headers: Record<string, any>): void {
-    // Remove or comment out references to 'updateRateLimit' and 'credentials'
-  }
 
   protected setupInterceptors() {
     // Request interceptor
@@ -278,7 +275,7 @@ export class InstagramClient extends BasePlatformClient {
     
     const posts: PlatformPost[] = validMediaItems.map((m) => ({
       id: m.id,
-      platform: PlatformEnum.INSTAGRAM,
+      platform: 'instagram',
       userId: userId,
       description: m.caption,
       mediaUrl: m.media_url,
@@ -334,7 +331,7 @@ export class InstagramClient extends BasePlatformClient {
         text: c.text,
         likeCount: c.like_count,
         publishedAt: c.timestamp,
-        platform: PlatformEnum.INSTAGRAM,
+        platform: 'instagram',
         sourceData: c,
       }));
 

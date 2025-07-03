@@ -1,4 +1,4 @@
-import crypto from 'crypto';
+import * as crypto from 'crypto';
 
 const ALGORITHM = 'aes-256-gcm';
 const KEY_LENGTH = 32; // 256 bits
@@ -31,9 +31,11 @@ export function encrypt(data: any, secret: string): { iv: string; authTag: strin
     keyBuffer = Buffer.from(secret.slice(0, KEY_LENGTH), 'utf-8');
   }
   
-  const cipher = crypto.createCipheriv(ALGORITHM, keyBuffer as crypto.CipherKey, iv as crypto.BinaryLike);
+  const cipher = crypto.createCipheriv(ALGORITHM, new Uint8Array(keyBuffer), iv);
   const json = JSON.stringify(data);
-  const encrypted = Buffer.concat([cipher.update(json, 'utf8') as Uint8Array, cipher.final() as Uint8Array]);
+  const encryptedUpdate = cipher.update(json, 'utf8');
+  const encryptedFinal = cipher.final();
+  const encrypted = Buffer.concat([encryptedUpdate, encryptedFinal]);
   const authTag = cipher.getAuthTag();
   
   return {
@@ -64,15 +66,18 @@ export function decrypt(encryptedData: { iv: string; authTag: string; encrypted:
     keyBuffer = Buffer.from(secret.slice(0, KEY_LENGTH), 'utf-8');
   }
 
-  const decipher = crypto.createDecipheriv(ALGORITHM, keyBuffer as crypto.CipherKey, Buffer.from(encryptedData.iv, 'hex') as crypto.BinaryLike);
-  decipher.setAuthTag(Buffer.from(encryptedData.authTag, 'hex') as ArrayBufferView);
+  const ivBuffer = Buffer.from(encryptedData.iv, 'hex');
+  const authTagBuffer = Buffer.from(encryptedData.authTag, 'hex');
+  const encryptedBuffer = Buffer.from(encryptedData.encrypted, 'hex');
   
-  const decrypted = Buffer.concat([
-    decipher.update(Buffer.from(encryptedData.encrypted, 'hex') as ArrayBufferView) as Uint8Array,
-    decipher.final() as Uint8Array,
-  ]);
+  const decipher = crypto.createDecipheriv(ALGORITHM, new Uint8Array(keyBuffer), ivBuffer);
+  decipher.setAuthTag(new Uint8Array(authTagBuffer));
   
-  const jsonString = Buffer.from(decrypted).toString('utf8');
+  const decryptedUpdate = decipher.update(encryptedBuffer);
+  const decryptedFinal = decipher.final();
+  const decrypted = Buffer.concat([decryptedUpdate, decryptedFinal]);
+  
+  const jsonString = decrypted.toString('utf8');
   return JSON.parse(jsonString);
 }
 

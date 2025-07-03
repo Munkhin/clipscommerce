@@ -37,11 +37,11 @@ export class SchedulerService {
       // 3. Queue it for publishing at the scheduled time
       
       logger.info('Scheduling post', {
-        postId: post.id || 'new',
+        postId: 'new',
         platforms: post.platforms,
         scheduledTime: post.scheduledTime.toISOString(),
         contentLength: post.content?.text?.length || 0,
-        hasMedia: Boolean(post.content?.media?.length),
+        hasMedia: Boolean(post.content?.mediaUrls?.length),
       });
       
       // Simulate API call delay
@@ -51,7 +51,7 @@ export class SchedulerService {
     } catch (error: unknown) {
       if (error instanceof Error) {
         logger.error('Failed to schedule post', error, {
-          postId: post.id || 'new',
+          postId: 'new',
           platforms: post.platforms,
           scheduledTime: post.scheduledTime.toISOString(),
         });
@@ -74,7 +74,7 @@ export class SchedulerService {
         postId: post.id,
         platform: post.platforms[0],
         contentPreview: post.content.text.substring(0, 50) + '...',
-        hasMedia: Boolean(post.content?.media?.length),
+        hasMedia: Boolean(post.content?.mediaUrls?.length),
       });
       
       // Simulate API call delay

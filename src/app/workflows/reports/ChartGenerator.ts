@@ -50,8 +50,8 @@ export class ChartGenerator {
     return 'Chart generated';
   }
 
-  async generateChartAsync(data: any, format: string): Promise<string> {
-    // Async chart generation method for compatibility
+  async generateChartAsync(data: ChartData, format: string): Promise<string> {
+    // Async chart generation method for compatibility with format parameter
     return `Chart generated in ${format} format`;
   }
 } 

@@ -1,10 +1,16 @@
+"use client";
+
 import * as React from "react";
-import { motion } from "framer-motion";
+import { motion, HTMLMotionProps } from "framer-motion";
 import { cn } from "@/lib/utils";
+
+interface AnimatedCardProps extends Omit<HTMLMotionProps<"div">, 'ref'> {
+  className?: string;
+}
 
 const AnimatedCard = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
+  AnimatedCardProps
 >(({ className, ...props }, ref) => (
   <motion.div
     ref={ref}

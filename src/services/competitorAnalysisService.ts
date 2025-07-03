@@ -54,12 +54,15 @@ export class CompetitorAnalysisService {
       }
 
       // Build query parameters
-      const params = new URLSearchParams({
-        niche: niche,
-        limit: (options.limit || 5).toString(),
-        ...(options.platform && options.platform !== 'all' && { platform: options.platform }),
-        ...(options.timeRange && { timeRange: options.timeRange })
-      });
+      const params = new URLSearchParams();
+      params.append('niche', niche);
+      params.append('limit', (options.limit || 5).toString());
+      if (options.platform && options.platform !== 'all') {
+        params.append('platform', options.platform);
+      }
+      if (options.timeRange) {
+        params.append('timeRange', options.timeRange);
+      }
 
       // Fetch competitor data from API
       const response = await fetch(`/api/competitors?${params}`, {

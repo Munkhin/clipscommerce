@@ -1,11 +1,10 @@
 import { BasePlatformClient, Post, Analytics } from './base-platform';
-import { ApiConfig as PlatformSpecificApiConfig, PlatformComment, ApiResponse, HeaderValue, PlatformPostMetrics, PlatformUserActivity, PlatformPost } from './types';
+import { ApiConfig as PlatformSpecificApiConfig, PlatformComment, ApiResponse, HeaderValue, PlatformPostMetrics, PlatformUserActivity, PlatformPost, PlatformClient } from './types';
 import { IAuthTokenManager } from '../auth.types';
 import { Platform } from '@/types/platform';
-import { PlatformEnum } from '../../../../../types/platform';
 import { ApiError, PlatformError, RateLimitError, ValidationError } from '../utils/errors';
 import { z } from 'zod';
-import { DISPLAY_PLATFORM_MAP } from '../../../../../types/platform';
+import { PLATFORM_DISPLAY_MAP } from '../../../../../types/platform';
 
 import {
   TikTokApiErrorData,
@@ -43,8 +42,8 @@ import {
 const TIKTOK_DEFAULT_TIMEOUT = 20000;
 const TIKTOK_API_VERSION = 'v2';
 
-export class TikTokClient extends BasePlatformClient {
-  protected readonly platform: Platform = PlatformEnum.TIKTOK;
+export class TikTokClient extends BasePlatformClient implements PlatformClient {
+  protected readonly platform: Platform = 'tiktok';
 
   constructor(
     platformConfigFromFactory: PlatformSpecificApiConfig,
@@ -116,7 +115,7 @@ export class TikTokClient extends BasePlatformClient {
         this.log('error', `TikTok API response validation failed for ${methodName}`, {
           errors: validationResult.error.flatten(), rawData: axiosResponse.data
         });
-        throw new ValidationError(DISPLAY_PLATFORM_MAP[this.platform] || 'tiktok', `TikTok API response validation failed for ${methodName}.`, validationResult.error.issues);
+        throw new ValidationError(this.platform, `TikTok API response validation failed for ${methodName}.`, validationResult.error.issues);
       }
 
       const responseDataTyped = validationResult.data;
@@ -124,7 +123,7 @@ export class TikTokClient extends BasePlatformClient {
       if (responseDataTyped.error && responseDataTyped.error.code !== 'ok') {
         this.log('error', `TikTok API error in ${methodName}: ${responseDataTyped.error.message}`, responseDataTyped.error);
         // Pass axiosResponse.status as the statusCode for ApiError
-        throw new ApiError(DISPLAY_PLATFORM_MAP[this.platform] || 'tiktok', responseDataTyped.error.code, responseDataTyped.error.message, axiosResponse.status, responseDataTyped.error);
+        throw new ApiError(this.platform, responseDataTyped.error.code, responseDataTyped.error.message, axiosResponse.status, responseDataTyped.error);
       }
 
       return { data: responseDataTyped.data as TApiDataField, rateLimit: this.rateLimit === null ? undefined : this.rateLimit };
@@ -133,7 +132,7 @@ export class TikTokClient extends BasePlatformClient {
         throw error;
       }
       this.log('error', `Unhandled error in ${methodName}`, { error, methodName });
-      throw new PlatformError(DISPLAY_PLATFORM_MAP[this.platform] || 'tiktok', `Unhandled error in ${methodName}: ${(error as Error).message}`, 'UNHANDLED_PLATFORM_ERROR', error);
+      throw new PlatformError(this.platform, `Unhandled error in ${methodName}: ${(error as Error).message}`, 'UNHANDLED_PLATFORM_ERROR', error);
     }
   }
 
@@ -267,7 +266,7 @@ export class TikTokClient extends BasePlatformClient {
     const validationResult = TikTokPostVideoParamsSchema.safeParse(params);
     if (!validationResult.success) {
         this.log('error', 'Invalid parameters for postVideo', { errors: validationResult.error.flatten() });
-        throw new ValidationError(DISPLAY_PLATFORM_MAP[this.platform] || 'tiktok', 'Invalid parameters for postVideo.', validationResult.error.issues);
+        throw new ValidationError(this.platform, 'Invalid parameters for postVideo.', validationResult.error.issues);
     }
     const validatedParams = validationResult.data;
 
@@ -315,7 +314,7 @@ export class TikTokClient extends BasePlatformClient {
     const initData = initApiResponse;
     if (!initData?.upload_id) {
       this.log('error', 'Failed to initiate TikTok video upload. No upload_id received.', { initApiResponse });
-      throw new PlatformError(DISPLAY_PLATFORM_MAP[this.platform] || 'tiktok', 'Failed to initiate TikTok video upload. No upload_id.', 'UPLOAD_INIT_FAILED');
+      throw new PlatformError(this.platform, 'Failed to initiate TikTok video upload. No upload_id.', 'UPLOAD_INIT_FAILED');
     }
     const uploadId = initData.upload_id;
     this.log('info', `TikTok video upload initiated. Upload ID: ${uploadId}`, { uploadId });
@@ -344,6 +343,8 @@ export class TikTokClient extends BasePlatformClient {
         likes: 0,
         comments: 0,
         shares: 0,
+        avgWatchTime: 0,
+        engagementRate: 0,
         timestamp: new Date().toISOString()
       },
       rateLimit: this.rateLimit === null ? undefined : this.rateLimit,

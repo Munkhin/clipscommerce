@@ -1,9 +1,8 @@
 import { z } from 'zod';
 import validator from 'validator';
-import { createDOMPurify } from 'isomorphic-dompurify';
+import DOMPurify from 'isomorphic-dompurify';
 
-// Initialize DOMPurify for both server and client environments
-const DOMPurify = createDOMPurify();
+// DOMPurify is already initialized for both server and client environments
 
 /**
  * Comprehensive Input Sanitization and Validation Utility
@@ -190,8 +189,8 @@ export class InputSanitizer {
       
       // Escape sequences
       /\\[nrtbfav]/g,
-      /\x[0-9a-fA-F]{2}/g,
-      /\u[0-9a-fA-F]{4}/g,
+      /\\x[0-9a-fA-F]{2}/g,
+      /\\u[0-9a-fA-F]{4}/g,
     ];
 
     injectionPatterns.forEach(pattern => {

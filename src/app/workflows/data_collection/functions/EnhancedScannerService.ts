@@ -6,7 +6,7 @@ import { OptimizedPostAnalyzer } from './analysis/PostAnalyzer';
 import { CacheSystem } from './cache/CacheSystem';
 import { MonitoringSystem } from './monitoring/MonitoringSystem';
 import EventEmitter from 'events';
-import { Platform as DeliverablePlatform } from '@/types/platform';
+import { Platform as DeliverablePlatform, PlatformEnum } from '@/types/platform';
 import { retryWithBackoff } from '../../../shared_infra';
 import PlatformFactory from '../lib/platforms/consolidated/PlatformFactory';
 import { TikTokClient } from '../lib/platforms/TikTokClient';
@@ -81,7 +81,7 @@ export class EnhancedScannerService {
     });
     
     // Initialize circuit breakers for each platform
-    for (const platform of ['tiktok', 'instagram', 'youtube'] as Platform[]) {
+    for (const platform of [PlatformEnum.TIKTOK, PlatformEnum.INSTAGRAM, PlatformEnum.YOUTUBE] as Platform[]) {
       this.initCircuitBreaker(`${platform}_api`, {
         failureThreshold: 5,
         successThreshold: 2,
@@ -896,9 +896,9 @@ export class EnhancedScannerService {
   // Example: initialize platform clients (should be called during service setup)
   public initializePlatformClients(authTokenManager: any, userId?: string) {
     for (const platform of [
-      'tiktok',
-      'instagram',
-      'youtube',
+      PlatformEnum.TIKTOK,
+      PlatformEnum.INSTAGRAM,
+      PlatformEnum.YOUTUBE,
     ] as Platform[]) {
       if (PlatformFactory.isPlatformSupported(platform)) {
         const client = PlatformFactory.createClient(platform, authTokenManager, userId);

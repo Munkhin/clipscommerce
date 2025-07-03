@@ -1,9 +1,9 @@
 import { BasePlatformClient, Post, Analytics } from './base-platform';
-import { ApiConfig, PlatformComment, ApiResponse } from './types';
+import { ApiConfig, PlatformComment, ApiResponse, PlatformPostMetrics, PlatformUserActivity, PlatformPost, PlatformClient } from './types';
 import { IAuthTokenManager } from '../auth.types';
 import { Platform } from '@/types/platform';
 
-export class YouTubeClient extends BasePlatformClient {
+export class YouTubeClient extends BasePlatformClient implements PlatformClient {
   protected readonly platform: Platform = 'youtube';
 
   constructor(

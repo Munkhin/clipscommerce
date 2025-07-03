@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { usageLimitsService, SUBSCRIPTION_TIERS } from '@/lib/usage-limits';
 import { useAuth } from '@/providers/AuthProvider';
 
@@ -39,7 +39,7 @@ export function useUsageLimits(subscriptionTier: string = 'lite') {
   /**
    * Check if user has access to a feature type
    */
-  const hasFeatureAccess = (feature: 'ecommerce' | 'analytics' | 'teamDashboard') => {
+  const hasFeatureAccess = (feature: 'ecommerceAccess' | 'analyticsAccess' | 'teamDashboard') => {
     return usageLimitsService.hasFeatureAccess(subscriptionTier, feature);
   };
 

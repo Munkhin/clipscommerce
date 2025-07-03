@@ -37,6 +37,48 @@ export interface VideoProcessingStatus {
   message: string;
 }
 
+// Database types for user_videos table
+interface DatabaseVideoRecord {
+  id: string;
+  user_id: string;
+  title?: string;
+  filename: string;
+  video_url: string;
+  thumbnail_url?: string;
+  file_size: number;
+  duration?: number;
+  status: string;
+  processing_stage?: 'audio' | 'content' | 'hashtags' | 'optimization';
+  uploaded_at: string;
+  processed_at?: string;
+  updated_at: string;
+  error_message?: string;
+  description?: string;
+  video_processing_results?: {
+    sentiment_analysis?: {
+      score: number;
+      label: string;
+    };
+    tone_analysis?: {
+      tone: string;
+      confidence: number;
+    };
+    hashtag_recommendations?: string[];
+    optimization_suggestions?: string[];
+    virality_score?: number;
+    engagement_prediction?: number;
+  }[];
+}
+
+// Supabase real-time payload type
+interface RealtimePayload {
+  eventType: 'INSERT' | 'UPDATE' | 'DELETE';
+  new: Record<string, unknown>;
+  old: Record<string, unknown>;
+  schema: string;
+  table: string;
+}
+
 export class UserVideoService {
   private supabase;
 
@@ -77,7 +119,7 @@ export class UserVideoService {
         };
       }
 
-      const videos: UserVideo[] = (data || []).map(video => ({
+      const videos: UserVideo[] = (data || []).map((video: DatabaseVideoRecord) => ({
         id: video.id,
         title: video.title || video.filename,
         thumbnailUrl: video.thumbnail_url,
@@ -390,7 +432,7 @@ export class UserVideoService {
     return columnMap[status] || 'todo';
   }
 
-  private mapProcessingResults(results: Record<string, unknown>): UserVideo['result'] | undefined {
+  private mapProcessingResults(results: any): UserVideo['result'] | undefined {
     if (!results) return undefined;
 
     return {
@@ -418,8 +460,8 @@ export class UserVideoService {
         schema: 'public',
         table: 'user_videos',
         filter: `user_id=eq.${userId}`
-      }, (payload) => {
-        const video = this.mapDatabaseRecord(payload.new as Record<string, unknown>);
+      }, (payload: RealtimePayload) => {
+        const video = this.mapDatabaseRecord(payload.new as any);
         callback(video);
       })
       .subscribe();
@@ -429,7 +471,7 @@ export class UserVideoService {
     };
   }
 
-  private mapDatabaseRecord(record: Record<string, unknown>): UserVideo {
+  private mapDatabaseRecord(record: any): UserVideo {
     return {
       id: String(record.id),
       title: String(record.title || record.filename),

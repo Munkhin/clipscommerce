@@ -1,5 +1,6 @@
 // Specialized Hashtag Performance Analysis Module
 import { PostMetrics, Platform } from '../types';
+import { PlatformEnum } from '@/types/platform';
 import { Cache } from '../../../../../lib/utils/cache';
 
 /**
@@ -89,7 +90,7 @@ export class HashtagAnalyzer {
     });
     
     // Initialize platform index for each supported platform
-    const platforms: Platform[] = ['tiktok', 'instagram', 'youtube'];
+    const platforms: Platform[] = [PlatformEnum.TIKTOK, PlatformEnum.INSTAGRAM, PlatformEnum.YOUTUBE];
     for (const platform of platforms) {
       this.platformHashtagIndex.set(platform, new Map());
     }
@@ -117,7 +118,7 @@ export class HashtagAnalyzer {
       // Clear indices if replacing all posts
       this.hashtagIndex.clear();
       this.coOccurrenceMatrix.clear();
-      const platformsList: Platform[] = ['tiktok', 'instagram', 'youtube'];
+      const platformsList: Platform[] = [PlatformEnum.TIKTOK, PlatformEnum.INSTAGRAM, PlatformEnum.YOUTUBE];
       for (const platform of platformsList) {
         this.platformHashtagIndex.set(platform, new Map());
       }
@@ -352,7 +353,7 @@ export class HashtagAnalyzer {
       engagementRate: number;
     }>;
     
-    const platformsList: Platform[] = ['tiktok', 'instagram', 'youtube', 'facebook', 'twitter', 'linkedin'];
+    const platformsList: Platform[] = [PlatformEnum.TIKTOK, PlatformEnum.INSTAGRAM, PlatformEnum.YOUTUBE, PlatformEnum.FACEBOOK, PlatformEnum.TWITTER, PlatformEnum.LINKEDIN];
     for (const platform of platformsList) {
       const metrics = platformMetrics[platform];
       performanceByPlatform[platform] = {

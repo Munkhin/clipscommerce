@@ -1,12 +1,12 @@
 import { BasePlatformClient } from './base-platform';
 import { Post, Analytics } from '@/types';
-import { ApiConfig, ApiResponse, PlatformComment, PlatformPostMetrics, PlatformUserActivity, PlatformPost, ApiRateLimit } from './types';
+import { ApiConfig, ApiResponse, PlatformComment, PlatformPostMetrics, PlatformUserActivity, PlatformPost, ApiRateLimit, PlatformClient } from './types';
 import { YouTubeCommentThreadListResponseSchema, YouTubeCommentThread, YouTubeChannelListResponseSchema, YouTubeChannelListResponse, YouTubeVideoListResponseSchema, YouTubeVideoListResponse, YouTubeVideo, YouTubeCommentThreadListResponse, YouTubeChannel } from './youtube.types';
 import { Platform, PlatformEnum } from '@/types/platform';
 import { IAuthTokenManager } from '../auth.types';
 import { ApiError, PlatformError, RateLimitError } from '../utils/errors';
 
-export class YouTubeClient extends BasePlatformClient {
+export class YouTubeClient extends BasePlatformClient implements PlatformClient {
   protected readonly platform: Platform = PlatformEnum.YOUTUBE;
 
   constructor(config: Partial<ApiConfig>, authTokenManager: IAuthTokenManager, userId?: string) {
@@ -153,6 +153,199 @@ export class YouTubeClient extends BasePlatformClient {
       this.log('error', `[YouTubeClient] Failed to fetch analytics for post ${postId}`, { error });
       // Return default analytics instead of throwing error
       return { views: 0, likes: 0, comments: 0, shares: 0, engagementRate: 0 };
+    }
+  }
+
+  // Required PlatformClient interface methods
+  async getPostMetrics(postId: string): Promise<ApiResponse<PlatformPostMetrics>> {
+    this.log('debug', `[YouTubeClient] Getting post metrics for: ${postId}`);
+    
+    try {
+      const analytics = await this.getAnalytics(postId);
+      const metrics: PlatformPostMetrics = {
+        id: postId,
+        views: analytics.views,
+        likes: analytics.likes,
+        comments: analytics.comments,
+        shares: analytics.shares,
+        engagementRate: analytics.engagementRate,
+        timestamp: new Date().toISOString()
+      };
+      
+      return {
+        data: metrics,
+        rateLimit: this.rateLimit === null ? undefined : this.rateLimit
+      };
+    } catch (error) {
+      this.log('error', `[YouTubeClient] Failed to get post metrics for ${postId}`, { error });
+      throw error;
+    }
+  }
+
+  async getUserActivity(): Promise<ApiResponse<PlatformUserActivity>> {
+    this.log('debug', `[YouTubeClient] Getting user activity`);
+    
+    try {
+      // Get channel statistics
+      const response = await this.request<any>({
+        url: '/channels',
+        method: 'GET',
+        params: {
+          part: 'statistics',
+          mine: true
+        }
+      });
+
+      const channelData = response.data.items?.[0];
+      if (!channelData) {
+        this.log('warn', `[YouTubeClient] No channel data found`);
+        return {
+          data: {
+            followerCount: 0,
+            followingCount: 0,
+            postCount: 0,
+            lastUpdated: new Date().toISOString()
+          },
+          rateLimit: this.rateLimit === null ? undefined : this.rateLimit
+        };
+      }
+
+      const stats = channelData.statistics;
+      const activity: PlatformUserActivity = {
+        followerCount: parseInt(stats.subscriberCount || '0', 10),
+        followingCount: 0, // YouTube doesn't provide following count for channels
+        postCount: parseInt(stats.videoCount || '0', 10),
+        lastUpdated: new Date().toISOString()
+      };
+
+      return {
+        data: activity,
+        rateLimit: this.rateLimit === null ? undefined : this.rateLimit
+      };
+    } catch (error) {
+      this.log('error', `[YouTubeClient] Failed to get user activity`, { error });
+      return {
+        data: {
+          followerCount: 0,
+          followingCount: 0,
+          postCount: 0,
+          lastUpdated: new Date().toISOString()
+        },
+        rateLimit: this.rateLimit === null ? undefined : this.rateLimit
+      };
+    }
+  }
+
+  async getUserVideos(options?: {
+    userId?: string;
+    cursor?: string;
+    limit?: number;
+  }): Promise<ApiResponse<{ posts: PlatformPost[]; nextPageCursor?: string; hasMore?: boolean }>> {
+    this.log('debug', `[YouTubeClient] Getting user videos`, { options });
+    
+    try {
+      const response = await this.request<any>({
+        url: '/search',
+        method: 'GET',
+        params: {
+          part: 'snippet',
+          forMine: true,
+          type: 'video',
+          maxResults: options?.limit || 25,
+          pageToken: options?.cursor,
+          order: 'date'
+        }
+      });
+
+      const posts: PlatformPost[] = response.data.items?.map((item: any) => ({
+        id: item.id.videoId,
+        platform: 'youtube' as Platform,
+        title: item.snippet.title,
+        description: item.snippet.description,
+        mediaUrl: `https://www.youtube.com/watch?v=${item.id.videoId}`,
+        thumbnailUrl: item.snippet.thumbnails?.default?.url,
+        publishedAt: item.snippet.publishedAt,
+        createdAt: item.snippet.publishedAt,
+        type: 'video' as const,
+        isPublished: true,
+        sourceData: item
+      })) || [];
+
+      return {
+        data: {
+          posts,
+          nextPageCursor: response.data.nextPageToken,
+          hasMore: !!response.data.nextPageToken
+        },
+        rateLimit: this.rateLimit === null ? undefined : this.rateLimit
+      };
+    } catch (error) {
+      this.log('error', `[YouTubeClient] Failed to get user videos`, { error, options });
+      return {
+        data: {
+          posts: [],
+          nextPageCursor: undefined,
+          hasMore: false
+        },
+        rateLimit: this.rateLimit === null ? undefined : this.rateLimit
+      };
+    }
+  }
+
+  async getVideoComments(
+    postId: string,
+    options?: { cursor?: string; limit?: number }
+  ): Promise<ApiResponse<{ comments: PlatformComment[]; nextPageCursor?: string; hasMore?: boolean }>> {
+    this.log('debug', `[YouTubeClient] Getting video comments for: ${postId}`, { options });
+    
+    try {
+      const response = await this.request<any>({
+        url: '/commentThreads',
+        method: 'GET',
+        params: {
+          part: 'snippet',
+          videoId: postId,
+          maxResults: options?.limit || 20,
+          pageToken: options?.cursor,
+          order: 'time'
+        }
+      });
+
+      const comments: PlatformComment[] = response.data.items?.map((item: any) => {
+        const snippet = item.snippet.topLevelComment.snippet;
+        return {
+          id: item.snippet.topLevelComment.id,
+          postId: postId,
+          userId: snippet.authorChannelId?.value,
+          userName: snippet.authorDisplayName,
+          userProfileImageUrl: snippet.authorProfileImageUrl,
+          text: snippet.textDisplay,
+          likeCount: snippet.likeCount || 0,
+          publishedAt: snippet.publishedAt,
+          updatedAt: snippet.updatedAt,
+          platform: 'youtube' as Platform,
+          sourceData: item
+        };
+      }) || [];
+
+      return {
+        data: {
+          comments,
+          nextPageCursor: response.data.nextPageToken,
+          hasMore: !!response.data.nextPageToken
+        },
+        rateLimit: this.rateLimit === null ? undefined : this.rateLimit
+      };
+    } catch (error) {
+      this.log('error', `[YouTubeClient] Failed to get video comments for ${postId}`, { error, options });
+      return {
+        data: {
+          comments: [],
+          nextPageCursor: undefined,
+          hasMore: false
+        },
+        rateLimit: this.rateLimit === null ? undefined : this.rateLimit
+      };
     }
   }
 }

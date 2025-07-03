@@ -1,4 +1,3 @@
-import { NodeSDK } from '@opentelemetry/sdk-node';
 import { NodeTracerProvider } from '@opentelemetry/sdk-trace-node';
 import { Resource } from '@opentelemetry/resources';
 import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';

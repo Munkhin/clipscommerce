@@ -2,7 +2,7 @@ import React from "react";
 import { ResponsiveContainer } from "recharts";
 
 interface ChartWrapperProps {
-  children: React.ReactNode;
+  children: React.ReactElement;
   /** optional dark background flag */
   dark?: boolean;
   className?: string;

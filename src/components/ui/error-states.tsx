@@ -17,7 +17,7 @@ interface BaseErrorProps {
 }
 
 interface ErrorMessageProps extends BaseErrorProps {
-  variant?: 'destructive' | 'warning' | 'info';
+  variant?: 'destructive' | 'default';
   icon?: React.ReactNode;
   onDismiss?: () => void;
 }

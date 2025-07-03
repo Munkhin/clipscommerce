@@ -429,7 +429,7 @@ export class SupabaseStorageService {
   }
 
   private generateFileHash(buffer: Buffer): string {
-    return crypto.createHash('sha256').update(buffer as crypto.BinaryLike).digest('hex');
+    return crypto.createHash('sha256').update(buffer).digest('hex');
   }
 
   private isImageFile(mimeType: string): boolean {

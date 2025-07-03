@@ -235,7 +235,7 @@ export class AccessibilityAuditor {
         }
         
         // Check for aria-labelledby or aria-label
-        return ariaLabelledBy || ariaLabel;
+        return !!(ariaLabelledBy || ariaLabel);
       },
       fix: (element) => {
         const type = element.getAttribute('type') || element.tagName.toLowerCase();
@@ -586,14 +586,17 @@ export class AccessibilityHelpers {
    * Add keyboard navigation to custom components
    */
   static addKeyboardNavigation(element: Element): void {
-    element.addEventListener('keydown', (event) => {
-      const key = (event as KeyboardEvent).key;
+    const handleKeyDown = (event: Event) => {
+      const keyboardEvent = event as KeyboardEvent;
+      const key = keyboardEvent.key;
       
       if (key === 'Enter' || key === ' ') {
-        event.preventDefault();
+        keyboardEvent.preventDefault();
         (element as HTMLElement).click();
       }
-    });
+    };
+    
+    element.addEventListener('keydown', handleKeyDown);
     
     if (!element.hasAttribute('tabindex')) {
       element.setAttribute('tabindex', '0');
@@ -641,7 +644,7 @@ export class AccessibilityHelpers {
   /**
    * Announce content changes to screen readers
    */
-  static announceToScreenReader(message: string, priority: 'polite' | 'assertive' = 'polite'): NodeJS.Timeout {
+  static announceToScreenReader(message: string, priority: 'polite' | 'assertive' = 'polite'): number {
     const announcement = document.createElement('div');
     announcement.setAttribute('aria-live', priority);
     announcement.setAttribute('aria-atomic', 'true');
@@ -651,7 +654,7 @@ export class AccessibilityHelpers {
     document.body.appendChild(announcement);
     
     // Remove after announcement
-    const timer = setTimeout(() => {
+    const timer = window.setTimeout(() => {
       document.body.removeChild(announcement);
     }, 1000);
     

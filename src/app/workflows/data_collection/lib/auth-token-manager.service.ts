@@ -3,6 +3,7 @@ import {
   IAuthTokenManager,
   PlatformCredentials,
   OAuth2Credentials,
+  ApiKeyCredentials,
   AuthStrategy,
   PlatformClientIdentifier
 } from './auth.types';
@@ -16,6 +17,27 @@ export class AuthTokenManagerService implements IAuthTokenManager {
 
   private generateStoreKey(id: PlatformClientIdentifier): string {
     return `${id.platform}:${id.userId || 'default'}`;
+  }
+
+  async getToken(id?: PlatformClientIdentifier): Promise<string | null> {
+    if (!id) {
+      console.warn('[AuthTokenManager] No platform identifier provided to getToken');
+      return null;
+    }
+
+    const credentials = await this.getValidCredentials(id);
+    if (!credentials) {
+      return null;
+    }
+    
+    // Handle the union type properly
+    if (credentials.strategy === AuthStrategy.OAUTH2) {
+      return (credentials as OAuth2Credentials).accessToken || null;
+    } else if (credentials.strategy === AuthStrategy.API_KEY) {
+      return (credentials as ApiKeyCredentials).apiKey || null;
+    }
+    
+    return null;
   }
 
   async getValidCredentials(id: PlatformClientIdentifier): Promise<PlatformCredentials | null> {

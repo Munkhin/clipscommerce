@@ -122,7 +122,7 @@ export class EngagementPredictor {
   ): Promise<EngagementMetrics> {
     // Check cache first to avoid recomputation
     const cacheKey = `engagement_${platform}_${this.hashContent(content)}_${postTime?.toISOString() || 'anytime'}`;
-    const cachedResult = this.cache.get(cacheKey);
+    const cachedResult = this.cache.get(cacheKey) as EngagementMetrics | undefined;
     if (cachedResult) return cachedResult;
 
     const platformAvg = this.platformAverages[platform];
@@ -328,7 +328,7 @@ export class EngagementPredictor {
   ): Promise<OptimalTimeSlot[]> {
     // Check cache first
     const cacheKey = `optimal_times_${platform}_${contentType}_${count}`;
-    const cachedResult = this.cache.get(cacheKey);
+    const cachedResult = this.cache.get(cacheKey) as OptimalTimeSlot[] | undefined;
     if (cachedResult) return cachedResult;
     
     const startTime = globalThis.performance?.now() ?? Date.now();
@@ -414,7 +414,7 @@ export class EngagementPredictor {
           ...slot,
           startTime,
           endTime,
-        };
+        } as OptimalTimeSlot & { startTime: string; endTime: string };
       });
     
     // Update performance metrics
@@ -518,7 +518,7 @@ export class EngagementPredictor {
   ): Promise<ContentSimulation[]> {
     // Check cache first
     const cacheKey = `content_sim_${platform}_${contentDrafts.map(c => this.hashContent(c).substring(0, 8)).join('_')}`;
-    const cachedResult = this.cache.get(cacheKey);
+    const cachedResult = this.cache.get(cacheKey) as ContentSimulation[] | undefined;
     if (cachedResult) return cachedResult;
     
     const startTime = globalThis.performance?.now() ?? Date.now();

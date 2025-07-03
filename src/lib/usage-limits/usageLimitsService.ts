@@ -188,30 +188,32 @@ export class UsageLimitsService {
     // In production, this would fetch from database
     // For now, simulate with localStorage or default values
     try {
-      const stored = localStorage.getItem(`usage_${userId}`);
-      if (stored) {
-        const usage = JSON.parse(stored);
-        
-        // Check if we need to reset monthly usage
-        const now = new Date();
-        const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-        
-        if (new Date(usage.currentPeriodStart) < monthStart) {
-          // Reset monthly usage
+      if (typeof window !== 'undefined') {
+        const stored = localStorage.getItem(`usage_${userId}`);
+        if (stored) {
+          const usage = JSON.parse(stored);
+          
+          // Check if we need to reset monthly usage
+          const now = new Date();
+          const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+          
+          if (new Date(usage.currentPeriodStart) < monthStart) {
+            // Reset monthly usage
+            return {
+              viralBlitzCycleUsed: 0,
+              ideaGeneratorUsed: 0,
+              autopostsUsed: 0,
+              lastReset: now,
+              currentPeriodStart: monthStart,
+            };
+          }
+          
           return {
-            viralBlitzCycleUsed: 0,
-            ideaGeneratorUsed: 0,
-            autopostsUsed: 0,
-            lastReset: now,
-            currentPeriodStart: monthStart,
+            ...usage,
+            lastReset: new Date(usage.lastReset),
+            currentPeriodStart: new Date(usage.currentPeriodStart),
           };
         }
-        
-        return {
-          ...usage,
-          lastReset: new Date(usage.lastReset),
-          currentPeriodStart: new Date(usage.currentPeriodStart),
-        };
       }
     } catch (error) {
       console.error('Error loading user usage:', error);
@@ -233,7 +235,9 @@ export class UsageLimitsService {
    */
   private async saveUserUsage(userId: string, usage: UserUsage): Promise<void> {
     try {
-      localStorage.setItem(`usage_${userId}`, JSON.stringify(usage));
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(`usage_${userId}`, JSON.stringify(usage));
+      }
     } catch (error) {
       console.error('Error saving user usage:', error);
     }

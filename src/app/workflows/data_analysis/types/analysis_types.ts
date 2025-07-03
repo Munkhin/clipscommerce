@@ -1,5 +1,6 @@
 import { Database } from '../../../../types/supabase';
 import { z } from 'zod';
+import { PlatformEnum, type Platform as CentralizedPlatform } from '@/types/platform';
 
 // Alias for Supabase video table row (Kept from original)
 // Using unknown since videos table structure is not defined in database types
@@ -25,8 +26,8 @@ export const TimeRangeSchema = z.object({
 });
 export type TimeRange = z.infer<typeof TimeRangeSchema>;
 
-export const PlatformSchema = z.enum(['tiktok', 'instagram', 'youtube', 'facebook', 'twitter', 'linkedin']); // New, more specific  
-export type Platform = z.infer<typeof PlatformSchema>;
+export const PlatformSchema = z.nativeEnum(PlatformEnum); // Use centralized enum
+export type Platform = CentralizedPlatform; // Use centralized type
 
 export const BaseAnalysisRequestSchema = z.object({
   userId: z.string().uuid(),

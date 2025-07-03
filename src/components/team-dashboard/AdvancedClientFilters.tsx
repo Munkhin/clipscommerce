@@ -168,7 +168,7 @@ export function AdvancedClientFilters({
         return (
           <div className="flex items-center space-x-2">
             <Checkbox
-              checked={value as boolean}
+              checked={Boolean(value)}
               onCheckedChange={(checked) => handleFilterChange(option.id, checked ? 'true' : '')}
             />
             <Label htmlFor={option.id}>{option.label}</Label>

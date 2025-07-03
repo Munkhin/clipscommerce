@@ -110,4 +110,4 @@ export interface PlatformClient {
   // Add other platform-specific methods as needed
 }
 
-export { Platform };
+export type { Platform };

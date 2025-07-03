@@ -1,5 +1,5 @@
 import { TrainingOrchestrator } from '../training/TrainingOrchestrator';
-import { Platform } from '@/types/platform';
+import { Platform, PlatformEnum } from '@/types/platform';
 import { createClient } from '@supabase/supabase-js';
 
 // Mock Supabase client
@@ -41,7 +41,7 @@ describe('TrainingOrchestrator', () => {
   describe('startTraining', () => {
     it('should start training successfully with valid parameters', async () => {
       const userId = 'test-user-1';
-      const platforms: Platform[] = ['tiktok', 'instagram'];
+      const platforms: Platform[] = [PlatformEnum.TIKTOK, PlatformEnum.INSTAGRAM];
       const options = {
         lookbackDays: 30,
         minPostsPerPlatform: 10,
@@ -64,7 +64,7 @@ describe('TrainingOrchestrator', () => {
 
     it('should throw error if training is already in progress', async () => {
       const userId = 'test-user-2';
-      const platforms: Platform[] = ['TikTok'];
+      const platforms: Platform[] = [PlatformEnum.TIKTOK];
 
       orchestrator.startTraining(userId, platforms);
       await expect(
@@ -76,7 +76,7 @@ describe('TrainingOrchestrator', () => {
   describe('session management', () => {
     it('should track session progress correctly', async () => {
       const userId = 'test-user-3';
-      const platforms: Platform[] = ['TikTok'];
+      const platforms: Platform[] = [PlatformEnum.TIKTOK];
 
       await orchestrator.startTraining(userId, platforms);
       
@@ -89,7 +89,7 @@ describe('TrainingOrchestrator', () => {
 
     it('should return current session correctly', async () => {
       const userId = 'test-user-4';
-      const platforms: Platform[] = ['Instagram'];
+      const platforms: Platform[] = [PlatformEnum.INSTAGRAM];
 
       await orchestrator.startTraining(userId, platforms);
       
@@ -138,7 +138,7 @@ describe('TrainingOrchestrator', () => {
   describe('session lifecycle', () => {
     it('should handle training completion correctly', async () => {
       const userId = 'test-user-6';
-      const platforms: Platform[] = ['TikTok'];
+      const platforms: Platform[] = [PlatformEnum.TIKTOK];
 
       const completedHandler = jest.fn();
       orchestrator.on('session_completed', completedHandler);
@@ -157,7 +157,7 @@ describe('TrainingOrchestrator', () => {
 
     it('should handle training failure correctly', async () => {
       const userId = 'test-user-7';
-      const platforms: Platform[] = ['TikTok'];
+      const platforms: Platform[] = [PlatformEnum.TIKTOK];
 
       const failedHandler = jest.fn();
       orchestrator.on('session_failed', failedHandler);
@@ -180,7 +180,7 @@ describe('TrainingOrchestrator', () => {
       expect(orchestrator.isTraining()).toBe(false);
 
       const userId = 'test-user-8';
-      const platforms: Platform[] = ['TikTok'];
+      const platforms: Platform[] = [PlatformEnum.TIKTOK];
 
       await orchestrator.startTraining(userId, platforms);
       expect(orchestrator.isTraining()).toBe(true);
@@ -190,7 +190,7 @@ describe('TrainingOrchestrator', () => {
   describe('stopTraining', () => {
     it('should stop training gracefully', async () => {
       const userId = 'test-user-9';
-      const platforms: Platform[] = ['TikTok'];
+      const platforms: Platform[] = [PlatformEnum.TIKTOK];
 
       await orchestrator.startTraining(userId, platforms);
       expect(orchestrator.isTraining()).toBe(true);

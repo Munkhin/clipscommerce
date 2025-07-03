@@ -11,7 +11,8 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { ScannerServiceAdapter } from '../functions/ScannerServiceAdapter';
-import type { Platform, ScanOptions, ScanStatus } from '../functions/types';
+import type { ScanOptions, ScanStatus } from '../functions/types';
+import { PlatformEnum } from '@/types/platform';
 
 // Custom hook for managing scanner service
 function useScannerService(userId: string) {
@@ -30,8 +31,8 @@ function useScannerService(userId: string) {
       try {
         // Get tokens from secure storage - in production, use a proper secret management system
         const tokens = [
-          { platform: 'instagram' as Platform, accessToken: process.env.NEXT_PUBLIC_INSTAGRAM_TOKEN || '' },
-          { platform: 'tiktok' as Platform, accessToken: process.env.NEXT_PUBLIC_TIKTOK_TOKEN || '' }
+          { platform: PlatformEnum.INSTAGRAM, accessToken: process.env.NEXT_PUBLIC_INSTAGRAM_TOKEN || '' },
+          { platform: PlatformEnum.TIKTOK, accessToken: process.env.NEXT_PUBLIC_TIKTOK_TOKEN || '' }
         ].filter(t => t.accessToken);
         
         if (tokens.length === 0) {
@@ -192,7 +193,7 @@ export function SocialScanner({ userId }: { userId: string }) {
   } = useScanState(scannerService, userId);
   
   // Form state
-  const [platforms, setPlatforms] = useState<Platform[]>(['INSTAGRAM' as any]);
+  const [platforms, setPlatforms] = useState<PlatformEnum[]>([PlatformEnum.INSTAGRAM]);
   const [lookbackDays, setLookbackDays] = useState(30);
   const [includeOwnPosts, setIncludeOwnPosts] = useState(true);
   const [timezone, setTimezone] = useState('America/New_York');
@@ -206,7 +207,7 @@ export function SocialScanner({ userId }: { userId: string }) {
     }
     
     startScan({
-      platforms: platforms as [Platform, ...Platform[]],
+      platforms: platforms.length > 0 ? platforms : [PlatformEnum.INSTAGRAM],
       lookbackDays,
       includeOwnPosts,
       timezone
@@ -214,7 +215,7 @@ export function SocialScanner({ userId }: { userId: string }) {
   };
   
   // Handle platform selection
-  const togglePlatform = (platform: Platform) => {
+  const togglePlatform = (platform: PlatformEnum) => {
     setPlatforms(prev => 
       prev.includes(platform)
         ? prev.filter(p => p !== platform)
@@ -247,12 +248,12 @@ export function SocialScanner({ userId }: { userId: string }) {
         <div className="mb-4">
           <label className="block text-gray-700 mb-2">Platforms</label>
           <div className="flex flex-wrap gap-3">
-            {['instagram', 'tiktok', 'youtube'].map((platform) => (
+            {[PlatformEnum.INSTAGRAM, PlatformEnum.TIKTOK, PlatformEnum.YOUTUBE].map((platform) => (
               <label key={platform} className="inline-flex items-center">
                 <input
                   type="checkbox"
-                  checked={platforms.includes(platform as Platform)}
-                  onChange={() => togglePlatform(platform as Platform)}
+                  checked={platforms.includes(platform)}
+                  onChange={() => togglePlatform(platform)}
                   className="form-checkbox h-5 w-5 text-blue-600"
                   disabled={isLoading}
                 />

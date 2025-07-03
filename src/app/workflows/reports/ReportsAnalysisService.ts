@@ -156,7 +156,7 @@ export class ReportsAnalysisService {
       }]
     };
     const chartGenerator = new ChartGenerator();
-    const chartSvg = options.includeCharts ? await chartGenerator.generateChart(chart, 'svg') : '';
+    const chartSvg = options.includeCharts ? await chartGenerator.generateChartAsync(chart, 'svg') : '';
     // 4. Generate report
     const generator = new ReportGenerator();
     const report = await generator.generateReport(

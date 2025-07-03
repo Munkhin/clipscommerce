@@ -38,6 +38,13 @@ interface VideoResult {
   optimizations?: string[];
   engagementScore?: number;
   recommendations?: string[];
+  sentiment?: {
+    score: number;
+    sentiment: string;
+  };
+  tone?: {
+    tone: string;
+  };
 }
 
 interface Video {

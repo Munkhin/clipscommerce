@@ -3,7 +3,7 @@ import { ApiConfig, ApiRateLimit, ApiResponse, HeaderValue, Platform, PlatformPo
 import { ApiError, RateLimitError } from '../utils/errors';
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import logger from '../../../../../utils/logger';
-import { DISPLAY_PLATFORM_MAP, PlatformEnum } from '../../../../../types/platform';
+import { PLATFORM_DISPLAY_MAP } from '../../../../../types/platform';
 import { Post, Analytics } from '../../../../../types';
 
 // Export ApiResponse for compatibility
@@ -15,7 +15,7 @@ export type { Post, Analytics } from '../../../../../types';
 export abstract class BasePlatformClient {
   protected readonly client: AxiosInstance;
   protected rateLimit: ApiRateLimit | null = null;
-  protected readonly platform: Platform = PlatformEnum.TIKTOK; // Default platform, should be overridden by subclasses
+  protected readonly platform: Platform = 'tiktok'; // Default platform, should be overridden by subclasses
 
   constructor(
     protected readonly config: ApiConfig,
@@ -90,7 +90,7 @@ export abstract class BasePlatformClient {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         throw new ApiError(
-          DISPLAY_PLATFORM_MAP[this.platform] || 'tiktok', // Convert platform enum to lowercase
+          this.platform,
           error.response?.status?.toString() || '500',
           error.response?.statusText || 'Unknown API Error',
           error.response?.status || 500,
