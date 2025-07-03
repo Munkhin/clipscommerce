@@ -1,11 +1,4 @@
 {
-  "version": 2,
-  "builds": [
-    { "src": "next.config.js", "use": "@vercel/next" }
-  ],
-  "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/$1" }
-  ],
   "env": {
     "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY": "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY",
     "STRIPE_SECRET_KEY": "STRIPE_SECRET_KEY",
@@ -34,6 +27,5 @@
     "BIGCOMMERCE_CLIENT_SECRET": "BIGCOMMERCE_CLIENT_SECRET",
     "BIGCOMMERCE_OAUTH_REDIRECT_URI": "BIGCOMMERCE_OAUTH_REDIRECT_URI",
     "BIGCOMMERCE_API_BASE_URL": "BIGCOMMERCE_API_BASE_URL"
-  },
-  "ignoreCommand": "echo 'Vercel will use Next.js output directory'"
+  }
 }
