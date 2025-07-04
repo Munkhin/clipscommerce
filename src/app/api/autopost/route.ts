@@ -2,8 +2,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { cookies } from 'next/headers';
+import { protectRoute } from '@/lib/usage-limits';
 
 export async function POST(req: NextRequest) {
+  // Check usage limits first
+  const protectedMiddleware = await protectRoute('autoposts');
+  const protectionResult = await protectedMiddleware(req);
+  if (protectionResult) {
+    return protectionResult; // Return early if usage limit exceeded
+  }
+
   const supabase = await createClient(cookies());
   const { data: { user } } = await supabase.auth.getUser();
 

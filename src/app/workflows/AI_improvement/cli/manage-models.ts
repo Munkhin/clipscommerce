@@ -10,6 +10,7 @@ dotenv.config({ path: path.join(process.cwd(), '.env.local') });
 import { ModelRegistry } from '../training/deployment/ModelRegistry';
 import { ModelEvaluator } from '../training/evaluation/ModelEvaluator';
 import { createClient } from '@supabase/supabase-js';
+import { isFeatureEnabled, getFeatureErrorResponse } from '../../../../lib/utils/featureFlags';
 
 // Configuration
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
@@ -457,6 +458,12 @@ async function evaluateModel(evaluator: ModelEvaluator, args: Record<string, str
   console.log(`🔬 Re-evaluating model ${modelId}...\n`);
 
   try {
+    if (!isFeatureEnabled('ADVANCED_ANALYTICS')) {
+      console.log('⚠️  Advanced analytics feature not enabled.');
+      console.log('   Model re-evaluation requires the ADVANCED_ANALYTICS feature flag.');
+      return;
+    }
+    
     // This would require loading test data and the model
     // For now, just show that the functionality exists
     console.log('⚠️  Model re-evaluation requires test data and is not implemented in this demo.');

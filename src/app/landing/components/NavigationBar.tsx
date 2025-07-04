@@ -4,13 +4,28 @@ import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { Menu, X, ChevronDown, Star } from 'lucide-react';
+import { Menu, ChevronDown, Star } from 'lucide-react';
+import { Cross2Icon } from '@radix-ui/react-icons';
 
 function NavigationBar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const router = useRouter();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [bannerDismissed, setBannerDismissed] = useState(false);
   const dropdownRefs = useRef<{[key: string]: HTMLDivElement | null}>({});
+
+  // Check if banner was dismissed from localStorage
+  useEffect(() => {
+    const dismissed = localStorage.getItem('promo-banner-dismissed');
+    if (dismissed === 'true') {
+      setBannerDismissed(true);
+    }
+  }, []);
+
+  const dismissBanner = () => {
+    setBannerDismissed(true);
+    localStorage.setItem('promo-banner-dismissed', 'true');
+  };
 
   // Handle clicking outside to close dropdowns
   useEffect(() => {
@@ -50,9 +65,9 @@ const navItems: NavItem[] = [
       key: 'features',
       hasDropdown: true,
       dropdown: [
-        { label: 'Content Optimization', href: '/#features' },
-        { label: 'Precise Autoposting', href: '/#how-it-works' },
-        { label: 'AI Analytics', href: '/#testimonials' },
+        { label: 'Content Optimization', href: '/features' },
+        { label: 'Precise Autoposting', href: '/features' },
+        { label: 'AI Analytics', href: '/features' },
       ]
     },
     { 
@@ -60,8 +75,8 @@ const navItems: NavItem[] = [
       key: 'solutions',
       hasDropdown: true,
       dropdown: [
-        { label: 'E-commerce', href: '/landing/solutions/ecommerce' },
-        { label: 'Content Marketing', href: '/landing/solutions/content-marketing' },
+        { label: 'E-commerce', href: '/landing/solutions' },
+        { label: 'Content Marketing', href: '/landing/solutions' },
         { label: 'Team', href: '/landing/team' },
       ]
     },
@@ -80,23 +95,32 @@ const navItems: NavItem[] = [
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 flex flex-col bg-black/80 backdrop-blur-md border-b border-white/5">
+    <header className="fixed top-0 left-0 right-0 z-50 flex flex-col bg-black/80 backdrop-blur-md border-b border-white/5" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
       {/* Announcement banner */}
-      <div className="bg-gradient-to-r from-purple-600 to-indigo-600 py-2.5 px-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-center gap-2 text-sm font-medium text-white">
-          <span className="flex items-center">
-            <Star className="h-4 w-4 mr-1.5 text-yellow-300 fill-yellow-300" />
-            Limited time pro plan offer
-          </span>
-          <Link 
-            href="/landing/pricing" 
-            className="font-bold underline hover:text-white/90 transition-colors"
-            onClick={() => setMobileMenuOpen(false)}
-          >
-            upgrade now
-          </Link>
+      {!bannerDismissed && (
+        <div className="bg-gradient-to-r from-purple-600 to-indigo-600 py-2.5 px-4">
+          <div className="max-w-7xl mx-auto flex items-center justify-center gap-2 text-sm font-medium text-white relative">
+            <span className="flex items-center">
+              <Star className="h-4 w-4 mr-1.5 text-yellow-300 fill-yellow-300" />
+              Limited time pro plan offer
+            </span>
+            <Link 
+              href="/landing/pricing" 
+              className="font-bold underline hover:text-white/90 transition-colors"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              upgrade now
+            </Link>
+            <button
+              onClick={dismissBanner}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white transition-colors"
+              aria-label="Dismiss banner"
+            >
+              <Cross2Icon className="h-4 w-4" />
+            </button>
+          </div>
         </div>
-      </div>
+      )}
       
       {/* Main navigation */}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -108,12 +132,13 @@ const navItems: NavItem[] = [
                 <div className="relative h-10 w-10 rounded-full overflow-hidden">
                   <Image 
                     src="/images/ChatGPT Image Jun 1, 2025, 07_27_54 PM.png" 
-                    alt="ChatGPT" 
+                    alt="ClipsCommerce logo" 
                     fill
                     style={{
                       objectFit: 'cover',
                       filter: 'invert(1)'
                     }}
+                    sizes="40px"
                     priority
                   />
                 </div>
@@ -183,7 +208,7 @@ const navItems: NavItem[] = [
               Sign In
             </Link>
             <Link
-              href="/dashboard"
+              href="/sign-up"
               className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20 inline-block"
             >
               Get Started
@@ -199,7 +224,7 @@ const navItems: NavItem[] = [
             >
               <span className="sr-only">Open main menu</span>
               {mobileMenuOpen ? (
-                <X className="block h-6 w-6" aria-hidden="true" />
+                <Cross2Icon className="block h-6 w-6" aria-hidden="true" />
               ) : (
                 <Menu className="block h-6 w-6" aria-hidden="true" />
               )}
@@ -211,14 +236,14 @@ const navItems: NavItem[] = [
       {/* Mobile menu */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-gray-900 border-t border-gray-800">
-          <div className="px-2 pt-2 pb-3 space-y-1">
+          <div className="px-2 pt-2 pb-3 space-y-1" style={{ paddingBottom: 'calc(0.75rem + env(safe-area-inset-bottom))' }}>
             {navItems.map((item) => (
               <div key={item.label} className="px-3 py-2">
                 {item.hasDropdown ? (
                   <div>
                     <button
                       onClick={() => item.key && toggleDropdown(item.key)}
-                      className="w-full flex items-center justify-between text-gray-200 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-base font-medium"
+                      className="w-full flex items-center justify-between text-gray-200 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-base font-medium min-h-[44px]"
                     >
                       {item.label}
                       <ChevronDown 
@@ -231,7 +256,7 @@ const navItems: NavItem[] = [
                           <Link
                             key={dropdownItem.label}
                             href={dropdownItem.href}
-                            className="block px-3 py-2 text-gray-300 hover:bg-gray-800 hover:text-white rounded-md text-sm"
+                            className="block px-3 py-2 text-gray-300 hover:bg-gray-800 hover:text-white rounded-md text-sm min-h-[44px] flex items-center"
                             onClick={() => {
                               setOpenDropdown(null);
                               setMobileMenuOpen(false);
@@ -246,7 +271,7 @@ const navItems: NavItem[] = [
                 ) : (
                   <Link
                     href={item.href || '#'}
-                    className="block px-3 py-2 text-gray-200 hover:bg-gray-800 hover:text-white rounded-md text-base font-medium"
+                    className="block px-3 py-2 text-gray-200 hover:bg-gray-800 hover:text-white rounded-md text-base font-medium min-h-[44px] flex items-center"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     {item.label}
@@ -256,15 +281,15 @@ const navItems: NavItem[] = [
             ))}
             <div className="pt-4 pb-2 px-3 space-y-2">
               <Link
-                href="/auth/sign-in"
-                className="block w-full px-4 py-2 text-center text-sm font-medium text-gray-200 hover:text-white"
+                href="/sign-in"
+                className="block w-full px-4 py-2 text-center text-sm font-medium text-gray-200 hover:text-white min-h-[44px] flex items-center justify-center"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Sign In
               </Link>
               <Link
-                href="/dashboard"
-                className="block w-full text-center bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-all duration-300"
+                href="/sign-up"
+                className="block w-full text-center bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-all duration-300 min-h-[44px] flex items-center justify-center"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Get Started

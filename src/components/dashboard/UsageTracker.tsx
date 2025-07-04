@@ -21,20 +21,8 @@ import { useAuth } from '@/providers/AuthProvider';
 import Link from 'next/link';
 
 interface UsageStats {
-  tier: SubscriptionTier;
-  usage: {
-    viralBlitzCycleUsed: number;
-    ideaGeneratorUsed: number;
-    autopostsUsed: number;
-    lastReset: Date;
-    currentPeriodStart: Date;
-  };
-  remainingUsage: {
-    viralBlitzCycle: number | 'unlimited';
-    ideaGenerator: number | 'unlimited';
-    autoposts: number | 'unlimited';
-  };
-  nextReset: Date;
+  tierName: string;
+  features: Record<string, { used: number; limit: number; percentage: number }>;
 }
 
 interface FeatureCardProps {
@@ -164,29 +152,29 @@ export default function UsageTracker() {
     {
       title: 'Viral Blitz Cycle',
       icon: Zap,
-      used: usageStats.usage.viralBlitzCycleUsed,
-      limit: usageStats.tier.limits.viralBlitzCycle,
-      remaining: usageStats.remainingUsage.viralBlitzCycle,
+      used: usageStats.features.viralBlitzCycle?.used || 0,
+      limit: usageStats.features.viralBlitzCycle?.limit || 0,
+      remaining: usageStats.features.viralBlitzCycle?.limit === -1 ? 'unlimited' : Math.max(0, (usageStats.features.viralBlitzCycle?.limit || 0) - (usageStats.features.viralBlitzCycle?.used || 0)),
       gradient: 'from-purple-500 to-indigo-500',
-      isUnlimited: usageStats.tier.limits.viralBlitzCycle === -1,
+      isUnlimited: usageStats.features.viralBlitzCycle?.limit === -1,
     },
     {
       title: 'Idea Generator',
       icon: Lightbulb,
-      used: usageStats.usage.ideaGeneratorUsed,
-      limit: usageStats.tier.limits.ideaGenerator,
-      remaining: usageStats.remainingUsage.ideaGenerator,
+      used: usageStats.features.ideaGenerator?.used || 0,
+      limit: usageStats.features.ideaGenerator?.limit || 0,
+      remaining: usageStats.features.ideaGenerator?.limit === -1 ? 'unlimited' : Math.max(0, (usageStats.features.ideaGenerator?.limit || 0) - (usageStats.features.ideaGenerator?.used || 0)),
       gradient: 'from-[#8D5AFF] to-[#5afcc0]',
-      isUnlimited: usageStats.tier.limits.ideaGenerator === -1,
+      isUnlimited: usageStats.features.ideaGenerator?.limit === -1,
     },
     {
       title: 'Auto Posts',
       icon: Send,
-      used: usageStats.usage.autopostsUsed,
-      limit: usageStats.tier.limits.autoposts,
-      remaining: usageStats.remainingUsage.autoposts,
+      used: usageStats.features.autoposts?.used || 0,
+      limit: usageStats.features.autoposts?.limit || 0,
+      remaining: usageStats.features.autoposts?.limit === -1 ? 'unlimited' : Math.max(0, (usageStats.features.autoposts?.limit || 0) - (usageStats.features.autoposts?.used || 0)),
       gradient: 'from-[#5afcc0] to-blue-500',
-      isUnlimited: usageStats.tier.limits.autoposts === -1,
+      isUnlimited: usageStats.features.autoposts?.limit === -1,
     },
   ];
 
@@ -206,7 +194,7 @@ export default function UsageTracker() {
               <div>
                 <CardTitle className="text-lg text-white">Usage Overview</CardTitle>
                 <p className="text-sm text-neutral-400">
-                  Current plan: <span className="text-[#8D5AFF] font-medium">{usageStats.tier.name}</span>
+                  Current plan: <span className="text-[#8D5AFF] font-medium">{usageStats.tierName}</span>
                 </p>
               </div>
             </div>

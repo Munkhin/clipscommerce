@@ -1,0 +1,82 @@
+{
+  "name": "ClipsCommerce - AI-Powered Content That Sells",
+  "short_name": "ClipsCommerce",
+  "description": "Transform your social media content into sales with AI-powered optimization. Generate viral content, automate posting, and boost conversions.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0A0A0A",
+  "theme_color": "#8B5CF6",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "categories": ["business", "productivity", "social"],
+  "lang": "en-US",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "/images/ChatGPT Image Jun 1, 2025, 07_27_54 PM.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/ChatGPT Image Jun 1, 2025, 07_27_54 PM.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/images/screenshot-desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "ClipsCommerce Dashboard"
+    },
+    {
+      "src": "/images/screenshot-mobile.png",
+      "sizes": "375x812",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "ClipsCommerce Mobile"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "description": "Go to your ClipsCommerce dashboard",
+      "url": "/dashboard",
+      "icons": [
+        {
+          "src": "/images/ChatGPT Image Jun 1, 2025, 07_27_54 PM.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Create Content",
+      "short_name": "Create",
+      "description": "Start creating new content",
+      "url": "/dashboard/ideator",
+      "icons": [
+        {
+          "src": "/images/ChatGPT Image Jun 1, 2025, 07_27_54 PM.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "share_target": {
+    "action": "/dashboard/ideator",
+    "method": "GET",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  },
+  "prefer_related_applications": false
+}

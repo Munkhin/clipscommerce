@@ -178,7 +178,7 @@ export class TrainingDataCollectionService {
   private transformDbPostToMetrics(dbPost: any): PostMetrics {
     return {
       id: dbPost.platform_post_id,
-      platform: dbPost.platform as Platform,
+      platform: dbPost.platform as any,
       url: dbPost.media_url || '',
       caption: dbPost.caption || '',
       hashtags: dbPost.hashtags || [],
@@ -198,7 +198,7 @@ export class TrainingDataCollectionService {
   private transformScanResultToPostMetrics(scanResult: any, platform: Platform): PostMetrics {
     return {
       id: scanResult.id,
-      platform,
+      platform: platform as any,
       url: scanResult.url || '',
       caption: scanResult.caption || '',
       hashtags: scanResult.hashtags || [],

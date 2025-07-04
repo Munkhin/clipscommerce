@@ -211,8 +211,10 @@ class ErrorReportingService {
   ): string {
     const errorId = this.generateErrorId();
     
+    const contextInfo = this.getContextInfo();
     const errorInfo: ErrorInfo = {
       errorId,
+      timestamp: contextInfo.timestamp!,
       category: context.category || ErrorCategory.UNKNOWN,
       severity: context.severity || ErrorSeverity.NORMAL,
       component: context.component,
@@ -221,7 +223,9 @@ class ErrorReportingService {
       requestId: context.requestId,
       additionalContext: context.additionalContext,
       fingerprint: context.fingerprint,
-      ...this.getContextInfo(),
+      sessionId: contextInfo.sessionId,
+      userAgent: contextInfo.userAgent,
+      url: contextInfo.url,
     };
 
     // Log to console in development or if enabled
@@ -244,7 +248,7 @@ class ErrorReportingService {
         }
 
         // Set additional context
-        scope.setContext('errorInfo', errorInfo);
+        scope.setContext('errorInfo', { ...errorInfo } as Record<string, any>);
         
         if (errorInfo.additionalContext) {
           scope.setContext('additional', errorInfo.additionalContext);

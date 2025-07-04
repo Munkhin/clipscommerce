@@ -37,7 +37,7 @@ export default function ResultsSection() {
 
         <div className="relative">
           {/* Decorative background elements */}
-          <div className="absolute inset-0 -z-10 opacity-20">
+          <div className="absolute inset-0 -z-10 opacity-20" aria-hidden="true">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,#3b82f6,transparent_70%)]" />
           </div>
           

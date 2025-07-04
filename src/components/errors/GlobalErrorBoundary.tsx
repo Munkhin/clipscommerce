@@ -177,7 +177,7 @@ export class GlobalErrorBoundary extends Component<Props, State> {
       `Please help me resolve this issue.`
     );
     
-    const mailtoUrl = `mailto:support@clipscommerce.com?subject=${subject}&body=${body}`;
+    const mailtoUrl = `mailto:hello@clipscommerce.com?subject=${subject}&body=${body}`;
     
     if (typeof window !== 'undefined') {
       window.open(mailtoUrl, '_blank');

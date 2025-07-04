@@ -252,7 +252,7 @@ export function AccessibilityProvider({
           color: #fff;
           padding: 8px;
           text-decoration: none;
-          border-radius: 4px;
+          border-radius: 8px;
           z-index: 9999;
         }
 

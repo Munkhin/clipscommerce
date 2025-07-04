@@ -15,7 +15,7 @@ export default function HeroSection({ onGetStarted, onDemo }: HeroSectionProps) 
   return (
     <section className="relative bg-black pt-44 pb-28 md:pt-52 md:pb-36 overflow-hidden">
       {/* Background grid lines */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
+      <div className="absolute inset-0 z-0 pointer-events-none" aria-hidden="true">
         <div 
           className="absolute inset-0" 
           style={{
@@ -30,8 +30,8 @@ export default function HeroSection({ onGetStarted, onDemo }: HeroSectionProps) 
       </div>
       
       {/* Background elements */}
-      <div className="absolute inset-0 z-0 bg-gradient-to-b from-black via-black to-[#0A0A0A]" />
-      <div className="absolute bottom-20 -right-20 w-[32rem] h-[32rem] bg-blitz-purple/25 rounded-full filter blur-[180px]" />
+      <div className="absolute inset-0 z-0 bg-gradient-to-b from-black via-black to-[#0A0A0A]" aria-hidden="true" />
+      <div className="absolute bottom-20 -right-20 w-[32rem] h-[32rem] bg-blitz-purple/25 rounded-full filter blur-[180px]" aria-hidden="true" />
       
       <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
         <div className="text-center max-w-5xl mx-auto">
@@ -46,16 +46,16 @@ export default function HeroSection({ onGetStarted, onDemo }: HeroSectionProps) 
               THE ONLY ALL-IN-ONE AI SHORT-FORM MARKETING PLATFORM
             </div>
             <div className="relative pb-6 mb-4">
-              <div className="whitespace-nowrap text-5xl sm:text-6xl font-bold text-white leading-tight tracking-tight">
+              <h1 className="whitespace-nowrap text-5xl sm:text-6xl font-bold text-white leading-tight tracking-tight">
                 The future of short-form marketing
-              </div>
-              <div className="absolute bottom-0 left-1/2 w-48 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent transform -translate-x-1/2" />
+              </h1>
+              <div className="absolute bottom-0 left-1/2 w-48 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent transform -translate-x-1/2" aria-hidden="true" />
             </div>
             <div className="relative">
               <p className="text-xl text-[#E5E7EB] max-w-3xl mx-auto font-light tracking-wide mb-2">
                 From Inspiration to Optimization — All in One Platform
               </p>
-              <div className="absolute -bottom-2 left-1/2 w-32 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent transform -translate-x-1/2" />
+              <div className="absolute -bottom-2 left-1/2 w-32 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent transform -translate-x-1/2" aria-hidden="true" />
             </div>
           </motion.div>
 
@@ -66,27 +66,30 @@ export default function HeroSection({ onGetStarted, onDemo }: HeroSectionProps) 
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
-            <div className="absolute -inset-4 border-l border-t border-white/10 rounded-tl-lg" />
-            <Link href="/dashboard" passHref>
+            <div className="absolute -inset-4 border-l border-t border-white/10 rounded-tl-lg" aria-hidden="true" />
+            <Link href="/sign-up" passHref>
               <motion.button
                 className="bg-[#8D5AFF] hover:bg-[#8D5AFF]/90 text-white px-10 py-5 rounded-lg font-bold text-lg shadow-xl shadow-[#8D5AFF]/30 transform transition-all"
                 whileHover={{ scale: 1.02, boxShadow: '0 10px 25px -5px rgba(141, 90, 255, 0.5)' }}
                 whileTap={{ scale: 0.98 }}
+                aria-label="Get started with ClipsCommerce"
               >
                 <span className="flex items-center justify-center">
-                  Start Selling Now
+                  Get Started
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </span>
               </motion.button>
             </Link>
-            <motion.button
-              onClick={onDemo}
-              className="border border-storm-light/25 bg-storm-light/5 hover:bg-storm-light/15 text-[#E5E7EB] hover:text-white px-10 py-5 rounded-lg font-bold text-lg transition-all duration-300 backdrop-blur-sm"
-              whileHover={{ backgroundColor: 'rgba(255, 255, 255, 0.05)' }}
-              whileTap={{ scale: 0.98 }}
-            >
-              See Live Demo
-            </motion.button>
+            <Link href="/landing/results" passHref>
+              <motion.button
+                className="border border-storm-light/25 bg-storm-light/5 hover:bg-storm-light/15 text-[#E5E7EB] hover:text-white px-10 py-5 rounded-lg font-bold text-lg transition-all duration-300 backdrop-blur-sm"
+                whileHover={{ backgroundColor: 'rgba(255, 255, 255, 0.05)' }}
+                whileTap={{ scale: 0.98 }}
+                aria-label="See live demo of ClipsCommerce"
+              >
+                See Live Demo
+              </motion.button>
+            </Link>
           </motion.div>
 
           {/* Key differentiators bullets */}
@@ -133,6 +136,9 @@ export default function HeroSection({ onGetStarted, onDemo }: HeroSectionProps) 
               fill
               style={{ objectFit: 'cover' }}
               priority
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 60vw"
+              placeholder="blur"
+              blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkrHB0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
             />
           </div>
         </motion.div>

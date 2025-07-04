@@ -5,7 +5,7 @@ export class ProductToTemplateTransformer {
   constructor(private llm: LlmWrapper) {}
 
   async transform(description: string, platform: string): Promise<ContentTemplateBatch> {
-    const templates = [];
+    const templates: any[] = [];
     for await (const template of this.llm.generateTemplates(description, platform)) {
       templates.push(template);
     }

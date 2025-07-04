@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
+export const dynamic = 'force-dynamic';
 import { cookies } from 'next/headers';
 import { type NextRequest, NextResponse } from 'next/server';
 import { authGuard } from '@/lib/security/auth-guard';

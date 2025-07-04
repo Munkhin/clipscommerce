@@ -4,6 +4,9 @@ import { cookies } from 'next/headers';
 import { serverStorageService, BucketName, FileMetadata } from '@/lib/storage/supabase-storage';
 import { URL } from 'url';
 
+// Force this route to be dynamic
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
   try {
     const supabase = await createClient(cookies());

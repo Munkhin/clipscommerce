@@ -4,6 +4,8 @@ import { AuthProvider } from '@/providers/AuthProvider';
 import { SettingsProvider } from '@/providers/SettingsProvider';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { GlobalErrorBoundary } from '@/components/errors/GlobalErrorBoundary';
+import { PWAInstaller } from '@/components/PWAInstaller';
+import { AnalyticsProvider } from '@/components/analytics/AnalyticsProvider';
 import { setUser, addBreadcrumb } from '@/lib/errors/errorReporting';
 import { URL } from 'url';
 
@@ -13,10 +15,13 @@ const inter = Inter({
   variable: '--font-inter',
 });
 
-// Production metadata
+// Default metadata (will be overridden by individual pages)
 export const metadata = {
   metadataBase: new URL('https://clipscommerce.com'),
-  title: 'ClipsCommerce - AI-Powered Content That Sells',
+  title: {
+    default: 'ClipsCommerce - AI-Powered Content That Sells',
+    template: '%s | ClipsCommerce'
+  },
   description: 'Transform your social media content into sales with AI-powered optimization. Generate viral content, automate posting, and boost conversions with ClipsCommerce.',
   keywords: 'AI content creation, social media automation, e-commerce marketing, viral content, TikTok marketing, Instagram marketing, content optimization',
   authors: [{ name: 'ClipsCommerce' }],
@@ -47,7 +52,8 @@ export const metadata = {
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#000000',
+  themeColor: '#8B5CF6',
+  viewportFit: 'cover',
 };
 
 export default function RootLayout({
@@ -60,15 +66,48 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="preload"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+          as="style"
+          onLoad="this.onload=null;this.rel='stylesheet'"
+        />
+        <noscript>
+          <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+          />
+        </noscript>
+        
+        {/* PWA Meta Tags */}
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="apple-touch-icon" href="/images/ChatGPT Image Jun 1, 2025, 07_27_54 PM.png" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="ClipsCommerce" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="msapplication-TileColor" content="#8B5CF6" />
+        <meta name="msapplication-TileImage" content="/images/ChatGPT Image Jun 1, 2025, 07_27_54 PM.png" />
+        
+        {/* Performance and Resource Hints */}
+        <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+        <link rel="dns-prefetch" href="//fonts.gstatic.com" />
+        <meta name="format-detection" content="telephone=no" />
+        
+        {/* iOS Safe Area Support */}
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
       </head>
       <body className={`${inter.className} antialiased flex flex-col h-screen`}>
-        <AuthProvider>
-          <SettingsProvider>
-            <AppLayout>
-              {children}
-            </AppLayout>
-          </SettingsProvider>
-        </AuthProvider>
+        <AnalyticsProvider>
+          <AuthProvider>
+            <SettingsProvider>
+              <AppLayout>
+                {children}
+              </AppLayout>
+              <PWAInstaller />
+            </SettingsProvider>
+          </AuthProvider>
+        </AnalyticsProvider>
       </body>
     </html>
   );

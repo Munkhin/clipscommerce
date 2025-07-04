@@ -332,7 +332,7 @@ export class YouTubeClient extends BasePlatformClient {
 
     return {
       id: video.id,
-      platform: 'youtube',
+      platform: PlatformEnum.YOUTUBE,
       views,
       likes,
       comments,

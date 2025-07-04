@@ -6,6 +6,7 @@ import { resetPasswordAction } from "@/lib/auth/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function ResetPasswordPage() {
   const router = useRouter();
@@ -15,6 +16,8 @@ export default function ResetPasswordPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const token = searchParams.get("token");
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -60,7 +63,11 @@ export default function ResetPasswordPage() {
       }, 3000);
     } catch (err: unknown) {
       if (err instanceof Error) {
-        setError(err.message || "An error occurred while resetting your password. Please try again.");
+        if (err.message.includes('401')) {
+          setError('Authentication failed. Please check your reset link and try again.');
+        } else {
+          setError(err.message || "An error occurred while resetting your password. Please try again.");
+        }
       } else {
         setError("An unknown error occurred.");
       }
@@ -101,40 +108,64 @@ export default function ResetPasswordPage() {
           </div>
 
           {error && (
-            <div className="bg-red-500/10 border border-red-500/30 text-red-300 p-4 rounded-lg text-sm">
+            <div className="bg-red-500/10 border border-red-500/30 text-red-300 p-4 rounded-lg text-sm" role="alert">
               {error}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="password">New Password</Label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your new password"
-                required
-                minLength={6}
-                className="bg-dominator-dark/50 border-dominator-dark/50 text-white placeholder-dominator-400"
-                disabled={isLoading}
-              />
+              <Label htmlFor="password" className="text-gray-300 font-medium">New Password</Label>
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter your new password"
+                  required
+                  minLength={6}
+                  className="bg-dominator-dark/50 border-dominator-dark/50 text-white placeholder-dominator-400 pr-12"
+                  disabled={isLoading}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-300 transition-colors"
+                  aria-pressed={showPassword}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  tabIndex={isLoading ? -1 : 0}
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm New Password</Label>
-              <Input
-                id="confirmPassword"
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Confirm your new password"
-                required
-                minLength={6}
-                className="bg-dominator-dark/50 border-dominator-dark/50 text-white placeholder-dominator-400"
-                disabled={isLoading}
-              />
+              <Label htmlFor="confirmPassword" className="text-gray-300 font-medium">Confirm New Password</Label>
+              <div className="relative">
+                <Input
+                  id="confirmPassword"
+                  type={showConfirmPassword ? "text" : "password"}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Confirm your new password"
+                  required
+                  minLength={6}
+                  className="bg-dominator-dark/50 border-dominator-dark/50 text-white placeholder-dominator-400 pr-12"
+                  disabled={isLoading}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-300 transition-colors"
+                  aria-pressed={showConfirmPassword}
+                  aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                  tabIndex={isLoading ? -1 : 0}
+                >
+                  {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
             </div>
 
             <Button

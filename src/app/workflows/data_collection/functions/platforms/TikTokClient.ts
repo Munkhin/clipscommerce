@@ -257,7 +257,7 @@ export class TikTokClient extends BasePlatformClient {
     
     return {
       id: video.id,
-      platform: 'tiktok',
+      platform: PlatformEnum.TIKTOK,
       views: video.view_count || 0,
       likes,
       comments,

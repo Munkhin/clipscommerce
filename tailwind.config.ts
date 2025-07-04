@@ -81,6 +81,14 @@ const config: Config = {
         'accent-gold': 'hsl(var(--accent-gold))',
         'accent-success-green': 'hsl(var(--accent-success-green))',
         'accent-error-red': 'hsl(var(--accent-error-red))',
+        
+        // Button Color System
+        'button-primary': 'hsl(var(--button-primary))',
+        'button-primary-hover': 'hsl(var(--button-primary-hover))',
+        'button-secondary': 'hsl(var(--button-secondary))',
+        'button-secondary-hover': 'hsl(var(--button-secondary-hover))',
+        'button-accent': 'hsl(var(--button-accent))',
+        'button-accent-hover': 'hsl(var(--button-accent-hover))',
 
         // Additional semantic colors if needed
         warning: {
@@ -121,9 +129,10 @@ const config: Config = {
         },
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        lg: "var(--radius-lg)",
+        md: "var(--radius-md)",
+        sm: "var(--radius-sm)",
+        DEFAULT: "var(--radius)",
       },
       keyframes: {
         "accordion-down": {

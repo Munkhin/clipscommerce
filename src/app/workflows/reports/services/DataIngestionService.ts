@@ -94,7 +94,7 @@ export class DataIngestionService {
     };
 
     // Ingest from all platforms in parallel
-    const promises = [];
+    const promises: Promise<any>[] = [];
 
     if (tokens.tiktok) {
       promises.push(

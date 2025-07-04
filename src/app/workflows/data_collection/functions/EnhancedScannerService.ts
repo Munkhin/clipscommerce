@@ -13,6 +13,7 @@ import { TikTokClient } from '../lib/platforms/TikTokClient';
 import { InstagramClient } from '../lib/platforms/InstagramClient';
 import { ApiConfig } from '../lib/platforms/types';
 import { IAuthTokenManager, PlatformCredentials, PlatformClientIdentifier, AuthStrategy } from '../lib/auth.types';
+import { isFeatureEnabled, getFeatureErrorResponse } from '../../../../lib/utils/featureFlags';
 
 // Circuit breaker states
 export enum CircuitBreakerState {
@@ -396,6 +397,10 @@ export class EnhancedScannerService {
             break;
           // Add other platform initializations here
           default:
+            if (!isFeatureEnabled('YOUTUBE_AUTH') && platform === 'youtube') {
+              this.logStructured('info', `YouTube auth feature not enabled`, { platform });
+              continue;
+            }
             this.logStructured('warn', `Platform client initialization not implemented for ${platform}`, { platform });
             continue; // Skip if platform client is not implemented
         }

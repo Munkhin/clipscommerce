@@ -384,7 +384,7 @@ export function usePerformanceOptimization<T>(
       totalItems: items.length,
       visibleItems: virtualData.visibleItems.length,
       renderRatio: virtualData.visibleItems.length / items.length,
-      memoryUsage: process.memoryUsage ? process.memoryUsage() : null,
+      memoryUsage: typeof window !== 'undefined' && 'memory' in performance ? (performance as any).memory : null,
       isOptimized: items.length > 100
     };
   }, [items.length, virtualData.visibleItems.length]);
@@ -539,7 +539,7 @@ export function usePerformanceMonitor(componentName: string) {
     });
 
     // Log performance data in development
-    if (process.env.NODE_ENV === 'development') {
+    if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
       console.log(`[Performance] ${componentName}:`, {
         renderCount: renderCountRef.current,
         renderTime,

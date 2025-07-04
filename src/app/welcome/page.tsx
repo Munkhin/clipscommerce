@@ -39,7 +39,7 @@ export default function WelcomePage() {
           </h1>
           
           <p className="text-xl text-gray-300 mb-8">
-            {user ? `Hi ${user.email}! ` : ''}
+            {user ? `Hi ${user.user_metadata?.full_name || user.email}! ` : ''}
             Your account has been successfully created. You&apos;re all set to start your journey with us.
           </p>
 
@@ -65,8 +65,8 @@ export default function WelcomePage() {
           {/* Action Buttons */}
           <div className="space-y-4">
             <Button asChild className="w-full bg-gradient-to-r from-[#8D5AFF] to-[#5AFCC0] hover:from-[#8D5AFF]/90 hover:to-[#5AFCC0]/90">
-              <Link href="/landing/pricing">
-                View Pricing Plans
+              <Link href="/dashboard">
+                Go to Dashboard
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Link>
             </Button>
@@ -82,8 +82,8 @@ export default function WelcomePage() {
           <div className="mt-8 text-gray-400 text-sm">
             <p>
               Need help? Contact us at{' '}
-              <a href="mailto:support@clipscommerce.com" className="text-[#8D5AFF] hover:underline">
-                support@clipscommerce.com
+              <a href="mailto:hello@clipscommerce.com" className="text-[#8D5AFF] hover:underline">
+                hello@clipscommerce.com
               </a>
             </p>
           </div>

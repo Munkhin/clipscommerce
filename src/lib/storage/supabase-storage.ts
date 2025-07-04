@@ -47,10 +47,18 @@ export interface OptimizationResult {
 }
 
 export class SupabaseStorageService {
-  private supabase;
+  private supabase: any = null;
+  private isServer: boolean;
   
   constructor(isServer = false) {
-    this.supabase = isServer ? createServerClient(cookies()) : createClient();
+    this.isServer = isServer;
+  }
+
+  private async getSupabaseClient() {
+    if (!this.supabase) {
+      this.supabase = this.isServer ? await createServerClient(cookies()) : createClient();
+    }
+    return this.supabase;
   }
 
   /**
@@ -119,7 +127,8 @@ export class SupabaseStorageService {
     const filePath = `${currentUserId}/${uniqueFileName}`;
 
     // Upload to Supabase Storage
-    const { data, error } = await this.supabase.storage
+    const supabase = await this.getSupabaseClient();
+    const { data, error } = await supabase.storage
       .from(bucket)
       .upload(filePath, processedBuffer, {
         contentType: mimeType,
@@ -198,7 +207,8 @@ export class SupabaseStorageService {
     }
 
     // Delete from storage
-    const { error } = await this.supabase.storage
+    const supabase = await this.getSupabaseClient();
+    const { error } = await supabase.storage
       .from(bucket)
       .remove([filePath]);
 
@@ -213,8 +223,9 @@ export class SupabaseStorageService {
   /**
    * Get file URL with caching headers
    */
-  getPublicUrl(bucket: BucketName, filePath: string): string {
-    const { data } = this.supabase.storage
+  async getPublicUrl(bucket: BucketName, filePath: string): Promise<string> {
+    const supabase = await this.getSupabaseClient();
+    const { data } = supabase.storage
       .from(bucket)
       .getPublicUrl(filePath);
 
@@ -225,7 +236,8 @@ export class SupabaseStorageService {
    * Get signed URL for private files
    */
   async getSignedUrl(bucket: BucketName, filePath: string, expiresIn = 3600): Promise<string> {
-    const { data, error } = await this.supabase.storage
+    const supabase = await this.getSupabaseClient();
+    const { data, error } = await supabase.storage
       .from(bucket)
       .createSignedUrl(filePath, expiresIn);
 
@@ -364,7 +376,8 @@ export class SupabaseStorageService {
    * File metadata operations
    */
   private async saveFileMetadata(metadata: Omit<FileMetadata, 'id' | 'created_at' | 'updated_at'>): Promise<FileMetadata> {
-    const { data, error } = await this.supabase
+    const supabase = await this.getSupabaseClient();
+    const { data, error } = await supabase
       .from('file_metadata')
       .insert(metadata)
       .select()
@@ -378,7 +391,8 @@ export class SupabaseStorageService {
   }
 
   async getFileMetadata(bucket: BucketName, filePath: string): Promise<FileMetadata | null> {
-    const { data, error } = await this.supabase
+    const supabase = await this.getSupabaseClient();
+    const { data, error } = await supabase
       .from('file_metadata')
       .select('*')
       .eq('bucket_id', bucket)
@@ -393,7 +407,8 @@ export class SupabaseStorageService {
   }
 
   private async deleteFileMetadata(bucket: BucketName, filePath: string): Promise<void> {
-    const { error } = await this.supabase
+    const supabase = await this.getSupabaseClient();
+    const { error } = await supabase
       .from('file_metadata')
       .delete()
       .eq('bucket_id', bucket)
@@ -405,7 +420,8 @@ export class SupabaseStorageService {
   }
 
   private async findFileByHash(userId: string, bucket: BucketName, hash: string): Promise<FileMetadata | null> {
-    const { data, error } = await this.supabase
+    const supabase = await this.getSupabaseClient();
+    const { data, error } = await supabase
       .from('file_metadata')
       .select('*')
       .eq('user_id', userId)
@@ -424,7 +440,8 @@ export class SupabaseStorageService {
    * Utility methods
    */
   private async getCurrentUserId(): Promise<string | null> {
-    const { data: { user } } = await this.supabase.auth.getUser();
+    const supabase = await this.getSupabaseClient();
+    const { data: { user } } = await supabase.auth.getUser();
     return user?.id || null;
   }
 
@@ -494,7 +511,8 @@ export class SupabaseStorageService {
     }
 
     // Get expired files
-    const { data: expiredFiles, error } = await this.supabase
+    const supabase = await this.getSupabaseClient();
+    const { data: expiredFiles, error } = await supabase
       .from('file_metadata')
       .select('*')
       .eq('user_id', currentUserId)
@@ -531,7 +549,8 @@ export class SupabaseStorageService {
       throw new Error('User must be authenticated');
     }
 
-    const { data: files, error } = await this.supabase
+    const supabase = await this.getSupabaseClient();
+    const { data: files, error } = await supabase
       .from('file_metadata')
       .select('bucket_id, file_size')
       .eq('user_id', currentUserId);

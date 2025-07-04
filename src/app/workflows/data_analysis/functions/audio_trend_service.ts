@@ -87,7 +87,7 @@ export class AudioTrendService {
       console.log(`[AudioTrendService] ${fastGrowing.length} sounds are growing >15% daily`);
       // Step 3: Analyze BPM, mood, and copyright for each sound
       const results = await Promise.all(fastGrowing.map(async (sound: Sound) => {
-        let bpm = null, mood = null, isCopyrightSafe = false;
+        let bpm: number | null = null, mood: string | null = null, isCopyrightSafe = false;
         try {
           bpm = await this.analyzeBPM(sound.url, librosa, sound.sound_id);
           mood = await this.analyzeMood(sound.url, cnnModel, sound.sound_id);

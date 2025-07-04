@@ -388,7 +388,6 @@ export default function AccelerateComponent() {
           ? {
               ...v,
               status: 'Error',
-              columnId: 'todo',
               loading: false,
               uploadProgress: undefined,
               error: err.message || 'Failed to optimize',
@@ -523,7 +522,7 @@ export default function AccelerateComponent() {
         // Revert UI state if retry failed
         setVideos(prev => prev.map(v =>
           v.id === videoId
-            ? { ...v, loading: false, error: result.error || 'Retry failed', status: 'error', columnId: 'todo' }
+            ? { ...v, loading: false, error: result.error || 'Retry failed', status: 'error' }
             : v
         ));
       }
@@ -531,7 +530,7 @@ export default function AccelerateComponent() {
       console.error('Error retrying video:', error);
       setVideos(prev => prev.map(v =>
         v.id === videoId
-          ? { ...v, loading: false, error: 'Retry failed', status: 'error', columnId: 'todo' }
+          ? { ...v, loading: false, error: 'Retry failed', status: 'error' }
           : v
       ));
     }

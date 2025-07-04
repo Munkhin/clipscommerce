@@ -19,7 +19,7 @@ export default function GuaranteeSection({ onGetStarted }: GuaranteeSectionProps
           transition={{ duration: 0.6 }}
         >
           {/* Decorative elements */}
-          <div className="absolute inset-0 -z-10 opacity-20">
+          <div className="absolute inset-0 -z-10 opacity-20" aria-hidden="true">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,#3b82f6,transparent_70%)]" />
           </div>
           

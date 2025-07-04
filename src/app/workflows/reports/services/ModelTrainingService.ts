@@ -429,11 +429,15 @@ export class ModelTrainingService {
     const scaledViralMatrix = this.viralScaler.transform([viralFeatureVectorRaw]);
     const scaledViralVector = scaledViralMatrix[0];
 
-    const engagementRateRaw = this.engagementModel.predict([scaledEngagementVector]);
-    const viralProbabilityRaw = this.viralModel.predict([scaledViralVector]);
+    const engagementRateRaw = this.engagementModel instanceof SimpleMLModel 
+      ? this.engagementModel.predict(scaledEngagementVector) 
+      : this.engagementModel.predict([scaledEngagementVector])[0];
+    const viralProbabilityRaw = this.viralModel instanceof SimpleMLModel 
+      ? this.viralModel.predict(scaledViralVector) 
+      : this.viralModel.predict([scaledViralVector])[0];
     
-    const engagementRate = Array.isArray(engagementRateRaw) ? engagementRateRaw[0] : engagementRateRaw;
-    const viralProbability = Array.isArray(viralProbabilityRaw) ? viralProbabilityRaw[0] : viralProbabilityRaw;
+    const engagementRate = engagementRateRaw;
+    const viralProbability = viralProbabilityRaw;
 
     // Simple confidence calculation based on feature completeness
     const totalFeatures = Object.keys(features).length;

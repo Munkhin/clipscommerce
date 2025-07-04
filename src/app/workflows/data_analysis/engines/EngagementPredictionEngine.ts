@@ -114,7 +114,7 @@ export class EngagementPredictionEngine {
     const growthRate = this.calculateGrowthRate(historicalData);
     
     // Future projection
-    const currentFollowers = historicalData.length > 0 ? historicalData[historicalData.length - 1].followers : 1000;
+    const currentFollowers = historicalData.length > 0 ? (historicalData[historicalData.length - 1] as any).followers : 1000;
     const projectedGrowth = this.projectFutureGrowth(currentFollowers, growthRate, trendAnalysis);
     
     return {
@@ -284,7 +284,7 @@ export class EngagementPredictionEngine {
 
   private async fetchHistoricalAudienceData(userId: string, platform: Platform, timeRange: TimeRange) {
     // Mock historical data - in real implementation, fetch from database
-    const dataPoints = [];
+    const dataPoints: any[] = [];
     const baseFollowers = 1000 + Math.floor(Math.random() * 50000);
     
     for (let i = 0; i < 30; i++) {

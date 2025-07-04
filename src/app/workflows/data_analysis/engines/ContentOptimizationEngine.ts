@@ -423,7 +423,7 @@ Return hashtags in a comma-separated list without explanations.`;
     ));
     
     // Generate improvement suggestions
-    const suggestions = [];
+    const suggestions: string[] = [];
     if (colorContrast === 'low') suggestions.push('Increase color contrast for better visibility');
     if (textReadability === 'low') suggestions.push('Improve text size and font choice for better readability');
     if (!faceDetected && visualAppeal < 7) suggestions.push('Consider adding human faces to increase emotional connection');

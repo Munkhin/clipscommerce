@@ -106,6 +106,9 @@ export default function FAQSection() {
               <button
                 className="relative flex items-center justify-between w-full p-6 text-left group-hover:bg-storm-darker/30 transition-colors duration-200"
                 onClick={() => toggleQuestion(index)}
+                aria-expanded={openIndex === index}
+                aria-controls={`faq-answer-${index}`}
+                id={`faq-question-${index}`}
               >
                 <h3 className="text-lg md:text-xl font-medium text-white pr-10 leading-relaxed">
                   {faq.question}
@@ -130,7 +133,7 @@ export default function FAQSection() {
                     }}
                     className="overflow-hidden"
                   >
-                    <div className="px-6 pb-8 -mt-2 text-[#E5E7EB]/90 border-t border-storm-light/10">
+                    <div className="px-6 pb-8 -mt-2 text-[#E5E7EB]/90 border-t border-storm-light/10" id={`faq-answer-${index}`} role="region" aria-labelledby={`faq-question-${index}`}>
                       <div className="border-l-2 border-[#1E90FF]/50 pl-5 py-3 mt-3">
                         <p className="text-base leading-relaxed">{faq.answer}</p>
                       </div>

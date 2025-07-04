@@ -36,15 +36,15 @@ export function Header({ isDashboard = false, isTeamDashboard = false }: HeaderP
         {/* Desktop Navigation / Dashboard Elements */}
         {!isDashboard ? (
           <nav className="hidden md:flex items-center gap-6">
-            <Link href="#features" className="text-gray-300 hover:text-white transition-colors">Features</Link>
-            <Link href="#pricing" className="text-gray-300 hover:text-white transition-colors">Pricing</Link>
+            <Link href="/features" className="text-gray-300 hover:text-white transition-colors">Features</Link>
+            <Link href="/pricing" className="text-gray-300 hover:text-white transition-colors">Pricing</Link>
             {user ? (
               <Button asChild className="btn-primary">
                 <Link href={isTeamDashboard ? "/team-dashboard" : "/dashboard"}>Go to Dashboard</Link>
               </Button>
             ) : (
               <Button asChild className="btn-primary">
-                <Link href="/login">Sign In</Link>
+                <Link href="/sign-in">Sign In</Link>
               </Button>
             )}
           </nav>
@@ -129,8 +129,8 @@ export function Header({ isDashboard = false, isTeamDashboard = false }: HeaderP
               <nav className="flex flex-col gap-4">
                 {!isDashboard && (
                   <>
-                    <Link href="#features" className="text-gray-300 hover:text-white transition-colors py-2" onClick={() => setIsMobileMenuOpen(false)}>Features</Link>
-                    <Link href="#pricing" className="text-gray-300 hover:text-white transition-colors py-2" onClick={() => setIsMobileMenuOpen(false)}>Pricing</Link>
+                    <Link href="/features" className="text-gray-300 hover:text-white transition-colors py-2" onClick={() => setIsMobileMenuOpen(false)}>Features</Link>
+                    <Link href="/pricing" className="text-gray-300 hover:text-white transition-colors py-2" onClick={() => setIsMobileMenuOpen(false)}>Pricing</Link>
                   </>
                 )}
                 {user ? (
@@ -139,7 +139,7 @@ export function Header({ isDashboard = false, isTeamDashboard = false }: HeaderP
                   </Button>
                 ) : (
                   <Button asChild className="btn-primary w-full">
-                    <Link href="/login" onClick={() => setIsMobileMenuOpen(false)}>Sign In</Link>
+                    <Link href="/sign-in" onClick={() => setIsMobileMenuOpen(false)}>Sign In</Link>
                   </Button>
                 )}
                 {isDashboard && (

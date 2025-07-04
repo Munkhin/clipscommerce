@@ -18,8 +18,8 @@ export default function Footer() {
     {
       title: 'Product',
       links: [
-        { name: 'Features', href: '#features' },
-        { name: 'Pricing', href: '#pricing' },
+        { name: 'Features', href: '/features' },
+        { name: 'Pricing', href: '/pricing' },
         { name: 'How It Works', href: '#how-it-works' },
         { name: 'Testimonials', href: '#testimonials' },
         { name: 'FAQ', href: '#faq' },
@@ -63,12 +63,12 @@ export default function Footer() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <h3 className="text-xl font-semibold text-white mb-6">Get in Touch</h3>
+          <h2 className="text-xl font-semibold text-white mb-6">Get in Touch</h2>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-6">
             <div className="flex items-center">
               <Mail className="h-5 w-5 text-[#8D5AFF] mr-2" />
-              <a href="mailto:cheemunkhin@gmail.com" className="text-white/80 hover:text-white transition-colors">
-                cheemunkhin@gmail.com
+              <a href="mailto:hello@clipscommerce.com" className="text-white/80 hover:text-white transition-colors">
+                hello@clipscommerce.com
               </a>
             </div>
           </div>
@@ -80,6 +80,7 @@ export default function Footer() {
               target="_blank" 
               rel="noopener noreferrer"
               className="text-white/60 hover:text-[#8D5AFF] transition-colors"
+              aria-label="Follow us on Twitter"
             >
               <Twitter className="h-5 w-5" />
             </a>
@@ -88,6 +89,7 @@ export default function Footer() {
               target="_blank" 
               rel="noopener noreferrer"
               className="text-white/60 hover:text-[#8D5AFF] transition-colors"
+              aria-label="Follow us on Facebook"
             >
               <Facebook className="h-5 w-5" />
             </a>
@@ -96,6 +98,7 @@ export default function Footer() {
               target="_blank" 
               rel="noopener noreferrer"
               className="text-white/60 hover:text-[#8D5AFF] transition-colors"
+              aria-label="Follow us on Instagram"
             >
               <Instagram className="h-5 w-5" />
             </a>

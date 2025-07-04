@@ -1,4 +1,5 @@
 import { ReportGenerator, EmailService, ReportOptions } from '../ReportGenerator';
+import { isFeatureEnabled, getFeatureErrorResponse } from '../../../../lib/utils/featureFlags';
 
 // Mock EmailService
 class MockEmailService extends EmailService {
@@ -95,7 +96,11 @@ describe('ReportGenerator', () => {
       const result = await reportGenerator.generateReport(mockData, mockInsights, options);
 
       expect(Buffer.isBuffer(result)).toBe(true);
-      expect(result.toString()).toBe('PDF not implemented');
+      if (isFeatureEnabled('ADVANCED_ANALYTICS')) {
+        expect(result.length).toBeGreaterThan(0);
+      } else {
+        expect(result.toString()).toBe('PDF not implemented');
+      }
     });
 
     it('should handle different report options', async () => {

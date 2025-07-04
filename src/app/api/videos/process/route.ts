@@ -265,7 +265,7 @@ async function initiateVideoProcessing(params: {
     console.log(`Processing initiated for video ${videoId} with ID ${processingId}`);
 
     // Simulate processing stages based on options
-    const stages = [];
+    const stages: string[] = [];
     if (!options?.skipAudioAnalysis) stages.push('audio_analysis');
     stages.push('content_analysis');
     if (!options?.skipHashtagGeneration) stages.push('hashtag_generation');

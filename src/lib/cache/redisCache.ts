@@ -107,6 +107,7 @@ export class RedisCache {
       tags?: string[];
     } = {}
   ): Promise<void> {
+    const tags = options.tags || [];
     try {
       if (!this.isConnected) {
         throw new Error('Redis client not connected');
@@ -114,7 +115,6 @@ export class RedisCache {
 
       const cacheKey = this.generateKey(key);
       const ttl = options.ttl || this.config.defaultTTL;
-      const tags = options.tags || [];
 
       const entry: CacheEntry<T> = {
         data,

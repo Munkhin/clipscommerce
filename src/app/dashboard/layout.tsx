@@ -6,6 +6,8 @@ import { useAuth } from '@/providers/AuthProvider';
 import { SettingsProvider } from '@/providers/SettingsProvider';
 import Header from '@/components/dashboard/Header';
 import Sidebar from '@/components/dashboard/Sidebar';
+import { usePollingSupabaseTable } from '@/hooks/usePollingSupabase';
+import { isFeatureEnabled } from '@/lib/utils/featureFlags';
 
 export default function DashboardLayout({
   children,
@@ -15,6 +17,28 @@ export default function DashboardLayout({
   const { user, loading } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
+
+  // Set up polling for dashboard data when realtime is disabled
+  const { data: notifications } = usePollingSupabaseTable(
+    'user_notifications',
+    user ? { user_id: user.id, read: false } : undefined,
+    { 
+      interval: 15000, // 15 seconds
+      enabled: !!user && !isFeatureEnabled('REALTIME_UPDATES'),
+      immediate: false
+    }
+  );
+
+  // Poll for autopost schedules to keep dashboard updated
+  const { data: autopostSchedules } = usePollingSupabaseTable(
+    'autopost_schedule',
+    user ? { user_id: user.id, status: 'scheduled' } : undefined,
+    { 
+      interval: 15000, // 15 seconds
+      enabled: !!user && !isFeatureEnabled('REALTIME_UPDATES'),
+      immediate: false
+    }
+  );
 
   // simple breadcrumb from path segments (dashboard/accelerate -> Dashboard / Accelerate)
   const segments = pathname?.split('/').filter(Boolean).slice(1); // remove 'dashboard'

@@ -8,6 +8,7 @@ import {
   AudioVirality,
   // AudioFeaturesInput // Removed for AudioRecommendationEngine
 } from '../data_analysis/types/analysis_types';
+import { PlatformEnum } from '@/types/platform';
 import { ContentInsightsEngine } from '../data_analysis/engines/ContentInsightsEngine';
 import { ViralityEngine } from '../data_analysis/engines/ViralityEngine';
 import { SentimentAnalysisEngine } from './engines/SentimentAnalysisEngine'; // Added new engine
@@ -18,7 +19,7 @@ import type { OptimizedVideoGeneratorConfig } from './OptimizedVideoGenerator'; 
 
 type OptimizationMode = 'fast' | 'thorough';
 
-interface GetVideoOptimizationInsightsRequest extends BaseAnalysisRequest {
+interface GetVideoOptimizationInsightsRequest {
   audioIds?: string[];
   userId: string;
   platform: Platform;
@@ -108,15 +109,20 @@ export class VideoOptimizationAnalysisService {
       const [contentInsightsResult, audioViralityResult, detailedAnalyticsResult] = await Promise.all([
         this.contentInsightsEngine.getTopPerformingContentInsights({
           userId: request.userId,
-          platform: request.platform,
+          platform: request.platform as PlatformEnum,
           timeRange: request.timeRange
         }),
         this.viralityEngine.analyzeAudioVirality({
           userId: request.userId,
-          platform: request.platform,
+          platform: request.platform as PlatformEnum,
           timeRange: request.timeRange
         }, request.audioIds),
-        this.contentInsightsEngine.getDetailedPlatformAnalytics(request)
+        this.contentInsightsEngine.getDetailedPlatformAnalytics({
+          userId: request.userId,
+          platform: request.platform as PlatformEnum,
+          timeRange: request.timeRange,
+          correlationId: request.correlationId
+        })
       ]);
 
       // Defensive: always provide defaults for missing/failed data

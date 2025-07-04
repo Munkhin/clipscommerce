@@ -63,7 +63,15 @@ export async function authGuard(
             identifier: rateLimit.identifier
           });
         }
-        return { success: false, response: rateLimitResponse };
+        // Convert Response to NextResponse
+        const responseData = await rateLimitResponse.json();
+        return { 
+          success: false, 
+          response: NextResponse.json(responseData, {
+            status: rateLimitResponse.status,
+            headers: Object.fromEntries(rateLimitResponse.headers.entries())
+          })
+        };
       }
     }
 

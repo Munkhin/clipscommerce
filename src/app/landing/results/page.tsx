@@ -31,7 +31,7 @@ export default function ResultsPage() {
     {
       name: "Alex Johnson",
       role: "Content Creator",
-      content: "SocialSchedule completely transformed my TikTok presence. The AI-optimized clips consistently perform 3x better than my manual posts. I've gained 50,000 new followers in just 45 days!",
+      content: "ClipsCommerce completely transformed my TikTok presence. The AI-optimized clips consistently perform 3x better than my manual posts. I've gained 50,000 new followers in just 45 days!",
       platform: "TikTok",
       followers: "285k",
       growth: "+128%"
@@ -39,7 +39,7 @@ export default function ResultsPage() {
     {
       name: "Sarah Martinez",
       role: "E-commerce Business Owner",
-      content: "The ROI from using SocialSchedule has been incredible. Not only do we save 15 hours a week on content creation, but our conversion rates from social traffic have increased by 37%.",
+      content: "The ROI from using ClipsCommerce has been incredible. Not only do we save 15 hours a week on content creation, but our conversion rates from social traffic have increased by 37%.",
       platform: "Instagram",
       followers: "124k",
       growth: "+73%"
@@ -47,7 +47,7 @@ export default function ResultsPage() {
     {
       name: "Marcus Chen",
       role: "Digital Marketing Agency",
-      content: "We manage social accounts for 12 clients, and SocialSchedule has become our secret weapon. The ability to maintain consistent brand voice across platforms while optimizing for each one is game-changing.",
+      content: "We manage social accounts for 12 clients, and ClipsCommerce has become our secret weapon. The ability to maintain consistent brand voice across platforms while optimizing for each one is game-changing.",
       platform: "Multiple",
       followers: "1.2M+",
       growth: "+92%"
@@ -100,7 +100,7 @@ export default function ResultsPage() {
               Real Results
             </motion.h1>
             <motion.p className="text-xl text-white/80 max-w-3xl mx-auto mb-10">
-              See how creators and businesses are transforming their social presence with SocialSchedule
+              See how creators and businesses are transforming their social presence with ClipsCommerce
             </motion.p>
             
             {/* 10-day guarantee badge */}
@@ -284,7 +284,7 @@ export default function ResultsPage() {
         >
           <h2 className="text-3xl font-bold text-white mb-6">Ready to see results for yourself?</h2>
           <p className="text-white/70 max-w-2xl mx-auto mb-8">
-            Join thousands of creators and businesses who have transformed their social media presence with SocialSchedule.
+            Join thousands of creators and businesses who have transformed their social media presence with ClipsCommerce.
           </p>
           <Link href="/dashboard" className="bg-[#8D5AFF] hover:bg-[#8D5AFF]/90 text-white px-8 py-4 rounded-lg font-bold inline-block shadow-lg shadow-[#8D5AFF]/30 transition-all">
             Get started today
@@ -297,7 +297,7 @@ export default function ResultsPage() {
       <div className="border-t border-white/10 py-8 mt-12">
         <div className="container mx-auto px-4">
           <div className="flex justify-center">
-            <p className="text-white/40 text-sm">© {currentYear} SocialSchedule. All rights reserved.</p>
+            <p className="text-white/40 text-sm">© {currentYear} ClipsCommerce. All rights reserved.</p>
           </div>
         </div>
       </div>

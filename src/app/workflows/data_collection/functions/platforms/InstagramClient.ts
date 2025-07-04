@@ -278,7 +278,7 @@ export class InstagramClient extends BasePlatformClient {
     
     return {
       id: media.id,
-      platform: 'instagram',
+      platform: 'instagram' as any,
       views: videoViews || impressions,
       likes,
       comments,

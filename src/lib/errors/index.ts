@@ -12,7 +12,7 @@ export { DashboardErrorBoundary, withDashboardErrorBoundary } from '../../compon
 export { PaymentErrorBoundary, withPaymentErrorBoundary } from '../../components/errors/PaymentErrorBoundary';
 
 // Re-export TeamModeErrorBoundary for backward compatibility
-export { TeamModeErrorBoundary, withTeamModeErrorBoundary, useTeamModeErrorHandler } from '../../components/team-dashboard/TeamModeErrorBoundary';
+export { TeamModeErrorBoundary } from '../../components/team-dashboard/TeamModeErrorBoundary';
 
 // Utility functions for easy error handling
 export const handleAsyncError = async <T>(

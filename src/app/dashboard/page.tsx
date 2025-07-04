@@ -46,7 +46,6 @@ import {
   Globe,
   Briefcase
 } from 'lucide-react';
-import { ReportsAnalysisService } from '@/app/workflows/reports/ReportsAnalysisService';
 import { createClient } from '@/lib/supabase/client';
 import { ChartWrapper } from '@/components/ui/chart-wrapper';
 import { LineChartComponent, BarChartComponent } from '@/components/dashboard/charts';
@@ -61,7 +60,7 @@ import { AutopostScheduler } from '@/components/dashboard/autopost/AutopostSched
 export default function DashboardPage() {
   const { user } = useAuth();
   const [greeting, setGreeting] = useState('Hello');
-  const [analytics, setAnalytics] = useState<Awaited<ReturnType<ReportsAnalysisService['getReport']>>['data']>(undefined);
+  const [analytics, setAnalytics] = useState<any>(undefined);
   const [loading, setLoading] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
@@ -148,19 +147,17 @@ export default function DashboardPage() {
       if (!user) return;
       setLoading(true);
       try {
-        const supabase = createClient();
-        const reportsService = new ReportsAnalysisService(supabase);
         const now = new Date();
-        const start = new Date(now.getFullYear(), now.getMonth(), 1);
-        const end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-        const result = await reportsService.getReport({
-          userId: user.id,
-          platform: 'tiktok',
-          timeRange: { start: start.toISOString(), end: end.toISOString() },
-          correlationId: `dashboard-home-${user.id}`,
-        });
+        const start = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+        const end = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString();
+        
+        const response = await fetch(`/api/analytics/reports?userId=${user.id}&platform=tiktok&startDate=${start}&endDate=${end}`);
+        const result = await response.json();
+        
         if (result.success) {
           setAnalytics(result.data);
+        } else {
+          console.error('Analytics API error:', result.error);
         }
       } catch (err: unknown) {
         console.error('Analytics error:', err);
@@ -311,7 +308,7 @@ export default function DashboardPage() {
     <div className="min-h-screen">
       <WelcomeModal />
       {!isAuthenticated && <LoginPromptPopup isOpen={showLoginPrompt} onClose={closeLoginPrompt} feature={currentFeature} />}
-      {!hasFeatureAccess('analytics') && isAuthenticated && <SubscriptionPromptPopup isOpen={showSubscriptionPrompt} onClose={closeSubscriptionPrompt} featureName={currentFeature || 'analytics'} />}
+      {!hasFeatureAccess('analyticsAccess') && isAuthenticated && <SubscriptionPromptPopup isOpen={showSubscriptionPrompt} onClose={closeSubscriptionPrompt} featureName={currentFeature || 'analytics'} />}
 
       {/* Header */}
       <div className="mb-8">

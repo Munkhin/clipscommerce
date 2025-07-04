@@ -8,6 +8,7 @@ import {
   PlatformClientIdentifier
 } from './auth.types';
 import axios from 'axios'; // For making HTTP requests in refreshOAuth2Token
+import { isFeatureEnabled, getFeatureErrorResponse } from '../../../../lib/utils/featureFlags';
 
 // Placeholder for a more robust storage solution (e.g., database, secure store)
 const credentialStore: Map<string, PlatformCredentials> = new Map();
@@ -378,6 +379,14 @@ export class AuthTokenManagerService implements IAuthTokenManager {
         return null; 
       }
     } else {
+      if (!isFeatureEnabled('INSTAGRAM_AUTH') && id.platform === 'instagram') {
+        console.log(`[AuthTokenManager] Instagram auth feature not enabled`);
+        return null;
+      }
+      if (!isFeatureEnabled('YOUTUBE_AUTH') && id.platform === 'youtube') {
+        console.log(`[AuthTokenManager] YouTube auth feature not enabled`);
+        return null;
+      }
       console.warn(`[AuthTokenManager] Auth code exchange not implemented for platform: ${id.platform}`);
       return null;
     }

@@ -52,7 +52,7 @@ export default function TestimonialsSection() {
 
         <div className="relative">
           {/* Decorative background elements */}
-          <div className="absolute inset-0 -z-10 opacity-10">
+          <div className="absolute inset-0 -z-10 opacity-10" aria-hidden="true">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,#3b82f6,transparent_70%)]" />
           </div>
           
@@ -70,7 +70,7 @@ export default function TestimonialsSection() {
                 {/* Stars */}
                 <div className="flex mb-4">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-5 h-5 text-blitz-yellow fill-current" />
+                    <Star key={i} className="w-5 h-5 text-blitz-yellow fill-current" aria-hidden="true" />
                   ))}
                 </div>
                 
@@ -79,7 +79,7 @@ export default function TestimonialsSection() {
                 
                 {/* Author */}
                 <div className="flex items-center mt-6">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blitz-blue/20 to-blitz-purple/20 mr-4 relative overflow-hidden border border-storm-light/20 flex-shrink-0">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blitz-blue/20 to-blitz-purple/20 mr-4 relative overflow-hidden border border-storm-light/20 flex-shrink-0" aria-hidden="true">
                     <div className="absolute inset-0 flex items-center justify-center text-blitz-blue font-bold">
                       {testimonial.author.charAt(0)}
                     </div>

@@ -28,6 +28,8 @@ export default function ForgotPasswordPage() {
         router.push(
           `/sign-in?message=${encodeURIComponent('Password reset link sent! Please check your email.')}&type=success`
         );
+      } else if (result?.error?.includes('401')) {
+        setError('Authentication failed. Please check your email and try again.');
       } else {
         setError(result?.error || "An unknown error occurred.");
       }
@@ -48,14 +50,14 @@ export default function ForgotPasswordPage() {
           </div>
 
           {error && (
-            <div className="bg-red-500/10 border border-red-500/30 text-red-300 p-4 rounded-lg text-sm">
+            <div className="bg-red-500/10 border border-red-500/30 text-red-300 p-4 rounded-lg text-sm" role="alert">
               {error}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="text-gray-300 font-medium">Email</Label>
               <Input
                 id="email"
                 name="email"

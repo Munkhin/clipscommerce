@@ -183,8 +183,11 @@ export default function ValueStatementSection() {
         >
           Stop creating content that gets likes.<br />Start creating content that gets <span className="text-[#5afcc0] text-5xl md:text-7xl font-extrabold inline-block px-2">SALES</span>.
         </motion.h2>
-        <Link href="/dashboard">
-          <button className="mt-8 bg-[#8D5AFF] text-white px-10 py-5 rounded-lg font-bold text-lg shadow-xl shadow-[#8D5AFF]/30 hover:bg-[#8D5AFF]/90 transition-all">
+        <Link href="/sign-up">
+          <button 
+            className="mt-8 bg-[#8D5AFF] text-white px-10 py-5 rounded-lg font-bold text-lg shadow-xl shadow-[#8D5AFF]/30 hover:bg-[#8D5AFF]/90 transition-all"
+            aria-label="Get started with ClipsCommerce to create content that gets sales"
+          >
             Get Started
           </button>
         </Link>

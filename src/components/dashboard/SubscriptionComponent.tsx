@@ -245,7 +245,7 @@ export default function SubscriptionComponent({ navigate, stripeLinks }: Subscri
                 >
                   Yearly
                   <Badge 
-                    className={`ml-2 px-2 py-0.5 rounded-sm text-xs font-medium`}
+                    className={`ml-2 px-2 py-0.5 rounded-lg text-xs font-medium`}
                     style={
                       billingCycle === 'yearly'
                         ? { background: 'transparent', border: '1px solid rgba(255,255,255,0.7)', color: 'white' }

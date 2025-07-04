@@ -11,6 +11,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { useState, useEffect } from 'react';
+import { isFeatureEnabled } from '@/lib/utils/featureFlags';
 
 interface SocialAccount {
   platform: string;
@@ -94,12 +95,24 @@ export function SocialConnection() {
     try {
       switch (platform.toLowerCase()) {
         case 'tiktok':
+          if (!process.env.NEXT_PUBLIC_TIKTOK_CLIENT_ID) {
+            alert('TikTok connection is not configured. Please contact support.');
+            return;
+          }
           await initiateTikTokOAuth();
           break;
         case 'instagram':
+          if (!isFeatureEnabled('INSTAGRAM_AUTH') || !process.env.NEXT_PUBLIC_INSTAGRAM_CLIENT_ID) {
+            alert('Instagram connection is not available. Please contact support.');
+            return;
+          }
           await initiateInstagramOAuth();
           break;
         case 'youtube':
+          if (!isFeatureEnabled('YOUTUBE_AUTH') || !process.env.NEXT_PUBLIC_YOUTUBE_CLIENT_ID) {
+            alert('YouTube connection is not available. Please contact support.');
+            return;
+          }
           await initiateYouTubeOAuth();
           break;
         default:
@@ -252,9 +265,25 @@ export function SocialConnection() {
         )}
       </CardContent>
       <CardFooter className="flex justify-between">
-        <Button onClick={() => handleConnect('tiktok')}>Connect TikTok</Button>
-        <Button onClick={() => handleConnect('instagram')}>Connect Instagram</Button>
-        <Button onClick={() => handleConnect('youtube')}>Connect YouTube</Button>
+        {process.env.NEXT_PUBLIC_TIKTOK_CLIENT_ID && (
+          <Button onClick={() => handleConnect('tiktok')}>Connect TikTok</Button>
+        )}
+        {isFeatureEnabled('INSTAGRAM_AUTH') && process.env.NEXT_PUBLIC_INSTAGRAM_CLIENT_ID && (
+          <Button 
+            onClick={() => handleConnect('instagram')}
+            title="Connect your Instagram account"
+          >
+            Connect Instagram
+          </Button>
+        )}
+        {isFeatureEnabled('YOUTUBE_AUTH') && process.env.NEXT_PUBLIC_YOUTUBE_CLIENT_ID && (
+          <Button 
+            onClick={() => handleConnect('youtube')}
+            title="Connect your YouTube account"
+          >
+            Connect YouTube
+          </Button>
+        )}
       </CardFooter>
     </Card>
   );

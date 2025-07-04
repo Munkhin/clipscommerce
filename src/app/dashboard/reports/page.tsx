@@ -5,44 +5,53 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import DatePickerWithRange from '@/components/ui/date-picker-with-range';
-import { ReportsAnalysisService } from '@/app/workflows/reports/ReportsAnalysisService';
-import { createClient } from '@/lib/supabase/client';
+import { useAuth } from '@/providers/AuthProvider';
 import Header from '@/components/dashboard/Header';
 
 export default function ReportsPage() {
+  const { user } = useAuth();
   const [platform, setPlatform] = useState('tiktok');
   const [dateRange, setDateRange] = useState<{ from: Date; to: Date } | undefined>();
-  const [report, setReport] = useState<string | Buffer | null>(null);
+  const [report, setReport] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleGenerateReport = async () => {
-    if (!dateRange) {
-      setError('Please select a date range');
+    if (!dateRange || !user) {
+      setError('Please select a date range and ensure you are logged in');
       return;
     }
 
     setLoading(true);
     setError(null);
     try {
-      const supabase = createClient();
-      const reportsService = new ReportsAnalysisService(supabase as any);
-      const result = await reportsService.getFullReport(
-        {
-          userId: 'test-user-id', // Replace with actual user ID
+      const response = await fetch('/api/analytics/full-report', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: user.id,
           platform: platform as "tiktok" | "instagram" | "youtube" | "facebook" | "twitter" | "linkedin",
           timeRange: {
             start: dateRange.from.toISOString(),
             end: dateRange.to.toISOString(),
           },
-        },
-        {
-          format: 'html',
-          includeCharts: true,
-          includeRawData: false,
-        }
-      );
-      setReport(result);
+          reportOptions: {
+            format: 'html',
+            includeCharts: true,
+            includeRawData: false,
+          }
+        }),
+      });
+
+      const result = await response.json();
+      
+      if (result.success) {
+        setReport(result.report);
+      } else {
+        setError(result.error || 'Failed to generate report');
+      }
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);

@@ -133,6 +133,7 @@ export default function FinalCTASection({ onGetStarted }: FinalCTASectionProps) 
                 style={{
                   boxShadow: '0 10px 25px -5px rgba(141, 90, 255, 0.4)'
                 }}
+                aria-label="Get started with ClipsCommerce today"
               >
                 <span>Get Started Today</span>
                 <ArrowRight className="ml-2 h-5 w-5" />

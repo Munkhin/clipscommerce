@@ -92,7 +92,7 @@ export class AccessibilityAuditor {
         const hasAriaLabel = element.hasAttribute('aria-label');
         const hasAriaLabelledBy = element.hasAttribute('aria-labelledby');
         const hasTitle = element.hasAttribute('title');
-        const hasTextContent = element.textContent?.trim().length > 0;
+        const hasTextContent = (element.textContent?.trim()?.length ?? 0) > 0;
         const hasAlt = element.hasAttribute('alt');
         
         return hasAriaLabel || hasAriaLabelledBy || hasTitle || hasTextContent || hasAlt;
@@ -616,16 +616,17 @@ export class AccessibilityHelpers {
     const firstElement = focusableElements[0];
     const lastElement = focusableElements[focusableElements.length - 1];
 
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Tab') {
-        if (event.shiftKey) {
+    const handleKeyDown = (event: Event) => {
+      const keyboardEvent = event as KeyboardEvent;
+      if (keyboardEvent.key === 'Tab') {
+        if (keyboardEvent.shiftKey) {
           if (document.activeElement === firstElement) {
-            event.preventDefault();
+            keyboardEvent.preventDefault();
             lastElement.focus();
           }
         } else {
           if (document.activeElement === lastElement) {
-            event.preventDefault();
+            keyboardEvent.preventDefault();
             firstElement.focus();
           }
         }

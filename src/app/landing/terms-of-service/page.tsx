@@ -1,27 +1,81 @@
+'use client';
+
 import React from 'react';
 import NavigationBar from '@/app/landing/components/NavigationBar';
+
+
+const TableOfContents = () => {
+  const sections = [
+    { id: 'introduction', title: '1. Introduction' },
+    { id: 'definitions', title: '2. Definitions' },
+    { id: 'user-conduct', title: '3. User Conduct' },
+    { id: 'content-ownership', title: '4. Content Ownership and Licensing' },
+    { id: 'intellectual-property', title: '5. Intellectual Property' },
+    { id: 'service-limitations', title: '6. Service Limitations' },
+    { id: 'liability-disclaimers', title: '7. Liability Disclaimers' },
+    { id: 'user-responsibilities', title: '8. User Responsibilities' },
+    { id: 'indemnification', title: '9. Indemnification' },
+    { id: 'termination', title: '10. Termination' },
+    { id: 'dispute-resolution', title: '11. Dispute Resolution' },
+    { id: 'governing-law', title: '12. Governing Law' },
+    { id: 'changes-to-tos', title: '13. Changes to the ToS' },
+    { id: 'contact', title: '14. Contact Information' },
+  ];
+
+  const handleScrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  return (
+    <div className="bg-white/5 border border-white/10 rounded-xl p-6 mb-8 sticky top-8">
+      <h2 className="text-xl font-bold mb-4 text-[#8D5AFF]">Table of Contents</h2>
+      <nav className="space-y-2">
+        {sections.map((section) => (
+          <button
+            key={section.id}
+            onClick={() => handleScrollToSection(section.id)}
+            className="block w-full text-left text-white/80 hover:text-[#8D5AFF] transition-colors text-sm py-1 hover:bg-white/5 rounded px-2"
+          >
+            {section.title}
+          </button>
+        ))}
+      </nav>
+    </div>
+  );
+};
 
 export default function TermsOfServicePage() {
   return (
     <div className="bg-black min-h-screen text-white">
       <NavigationBar />
       
-      <main className="max-w-4xl mx-auto px-6 py-24 text-base">
-        <h1 className="text-4xl font-bold mb-4 text-[#8D5AFF]">ClipsCommerce Terms of Service</h1>
-        <p className="mb-8 text-lg text-white/60">Effective Date: June 7, 2025</p>
+      <main className="max-w-6xl mx-auto px-6 py-24 text-base">
+        <div className="grid lg:grid-cols-4 gap-8">
+          {/* Table of Contents Sidebar */}
+          <div className="lg:col-span-1">
+            <TableOfContents />
+          </div>
+          
+          {/* Main Content */}
+          <div className="lg:col-span-3">
+            <h1 className="text-4xl font-bold mb-4 text-[#8D5AFF]">ClipsCommerce Terms of Service</h1>
+            <p className="mb-8 text-lg text-white/60">Effective Date: June 7, 2025</p>
 
-        <section className="mb-8">
-          <p className="text-white/90 leading-relaxed">Welcome to ClipsCommerce! These Terms of Service (&quot;ToS&quot;) govern your use of the ClipsCommerce website and services (collectively, the &quot;Service&quot;). By accessing or using the Service, you agree to be bound by these ToS. If you do not agree to these terms, please do not use the Service.</p>
-        </section>
+            <section className="mb-8">
+              <p className="text-white/90 leading-relaxed">Welcome to ClipsCommerce! These Terms of Service (&quot;ToS&quot;) govern your use of the ClipsCommerce website and services (collectively, the &quot;Service&quot;). By accessing or using the Service, you agree to be bound by these ToS. If you do not agree to these terms, please do not use the Service.</p>
+            </section>
 
-        <div className="space-y-8">
-          <section>
-            <h2 className="text-2xl font-bold mb-4 text-[#8D5AFF]">1. Introduction</h2>
+            <div className="space-y-8">
+              <section id="introduction">
+                <h2 className="text-2xl font-bold mb-4 text-[#8D5AFF]">1. Introduction</h2>
             <p className="text-white/90 leading-relaxed">These ToS outline the rules and responsibilities for using ClipsCommerce. They are designed to protect both you and ClipsCommerce, ensuring a safe and productive environment for all users. Please read them carefully before using the Service.</p>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-bold mb-4 text-[#8D5AFF]">2. Definitions</h2>
+              <section id="definitions">
+                <h2 className="text-2xl font-bold mb-4 text-[#8D5AFF]">2. Definitions</h2>
             <ul className="space-y-2 text-white/90">
               <li><span className="font-semibold text-white">User:</span> Any individual or entity that accesses or uses the Service.</li>
               <li><span className="font-semibold text-white">Content:</span> Any videos, text, images, or other materials uploaded or shared by Users on the Platform.</li>
@@ -30,8 +84,8 @@ export default function TermsOfServicePage() {
             </ul>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-bold mb-4 text-[#8D5AFF]">3. User Conduct</h2>
+              <section id="user-conduct">
+                <h2 className="text-2xl font-bold mb-4 text-[#8D5AFF]">3. User Conduct</h2>
             <p className="text-white/90 mb-4">Users must not:</p>
             <ul className="space-y-2 text-white/90 list-disc pl-6">
               <li>Upload or share Content that is illegal, harmful, defamatory, or infringes on the rights of others.</li>
@@ -43,8 +97,8 @@ export default function TermsOfServicePage() {
             <p className="mt-4 text-white/90">ClipsCommerce reserves the right to remove any Content or suspend any User who violates these rules.</p>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-bold mb-4 text-[#8D5AFF]">4. Content Ownership and Licensing</h2>
+              <section id="content-ownership">
+                <h2 className="text-2xl font-bold mb-4 text-[#8D5AFF]">4. Content Ownership and Licensing</h2>
             <ul className="space-y-3 text-white/90">
               <li><span className="font-semibold text-white">Ownership:</span> You retain ownership of any Content you upload to the Platform.</li>
               <li><span className="font-semibold text-white">License:</span> By uploading Content, you grant ClipsCommerce a non-exclusive, worldwide, royalty-free license to use, display, and distribute your Content solely for the purpose of providing and improving the Service.</li>
@@ -52,16 +106,16 @@ export default function TermsOfServicePage() {
             </ul>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-bold mb-4 text-[#8D5AFF]">5. Intellectual Property</h2>
+              <section id="intellectual-property">
+                <h2 className="text-2xl font-bold mb-4 text-[#8D5AFF]">5. Intellectual Property</h2>
             <ul className="space-y-3 text-white/90">
               <li><span className="font-semibold text-white">ClipsCommerce&apos;s Intellectual Property:</span> All trademarks, logos, designs, and other intellectual property associated with the Service are owned by ClipsCommerce or its licensors. You may not use, copy, or distribute any of these without prior written permission.</li>
               <li><span className="font-semibold text-white">User Responsibilities:</span> You agree not to infringe on ClipsCommerce&apos;s intellectual property rights or those of any third party while using the Service.</li>
             </ul>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-bold mb-4 text-[#8D5AFF]">6. Service Limitations</h2>
+              <section id="service-limitations">
+                <h2 className="text-2xl font-bold mb-4 text-[#8D5AFF]">6. Service Limitations</h2>
             <ul className="space-y-3 text-white/90 list-disc pl-6">
               <li>The Service is provided &quot;as is&quot; and &quot;as available.&quot; ClipsCommerce does not guarantee that the Service will be uninterrupted, error-free, or free from viruses or other harmful components.</li>
               <li>ClipsCommerce may modify, suspend, or discontinue any part of the Service at any time without notice.</li>
@@ -69,8 +123,8 @@ export default function TermsOfServicePage() {
             </ul>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-bold mb-4 text-[#8D5AFF]">7. Liability Disclaimers</h2>
+              <section id="liability-disclaimers">
+                <h2 className="text-2xl font-bold mb-4 text-[#8D5AFF]">7. Liability Disclaimers</h2>
             <p className="text-white/90 mb-4">ClipsCommerce shall not be liable for:</p>
             <ul className="space-y-2 text-white/90 list-disc pl-6">
               <li>Any indirect, incidental, consequential, or punitive damages arising from your use of the Service.</li>
@@ -80,8 +134,8 @@ export default function TermsOfServicePage() {
             <p className="mt-4 text-white/90">You agree that your use of the Service is at your own risk.</p>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-bold mb-4 text-[#8D5AFF]">8. User Responsibilities</h2>
+              <section id="user-responsibilities">
+                <h2 className="text-2xl font-bold mb-4 text-[#8D5AFF]">8. User Responsibilities</h2>
             <ul className="space-y-3 text-white/90 list-disc pl-6">
               <li>You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account.</li>
               <li>You agree to notify ClipsCommerce immediately of any unauthorized use of your account.</li>
@@ -89,8 +143,8 @@ export default function TermsOfServicePage() {
             </ul>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-bold mb-4 text-[#8D5AFF]">9. Indemnification</h2>
+              <section id="indemnification">
+                <h2 className="text-2xl font-bold mb-4 text-[#8D5AFF]">9. Indemnification</h2>
             <p className="text-white/90 mb-4">You agree to indemnify, defend, and hold harmless ClipsCommerce, its affiliates, and their respective officers, directors, employees, and agents from any claims, liabilities, damages, or expenses (including reasonable attorneys&apos; fees) arising from:</p>
             <ul className="space-y-2 text-white/90 list-disc pl-6">
               <li>Your use of the Service.</li>
@@ -99,8 +153,8 @@ export default function TermsOfServicePage() {
             </ul>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-bold mb-4 text-[#8D5AFF]">10. Termination</h2>
+              <section id="termination">
+                <h2 className="text-2xl font-bold mb-4 text-[#8D5AFF]">10. Termination</h2>
             <p className="text-white/90 mb-4">ClipsCommerce may terminate your access to the Service for:</p>
             <ul className="space-y-2 text-white/90 list-disc pl-6">
               <li>Violation of these ToS.</li>
@@ -110,31 +164,33 @@ export default function TermsOfServicePage() {
             <p className="mt-4 text-white/90">Upon termination, your right to use the Service will immediately cease, and ClipsCommerce may delete your Content without liability.</p>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-bold mb-4 text-[#8D5AFF]">11. Dispute Resolution</h2>
+              <section id="dispute-resolution">
+                <h2 className="text-2xl font-bold mb-4 text-[#8D5AFF]">11. Dispute Resolution</h2>
             <p className="text-white/90">Any disputes arising from or relating to these ToS or your use of the Service shall be resolved through binding arbitration in accordance with the rules of the American Arbitration Association. Arbitration shall take place in the United States, and the decision of the arbitrator shall be final and binding. You agree to waive any right to participate in a class action lawsuit or class-wide arbitration.</p>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-bold mb-4 text-[#8D5AFF]">12. Governing Law</h2>
+              <section id="governing-law">
+                <h2 className="text-2xl font-bold mb-4 text-[#8D5AFF]">12. Governing Law</h2>
             <p className="text-white/90">These ToS shall be governed by and construed in accordance with the laws of the United States of America, without regard to its conflict of law principles.</p>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-bold mb-4 text-[#8D5AFF]">13. Changes to the ToS</h2>
+              <section id="changes-to-tos">
+                <h2 className="text-2xl font-bold mb-4 text-[#8D5AFF]">13. Changes to the ToS</h2>
             <p className="text-white/90">ClipsCommerce reserves the right to modify these ToS at any time. Any changes will be effective immediately upon posting on the Platform. Your continued use of the Service after such changes constitutes your acceptance of the updated ToS. It is your responsibility to review the ToS periodically for any updates.</p>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-bold mb-4 text-[#8D5AFF]">14. Contact Information</h2>
+              <section id="contact">
+                <h2 className="text-2xl font-bold mb-4 text-[#8D5AFF]">14. Contact Information</h2>
             <p className="text-white/90">
               Email: <a href="mailto:hello@clipscommerce.com" className="text-[#5afcc0] hover:text-[#5afcc0]/80 transition-colors">hello@clipscommerce.com</a>
             </p>
           </section>
-        </div>
+            </div>
 
-        <div className="mt-12 pt-8 border-t border-white/10">
-          <p className="text-white/60 text-sm">By using ClipsCommerce, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service.</p>
+            <div className="mt-12 pt-8 border-t border-white/10">
+              <p className="text-white/60 text-sm">By using ClipsCommerce, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service.</p>
+            </div>
+          </div>
         </div>
       </main>
 

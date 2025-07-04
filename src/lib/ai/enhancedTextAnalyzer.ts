@@ -301,7 +301,7 @@ export class EnhancedTextAnalyzer {
           const cachedResult = await this.cache.getOrCompute(cacheKey, async () => {
             throw new TextAnalyzerError('Internal logic error: Cache hit verification failed', 'INTERNAL_CACHE_ERROR');
           });
-          results.push(cachedResult);
+          results.push(cachedResult as ContentSummaryResult);
           continue;
         }
         
@@ -537,7 +537,7 @@ export class EnhancedTextAnalyzer {
           return result;
         },
         { ttl: this.config.cacheTtlMs }
-      );
+      ) as ContentSummaryResult;
     } catch (error) {
       // If anything fails, fall back to local summarization
       this.metrics.recordError(error);
@@ -701,6 +701,6 @@ export class EnhancedTextAnalyzer {
     if (typeof (this as Record<string, unknown>)[methodName] !== 'function') {
       throw new Error(`Method ${methodName} does not exist on EnhancedTextAnalyzer`);
     }
-    return Promise.all(texts.map(text => (this as Record<string, Function>)[methodName](text)));
+    return Promise.all(texts.map(text => (this as unknown as Record<string, Function>)[methodName](text)));
   }
 }

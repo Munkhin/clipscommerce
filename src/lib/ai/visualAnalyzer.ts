@@ -292,7 +292,7 @@ export class VisualAnalyzer {
         brightness: 0.5,
         contrast: 0.5,
         faceCount: 0,
-        dominant: 'other'
+        dominant: 'other' as const
       };
 
     if (objectsResult.status === 'rejected') {

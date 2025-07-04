@@ -207,7 +207,7 @@ export function SocialScanner({ userId }: { userId: string }) {
     }
     
     startScan({
-      platforms: platforms.length > 0 ? platforms : [PlatformEnum.INSTAGRAM],
+      platforms: platforms.length > 0 ? platforms as [PlatformEnum, ...PlatformEnum[]] : [PlatformEnum.INSTAGRAM],
       lookbackDays,
       includeOwnPosts,
       timezone

@@ -82,7 +82,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
 
     // Validate status transitions
     if (validatedData.status) {
-      let currentStatus = undefined;
+      let currentStatus: string | undefined = undefined;
       if (currentPost && typeof currentPost === 'object' && 'status' in currentPost) {
         currentStatus = (currentPost as { status: string }).status;
       }

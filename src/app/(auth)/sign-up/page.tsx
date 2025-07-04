@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useFormStatus } from "react-dom";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Eye, EyeOff } from "lucide-react";
 
 function SubmitButton({ 
   children, 
@@ -34,6 +35,7 @@ export default function SignUpPage() {
   const searchParams = useSearchParams();
   const [state, setState] = useState<{ success?: boolean; error?: string } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   
   // Get message and type from URL search params
   const message = searchParams?.get('message');
@@ -52,6 +54,12 @@ export default function SignUpPage() {
       const formData = new FormData(event.currentTarget);
       const result = await signUpAction(null, formData);
       setState(result);
+    } catch (err) {
+      if (err instanceof Error && err.message.includes('401')) {
+        setState({ error: 'Authentication failed. Please check your credentials and try again.' });
+      } else {
+        setState({ error: 'An error occurred during sign up' });
+      }
     } finally {
       setIsLoading(false);
     }
@@ -102,15 +110,27 @@ export default function SignUpPage() {
                 
                 <div className="space-y-2">
                   <Label htmlFor="password" className="text-gray-300 font-medium">Password</Label>
-                  <Input
-                    id="password"
-                    name="password"
-                    type="password"
-                    placeholder="Create a strong password"
-                    required
-                    className="bg-gray-800/50 border-gray-600/50 text-white placeholder-gray-400 focus:ring-2 focus:ring-[#8D5AFF] focus:border-transparent rounded-xl h-12 transition-all"
-                    disabled={isLoading}
-                  />
+                  <div className="relative">
+                    <Input
+                      id="password"
+                      name="password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Create a strong password"
+                      required
+                      className="bg-gray-800/50 border-gray-600/50 text-white placeholder-gray-400 focus:ring-2 focus:ring-[#8D5AFF] focus:border-transparent rounded-xl h-12 transition-all pr-12"
+                      disabled={isLoading}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-300 transition-colors"
+                      aria-pressed={showPassword}
+                      aria-label={showPassword ? "Hide password" : "Show password"}
+                      tabIndex={isLoading ? -1 : 0}
+                    >
+                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
+                  </div>
                 </div>
                 
                 <SubmitButton loading={isLoading}>
@@ -118,7 +138,7 @@ export default function SignUpPage() {
                 </SubmitButton>
                 
                 {state?.error && (
-                  <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4">
+                  <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4" role="alert">
                     <div className="text-red-400 text-sm text-center">
                       {state.error}
                     </div>
@@ -130,7 +150,7 @@ export default function SignUpPage() {
                     type === 'error' 
                       ? 'bg-red-500/10 border-red-500/20 text-red-400' 
                       : 'bg-green-500/10 border-green-500/20 text-green-400'
-                  }`}>
+                  }`} role="alert">
                     <div className="text-sm text-center">
                       {message}
                     </div>

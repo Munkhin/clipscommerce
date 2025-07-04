@@ -347,7 +347,7 @@ export class DataCollectionAgent {
    * Generate recommended actions for addressing data gaps
    */
   private generateGapActions(niche: ContentNiche, platform: Platform, gapPercentage: number): string[] {
-    const actions = [];
+    const actions: string[] = [];
     
     if (gapPercentage > 0.5) {
       actions.push('Increase data collection frequency to 2x normal rate');
@@ -554,7 +554,7 @@ export class DataCollectionAgent {
    * Generate quality improvement recommendations
    */
   private generateQualityRecommendations(metrics: DataQualityMetrics): string[] {
-    const recommendations = [];
+    const recommendations: string[] = [];
     
     if (metrics.completeness < 0.9) {
       recommendations.push('Improve data completeness by expanding collection sources');

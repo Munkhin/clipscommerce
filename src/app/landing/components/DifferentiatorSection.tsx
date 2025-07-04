@@ -55,9 +55,9 @@ export default function DifferentiatorSection() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h3 className="text-2xl md:text-4xl font-bold mb-3 text-[#8D5AFF]">
+          <h2 className="text-2xl md:text-4xl font-bold mb-3 text-[#8D5AFF]">
             What You&apos;d Pay Separately
-          </h3>
+          </h2>
           <p className="text-lg text-white/80 max-w-2xl mx-auto">
             Our end-to-end solution covers the complete content lifecycle
           </p>
@@ -104,20 +104,12 @@ export default function DifferentiatorSection() {
         >
           <div className="absolute inset-0 bg-[#8D5AFF]/5 blur-xl rounded-full -z-10"></div>
           
-          <h3 className="text-3xl font-bold mb-3 text-white">
-            ${totalValue.toLocaleString()} <span className="text-xl">Total Value</span>
+          <h3 className="text-3xl font-bold mb-6 text-white">
+            All This for Just <span className="text-[#5afcc0]">$600</span> Annually
           </h3>
           
-          <div className="flex items-center justify-center gap-4 mb-4">
-            <div className="h-px bg-[#8D5AFF]/20 flex-1 max-w-[100px]"></div>
-            <p className="text-2xl font-bold text-[#5afcc0]">
-              Yours for only $600 <span className="text-sm font-normal">annually</span>
-            </p>
-            <div className="h-px bg-[#8D5AFF]/20 flex-1 max-w-[100px]"></div>
-          </div>
-          
-          <p className="text-neutral-300 text-sm">
-            That&apos;s less than ${Math.round(600 / totalValue * 100)}% of the total value!
+          <p className="text-neutral-300 text-lg">
+            Get everything you need to dominate your niche and maximize revenue
           </p>
         </motion.div>
       </div>

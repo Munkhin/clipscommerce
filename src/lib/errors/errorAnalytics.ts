@@ -1,6 +1,29 @@
 'use client';
 
 import { ErrorCategory, ErrorSeverity } from './errorReporting';
+import * as Sentry from '@sentry/nextjs';
+
+// Initialize Sentry in production
+if (typeof window !== 'undefined' && process.env.NODE_ENV === 'production') {
+  const sentryDsn = process.env.NEXT_PUBLIC_SENTRY_DSN;
+  if (sentryDsn) {
+    Sentry.init({
+      dsn: sentryDsn,
+      environment: process.env.NODE_ENV,
+      tracesSampleRate: 0.1,
+      integrations: [
+        new Sentry.BrowserTracing(),
+      ],
+      beforeSend(event) {
+        // Filter out non-critical errors in production
+        if (event.level === 'info' || event.level === 'debug') {
+          return null;
+        }
+        return event;
+      },
+    });
+  }
+}
 
 // Analytics event types
 export enum AnalyticsEventType {
@@ -171,7 +194,7 @@ class ErrorAnalyticsService {
     const baseline = {
       timestamp: new Date().toISOString(),
       memory: (performance as any).memory?.usedJSHeapSize,
-      loadTime: timing.loadEventEnd - timing.navigationStart,
+      loadTime: timing.loadEventEnd - timing.startTime,
       responseTime: timing.responseEnd - timing.requestStart
     };
 
@@ -218,6 +241,22 @@ class ErrorAnalyticsService {
     // Update error patterns
     if (data.eventType === AnalyticsEventType.ERROR_OCCURRED) {
       this.updateErrorPattern(analyticsData);
+      
+      // Send error to Sentry in production
+      if (process.env.NODE_ENV === 'production') {
+        Sentry.withScope((scope) => {
+          scope.setTag('category', data.category);
+          scope.setTag('severity', data.severity);
+          scope.setLevel(data.severity === ErrorSeverity.CRITICAL ? 'error' : 'warning');
+          
+          if (data.component) scope.setTag('component', data.component);
+          if (data.userId) scope.setUser({ id: data.userId });
+          if (data.url) scope.setContext('page', { url: data.url });
+          if (data.additionalData) scope.setContext('additional', data.additionalData);
+          
+          Sentry.captureMessage(`Error in ${data.component || 'Unknown Component'}: ${data.action || 'Unknown Action'}`, 'error');
+        });
+      }
     }
 
     // Limit storage size

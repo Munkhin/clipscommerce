@@ -23,7 +23,7 @@ export default function PricingSection({ onGetStarted, navigate }: PricingSectio
     {
       name: 'Lite',
       subtitle: '$20/month',
-      annualPrice: 240, // $20 * 12
+      annualPrice: 192, // $20 * 12 * 0.8 (20% discount)
       monthlyPrice: 20,
       features: [
         'Viral Blitz Cycle Framework (15 uses)',
@@ -36,7 +36,7 @@ export default function PricingSection({ onGetStarted, navigate }: PricingSectio
     {
       name: 'Pro',
       subtitle: '$70/month',
-      annualPrice: 840, // $70 * 12
+      annualPrice: 672, // $70 * 12 * 0.8 (20% discount)
       monthlyPrice: 70,
       features: [
         'Viral Blitz Cycle Framework (unlimited)',
@@ -51,7 +51,7 @@ export default function PricingSection({ onGetStarted, navigate }: PricingSectio
     {
       name: 'Team',
       subtitle: '$500/month',
-      annualPrice: 6000, // $500 * 12
+      annualPrice: 4800, // $500 * 12 * 0.8 (20% discount)
       monthlyPrice: 500,
       features: [
         'Everything in Pro',
@@ -127,7 +127,7 @@ export default function PricingSection({ onGetStarted, navigate }: PricingSectio
             Simple, Transparent Pricing
           </motion.span>
           
-          <motion.h2 
+          <motion.h3 
             className="text-3xl md:text-4xl font-bold text-white mb-6"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -135,7 +135,7 @@ export default function PricingSection({ onGetStarted, navigate }: PricingSectio
             transition={{ duration: 0.6, delay: 0.1 }}
           >
             Scale Your Content and <span className="text-[#8D5AFF]">Maximize Sales</span>
-          </motion.h2>
+          </motion.h3>
           
           <motion.p 
             className="text-xl text-white/80 max-w-3xl mx-auto mb-10"
@@ -195,7 +195,7 @@ export default function PricingSection({ onGetStarted, navigate }: PricingSectio
                     <div className="absolute -top-20 -right-20 w-64 h-64 bg-[#8D5AFF]/20 rounded-full filter blur-3xl -z-10" />
                   )}
                   
-                  <h3 className="text-2xl font-bold text-white mb-2">{plan.name}</h3>
+                  <h4 className="text-2xl font-bold text-white mb-2">{plan.name}</h4>
                   <p className="text-white/60 mb-6 min-h-[40px]">{plan.subtitle}</p>
                   
                   <div className="flex items-baseline mb-6">

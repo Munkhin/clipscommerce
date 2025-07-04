@@ -61,20 +61,31 @@ export class AnalyticsService {
     });
     
     // Find best and worst performing posts
-    let bestPost: (typeof posts[0] & { engagementRate: number }) | null = null;
-    let worstPost: (typeof posts[0] & { engagementRate: number }) | null = null;
+    let bestPost: (Post & { engagementRate: number }) | null = null;
+    let worstPost: (Post & { engagementRate: number }) | null = null;
     
-    posts.forEach((post, index) => {
-      const metrics = allMetrics[index];
-      if (metrics) {
-        const postWithMetrics = { ...post, engagementRate: metrics.engagementRate || 0 };
-        
-        if (!bestPost || metrics.engagementRate > bestPost.engagementRate) {
-          bestPost = postWithMetrics;
+    let metricsIndex = 0;
+    posts.forEach((post) => {
+      // Calculate average engagement rate for this post across all platforms
+      let totalEngagementRate = 0;
+      let platformCount = 0;
+      
+      for (const platform of post.platforms) {
+        const metrics = allMetrics[metricsIndex++];
+        if (metrics) {
+          totalEngagementRate += metrics.engagementRate || 0;
+          platformCount++;
         }
-        if (!worstPost || metrics.engagementRate < worstPost.engagementRate) {
-          worstPost = postWithMetrics;
-        }
+      }
+      
+      const avgEngagementRate = platformCount > 0 ? totalEngagementRate / platformCount : 0;
+      const postWithMetrics = { ...post, engagementRate: avgEngagementRate };
+      
+      if (!bestPost || avgEngagementRate > bestPost.engagementRate) {
+        bestPost = postWithMetrics;
+      }
+      if (!worstPost || avgEngagementRate < worstPost.engagementRate) {
+        worstPost = postWithMetrics;
       }
     });
     
@@ -85,19 +96,31 @@ export class AnalyticsService {
         ? totalEngagement.engagementRate / allMetrics.length 
         : 0,
       bestPerformingPost: bestPost ? {
-        id: bestPost.id,
-        content: bestPost.content?.text?.substring(0, 100) || '',
-        engagementRate: bestPost.engagementRate,
-        platform: bestPost.platforms?.[0] || 'instagram' as Platform,
-        publishedAt: bestPost.status?.publishedAt || new Date(),
-      } : null,
+        id: (bestPost as Post & { engagementRate: number }).id,
+        content: (bestPost as Post & { engagementRate: number }).content?.text?.substring(0, 100) || '',
+        engagementRate: (bestPost as Post & { engagementRate: number }).engagementRate,
+        platform: (bestPost as Post & { engagementRate: number }).platforms?.[0] || 'instagram' as Platform,
+        publishedAt: (bestPost as Post & { engagementRate: number }).status?.publishedAt || new Date(),
+      } : {
+        id: 'no-posts',
+        content: 'No posts available',
+        engagementRate: 0,
+        platform: 'instagram' as Platform,
+        publishedAt: new Date(),
+      },
       worstPerformingPost: worstPost ? {
-        id: worstPost.id,
-        content: worstPost.content?.text?.substring(0, 100) || '',
-        engagementRate: worstPost.engagementRate,
-        platform: worstPost.platforms?.[0] || 'instagram' as Platform,
-        publishedAt: worstPost.status?.publishedAt || new Date(),
-      } : null,
+        id: (worstPost as Post & { engagementRate: number }).id,
+        content: (worstPost as Post & { engagementRate: number }).content?.text?.substring(0, 100) || '',
+        engagementRate: (worstPost as Post & { engagementRate: number }).engagementRate,
+        platform: (worstPost as Post & { engagementRate: number }).platforms?.[0] || 'instagram' as Platform,
+        publishedAt: (worstPost as Post & { engagementRate: number }).status?.publishedAt || new Date(),
+      } : {
+        id: 'no-posts',
+        content: 'No posts available',
+        engagementRate: 0,
+        platform: 'instagram' as Platform,
+        publishedAt: new Date(),
+      },
     };
   }
 

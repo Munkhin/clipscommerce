@@ -10,6 +10,7 @@ import { TikTokClient } from '../lib/platforms/TikTokClient';
 import { InstagramClient } from '../lib/platforms/InstagramClient';
 import { ApiConfig } from '../lib/platforms/types';
 import { IAuthTokenManager, PlatformCredentials, PlatformClientIdentifier, AuthStrategy } from '../lib/auth.types';
+import { isFeatureEnabled, getFeatureErrorResponse } from '../../../../lib/utils/featureFlags';
 
 /**
  * @interface CircuitBreakerState
@@ -430,6 +431,10 @@ export class ScannerService {
           //   this.platformClients.set(platform, new YouTubeClient(defaultConfig, authTokenManager, userId));
           //   break;
           default:
+            if (!isFeatureEnabled('YOUTUBE_AUTH') && platform === 'youtube') {
+              this.logStructured('info', `YouTube auth feature not enabled`, { platform });
+              continue;
+            }
             this.logStructured('warn', `Platform client initialization not implemented in initializePlatforms for ${platform}`, { platform });
             continue;
         }
