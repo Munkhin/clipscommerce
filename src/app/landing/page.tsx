@@ -1,7 +1,6 @@
 'use client';
 
 import * as React from 'react';
-
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
@@ -34,6 +33,42 @@ export default function LandingPage() {
 
   return (
     <div className="bg-black text-white relative">
+      {/* Structured Data - Organization */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "ClipsCommerce",
+            "url": "https://clipscommerce.com",
+            "logo": "https://clipscommerce.com/images/logo.png",
+            "description": "AI-powered short-form content creation platform for e-commerce sellers",
+            "sameAs": [
+              "https://twitter.com/clipscommerce",
+              "https://linkedin.com/company/clipscommerce"
+            ],
+            "contactPoint": {
+              "@type": "ContactPoint",
+              "telephone": "+1-555-012-3456",
+              "contactType": "Customer Service",
+              "email": "hello@clipscommerce.com"
+            },
+            "foundingDate": "2024",
+            "founders": [
+              {
+                "@type": "Person",
+                "name": "ClipsCommerce Team"
+              }
+            ],
+            "address": {
+              "@type": "PostalAddress",
+              "addressCountry": "US"
+            }
+          })
+        }}
+      />
+      
       {/* Enhanced Grid Background */}
       <div className="fixed inset-0 -z-10 bg-black">
         <div className="absolute inset-0 [background-image:linear-gradient(to_right,rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.1)_1px,transparent_1px)] [background-size:60px_60px]"></div>

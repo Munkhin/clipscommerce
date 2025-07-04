@@ -75,19 +75,33 @@ export default function PricingPage() {
   };
 
   const handleFollowersChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFollowers(parseInt(e.target.value) || 0);
+    const value = Math.max(0, parseInt(e.target.value) || 0);
+    setFollowers(value);
   };
 
   const handlePostsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPosts(parseInt(e.target.value) || 0);
+    const value = Math.max(0, parseInt(e.target.value) || 0);
+    setPosts(value);
+  };
+
+  // Prevent arrow key decrements to negative values
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const currentValue = parseInt((e.target as HTMLInputElement).value) || 0;
+    if (e.key === 'ArrowDown' && currentValue <= 0) {
+      e.preventDefault();
+    }
   };
 
   const togglePlatform = (platformId: string) => {
-    setSelectedPlatforms(prev => 
-      prev.includes(platformId)
-        ? prev.filter(id => id !== platformId)
-        : [...prev, platformId]
-    );
+    setSelectedPlatforms(prev => {
+      const currentSet = new Set(prev);
+      if (currentSet.has(platformId)) {
+        currentSet.delete(platformId);
+      } else {
+        currentSet.add(platformId);
+      }
+      return Array.from(currentSet);
+    });
   };
 
   // Using fixed prices as specified
@@ -98,7 +112,7 @@ export default function PricingPage() {
       id: 'lite',
       name: 'Lite',
       price: 20,
-      yearlyPrice: 240,
+      yearlyPrice: 192, // 20% discount: $20 * 12 * 0.8 = $192
       description: '$20/month',
       features: [
         'Viral Blitz Cycle Framework (15 uses)',
@@ -114,7 +128,7 @@ export default function PricingPage() {
       id: 'pro',
       name: 'Pro',
       price: 70,
-      yearlyPrice: 840,
+      yearlyPrice: 672, // 20% discount: $70 * 12 * 0.8 = $672
       description: '$70/month',
       features: [
         'Viral Blitz Cycle Framework (unlimited)',
@@ -133,7 +147,7 @@ export default function PricingPage() {
       id: 'team',
       name: 'Team',
       price: 500, // Monthly price
-      yearlyPrice: 6000, // Annual price ($500 * 12)
+      yearlyPrice: 4800, // 20% discount: $500 * 12 * 0.8 = $4800
       description: '$500/month',
       features: [
         'Everything in Pro',
@@ -256,8 +270,26 @@ export default function PricingPage() {
 
   // Recommended plan based on inputs
   const getRecommendedPlan = () => {
-    if (followers > 10000 || posts > 30 || selectedPlatforms.length > 2) return 'team';
-    if (followers > 1000 || posts > 10 || selectedPlatforms.length > 1) return 'pro';
+    // Calculate a score based on input values
+    let score = 0;
+    
+    // Scoring based on creators/followers
+    if (followers >= 10000) score += 3;
+    else if (followers >= 5000) score += 2;
+    else if (followers >= 1000) score += 1;
+    
+    // Scoring based on weekly posts
+    if (posts >= 30) score += 3;
+    else if (posts >= 15) score += 2;
+    else if (posts >= 10) score += 1;
+    
+    // Scoring based on platform diversity
+    if (selectedPlatforms.length >= 3) score += 2;
+    else if (selectedPlatforms.length >= 2) score += 1;
+    
+    // Return recommendation based on total score
+    if (score >= 4) return 'team';
+    if (score >= 2) return 'pro';
     return 'lite';
   };
 
@@ -275,6 +307,50 @@ export default function PricingPage() {
 
   return (
     <div className="bg-[#0A0A0A] min-h-screen text-lightning-DEFAULT pt-16">
+      {/* Structured Data - FAQ */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": faqs.map((faq) => ({
+              "@type": "Question",
+              "name": faq.question,
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": faq.answer
+              }
+            }))
+          })
+        }}
+      />
+      
+      {/* Structured Data - Organization */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "ClipsCommerce",
+            "url": "https://clipscommerce.com",
+            "logo": "https://clipscommerce.com/images/logo.png",
+            "description": "AI-powered short-form content creation platform for e-commerce sellers",
+            "sameAs": [
+              "https://twitter.com/clipscommerce",
+              "https://linkedin.com/company/clipscommerce"
+            ],
+            "contactPoint": {
+              "@type": "ContactPoint",
+              "telephone": "+1-555-012-3456",
+              "contactType": "Customer Service",
+              "email": "hello@clipscommerce.com"
+            }
+          })
+        }}
+      />
+      
       <NavigationBar />
       <div className="container mx-auto px-4 py-12">
         {/* CTA section */}
@@ -311,7 +387,7 @@ export default function PricingPage() {
               >
                 <button
                   onClick={() => setBillingCycle('monthly')}
-                  className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${billingCycle === 'monthly' 
+                  className={`px-6 py-2 rounded-full text-sm font-medium transition-all min-h-[44px] flex items-center ${billingCycle === 'monthly' 
                     ? 'bg-[#8D5AFF] text-white shadow-lg' 
                     : 'text-white/60 hover:text-white'}`}
                 >
@@ -319,7 +395,7 @@ export default function PricingPage() {
                 </button>
                 <button
                   onClick={() => setBillingCycle('yearly')}
-                  className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${billingCycle === 'yearly' 
+                  className={`px-6 py-2 rounded-full text-sm font-medium transition-all min-h-[44px] flex items-center ${billingCycle === 'yearly' 
                     ? 'bg-[#8D5AFF] text-white shadow-lg' 
                     : 'text-white/60 hover:text-white'}`}
                 >
@@ -341,11 +417,8 @@ export default function PricingPage() {
           className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto mb-12 relative"
         >
           {pricingTiers.map((tier: PricingTier, index: number) => {
-            // Handle Team tier pricing display
+            // Handle pricing display for all tiers
             const priceDisplay = () => {
-              if (tier.id === 'team' && billingCycle === 'yearly') {
-                return '$6000';
-              }
               return `$${billingCycle === 'yearly' ? tier.yearlyPrice : tier.price}`;
             };
             
@@ -411,7 +484,7 @@ export default function PricingPage() {
                       whileHover={{ scale: 1.03 }}
                       whileTap={{ scale: 0.97 }}
                       onClick={() => handleCtaClick(tier)}
-                      className={`w-full py-3 rounded-xl font-medium transition-all cursor-pointer ${tier.isPopular
+                      className={`w-full py-3 rounded-xl font-medium transition-all cursor-pointer min-h-[44px] flex items-center justify-center ${tier.isPopular
                         ? 'bg-gradient-to-r from-[#8D5AFF] to-[#5afcc0] text-white hover:shadow-lg hover:shadow-[#8D5AFF]/20'
                         : 'bg-[#8D5AFF] text-white hover:bg-[#8D5AFF]/90'}`}
                     >
@@ -474,6 +547,8 @@ export default function PricingPage() {
                     type="number" 
                     value={followers} 
                     onChange={handleFollowersChange}
+                    onKeyDown={handleKeyDown}
+                    min="0"
                     className="w-full px-4 py-3 bg-black/30 border border-white/10 rounded-l-lg focus:outline-none focus:border-blitz-blue/50 text-lightning-DEFAULT"
                   />
                   <div className="bg-black/20 border border-l-0 border-white/10 rounded-r-lg px-4 flex items-center text-white/70">
@@ -489,6 +564,8 @@ export default function PricingPage() {
                     type="number" 
                     value={posts} 
                     onChange={handlePostsChange}
+                    onKeyDown={handleKeyDown}
+                    min="0"
                     className="w-full px-4 py-3 bg-black/30 border border-white/10 rounded-l-lg focus:outline-none focus:border-blitz-blue/50 text-lightning-DEFAULT"
                   />
                   <div className="bg-black/20 border border-l-0 border-white/10 rounded-r-lg px-4 flex items-center text-white/70">
@@ -505,7 +582,7 @@ export default function PricingPage() {
                   <button
                     key={option.id}
                     onClick={() => togglePlatform(option.id)}
-                    className={`flex items-center justify-center space-x-2 p-3 rounded-lg border transition-all ${selectedPlatforms.includes(option.id)
+                    className={`flex items-center justify-center space-x-2 p-3 rounded-lg border transition-all min-h-[44px] min-w-[44px] ${selectedPlatforms.includes(option.id)
                       ? 'border-blitz-blue/50 bg-blitz-blue/5 text-lightning-DEFAULT' 
                       : 'border-white/10 bg-black/20 text-white/70 hover:text-white/90 hover:border-white/20'}`}
                   >
@@ -543,7 +620,7 @@ export default function PricingPage() {
             <div className="text-center">
               <Link 
                 href={`#${recommendedPlan}`} 
-                className="inline-flex items-center px-8 py-3 bg-[#8D5AFF] text-white rounded-xl font-medium hover:shadow-lg hover:shadow-[#8D5AFF]/20 transition-all"
+                className="inline-flex items-center px-8 py-3 bg-[#8D5AFF] text-white rounded-xl font-medium hover:shadow-lg hover:shadow-[#8D5AFF]/20 transition-all min-h-[44px] min-w-[44px]"
               >
                 <span>Select {pricingTiers.find(p => p.id === recommendedPlan)?.name}</span>
                 <ArrowRight className="ml-2 h-4 w-4" />
@@ -573,6 +650,7 @@ export default function PricingPage() {
               >
                 <button
                   onClick={() => toggleFaq(index)}
+                  aria-expanded={activeFaq === index}
                   className="flex justify-between items-center w-full text-left p-6 hover:bg-white/5 transition-colors duration-200"
                 >
                   <span className="font-medium text-lg text-white">{faq.question}</span>
@@ -619,10 +697,10 @@ export default function PricingPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <motion.a
-                href="mailto:support@clipscommerce.com"
+                href="mailto:hello@clipscommerce.com"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="inline-flex items-center px-6 py-3 bg-[#8D5AFF] text-white rounded-xl font-medium hover:bg-[#8D5AFF]/90 transition-all"
+                className="inline-flex items-center px-6 py-3 bg-[#8D5AFF] text-white rounded-xl font-medium hover:bg-[#8D5AFF]/90 transition-all min-h-[44px] min-w-[44px]"
               >
                 <Mail className="mr-2 h-4 w-4" />
                 Get in Touch
@@ -631,7 +709,7 @@ export default function PricingPage() {
                 href="tel:+1-555-0123"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="inline-flex items-center px-6 py-3 border border-white/20 text-white rounded-xl font-medium hover:bg-white/5 transition-all"
+                className="inline-flex items-center px-6 py-3 border border-white/20 text-white rounded-xl font-medium hover:bg-white/5 transition-all min-h-[44px] min-w-[44px]"
               >
                 <span className="mr-2">📞</span>
                 Call Us: +1 (555) 012-3456
