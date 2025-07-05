@@ -172,13 +172,13 @@ export default function PricingPage() {
                     ))}
                   </ul>
                   
-                  <Link href={plan.cta === 'Contact Sales' ? '/contact' : '/sign-up'}>
+                  <Link href={`/sign-up?plan=${plan.name.toLowerCase()}&billing=${isAnnual ? 'yearly' : 'monthly'}&price=${isAnnual ? plan.yearlyPrice : plan.price}`}>
                     <button className={`w-full py-4 rounded-lg font-bold text-lg transition-all duration-300 inline-flex items-center justify-center ${
                       plan.popular
                         ? 'bg-gradient-to-r from-[#8D5AFF] to-[#5afcc0] hover:shadow-lg hover:shadow-[#8D5AFF]/20 text-white'
                         : 'bg-[#8D5AFF] hover:bg-[#8D5AFF]/90 text-white'
                     }`}>
-                      {plan.cta}
+                      Get Started
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </button>
                   </Link>

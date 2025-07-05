@@ -80,7 +80,7 @@ export default function SubscriptionComponent({ navigate, stripeLinks }: Subscri
       id: 'lite',
       name: 'Lite',
       price: 9,
-      yearlyPrice: 99,
+      yearlyPrice: 240,
       interval: 'monthly',
       description: 'Access to basic content automation features.',
       features: [
@@ -96,7 +96,7 @@ export default function SubscriptionComponent({ navigate, stripeLinks }: Subscri
       id: 'pro',
       name: 'Pro',
       price: 70,
-      yearlyPrice: 699,
+      yearlyPrice: 600,
       interval: 'monthly',
       description: 'Advanced features for professional creators.',
       isPopular: true,
@@ -116,7 +116,7 @@ export default function SubscriptionComponent({ navigate, stripeLinks }: Subscri
       id: 'team',
       name: 'Team',
       price: 199,
-      yearlyPrice: 1999,
+      yearlyPrice: 6000,
       interval: 'monthly',
       description: 'Collaborative features for larger teams.',
       features: [

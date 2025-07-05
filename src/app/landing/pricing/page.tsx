@@ -77,7 +77,7 @@ export default function PricingPage() {
       id: 'lite',
       name: 'Lite',
       price: 20,
-      yearlyPrice: 192, // 20% discount: $20 * 12 * 0.8 = $192
+      yearlyPrice: 240, // $20/month, billed annually
       description: '$20/month',
       features: [
         'Viral Blitz Cycle Framework (15 uses)',
@@ -93,7 +93,7 @@ export default function PricingPage() {
       id: 'pro',
       name: 'Pro',
       price: 70,
-      yearlyPrice: 672, // 20% discount: $70 * 12 * 0.8 = $672
+      yearlyPrice: 600, // $50/month, billed annually
       description: '$70/month',
       features: [
         'Viral Blitz Cycle Framework (unlimited)',
@@ -112,7 +112,7 @@ export default function PricingPage() {
       id: 'team',
       name: 'Team',
       price: 500, // Monthly price
-      yearlyPrice: 4800, // 20% discount: $500 * 12 * 0.8 = $4800
+      yearlyPrice: 6000, // $500/month, billed annually
       description: '$500/month',
       features: [
         'Everything in Pro',
@@ -182,12 +182,8 @@ export default function PricingPage() {
 
   const handleCtaClick = (tier: PricingTier) => {
     const priceId = billingCycle === 'monthly' ? tier.stripeMonthlyPriceId : tier.stripeYearlyPriceId;
-    
-    if (priceId) {
-      window.location.href = priceId;
-    } else {
-      window.location.href = '/dashboard';
-    }
+    const redirectUrl = `/sign-up?plan=${tier.id}&billing=${billingCycle}&priceId=${encodeURIComponent(priceId || '')}`;
+    window.location.href = redirectUrl;
   };
 
   return (
@@ -286,7 +282,7 @@ export default function PricingPage() {
                 >
                   Yearly
                   <span className="ml-1 text-xs bg-[#5afcc0] text-black px-2 py-0.5 rounded-full">
-                    Save 20%
+                    Save 30%
                   </span>
                 </button>
               </motion.div>
@@ -343,9 +339,8 @@ export default function PricingPage() {
                     </span>
                   </div>
                   
-                  {/* Display annual savings if yearly billing is selected */}
-                  {billingCycle === 'yearly' && (
-                    <div className="text-[#5afcc0] text-sm mb-4">Save 20% with annual billing</div>
+                  {billingCycle === 'yearly' && tier.isPopular && (
+                    <div className="text-[#5afcc0] text-sm mb-4">Save 30% with annual billing</div>
                   )}
                   
                   {/* Bonus section */}

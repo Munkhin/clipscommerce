@@ -60,7 +60,7 @@ export default function DashboardLayout({
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen bg-[#FFFFFF]">
+      <div className="flex items-center justify-center h-screen bg-gray-900">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#8B5CF6]"></div>
       </div>
     );
@@ -68,11 +68,11 @@ export default function DashboardLayout({
 
   return (
     <SettingsProvider>
-      <div className="flex h-screen bg-[#FFFFFF] text-[#111827] overflow-hidden">
+      <div className="flex h-screen bg-gray-900 text-gray-200 overflow-hidden">
         <Sidebar />
         <div className="flex-1 flex flex-col min-h-0">
           <Header breadcrumb={breadcrumb} />
-          <main className="flex-1 bg-[#FFFFFF] overflow-hidden">
+          <main className="flex-1 bg-gray-900 overflow-hidden">
             <div className="h-full overflow-y-auto">
               <div className="min-h-full p-8">
                 {children}

@@ -41,7 +41,7 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen bg-dominator-black text-white flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-[#00A67E] to-[#007567] text-white flex items-center justify-center p-4">
       <div className="w-full max-w-md rounded-2xl bg-dominator-dark/50 p-8 backdrop-blur-sm border border-dominator-dark/50 shadow-2xl">
         <div className="space-y-6">
           <div className="space-y-2 text-center">
@@ -75,7 +75,7 @@ export default function ForgotPasswordPage() {
 
             <Button
               type="submit"
-              className="w-full bg-gradient-to-r from-dominator-blue to-dominator-magenta hover:from-dominator-blue/90 hover:to-dominator-magenta/90 text-white font-semibold py-2.5 rounded-lg transition-all hover:shadow-[0_0_20px_rgba(0,245,255,0.5)]"
+              className="w-full bg-gradient-to-r from-[#00A67E] to-[#007567] hover:from-[#00A67E]/90 hover:to-[#007567]/90 text-white font-semibold py-2.5 rounded-lg transition-all hover:shadow-[0_0_20px_rgba(0,166,126,0.5)]"
               disabled={isLoading}
             >
               {isLoading ? "Sending Reset Link..." : "Send Reset Link"}
@@ -86,7 +86,7 @@ export default function ForgotPasswordPage() {
             Remember your password?{" "}
             <Link
               href="/sign-in"
-              className="text-dominator-100 hover:text-white font-medium transition-colors"
+              className="text-[#00A67E] hover:text-white font-medium transition-colors"
             >
               Sign in
             </Link>

@@ -356,10 +356,10 @@ export default function DashboardPage() {
 
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-[28px] font-bold text-[#111827] mb-2" style={{ fontFamily: 'cursive' }}>
+        <h1 className="text-[28px] font-bold text-white mb-2" style={{ fontFamily: 'cursive' }}>
           {greeting}, {user?.user_metadata.full_name || user?.email || 'User'}!
         </h1>
-        <p className="text-[#6B7280] text-sm">{currentTime.toLocaleString()}</p>
+        <p className="text-gray-400 text-sm">{currentTime.toLocaleString()}</p>
       </div>
 
       {/* Key Metrics Section */}
@@ -368,7 +368,7 @@ export default function DashboardPage() {
           <div
             key={metric.id}
             className={`
-              bg-white border-2 border-[#E5E7EB] rounded-xl p-6 cursor-pointer transition-all duration-200
+              bg-gray-800 border-2 border-gray-700 rounded-xl p-6 cursor-pointer transition-all duration-200
               ${hoveredCard === metric.id 
                 ? 'border-[#8B5CF6] shadow-[0_4px_12px_rgba(139,92,246,0.15)] transform -translate-y-0.5' 
                 : 'shadow-[0_2px_8px_rgba(0,0,0,0.06)] hover:border-[#8B5CF6]'
@@ -384,8 +384,8 @@ export default function DashboardPage() {
           >
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center space-x-2">
-                <metric.icon className="w-5 h-5 text-[#6B7280]" />
-                <span className="text-sm font-medium text-[#6B7280]">{metric.title}</span>
+                <metric.icon className="w-5 h-5 text-gray-400" />
+                <span className="text-sm font-medium text-gray-400">{metric.title}</span>
               </div>
               <span className={`
                 px-2 py-1 rounded text-xs font-semibold
@@ -398,15 +398,15 @@ export default function DashboardPage() {
                 {metric.trend === 'up' ? <TrendingUp className="ml-1 h-3 w-3 inline" /> : <TrendingDown className="ml-1 h-3 w-3 inline" />}
               </span>
             </div>
-            <p className="text-3xl font-bold text-[#111827] mb-2">{metric.value}</p>
-            <p className="text-sm text-[#6B7280]">{metric.description}</p>
+            <p className="text-3xl font-bold text-white mb-2">{metric.value}</p>
+            <p className="text-sm text-gray-400">{metric.description}</p>
           </div>
         ))}
       </section>
 
       {/* Quick Actions Section */}
       <section className="mb-8">
-        <h2 className="text-[20px] font-semibold text-[#111827] mb-6" style={{ fontFamily: 'cursive' }}>
+        <h2 className="text-[20px] font-semibold text-white mb-6" style={{ fontFamily: 'cursive' }}>
           Quick Actions
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -414,7 +414,7 @@ export default function DashboardPage() {
             <div
               key={action.name}
               className="
-                relative bg-white border-2 border-[#E5E7EB] rounded-xl p-6 cursor-pointer 
+                relative bg-gray-800 border-2 border-gray-700 rounded-xl p-6 cursor-pointer 
                 transition-all duration-200 group hover:border-[#8B5CF6] 
                 hover:shadow-[0_4px_12px_rgba(139,92,246,0.15)] hover:-translate-y-0.5
               "
@@ -428,10 +428,10 @@ export default function DashboardPage() {
               <div className="absolute top-4 right-4 w-6 h-6 bg-[#8B5CF6] rounded flex items-center justify-center">
                 <action.icon className="w-3 h-3 text-white" />
               </div>
-              <h3 className="text-[20px] font-semibold text-[#111827] mb-2 pr-8">
+              <h3 className="text-[20px] font-semibold text-white mb-2 pr-8">
                 {action.title}
               </h3>
-              <p className="text-sm text-[#6B7280] leading-relaxed">{action.description}</p>
+              <p className="text-sm text-gray-400 leading-relaxed">{action.description}</p>
             </div>
           ))}
         </div>
@@ -439,28 +439,28 @@ export default function DashboardPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         {/* Performance Trends */}
-        <div className="bg-white rounded-xl p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
-          <h3 className="text-[18px] font-semibold text-[#111827] mb-4">Sales Performance</h3>
+        <div className="bg-gray-800 rounded-xl p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
+          <h3 className="text-[18px] font-semibold text-white mb-4">Sales Performance</h3>
           <LineChartComponent data={salesData} />
         </div>
         
-        <div className="bg-white rounded-xl p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
-          <h3 className="text-[18px] font-semibold text-[#111827] mb-4">Engagement Over Time</h3>
+        <div className="bg-gray-800 rounded-xl p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
+          <h3 className="text-[18px] font-semibold text-white mb-4">Engagement Over Time</h3>
           <BarChartComponent data={engagementData} />
         </div>
       </div>
 
       {/* Recent Activity */}
-      <div className="bg-white rounded-xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
-        <h3 className="text-[18px] font-semibold text-[#111827] mb-4">Recent Activity</h3>
+      <div className="bg-gray-800 rounded-xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
+        <h3 className="text-[18px] font-semibold text-white mb-4">Recent Activity</h3>
         <div className="space-y-4">
           {recentActivity.map((activity) => (
             <div key={activity.id} className="flex items-start space-x-3">
-              <activity.icon className="w-5 h-5 text-[#6B7280] mt-1" />
+              <activity.icon className="w-5 h-5 text-gray-400 mt-1" />
               <div>
-                <p className="font-medium text-[#111827]">{activity.title}</p>
-                <p className="text-sm text-[#6B7280]">{activity.description}</p>
-                <p className="text-xs text-[#6B7280]">{activity.timestamp}</p>
+                <p className="font-medium text-white">{activity.title}</p>
+                <p className="text-sm text-gray-400">{activity.description}</p>
+                <p className="text-xs text-gray-400">{activity.timestamp}</p>
               </div>
             </div>
           ))}

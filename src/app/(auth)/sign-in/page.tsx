@@ -23,7 +23,7 @@ function SubmitButton({
   return (
     <Button 
       type="submit" 
-      className="w-full bg-gradient-to-r from-[#8D5AFF] to-[#5AFCC0] hover:from-[#8D5AFF]/90 hover:to-[#5AFCC0]/90 text-white font-semibold py-3 rounded-lg transition-all duration-300 ease-in-out hover:shadow-lg hover:shadow-[#8D5AFF]/30 h-12 text-base"
+      className="w-full bg-gradient-to-r from-[#00A67E] to-[#007567] hover:from-[#00A67E]/90 hover:to-[#007567]/90 text-white font-semibold py-3 rounded-lg transition-all duration-300 ease-in-out hover:shadow-lg hover:shadow-[#00A67E]/30 h-12 text-base"
       disabled={loading}
     >
       {loading ? 'Signing in...' : children}
@@ -41,6 +41,12 @@ export default function SignInPage() {
 
   const message = searchParams.get('message');
   const type = searchParams.get('type') as 'success' | 'error' | 'info' | 'warning' | null;
+  
+  // Get plan parameters for post-login redirect
+  const plan = searchParams.get('plan');
+  const billing = searchParams.get('billing');
+  const priceId = searchParams.get('priceId');
+  const price = searchParams.get('price');
 
   useEffect(() => {
     const checkSession = async () => {
@@ -49,7 +55,15 @@ export default function SignInPage() {
         const { data: { session } } = await supabase.auth.getSession();
         
         if (session) {
-          router.push('/welcome');
+          // If there are plan parameters, redirect to checkout
+          if (plan && priceId) {
+            window.location.href = priceId;
+          } else if (plan && price) {
+            // For fallback, construct checkout URL or redirect to dashboard
+            router.push('/dashboard');
+          } else {
+            router.push('/welcome');
+          }
         } else {
           setIsLoading(false);
         }
@@ -59,7 +73,7 @@ export default function SignInPage() {
     };
 
     checkSession();
-  }, [router]);
+  }, [router, plan, priceId, price]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -73,7 +87,15 @@ export default function SignInPage() {
       if (result?.error) {
         setError(result.error);
       } else if (result?.success) {
-        router.push("/welcome");
+        // If there are plan parameters, redirect to checkout
+        if (plan && priceId) {
+          window.location.href = priceId;
+        } else if (plan && price) {
+          // For fallback, redirect to dashboard
+          router.push('/dashboard');
+        } else {
+          router.push("/welcome");
+        }
       } else {
         setError('An unknown error occurred');
       }
@@ -97,7 +119,7 @@ export default function SignInPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#101014] via-[#0A0A0C] to-[#030304] text-white flex flex-col items-center justify-center p-6 sm:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-[#00A67E] to-[#007567] text-white flex flex-col items-center justify-center p-6 sm:p-8">
       <div className="w-full max-w-xs space-y-8">
         <div className="text-center">
           <div className="inline-flex items-center justify-center w-[70px] h-[70px] bg-gradient-to-br from-[#8D5AFF] to-[#5AFCC0] rounded-xl mb-6 shadow-md overflow-hidden">
@@ -180,7 +202,7 @@ export default function SignInPage() {
           <div>
             <Link
               href="/forgot-password"
-              className="text-sm text-[#BF9FFF] hover:text-[#A07EFF] transition-colors font-medium"
+              className="text-sm text-[#00A67E] hover:text-[#007567] transition-colors font-medium"
               tabIndex={isLoading ? -1 : 0}
             >
               Forgot password?
@@ -191,7 +213,7 @@ export default function SignInPage() {
               Don&apos;t have an account?{" "}
               <Link
                 href="/sign-up"
-                className="font-medium text-[#BF9FFF] hover:text-[#A07EFF] hover:underline transition-colors"
+                className="font-medium text-[#00A67E] hover:text-[#007567] hover:underline transition-colors"
                 tabIndex={isLoading ? -1 : 0}
               >
                 Sign up

@@ -24,7 +24,7 @@ function SubmitButton({
   return (
     <Button 
       type="submit" 
-      className="w-full bg-gradient-to-r from-[#8D5AFF] to-[#5afcc0] hover:from-[#8D5AFF]/90 hover:to-[#5afcc0]/90 text-white font-semibold py-3 rounded-xl transition-all hover:shadow-lg hover:shadow-[#8D5AFF]/20 h-12"
+      className="w-full bg-gradient-to-r from-[#00A67E] to-[#007567] hover:from-[#00A67E]/90 hover:to-[#007567]/90 text-white font-semibold py-3 rounded-xl transition-all hover:shadow-lg hover:shadow-[#00A67E]/20 h-12"
       disabled={loading || pending}
     >
       {(loading || pending) ? 'Creating account...' : children}
@@ -42,12 +42,31 @@ export default function SignUpPage() {
   // Get message and type from URL search params
   const message = searchParams?.get('message');
   const type = searchParams?.get('type') as 'success' | 'error' | 'info' | 'warning' | null;
+  
+  // Get plan parameters from URL
+  const plan = searchParams?.get('plan');
+  const billing = searchParams?.get('billing');
+  const priceId = searchParams?.get('priceId');
+  const price = searchParams?.get('price');
 
   useEffect(() => {
     if (state?.success) {
-      router.push("/sign-in?message=Account created successfully! Please check your email to confirm your account.&type=success");
+      // If coming from pricing page, redirect to sign-in with plan parameters
+      if (plan && (priceId || price)) {
+        const signInParams = new URLSearchParams({
+          message: 'Account created successfully! Please check your email to confirm your account.',
+          type: 'success',
+          plan: plan,
+          billing: billing || 'monthly',
+          ...(priceId ? { priceId } : {}),
+          ...(price ? { price } : {})
+        });
+        router.push(`/sign-in?${signInParams.toString()}`);
+      } else {
+        router.push("/sign-in?message=Account created successfully! Please check your email to confirm your account.&type=success");
+      }
     }
-  }, [state, router]);
+  }, [state, router, plan, billing, priceId, price]);
 
   const handleFormAction = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -68,7 +87,7 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-[#00A67E] to-[#007567] text-white relative overflow-hidden">
       {/* Background effects */}
       <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-20 [mask-image:radial-gradient(ellipse_at_center,white,transparent_70%)]"></div>
       <div className="absolute top-20 right-20 w-72 h-72 bg-[#8D5AFF]/20 rounded-full filter blur-3xl"></div>
@@ -79,15 +98,25 @@ export default function SignUpPage() {
           <div className="w-full max-w-md">
             {/* Logo/Brand */}
             <div className="text-center mb-8">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-[#8D5AFF] to-[#5afcc0] rounded-2xl mb-4">
-                <span className="text-2xl font-bold text-white">CC</span>
-              </div>
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-[#00A67E] to-[#007567] rounded-2xl mb-4">
+              <Image
+                src="/images/ChatGPT Image Jun 1, 2025, 07_27_54 PM.png"
+                alt="ClipsCommerce Logo"
+                width={48}
+                height={48}
+                className="object-contain p-1 invert"
+                priority
+              />
+            </div>
               <h1 className="text-3xl font-bold tracking-tight text-white mb-2">Create an Account</h1>
               <p className="text-gray-300">
                 Already have an account?{" "}
                 <Link 
-                  href="/sign-in" 
-                  className="text-[#8D5AFF] hover:text-[#8D5AFF]/80 font-medium transition-colors"
+                  href={plan && (priceId || price) 
+                    ? `/sign-in?plan=${plan}&billing=${billing || 'monthly'}${priceId ? `&priceId=${encodeURIComponent(priceId)}` : ''}${price ? `&price=${price}` : ''}` 
+                    : "/sign-in"
+                  } 
+                  className="text-[#00A67E] hover:text-[#007567]/80 font-medium transition-colors"
                   tabIndex={isLoading ? -1 : 0}
                 >
                   Sign in here
@@ -163,11 +192,11 @@ export default function SignUpPage() {
               <div className="mt-8 pt-6 border-t border-gray-700/50">
                 <p className="text-xs text-gray-400 text-center">
                   By creating an account, you agree to our{" "}
-                  <Link href="/terms" className="text-[#8D5AFF] hover:text-[#8D5AFF]/80 transition-colors">
+                  <Link href="/terms" className="text-[#00A67E] hover:text-[#007567]/80 transition-colors">
                     Terms of Service
                   </Link>{" "}
                   and{" "}
-                  <Link href="/privacy" className="text-[#8D5AFF] hover:text-[#8D5AFF]/80 transition-colors">
+                  <Link href="/privacy" className="text-[#00A67E] hover:text-[#007567]/80 transition-colors">
                     Privacy Policy
                   </Link>
                 </p>

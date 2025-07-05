@@ -23,7 +23,7 @@ export default function PricingSection({ onGetStarted, navigate }: PricingSectio
     {
       name: 'Lite',
       subtitle: '$20/month',
-      annualPrice: 192, // $20 * 12 * 0.8 (20% discount)
+      annualPrice: 240, // $20/month, billed annually
       monthlyPrice: 20,
       features: [
         'Viral Blitz Cycle Framework (15 uses)',
@@ -36,7 +36,7 @@ export default function PricingSection({ onGetStarted, navigate }: PricingSectio
     {
       name: 'Pro',
       subtitle: '$70/month',
-      annualPrice: 672, // $70 * 12 * 0.8 (20% discount)
+      annualPrice: 600, // $50/month, billed annually
       monthlyPrice: 70,
       features: [
         'Viral Blitz Cycle Framework (unlimited)',
@@ -51,7 +51,7 @@ export default function PricingSection({ onGetStarted, navigate }: PricingSectio
     {
       name: 'Team',
       subtitle: '$500/month',
-      annualPrice: 4800, // $500 * 12 * 0.8 (20% discount)
+      annualPrice: 6000, // $500/month, billed annually
       monthlyPrice: 500,
       features: [
         'Everything in Pro',
@@ -161,7 +161,7 @@ export default function PricingSection({ onGetStarted, navigate }: PricingSectio
             >
               Annual
               <span className="ml-1 text-xs bg-[#5afcc0] text-black px-2 py-0.5 rounded-full">
-                Save 20%
+                Save 30%
               </span>
             </button>
             <button

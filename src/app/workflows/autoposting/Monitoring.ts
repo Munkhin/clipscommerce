@@ -361,7 +361,7 @@ export class MonitoringService {
 
     if (errorRecord && errorRecord.severity === 'critical') {
       this.alertAdmin(
-        `Critical error detected: ${errorRecord.message}`,
+        `System alert: ${errorRecord.message}`,
         'critical',
         { errorRecord }
       );

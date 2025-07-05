@@ -131,33 +131,33 @@ class ErrorNotificationService {
     });
 
     // Create urgent notification
-    this.createNotification({
-      type: NotificationType.MODAL,
-      priority: NotificationPriority.URGENT,
-      title: 'Critical Error Detected',
-      message: 'A critical error has occurred. Our team has been notified and is working on a fix.',
-      category: context.category || ErrorCategory.UNKNOWN,
-      severity: ErrorSeverity.CRITICAL,
-      errorId,
-      persistent: true,
-      actions: [
-        {
-          label: 'Reload Page',
-          action: () => window.location.reload(),
-          style: 'primary'
-        },
-        {
-          label: 'Contact Support',
-          action: () => this.contactSupport(errorId),
-          style: 'secondary'
-        }
-      ]
-    });
+    // this.createNotification({
+    //   type: NotificationType.MODAL,
+    //   priority: NotificationPriority.URGENT,
+    //   title: 'System Alert',
+    //   message: 'An unexpected issue occurred. We're on it!',
+    //   category: context.category || ErrorCategory.UNKNOWN,
+    //   severity: ErrorSeverity.CRITICAL,
+    //   errorId,
+    //   persistent: true,
+    //   actions: [
+    //     {
+    //       label: 'Reload Page',
+    //       action: () => window.location.reload(),
+    //       style: 'primary'
+    //     },
+    //     {
+    //       label: 'Contact Support',
+    //       action: () => this.contactSupport(errorId),
+    //       style: 'secondary'
+    //     }
+    //   ]
+    // });
 
     // Also show a browser notification if permissions allow
     this.showBrowserNotification({
-      title: 'ClipsCommerce - Critical Error',
-      message: 'A critical error occurred. Please check the application.',
+      title: 'ClipsCommerce - System Alert',
+      message: 'An unexpected issue occurred. Please check the application.',
       icon: '/favicon.ico',
       tag: `critical-error-${errorId}`
     });
@@ -303,7 +303,7 @@ class ErrorNotificationService {
 
       // Try to show the notification
       try {
-        this.showNotification(notification);
+        // this.showNotification(notification);
         return false; // Remove from queue on success
       } catch (error) {
         console.error('Failed to show notification:', error);
