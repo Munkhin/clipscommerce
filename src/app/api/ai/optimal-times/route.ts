@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+
+export const dynamic = 'force-dynamic';
 import { createClient } from '@/lib/supabase/server';
 import { SchedulingService } from '@/lib/services/schedulingService';
 import { Post, PostStatusType } from '@/types/schedule';

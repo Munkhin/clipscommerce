@@ -62,6 +62,25 @@ export function correlationMiddleware(request: NextRequest): NextResponse {
   if (context.traceId) {
     response.headers.set(TRACE_ID_HEADER, context.traceId);
   }
+
+  // Add a script to set correlation ID on client side for error tracking
+  if (!request.nextUrl.pathname.startsWith('/api/')) {
+    const correlationScript = `
+      <script>
+        if (typeof window !== 'undefined') {
+          window.__CORRELATION_ID__ = '${context.correlationId}';
+          try {
+            localStorage.setItem('clipscommerce_correlation_id', '${context.correlationId}');
+          } catch (e) {
+            // Ignore localStorage errors
+          }
+        }
+      </script>
+    `;
+    
+    // Note: In a real implementation, you'd need to modify the HTML response
+    // For now, we'll rely on the headers and client-side generation
+  }
   
   // Log request completion (this won't capture the actual end time, but it's a start)
   const duration = Date.now() - startTime;

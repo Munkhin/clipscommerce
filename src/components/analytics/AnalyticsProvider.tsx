@@ -12,14 +12,24 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
   const pathname = usePathname();
 
   useEffect(() => {
-    // Initialize analytics on mount
-    analytics.initialize();
+    // Initialize analytics on mount with error handling
+    try {
+      analytics.initialize();
+    } catch (error) {
+      console.error('[AnalyticsProvider] Failed to initialize analytics:', error);
+      // Don't break the app if analytics fails
+    }
   }, []);
 
   useEffect(() => {
-    // Track page views on route changes
+    // Track page views on route changes with error handling
     if (pathname) {
-      analytics.trackPageView(pathname);
+      try {
+        analytics.trackPageView(pathname);
+      } catch (error) {
+        console.error('[AnalyticsProvider] Failed to track page view:', error);
+        // Don't break the app if page view tracking fails
+      }
     }
   }, [pathname]);
 

@@ -157,7 +157,6 @@
     }
   }
     /* Remove overflow-y from html to avoid double scrollbars or conflicts */
-  }
   
   /* Selection styling */
   ::selection {

@@ -2,6 +2,7 @@
 
 import { ErrorCategory, ErrorSeverity } from './errorReporting';
 import * as Sentry from '@sentry/nextjs';
+import { BrowserTracing } from '@sentry/nextjs';
 
 // Initialize Sentry in production
 if (typeof window !== 'undefined' && process.env.NODE_ENV === 'production') {
@@ -11,9 +12,7 @@ if (typeof window !== 'undefined' && process.env.NODE_ENV === 'production') {
       dsn: sentryDsn,
       environment: process.env.NODE_ENV,
       tracesSampleRate: 0.1,
-      integrations: [
-        new Sentry.BrowserTracing(),
-      ],
+      integrations: [],
       beforeSend(event) {
         // Filter out non-critical errors in production
         if (event.level === 'info' || event.level === 'debug') {

@@ -49,16 +49,23 @@ export class GlobalErrorBoundary extends Component<Props, State> {
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     console.error('Global Error Boundary caught an error:', error, errorInfo);
     
+    // Generate or extract correlation ID for this error
+    const correlationId = this.getOrCreateCorrelationId();
+    
     // Report error with context
     const errorId = errorReporter.reportError(error, {
       category: ErrorCategory.UI,
       severity: this.determineSeverity(error),
       component: 'GlobalErrorBoundary',
       action: 'component_render',
+      requestId: correlationId,
       additionalContext: {
         componentStack: errorInfo.componentStack,
         retryCount: this.state.retryCount,
         timestamp: new Date().toISOString(),
+        correlationId,
+        url: typeof window !== 'undefined' ? window.location.href : 'unknown',
+        userAgent: typeof window !== 'undefined' ? navigator.userAgent : 'unknown',
       },
       fingerprint: [
         'global-error-boundary',
@@ -107,6 +114,42 @@ export class GlobalErrorBoundary extends Component<Props, State> {
     // Create a signature for similar errors to be grouped together
     const message = error.message.replace(/\d+/g, 'N'); // Replace numbers with N
     return message.substring(0, 50);
+  }
+
+  private getOrCreateCorrelationId(): string {
+    // Try to get existing correlation ID from various sources
+    if (typeof window !== 'undefined') {
+      // Check global variable set by middleware
+      const globalCorrelationId = (window as any).__CORRELATION_ID__;
+      if (globalCorrelationId) {
+        return globalCorrelationId;
+      }
+      
+      // Check localStorage
+      try {
+        const storedCorrelationId = localStorage.getItem('clipscommerce_correlation_id');
+        if (storedCorrelationId) {
+          return storedCorrelationId;
+        }
+      } catch (e) {
+        // Ignore localStorage errors
+      }
+    }
+    
+    // Generate new correlation ID
+    const newCorrelationId = `ui_err_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    
+    // Store it for future use
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('clipscommerce_correlation_id', newCorrelationId);
+        (window as any).__CORRELATION_ID__ = newCorrelationId;
+      } catch (e) {
+        // Ignore storage errors
+      }
+    }
+    
+    return newCorrelationId;
   }
 
   private attemptAutoRecovery(error: Error) {

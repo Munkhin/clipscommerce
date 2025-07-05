@@ -59,11 +59,11 @@ class ErrorNotificationService {
 
   private initializeService() {
     // Check for permission to show notifications
-    if (typeof window !== 'undefined' && 'Notification' in window) {
-      if (Notification.permission === 'default') {
-        Notification.requestPermission();
-      }
-    }
+    // if (typeof window !== 'undefined' && 'Notification' in window) {
+    //   if (Notification.permission === 'default') {
+    //     Notification.requestPermission();
+    //   }
+    // }
 
     // Process notification queue periodically
     setInterval(() => {

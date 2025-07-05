@@ -17,6 +17,7 @@ export default function NotFound() {
   useEffect(() => {
     // Extract correlation ID from response headers if available
     const fetchCorrelationId = async () => {
+      if (typeof window === 'undefined') return; // Ensure this runs only on the client
       try {
         // Try to get correlation ID from the current response headers
         const response = await fetch(window.location.href, { method: 'HEAD' });

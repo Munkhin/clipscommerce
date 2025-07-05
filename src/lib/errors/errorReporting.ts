@@ -92,10 +92,10 @@ class ErrorReportingService {
         ],
 
         // Auto-instrumentation
-        integrations: [
+        integrations: typeof window !== 'undefined' ? [
           Sentry.replayIntegration(),
           Sentry.browserTracingIntegration(),
-        ],
+        ] : [],
       });
 
       // Set global context
@@ -134,6 +134,10 @@ class ErrorReportingService {
     return `err_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   }
 
+  private generateCorrelationId(): string {
+    return `corr_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  }
+
   private getContextInfo(): Partial<ErrorInfo> {
     const info: Partial<ErrorInfo> = {
       timestamp: new Date().toISOString(),
@@ -143,9 +147,51 @@ class ErrorReportingService {
     if (typeof window !== 'undefined') {
       info.userAgent = navigator.userAgent;
       info.url = window.location.href;
+      
+      // Try to extract correlation ID from response headers or generate one
+      const correlationId = this.extractCorrelationId();
+      if (correlationId) {
+        info.requestId = correlationId;
+      }
     }
 
     return info;
+  }
+
+  private extractCorrelationId(): string | undefined {
+    // Try to get correlation ID from various sources
+    if (typeof window !== 'undefined') {
+      // Check if there's a global correlation ID set by middleware
+      const globalCorrelationId = (window as any).__CORRELATION_ID__;
+      if (globalCorrelationId) {
+        return globalCorrelationId;
+      }
+      
+      // Check localStorage for persistent correlation tracking
+      try {
+        const storedCorrelationId = localStorage.getItem('clipscommerce_correlation_id');
+        if (storedCorrelationId) {
+          return storedCorrelationId;
+        }
+      } catch (e) {
+        // Ignore localStorage errors
+      }
+    }
+    
+    // Generate a new correlation ID
+    const newCorrelationId = this.generateCorrelationId();
+    
+    // Store it for future use
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('clipscommerce_correlation_id', newCorrelationId);
+        (window as any).__CORRELATION_ID__ = newCorrelationId;
+      } catch (e) {
+        // Ignore storage errors
+      }
+    }
+    
+    return newCorrelationId;
   }
 
   private logToConsole(error: Error, errorInfo: ErrorInfo) {

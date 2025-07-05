@@ -1,5 +1,6 @@
 // Logger utility with HTTP request logging support
 import type { Logger, LogFn } from 'pino';
+import type { LogContext } from '@/types/log';
 
 // Simple logger interface for our application
 interface AppLogger {
@@ -19,22 +20,36 @@ interface AppLogger {
     duration: number,
     metadata?: Record<string, any>
   ) => void;
+  withContext: (context: LogContext) => AppLogger;
 }
 
 // Create a simple console-based logger for development
-const createLogger = (): AppLogger => {
+const createLogger = (context?: LogContext): AppLogger => {
+  const formatLog = (level: string, obj: any, msg?: string, ...args: any[]) => {
+    const timestamp = new Date().toISOString();
+    const prefix = `[${timestamp}] [${level.toUpperCase()}]`;
+    
+    // Add correlation context if available
+    let contextStr = '';
+    if (context?.correlationId) {
+      contextStr = ` [${context.correlationId}]`;
+    }
+    
+    if (typeof obj === 'string') {
+      // First argument is a string message
+      console.log(`${prefix}${contextStr}`, obj, msg, ...args);
+    } else if (typeof obj === 'object' && msg && typeof msg === 'string') {
+      // First argument is an object, second is a message string
+      console.log(`${prefix}${contextStr}`, msg, { ...obj, ...context }, ...args);
+    } else {
+      // Fallback handling
+      console.log(`${prefix}${contextStr}`, msg || obj, context ? { context } : '', ...args);
+    }
+  };
+
   const logFn = (level: string) => {
     return (obj: any, msg?: string, ...args: any[]) => {
-      if (typeof obj === 'string') {
-        // First argument is a string message
-        console.log(`[${level.toUpperCase()}]`, obj, msg, ...args);
-      } else if (typeof obj === 'object' && msg && typeof msg === 'string') {
-        // First argument is an object, second is a message string
-        console.log(`[${level.toUpperCase()}]`, msg, obj, ...args);
-      } else {
-        // Fallback handling
-        console.log(`[${level.toUpperCase()}]`, msg || obj, ...args);
-      }
+      formatLog(level, obj, msg, ...args);
     };
   };
 
@@ -47,9 +62,8 @@ const createLogger = (): AppLogger => {
     fatal: logFn('fatal'),
     silent: () => {}, // No-op for silent logging
     child: (bindings?: Record<string, any>) => {
-      const childLogger = createLogger();
-      // In a real implementation, you'd merge bindings
-      return childLogger;
+      const childContext = { ...context, ...bindings };
+      return createLogger(childContext);
     },
     level: 'info'
   };
@@ -71,6 +85,9 @@ const createLogger = (): AppLogger => {
         ...metadata,
         type: 'http_request'
       }, `${method} ${url} ${statusCode} - ${duration}ms`);
+    },
+    withContext: (newContext: LogContext) => {
+      return createLogger({ ...context, ...newContext });
     }
   };
 };
