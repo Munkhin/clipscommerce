@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
-import { subscriptionService } from '@/services/subscriptionService';
+import { syncSubscriptionFromStripe, deleteSubscription } from '@/actions/subscriptionActions';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2024-12-18.acacia'
@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
 async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
   try {
     console.log('Processing subscription updated:', subscription.id);
-    await subscriptionService.syncSubscriptionFromStripe(subscription);
+    await syncSubscriptionFromStripe(subscription);
     
     // Log subscription status change
     console.log(`Subscription ${subscription.id} updated to status: ${subscription.status}`);
@@ -108,7 +108,7 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
     }
 
     // Delete subscription and revert to free plan
-    await subscriptionService.deleteSubscription(userId);
+    await deleteSubscription(userId);
     
     console.log(`Subscription ${subscription.id} deleted for user ${userId}`);
   } catch (error) {
@@ -153,7 +153,7 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
     if (invoice.subscription) {
       // Fetch the latest subscription data and sync it
       const subscription = await stripe.subscriptions.retrieve(invoice.subscription as string);
-      await subscriptionService.syncSubscriptionFromStripe(subscription);
+      await syncSubscriptionFromStripe(subscription);
       
       console.log(`Payment succeeded for subscription ${subscription.id}`);
     }
@@ -170,7 +170,7 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
     if (invoice.subscription) {
       // Fetch the latest subscription data and sync it
       const subscription = await stripe.subscriptions.retrieve(invoice.subscription as string);
-      await subscriptionService.syncSubscriptionFromStripe(subscription);
+      await syncSubscriptionFromStripe(subscription);
       
       console.log(`Payment failed for subscription ${subscription.id}`);
       
@@ -202,7 +202,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     if (session.subscription) {
       // Fetch the subscription and sync it
       const subscription = await stripe.subscriptions.retrieve(session.subscription as string);
-      await subscriptionService.syncSubscriptionFromStripe(subscription);
+      await syncSubscriptionFromStripe(subscription);
       
       console.log(`Checkout completed for subscription ${subscription.id}`);
     }

@@ -2,6 +2,7 @@ import { NextResponse, NextRequest } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { cookies } from 'next/headers';
 import { subscriptionService } from '@/services/subscriptionService';
+import { createCheckoutSession } from '@/actions/subscriptionActions';
 
 export async function GET(request: NextRequest) {
   try {
@@ -40,7 +41,7 @@ export async function GET(request: NextRequest) {
     const successUrl = `${process.env.NEXT_PUBLIC_APP_URL}/payment-success?session_id={CHECKOUT_SESSION_ID}`;
     const cancelUrl = `${process.env.NEXT_PUBLIC_APP_URL}/pricing`;
     
-    const checkoutUrl = await subscriptionService.createCheckoutSession(
+    const checkoutUrl = await createCheckoutSession(
       user.id,
       priceId,
       successUrl,
@@ -95,7 +96,7 @@ export async function POST(request: NextRequest) {
     const defaultSuccessUrl = `${process.env.NEXT_PUBLIC_APP_URL}/payment-success?session_id={CHECKOUT_SESSION_ID}`;
     const defaultCancelUrl = `${process.env.NEXT_PUBLIC_APP_URL}/pricing`;
     
-    const checkoutUrl = await subscriptionService.createCheckoutSession(
+    const checkoutUrl = await createCheckoutSession(
       user.id,
       priceId,
       successUrl || defaultSuccessUrl,
