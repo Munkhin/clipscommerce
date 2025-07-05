@@ -1,7 +1,13 @@
 /**
  * Role-Based Access Control (RBAC) System
  * Defines roles, permissions, and access control logic
+ * Now integrated with Supabase database
  */
+
+import { createClient } from '@/lib/supabase/client';
+import { createClient as createServerClient } from '@/lib/supabase/server';
+import { cookies } from 'next/headers';
+import logger from '@/utils/logger';
 
 export enum Role {
   ADMIN = 'admin',
@@ -55,16 +61,20 @@ export enum Permission {
 }
 
 export interface RoleDefinition {
+  id: string;
   name: Role;
   displayName: string;
   description: string;
   permissions: Permission[];
-  inherits?: Role[];
+  inheritsFrom?: string[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface UserRole {
+  id: string;
   userId: string;
-  role: Role;
+  roleId: string;
   teamId?: string;
   assignedBy: string;
   assignedAt: Date;
@@ -72,106 +82,38 @@ export interface UserRole {
   isActive: boolean;
 }
 
+export interface TeamInfo {
+  id: string;
+  name: string;
+  description?: string;
+  ownerId: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export class RoleManager {
   private static instance: RoleManager;
-  private roleDefinitions: Map<Role, RoleDefinition> = new Map();
-  private userRoles: Map<string, UserRole[]> = new Map();
+  private isServer: boolean;
 
-  constructor() {
-    this.initializeRoles();
+  constructor(isServer: boolean = false) {
+    this.isServer = isServer;
   }
 
-  static getInstance(): RoleManager {
+  static getInstance(isServer: boolean = false): RoleManager {
     if (!RoleManager.instance) {
-      RoleManager.instance = new RoleManager();
+      RoleManager.instance = new RoleManager(isServer);
     }
     return RoleManager.instance;
   }
 
   /**
-   * Initialize default role definitions
+   * Get Supabase client based on environment
    */
-  private initializeRoles(): void {
-    // Member role - basic access
-    this.roleDefinitions.set(Role.MEMBER, {
-      name: Role.MEMBER,
-      displayName: 'Member',
-      description: 'Basic team member with limited access',
-      permissions: [
-        Permission.USER_READ,
-        Permission.TEAM_READ,
-        Permission.CLIENT_READ,
-        Permission.CLIENT_CREATE,
-        Permission.CLIENT_UPDATE,
-        Permission.ANALYTICS_READ,
-        Permission.API_READ
-      ]
-    });
-
-    // Manager role - extended access
-    this.roleDefinitions.set(Role.MANAGER, {
-      name: Role.MANAGER,
-      displayName: 'Manager',
-      description: 'Team manager with extended permissions',
-      permissions: [
-        Permission.USER_READ,
-        Permission.USER_INVITE,
-        Permission.TEAM_READ,
-        Permission.TEAM_UPDATE,
-        Permission.TEAM_MANAGE_MEMBERS,
-        Permission.BILLING_READ,
-        Permission.CLIENT_CREATE,
-        Permission.CLIENT_READ,
-        Permission.CLIENT_UPDATE,
-        Permission.CLIENT_DELETE,
-        Permission.CLIENT_EXPORT,
-        Permission.CLIENT_BULK_OPERATIONS,
-        Permission.ANALYTICS_READ,
-        Permission.ANALYTICS_EXPORT,
-        Permission.API_READ,
-        Permission.API_WRITE
-      ],
-      inherits: [Role.MEMBER]
-    });
-
-    // Admin role - full access
-    this.roleDefinitions.set(Role.ADMIN, {
-      name: Role.ADMIN,
-      displayName: 'Administrator',
-      description: 'Full administrative access',
-      permissions: [
-        Permission.USER_CREATE,
-        Permission.USER_READ,
-        Permission.USER_UPDATE,
-        Permission.USER_DELETE,
-        Permission.USER_INVITE,
-        Permission.TEAM_CREATE,
-        Permission.TEAM_READ,
-        Permission.TEAM_UPDATE,
-        Permission.TEAM_DELETE,
-        Permission.TEAM_MANAGE_MEMBERS,
-        Permission.BILLING_READ,
-        Permission.BILLING_UPDATE,
-        Permission.BILLING_CANCEL,
-        Permission.BILLING_EXPORT,
-        Permission.CLIENT_CREATE,
-        Permission.CLIENT_READ,
-        Permission.CLIENT_UPDATE,
-        Permission.CLIENT_DELETE,
-        Permission.CLIENT_EXPORT,
-        Permission.CLIENT_BULK_OPERATIONS,
-        Permission.ANALYTICS_READ,
-        Permission.ANALYTICS_EXPORT,
-        Permission.ANALYTICS_ADVANCED,
-        Permission.SYSTEM_SETTINGS,
-        Permission.SYSTEM_AUDIT_LOGS,
-        Permission.SYSTEM_MONITORING,
-        Permission.API_READ,
-        Permission.API_WRITE,
-        Permission.API_ADMIN
-      ],
-      inherits: [Role.MANAGER]
-    });
+  private getSupabaseClient() {
+    if (this.isServer) {
+      return createServerClient(cookies());
+    }
+    return createClient();
   }
 
   /**
@@ -184,175 +126,320 @@ export class RoleManager {
     teamId?: string,
     expiresAt?: Date
   ): Promise<void> {
-    const userRole: UserRole = {
-      userId,
-      role,
-      teamId,
-      assignedBy,
-      assignedAt: new Date(),
-      expiresAt,
-      isActive: true
-    };
-
-    if (!this.userRoles.has(userId)) {
-      this.userRoles.set(userId, []);
-    }
-
-    // Remove existing role for the same team (if applicable)
-    const existingRoles = this.userRoles.get(userId)!;
-    const filteredRoles = existingRoles.filter(r => r.teamId !== teamId);
-    filteredRoles.push(userRole);
+    const supabase = this.getSupabaseClient();
     
-    this.userRoles.set(userId, filteredRoles);
-
-    // In production, this would be saved to database
-    console.log(`[RBAC] Assigned role ${role} to user ${userId} by ${assignedBy}`);
+    try {
+      // First, get the role ID
+      const { data: roleData, error: roleError } = await supabase
+        .from('roles')
+        .select('id')
+        .eq('name', role)
+        .single();
+      
+      if (roleError || !roleData) {
+        throw new Error(`Role ${role} not found`);
+      }
+      
+      // Insert or update user role
+      const { error: assignError } = await supabase
+        .from('user_roles')
+        .upsert({
+          user_id: userId,
+          role_id: roleData.id,
+          team_id: teamId,
+          assigned_by: assignedBy,
+          expires_at: expiresAt?.toISOString(),
+          is_active: true
+        }, {
+          onConflict: 'user_id,role_id,team_id'
+        });
+      
+      if (assignError) {
+        throw assignError;
+      }
+      
+      logger.info(`[RBAC] Assigned role ${role} to user ${userId} by ${assignedBy}`);
+    } catch (error) {
+      logger.error(`[RBAC] Error assigning role ${role} to user ${userId}:`, error);
+      throw error;
+    }
   }
 
   /**
    * Remove a role from a user
    */
   async removeRole(userId: string, role: Role, teamId?: string): Promise<void> {
-    const userRoles = this.userRoles.get(userId);
-    if (!userRoles) return;
-
-    const filteredRoles = userRoles.filter(r => 
-      !(r.role === role && r.teamId === teamId)
-    );
-
-    this.userRoles.set(userId, filteredRoles);
-
-    console.log(`[RBAC] Removed role ${role} from user ${userId}`);
+    const supabase = this.getSupabaseClient();
+    
+    try {
+      // Get the role ID
+      const { data: roleData, error: roleError } = await supabase
+        .from('roles')
+        .select('id')
+        .eq('name', role)
+        .single();
+      
+      if (roleError || !roleData) {
+        throw new Error(`Role ${role} not found`);
+      }
+      
+      // Remove user role
+      const { error: removeError } = await supabase
+        .from('user_roles')
+        .delete()
+        .eq('user_id', userId)
+        .eq('role_id', roleData.id)
+        .eq('team_id', teamId);
+      
+      if (removeError) {
+        throw removeError;
+      }
+      
+      logger.info(`[RBAC] Removed role ${role} from user ${userId}`);
+    } catch (error) {
+      logger.error(`[RBAC] Error removing role ${role} from user ${userId}:`, error);
+      throw error;
+    }
   }
 
   /**
    * Get user's roles
    */
-  getUserRoles(userId: string, teamId?: string): UserRole[] {
-    const userRoles = this.userRoles.get(userId) || [];
+  async getUserRoles(userId: string, teamId?: string): Promise<UserRole[]> {
+    const supabase = this.getSupabaseClient();
     
-    return userRoles.filter(role => {
-      // Check if role is active and not expired
-      if (!role.isActive) return false;
-      if (role.expiresAt && role.expiresAt < new Date()) return false;
+    try {
+      let query = supabase
+        .from('user_roles')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('is_active', true);
       
-      // Filter by team if specified
-      if (teamId !== undefined && role.teamId !== teamId) return false;
+      if (teamId !== undefined) {
+        query = query.eq('team_id', teamId);
+      }
       
-      return true;
-    });
+      const { data, error } = await query;
+      
+      if (error) {
+        throw error;
+      }
+      
+      // Filter out expired roles
+      const activeRoles = (data || []).filter(role => {
+        if (!role.expires_at) return true;
+        return new Date(role.expires_at) > new Date();
+      });
+      
+      return activeRoles.map(role => ({
+        id: role.id,
+        userId: role.user_id,
+        roleId: role.role_id,
+        teamId: role.team_id,
+        assignedBy: role.assigned_by,
+        assignedAt: new Date(role.assigned_at),
+        expiresAt: role.expires_at ? new Date(role.expires_at) : undefined,
+        isActive: role.is_active
+      }));
+    } catch (error) {
+      logger.error(`[RBAC] Error getting user roles for ${userId}:`, error);
+      return [];
+    }
   }
 
   /**
    * Get user's highest role
    */
-  getUserHighestRole(userId: string, teamId?: string): Role | null {
-    const roles = this.getUserRoles(userId, teamId);
-    if (roles.length === 0) return null;
-
-    // Role hierarchy: Admin > Manager > Member
-    const roleHierarchy = [Role.ADMIN, Role.MANAGER, Role.MEMBER];
+  async getUserHighestRole(userId: string, teamId?: string): Promise<Role | null> {
+    const supabase = this.getSupabaseClient();
     
-    for (const hierarchyRole of roleHierarchy) {
-      if (roles.some(r => r.role === hierarchyRole)) {
-        return hierarchyRole;
+    try {
+      let query = supabase
+        .from('user_roles')
+        .select('roles(name)')
+        .eq('user_id', userId)
+        .eq('is_active', true);
+      
+      if (teamId !== undefined) {
+        query = query.eq('team_id', teamId);
       }
+      
+      const { data, error } = await query;
+      
+      if (error) {
+        throw error;
+      }
+      
+      if (!data || data.length === 0) return null;
+      
+      // Filter out expired roles and get role names
+      const roleNames = data
+        .filter(userRole => {
+          if (!userRole.expires_at) return true;
+          return new Date(userRole.expires_at) > new Date();
+        })
+        .map(userRole => (userRole.roles as any)?.name)
+        .filter(Boolean);
+      
+      // Role hierarchy: Admin > Manager > Member
+      const roleHierarchy = [Role.ADMIN, Role.MANAGER, Role.MEMBER];
+      
+      for (const hierarchyRole of roleHierarchy) {
+        if (roleNames.includes(hierarchyRole)) {
+          return hierarchyRole;
+        }
+      }
+      
+      return null;
+    } catch (error) {
+      logger.error(`[RBAC] Error getting user highest role for ${userId}:`, error);
+      return null;
     }
-
-    return null;
   }
 
   /**
    * Check if user has permission
    */
-  hasPermission(userId: string, permission: Permission, teamId?: string): boolean {
-    const roles = this.getUserRoles(userId, teamId);
+  async hasPermission(userId: string, permission: Permission, teamId?: string): Promise<boolean> {
+    const supabase = this.getSupabaseClient();
     
-    for (const userRole of roles) {
-      const roleDefinition = this.roleDefinitions.get(userRole.role);
-      if (!roleDefinition) continue;
-
-      // Check direct permissions
-      if (roleDefinition.permissions.includes(permission)) {
-        return true;
+    try {
+      const { data, error } = await supabase.rpc('user_has_permission', {
+        user_uuid: userId,
+        permission_name: permission
+      });
+      
+      if (error) {
+        logger.error(`[RBAC] Error checking permission ${permission} for user ${userId}:`, error);
+        return false;
       }
-
-      // Check inherited permissions
-      if (roleDefinition.inherits) {
-        for (const inheritedRole of roleDefinition.inherits) {
-          const inheritedRoleDefinition = this.roleDefinitions.get(inheritedRole);
-          if (inheritedRoleDefinition?.permissions.includes(permission)) {
-            return true;
-          }
-        }
-      }
+      
+      return data || false;
+    } catch (error) {
+      logger.error(`[RBAC] Error checking permission ${permission} for user ${userId}:`, error);
+      return false;
     }
-
-    return false;
   }
 
   /**
    * Check if user has any of the specified permissions
    */
-  hasAnyPermission(userId: string, permissions: Permission[], teamId?: string): boolean {
-    return permissions.some(permission => this.hasPermission(userId, permission, teamId));
+  async hasAnyPermission(userId: string, permissions: Permission[], teamId?: string): Promise<boolean> {
+    for (const permission of permissions) {
+      if (await this.hasPermission(userId, permission, teamId)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
    * Check if user has all of the specified permissions
    */
-  hasAllPermissions(userId: string, permissions: Permission[], teamId?: string): boolean {
-    return permissions.every(permission => this.hasPermission(userId, permission, teamId));
+  async hasAllPermissions(userId: string, permissions: Permission[], teamId?: string): Promise<boolean> {
+    for (const permission of permissions) {
+      if (!(await this.hasPermission(userId, permission, teamId))) {
+        return false;
+      }
+    }
+    return true;
   }
 
   /**
    * Get all permissions for a user
    */
-  getUserPermissions(userId: string, teamId?: string): Permission[] {
-    const roles = this.getUserRoles(userId, teamId);
-    const permissions = new Set<Permission>();
-
-    for (const userRole of roles) {
-      const roleDefinition = this.roleDefinitions.get(userRole.role);
-      if (!roleDefinition) continue;
-
-      // Add direct permissions
-      roleDefinition.permissions.forEach(permission => permissions.add(permission));
-
-      // Add inherited permissions
-      if (roleDefinition.inherits) {
-        for (const inheritedRole of roleDefinition.inherits) {
-          const inheritedRoleDefinition = this.roleDefinitions.get(inheritedRole);
-          if (inheritedRoleDefinition) {
-            inheritedRoleDefinition.permissions.forEach(permission => permissions.add(permission));
-          }
-        }
+  async getUserPermissions(userId: string, teamId?: string): Promise<Permission[]> {
+    const supabase = this.getSupabaseClient();
+    
+    try {
+      const { data, error } = await supabase.rpc('get_user_permissions', {
+        user_uuid: userId
+      });
+      
+      if (error) {
+        logger.error(`[RBAC] Error getting permissions for user ${userId}:`, error);
+        return [];
       }
+      
+      return data || [];
+    } catch (error) {
+      logger.error(`[RBAC] Error getting permissions for user ${userId}:`, error);
+      return [];
     }
-
-    return Array.from(permissions);
   }
 
   /**
    * Get role definition
    */
-  getRoleDefinition(role: Role): RoleDefinition | undefined {
-    return this.roleDefinitions.get(role);
+  async getRoleDefinition(role: Role): Promise<RoleDefinition | null> {
+    const supabase = this.getSupabaseClient();
+    
+    try {
+      const { data, error } = await supabase
+        .from('roles')
+        .select('*')
+        .eq('name', role)
+        .single();
+      
+      if (error || !data) {
+        return null;
+      }
+      
+      return {
+        id: data.id,
+        name: data.name as Role,
+        displayName: data.display_name,
+        description: data.description,
+        permissions: data.permissions || [],
+        inheritsFrom: data.inherits_from,
+        createdAt: new Date(data.created_at),
+        updatedAt: new Date(data.updated_at)
+      };
+    } catch (error) {
+      logger.error(`[RBAC] Error getting role definition for ${role}:`, error);
+      return null;
+    }
   }
 
   /**
    * Get all role definitions
    */
-  getAllRoleDefinitions(): RoleDefinition[] {
-    return Array.from(this.roleDefinitions.values());
+  async getAllRoleDefinitions(): Promise<RoleDefinition[]> {
+    const supabase = this.getSupabaseClient();
+    
+    try {
+      const { data, error } = await supabase
+        .from('roles')
+        .select('*')
+        .order('name');
+      
+      if (error) {
+        logger.error('[RBAC] Error getting all role definitions:', error);
+        return [];
+      }
+      
+      return (data || []).map(role => ({
+        id: role.id,
+        name: role.name as Role,
+        displayName: role.display_name,
+        description: role.description,
+        permissions: role.permissions || [],
+        inheritsFrom: role.inherits_from,
+        createdAt: new Date(role.created_at),
+        updatedAt: new Date(role.updated_at)
+      }));
+    } catch (error) {
+      logger.error('[RBAC] Error getting all role definitions:', error);
+      return [];
+    }
   }
 
   /**
    * Check if user can manage another user
    */
-  canManageUser(managerId: string, targetUserId: string, teamId?: string): boolean {
-    const managerRole = this.getUserHighestRole(managerId, teamId);
-    const targetRole = this.getUserHighestRole(targetUserId, teamId);
+  async canManageUser(managerId: string, targetUserId: string, teamId?: string): Promise<boolean> {
+    const managerRole = await this.getUserHighestRole(managerId, teamId);
+    const targetRole = await this.getUserHighestRole(targetUserId, teamId);
 
     if (!managerRole || !targetRole) return false;
 
@@ -368,8 +455,8 @@ export class RoleManager {
   /**
    * Validate role assignment
    */
-  canAssignRole(assignerId: string, targetRole: Role, teamId?: string): boolean {
-    const assignerRole = this.getUserHighestRole(assignerId, teamId);
+  async canAssignRole(assignerId: string, targetRole: Role, teamId?: string): Promise<boolean> {
+    const assignerRole = await this.getUserHighestRole(assignerId, teamId);
     if (!assignerRole) return false;
 
     // Only admins can assign admin roles
@@ -389,52 +476,186 @@ export class RoleManager {
   /**
    * Get users by role
    */
-  getUsersByRole(role: Role, teamId?: string): string[] {
-    const users: string[] = [];
-
-    for (const [userId, userRoles] of this.userRoles.entries()) {
-      const hasRole = userRoles.some(r => 
-        r.role === role && 
-        r.isActive && 
-        (!r.expiresAt || r.expiresAt > new Date()) &&
-        (teamId === undefined || r.teamId === teamId)
-      );
-
-      if (hasRole) {
-        users.push(userId);
+  async getUsersByRole(role: Role, teamId?: string): Promise<string[]> {
+    const supabase = this.getSupabaseClient();
+    
+    try {
+      let query = supabase
+        .from('user_roles')
+        .select('user_id, roles!inner(name)')
+        .eq('is_active', true)
+        .eq('roles.name', role);
+      
+      if (teamId !== undefined) {
+        query = query.eq('team_id', teamId);
       }
+      
+      const { data, error } = await query;
+      
+      if (error) {
+        logger.error(`[RBAC] Error getting users by role ${role}:`, error);
+        return [];
+      }
+      
+      // Filter out expired roles
+      const activeUsers = (data || []).filter(userRole => {
+        if (!userRole.expires_at) return true;
+        return new Date(userRole.expires_at) > new Date();
+      });
+      
+      return activeUsers.map(userRole => userRole.user_id);
+    } catch (error) {
+      logger.error(`[RBAC] Error getting users by role ${role}:`, error);
+      return [];
     }
-
-    return users;
   }
 
   /**
    * Cleanup expired roles
    */
   async cleanupExpiredRoles(): Promise<void> {
-    const now = new Date();
-    let cleanedCount = 0;
-
-    for (const [userId, userRoles] of this.userRoles.entries()) {
-      const activeRoles = userRoles.filter(role => {
-        const isExpired = role.expiresAt && role.expiresAt < now;
-        if (isExpired) cleanedCount++;
-        return !isExpired;
-      });
-
-      this.userRoles.set(userId, activeRoles);
+    const supabase = this.getSupabaseClient();
+    
+    try {
+      const { data, error } = await supabase
+        .from('user_roles')
+        .update({ is_active: false })
+        .lt('expires_at', new Date().toISOString())
+        .select('count');
+      
+      if (error) {
+        logger.error('[RBAC] Error cleaning up expired roles:', error);
+        return;
+      }
+      
+      const cleanedCount = data?.length || 0;
+      logger.info(`[RBAC] Cleaned up ${cleanedCount} expired roles`);
+    } catch (error) {
+      logger.error('[RBAC] Error cleaning up expired roles:', error);
     }
+  }
 
-    console.log(`[RBAC] Cleaned up ${cleanedCount} expired roles`);
+  /**
+   * Create a new team
+   */
+  async createTeam(name: string, description: string, ownerId: string): Promise<string> {
+    const supabase = this.getSupabaseClient();
+    
+    try {
+      const { data, error } = await supabase
+        .from('teams')
+        .insert({
+          name,
+          description,
+          owner_id: ownerId
+        })
+        .select('id')
+        .single();
+      
+      if (error) {
+        throw error;
+      }
+      
+      logger.info(`[RBAC] Created team ${name} with ID ${data.id}`);
+      return data.id;
+    } catch (error) {
+      logger.error(`[RBAC] Error creating team ${name}:`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get team information
+   */
+  async getTeam(teamId: string): Promise<TeamInfo | null> {
+    const supabase = this.getSupabaseClient();
+    
+    try {
+      const { data, error } = await supabase
+        .from('teams')
+        .select('*')
+        .eq('id', teamId)
+        .single();
+      
+      if (error || !data) {
+        return null;
+      }
+      
+      return {
+        id: data.id,
+        name: data.name,
+        description: data.description,
+        ownerId: data.owner_id,
+        createdAt: new Date(data.created_at),
+        updatedAt: new Date(data.updated_at)
+      };
+    } catch (error) {
+      logger.error(`[RBAC] Error getting team ${teamId}:`, error);
+      return null;
+    }
+  }
+
+  /**
+   * Get user's teams
+   */
+  async getUserTeams(userId: string): Promise<TeamInfo[]> {
+    const supabase = this.getSupabaseClient();
+    
+    try {
+      const { data, error } = await supabase
+        .from('teams')
+        .select('*')
+        .or(`owner_id.eq.${userId},id.in.(${await this.getUserTeamIds(userId)})`);
+      
+      if (error) {
+        logger.error(`[RBAC] Error getting teams for user ${userId}:`, error);
+        return [];
+      }
+      
+      return (data || []).map(team => ({
+        id: team.id,
+        name: team.name,
+        description: team.description,
+        ownerId: team.owner_id,
+        createdAt: new Date(team.created_at),
+        updatedAt: new Date(team.updated_at)
+      }));
+    } catch (error) {
+      logger.error(`[RBAC] Error getting teams for user ${userId}:`, error);
+      return [];
+    }
+  }
+
+  /**
+   * Get team IDs for a user
+   */
+  private async getUserTeamIds(userId: string): Promise<string> {
+    const supabase = this.getSupabaseClient();
+    
+    try {
+      const { data } = await supabase
+        .from('user_roles')
+        .select('team_id')
+        .eq('user_id', userId)
+        .eq('is_active', true);
+      
+      return (data || [])
+        .map(role => role.team_id)
+        .filter(Boolean)
+        .join(',');
+    } catch (error) {
+      return '';
+    }
   }
 }
 
-// Export singleton instance
+// Export singleton instances
 export const roleManager = RoleManager.getInstance();
+export const serverRoleManager = RoleManager.getInstance(true);
 
 // Middleware for permission checking
 export function requirePermission(permission: Permission) {
-  return (req: any, res: any, next: any) => {
+  return async (req: any, res: any, next: any) => {
     const userId = req.user?.id;
     const teamId = req.params?.teamId || req.body?.teamId;
 
@@ -442,7 +663,8 @@ export function requirePermission(permission: Permission) {
       return res.status(401).json({ error: 'Authentication required' });
     }
 
-    if (!roleManager.hasPermission(userId, permission, teamId)) {
+    const hasPermission = await serverRoleManager.hasPermission(userId, permission, teamId);
+    if (!hasPermission) {
       return res.status(403).json({ 
         error: 'Insufficient permissions',
         required: permission
@@ -455,7 +677,7 @@ export function requirePermission(permission: Permission) {
 
 // Middleware for role checking
 export function requireRole(role: Role) {
-  return (req: any, res: any, next: any) => {
+  return async (req: any, res: any, next: any) => {
     const userId = req.user?.id;
     const teamId = req.params?.teamId || req.body?.teamId;
 
@@ -463,8 +685,8 @@ export function requireRole(role: Role) {
       return res.status(401).json({ error: 'Authentication required' });
     }
 
-    const userRoles = roleManager.getUserRoles(userId, teamId);
-    const hasRole = userRoles.some(r => r.role === role);
+    const userRoles = await serverRoleManager.getUserRoles(userId, teamId);
+    const hasRole = userRoles.some(r => r.roleId === role);
 
     if (!hasRole) {
       return res.status(403).json({ 
@@ -475,4 +697,14 @@ export function requireRole(role: Role) {
 
     next();
   };
+}
+
+// Helper function to check permissions in React components
+export async function checkUserPermission(userId: string, permission: Permission, teamId?: string): Promise<boolean> {
+  return roleManager.hasPermission(userId, permission, teamId);
+}
+
+// Helper function to get user role in React components
+export async function getUserRole(userId: string, teamId?: string): Promise<Role | null> {
+  return roleManager.getUserHighestRole(userId, teamId);
 } 

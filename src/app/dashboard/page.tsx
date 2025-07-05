@@ -153,13 +153,32 @@ export default function DashboardPage() {
         const start = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
         const end = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString();
         
-        const response = await fetch(`/api/analytics/reports?userId=${user.id}&platform=tiktok&startDate=${start}&endDate=${end}`);
+        const response = await fetch(`/api/analytics/reports?userId=${user.id}&platform=tiktok&startDate=${start}&endDate=${end}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
         const result = await response.json();
         
-        if (result.success) {
+        if (result.success && result.data) {
           setAnalytics(result.data);
+          
+          // Update realtime data with analytics data if available
+          if (result.data?.summary) {
+            const summary = result.data.summary;
+            setRealtimeData(prev => ({
+              ...prev,
+              orders: summary.totalPosts || prev.orders,
+              ordersGrowth: Math.min(summary.avgEngagementRate || prev.ordersGrowth, 100),
+              visitors: summary.totalEngagement || prev.visitors,
+              visitorsGrowth: Math.min(summary.followersGrowth || prev.visitorsGrowth, 100),
+            }));
+          }
         } else {
           console.error('Analytics API error:', result.error);
+          // Set empty analytics to prevent infinite loading
+          setAnalytics({ summary: null, contentPerformance: [], timeSeries: [] });
         }
       } catch (err: unknown) {
         console.error('Analytics error:', err);
@@ -253,8 +272,16 @@ export default function DashboardPage() {
     },
   ];
 
-  // Mock data for recent activity (replace with real data from services)
-  const recentActivity = [
+  // Generate recent activity from analytics data
+  const recentActivity = analytics?.contentPerformance?.slice(0, 4).map((content: any, index: number) => ({
+    id: content.id || `activity-${index}`,
+    icon: content.metrics?.engagementRate > 5 ? TrendingUp : content.platform === 'tiktok' ? Video : Upload,
+    title: content.metrics?.engagementRate > 5 ? 'High Engagement Content' : 'Content Published',
+    timestamp: content.publishedAt ? new Date(content.publishedAt).toLocaleDateString() : `${index + 1} days ago`,
+    description: content.content ? `"${content.content.substring(0, 50)}..." on ${content.platform}` : 'Content activity',
+  })) || (
+    // Only use fallback data if no analytics data is available
+    !analytics ? [
     {
       id: '1',
       icon: DollarSign,
@@ -283,28 +310,43 @@ export default function DashboardPage() {
       timestamp: '3 days ago',
       description: '"Fall Collection" video ready for review.',
     },
-  ];
+  ] : []
+  );
 
-  // Mock data for performance trends chart
-  const salesData = [
-    { name: 'Jan', sales: 4000, revenue: 2400 },
-    { name: 'Feb', sales: 3000, revenue: 1398 },
-    { name: 'Mar', sales: 2000, revenue: 9800 },
-    { name: 'Apr', sales: 2780, revenue: 3908 },
-    { name: 'May', sales: 1890, revenue: 4800 },
-    { name: 'Jun', sales: 2390, revenue: 3800 },
-    { name: 'Jul', sales: 3490, revenue: 4300 },
-  ];
+  // Transform analytics data for charts
+  const salesData = analytics?.timeSeries?.map((item: any, index: number) => ({
+    name: item.date ? new Date(item.date).toLocaleDateString('en-US', { month: 'short' }) : `Day ${index + 1}`,
+    sales: item.metrics?.reach || 0,
+    revenue: item.metrics?.impressions || 0,
+  })) || (
+    // Only use fallback data if no analytics data is available
+    !analytics ? [
+      { name: 'Jan', sales: 4000, revenue: 2400 },
+      { name: 'Feb', sales: 3000, revenue: 1398 },
+      { name: 'Mar', sales: 2000, revenue: 9800 },
+      { name: 'Apr', sales: 2780, revenue: 3908 },
+      { name: 'May', sales: 1890, revenue: 4800 },
+      { name: 'Jun', sales: 2390, revenue: 3800 },
+      { name: 'Jul', sales: 3490, revenue: 4300 },
+    ] : []
+  );
 
-  const engagementData = [
-    { name: 'Mon', views: 2400, likes: 1200 },
-    { name: 'Tue', views: 1398, likes: 800 },
-    { name: 'Wed', views: 9800, likes: 5000 },
-    { name: 'Thu', views: 3908, likes: 2000 },
-    { name: 'Fri', views: 4800, likes: 2500 },
-    { name: 'Sat', views: 3800, likes: 1800 },
-    { name: 'Sun', views: 4300, likes: 2100 },
-  ];
+  const engagementData = analytics?.timeSeries?.slice(-7).map((item: any, index: number) => ({
+    name: item.date ? new Date(item.date).toLocaleDateString('en-US', { weekday: 'short' }) : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'][index],
+    views: item.metrics?.impressions || 0,
+    likes: item.metrics?.likes || 0,
+  })) || (
+    // Only use fallback data if no analytics data is available
+    !analytics ? [
+      { name: 'Mon', views: 2400, likes: 1200 },
+      { name: 'Tue', views: 1398, likes: 800 },
+      { name: 'Wed', views: 9800, likes: 5000 },
+      { name: 'Thu', views: 3908, likes: 2000 },
+      { name: 'Fri', views: 4800, likes: 2500 },
+      { name: 'Sat', views: 3800, likes: 1800 },
+      { name: 'Sun', views: 4300, likes: 2100 },
+    ] : []
+  );
 
   return (
     <div className="min-h-screen">

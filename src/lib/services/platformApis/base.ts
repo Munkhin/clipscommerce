@@ -29,6 +29,12 @@ export abstract class PlatformApiClient {
   abstract getPostsInsights(postIds: string[]): Promise<Record<string, any>>;
   abstract getAccountMetrics(): Promise<any>;
   
+  // Enhanced Analytics for ClipsCommerce
+  abstract getAudienceDemographics(accessToken: string): Promise<any>;
+  abstract getTopLocations(accessToken: string): Promise<Array<{ location: string; percentage: number }>>;
+  abstract getTopLanguages(accessToken: string): Promise<Array<{ language: string; percentage: number }>>;
+  abstract getTrendingAudio(accessToken: string): Promise<Array<{ id: string; title: string; author: string; postCount: number; growth: number }>>;
+  
   // Comments & Engagement
   abstract getComments(postId: string): Promise<any[]>;
   abstract replyToComment(commentId: string, message: string): Promise<boolean>;

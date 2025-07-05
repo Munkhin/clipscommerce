@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { cookies } from 'next/headers';
+import { VideoOptimizationAnalysisService } from '@/app/workflows/video_optimization/VideoOptimizationAnalysisService';
+import { PlatformEnum } from '@/types/platform';
+import { TimeRange } from '@/app/workflows/data_analysis/types/analysis_types';
 
 interface VideoProcessingRequest {
   videoId: string;
@@ -255,25 +258,32 @@ async function initiateVideoProcessing(params: {
   try {
     const { videoId, userId, processingId, videoUrl, options } = params;
 
-    // In a real implementation, this would:
-    // 1. Add job to processing queue (Redis, BullMQ, etc.)
-    // 2. Trigger background workers
-    // 3. Set up webhooks for status updates
-    // 4. Initialize processing pipeline
+    // Initialize the VideoOptimizationAnalysisService
+    const openAIApiKey = process.env.OPENAI_API_KEY;
+    if (!openAIApiKey) {
+      throw new Error('OpenAI API key is not configured');
+    }
 
-    // For now, we'll simulate the process initiation
+    const analysisService = new VideoOptimizationAnalysisService(openAIApiKey);
+
+    // Determine platform based on video metadata or default
+    const platform = PlatformEnum.TIKTOK; // Default to TikTok for now
+    const timeRange: TimeRange = '1-week'; // Default time range
+
     console.log(`Processing initiated for video ${videoId} with ID ${processingId}`);
 
-    // Simulate processing stages based on options
-    const stages: string[] = [];
-    if (!options?.skipAudioAnalysis) stages.push('audio_analysis');
-    stages.push('content_analysis');
-    if (!options?.skipHashtagGeneration) stages.push('hashtag_generation');
-    if (!options?.skipEngagementPrediction) stages.push('engagement_prediction');
-    stages.push('optimization');
+    // Start background processing with stages
+    processVideoInBackground({
+      videoId,
+      userId,
+      processingId,
+      videoUrl,
+      options,
+      analysisService,
+      platform,
+      timeRange
+    });
 
-    // In production, this would trigger actual processing
-    // For testing, we'll just return success
     return { success: true };
 
   } catch (error) {
@@ -283,6 +293,174 @@ async function initiateVideoProcessing(params: {
       error: error instanceof Error ? error.message : 'Processing initiation failed' 
     };
   }
+}
+
+// Background video processing function
+async function processVideoInBackground(params: {
+  videoId: string;
+  userId: string;
+  processingId: string;
+  videoUrl: string;
+  options: VideoProcessingRequest['options'];
+  analysisService: VideoOptimizationAnalysisService;
+  platform: PlatformEnum;
+  timeRange: TimeRange;
+}): Promise<void> {
+  const { videoId, userId, processingId, videoUrl, options, analysisService, platform, timeRange } = params;
+  const supabase = createClient(cookies());
+
+  try {
+    // Stage 1: Initialize processing
+    await updateProcessingStatus(supabase, videoId, processingId, 'initialization', 'processing', 5, 'Initializing video processing...');
+    
+    // Stage 2: Video analysis
+    await updateProcessingStatus(supabase, videoId, processingId, 'analysis', 'processing', 20, 'Analyzing video content...');
+    
+    const analysisResult = await analysisService.getVideoOptimizationInsights({
+      userId,
+      platform,
+      timeRange,
+      correlationId: processingId,
+      mode: options?.priority === 'high' ? 'thorough' : 'fast'
+    });
+
+    if (!analysisResult.success) {
+      await updateProcessingStatus(supabase, videoId, processingId, 'analysis', 'failed', 20, 'Analysis failed: ' + (analysisResult.error?.message || 'Unknown error'));
+      return;
+    }
+
+    // Stage 3: Content optimization
+    await updateProcessingStatus(supabase, videoId, processingId, 'content_optimization', 'processing', 50, 'Optimizing content recommendations...');
+    
+    // Generate optimized content if we have analysis data
+    let optimizedContent = null;
+    if (analysisResult.data) {
+      const userPreferences = {
+        userId,
+        platform,
+        correlationId: processingId,
+        targetAudience: 'general',
+        contentStyle: 'engaging'
+      };
+
+      const contentResult = await analysisService.generateOptimizedContent(
+        analysisResult.data,
+        userPreferences
+      );
+
+      if (contentResult.success) {
+        optimizedContent = contentResult.data;
+      }
+    }
+
+    // Stage 4: Audio analysis (if not skipped)
+    if (!options?.skipAudioAnalysis) {
+      await updateProcessingStatus(supabase, videoId, processingId, 'audio_analysis', 'processing', 70, 'Analyzing audio content...');
+      await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate processing time
+    }
+
+    // Stage 5: Hashtag generation (if not skipped)
+    if (!options?.skipHashtagGeneration) {
+      await updateProcessingStatus(supabase, videoId, processingId, 'hashtag_generation', 'processing', 85, 'Generating hashtag recommendations...');
+      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate processing time
+    }
+
+    // Stage 6: Engagement prediction (if not skipped)
+    if (!options?.skipEngagementPrediction) {
+      await updateProcessingStatus(supabase, videoId, processingId, 'engagement_prediction', 'processing', 95, 'Predicting engagement metrics...');
+      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate processing time
+    }
+
+    // Stage 7: Finalization
+    await updateProcessingStatus(supabase, videoId, processingId, 'finalization', 'processing', 100, 'Finalizing results...');
+
+    // Store final results
+    const finalResults = {
+      analysisData: analysisResult.data,
+      optimizedContent,
+      processingOptions: options,
+      completedAt: new Date().toISOString()
+    };
+
+    await supabase
+      .from('video_processing_results')
+      .insert({
+        video_id: videoId,
+        processing_id: processingId,
+        stage: 'completed',
+        status: 'completed',
+        progress: 100,
+        results: finalResults
+      });
+
+    // Update main video record
+    await supabase
+      .from('user_videos')
+      .update({
+        status: 'optimized',
+        processing_stage: null,
+        processed_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', videoId);
+
+    console.log(`Video processing completed for ${videoId}`);
+
+  } catch (error) {
+    console.error('Error during video processing:', error);
+    
+    await updateProcessingStatus(
+      supabase, 
+      videoId, 
+      processingId, 
+      'error', 
+      'failed', 
+      0, 
+      `Processing failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
+
+    await supabase
+      .from('user_videos')
+      .update({
+        status: 'error',
+        error_message: error instanceof Error ? error.message : 'Processing failed',
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', videoId);
+  }
+}
+
+// Helper function to update processing status
+async function updateProcessingStatus(
+  supabase: any,
+  videoId: string,
+  processingId: string,
+  stage: string,
+  status: string,
+  progress: number,
+  message: string
+): Promise<void> {
+  await supabase
+    .from('video_processing_results')
+    .insert({
+      video_id: videoId,
+      processing_id: processingId,
+      stage,
+      status,
+      progress,
+      error_message: status === 'failed' ? message : null,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    });
+
+  // Also update the main video record's processing stage
+  await supabase
+    .from('user_videos')
+    .update({
+      processing_stage: stage,
+      updated_at: new Date().toISOString()
+    })
+    .eq('id', videoId);
 }
 
 // Helper function to calculate estimated processing time

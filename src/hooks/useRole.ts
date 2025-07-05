@@ -1,43 +1,58 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/providers/AuthProvider';
-import { createClient } from '@/lib/supabase/client';
+import { clientRoleManager, Role, Permission } from '@/lib/rbac/clientRoleManager';
 
 export function useRole() {
   const { user } = useAuth();
-  const [role, setRole] = useState<string | null>(null);
+  const [role, setRole] = useState<Role | null>(null);
+  const [permissions, setPermissions] = useState<Permission[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchRole() {
       if (!user) {
+        setLoading(false);
         return;
       }
 
-      const supabase = createClient();
-      const { data, error } = await supabase
-        .from('users')
-        .select('role_id')
-        .eq('id', user.id)
-        .single();
-
-      if (error) {
-        console.error('Error fetching user role:', error);
-      } else {
-        const { data: roleData, error: roleError } = await supabase
-          .from('roles')
-          .select('name')
-          .eq('id', data.role_id)
-          .single();
+      try {
+        const userRole = await clientRoleManager.getUserHighestRole(user.id);
+        const userPermissions = await clientRoleManager.getUserPermissions(user.id);
         
-        if (roleError) {
-          console.error('Error fetching role name:', roleError);
-        } else {
-          setRole(roleData.name);
-        }
+        setRole(userRole);
+        setPermissions(userPermissions);
+      } catch (error) {
+        console.error('Error fetching user role:', error);
+      } finally {
+        setLoading(false);
       }
     }
 
     fetchRole();
   }, [user]);
 
-  return role;
+  const hasPermission = async (permission: Permission): Promise<boolean> => {
+    if (!user) return false;
+    return clientRoleManager.hasPermission(user.id, permission);
+  };
+
+  const hasRole = (targetRole: Role): boolean => {
+    return role === targetRole;
+  };
+
+  const hasAnyRole = (targetRoles: Role[]): boolean => {
+    return role ? targetRoles.includes(role) : false;
+  };
+
+  return {
+    role,
+    permissions,
+    loading,
+    hasPermission,
+    hasRole,
+    hasAnyRole,
+    isAdmin: role === Role.ADMIN,
+    isManager: role === Role.MANAGER,
+    isMember: role === Role.MEMBER
+  };
 }

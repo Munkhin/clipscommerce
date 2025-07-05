@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { cookies } from 'next/headers';
 import { z } from 'zod';
+import { RetryService } from '../../workflows/autoposting/RetryService';
+import { MonitoringService } from '../../workflows/autoposting/Monitoring';
 
 // Validation schema for scheduling posts
 const schedulePostSchema = z.object({
@@ -10,6 +12,9 @@ const schedulePostSchema = z.object({
   media_urls: z.array(z.string().url()).min(1, 'At least one media URL is required'),
   post_time: z.string().datetime('Invalid post time format'),
   hashtags: z.array(z.string()).optional(),
+  priority: z.enum(['low', 'normal', 'high', 'urgent']).optional().default('normal'),
+  max_retries: z.number().min(0).max(10).optional().default(3),
+  retry_delay: z.number().min(10000).max(3600000).optional().default(30000), // 10 seconds to 1 hour
   additional_settings: z.object({
     privacy_level: z.enum(['PUBLIC_TO_EVERYONE', 'MUTUAL_FOLLOW_FRIENDS', 'FOLLOWER_OF_CREATOR', 'SELF_ONLY']).optional(),
     allow_comments: z.boolean().optional(),
@@ -24,7 +29,10 @@ const updatePostSchema = z.object({
   content: z.string().optional(),
   media_urls: z.array(z.string().url()).optional(),
   post_time: z.string().datetime().optional(),
-  status: z.enum(['scheduled', 'posted', 'failed', 'cancelled']).optional(),
+  status: z.enum(['scheduled', 'processing', 'posted', 'failed', 'cancelled', 'retrying']).optional(),
+  priority: z.enum(['low', 'normal', 'high', 'urgent']).optional(),
+  max_retries: z.number().min(0).max(10).optional(),
+  retry_delay: z.number().min(10000).max(3600000).optional(),
 });
 
 // POST - Schedule a new post
@@ -97,7 +105,7 @@ export async function POST(request: NextRequest) {
       validatedData.platform
     );
 
-    // Create scheduled post
+    // Create scheduled post with enhanced metadata
     const { data: scheduledPost, error: insertError } = await supabase
       .from('autopost_schedule')
       .insert({
@@ -107,11 +115,20 @@ export async function POST(request: NextRequest) {
         media_urls: validatedData.media_urls,
         post_time: validatedData.post_time,
         status: 'scheduled',
+        retry_count: 0,
+        max_retries: validatedData.max_retries || 3,
+        retry_delay: validatedData.retry_delay || 30000,
+        priority: validatedData.priority || 'normal',
+        hashtags: validatedData.hashtags,
+        additional_settings: validatedData.additional_settings || {},
         metadata: {
           original_content: validatedData.content,
           hashtags: validatedData.hashtags,
           additional_settings: validatedData.additional_settings,
           media_validation: mediaValidation,
+          scheduled_at: new Date().toISOString(),
+          user_agent: request.headers.get('user-agent'),
+          ip_address: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip'),
         },
       })
       .select()
@@ -224,81 +241,38 @@ export async function GET(request: NextRequest) {
 
 // Helper functions
 async function checkPostingLimits(userId: string, platform: string) {
-  const supabase = await createClient(cookies());
+  const { subscriptionService } = await import('@/services/subscriptionService');
 
   try {
-    // Get user's subscription/plan limits
-    // This would integrate with your subscription system
-    const defaultLimits = {
-      daily_posts: 10,
-      weekly_posts: 50,
-      monthly_posts: 200,
-    };
-
-    // Check recent posting activity
-    const now = new Date();
-    const dayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-    const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-    const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-
-    const [dailyCount, weeklyCount, monthlyCount] = await Promise.all([
-      supabase
-        .from('autopost_schedule')
-        .select('id', { count: 'exact' })
-        .eq('user_id', userId)
-        .eq('platform', platform)
-        .gte('created_at', dayAgo.toISOString()),
-      
-      supabase
-        .from('autopost_schedule')
-        .select('id', { count: 'exact' })
-        .eq('user_id', userId)
-        .eq('platform', platform)
-        .gte('created_at', weekAgo.toISOString()),
-      
-      supabase
-        .from('autopost_schedule')
-        .select('id', { count: 'exact' })
-        .eq('user_id', userId)
-        .eq('platform', platform)
-        .gte('created_at', monthAgo.toISOString()),
-    ]);
-
-    const dailyUsage = dailyCount.count || 0;
-    const weeklyUsage = weeklyCount.count || 0;
-    const monthlyUsage = monthlyCount.count || 0;
-
-    if (dailyUsage >= defaultLimits.daily_posts) {
+    // Check subscription limits for autoposts feature
+    const canUseResult = await subscriptionService.canUseFeature(userId, 'autoposts');
+    
+    if (!canUseResult.allowed) {
       return {
         allowed: false,
-        reason: 'Daily posting limit exceeded',
-        limits: { daily: defaultLimits.daily_posts, used: dailyUsage },
-      };
-    }
-
-    if (weeklyUsage >= defaultLimits.weekly_posts) {
-      return {
-        allowed: false,
-        reason: 'Weekly posting limit exceeded',
-        limits: { weekly: defaultLimits.weekly_posts, used: weeklyUsage },
-      };
-    }
-
-    if (monthlyUsage >= defaultLimits.monthly_posts) {
-      return {
-        allowed: false,
-        reason: 'Monthly posting limit exceeded',
-        limits: { monthly: defaultLimits.monthly_posts, used: monthlyUsage },
+        reason: canUseResult.used !== undefined && canUseResult.limit !== undefined
+          ? `Monthly autopost limit exceeded (${canUseResult.used}/${canUseResult.limit})`
+          : 'Autopost feature not available on your plan',
+        limits: {
+          monthly: { 
+            limit: canUseResult.limit || 0, 
+            used: canUseResult.used || 0 
+          }
+        },
+        resetDate: canUseResult.resetDate,
       };
     }
 
     return {
       allowed: true,
       limits: {
-        daily: { limit: defaultLimits.daily_posts, used: dailyUsage },
-        weekly: { limit: defaultLimits.weekly_posts, used: weeklyUsage },
-        monthly: { limit: defaultLimits.monthly_posts, used: monthlyUsage },
+        monthly: { 
+          limit: canUseResult.limit || -1, 
+          used: canUseResult.used || 0 
+        }
       },
+      remaining: canUseResult.remaining,
+      resetDate: canUseResult.resetDate,
     };
 
   } catch (error) {
@@ -369,7 +343,15 @@ function formatContentForPlatform(content: string, hashtags?: string[], platform
 }
 
 async function updateUsageTracking(userId: string, action: string) {
-  // This would update usage metrics for analytics
-  // Implementation depends on your analytics system
-  console.log(`Usage tracking: User ${userId} performed action: ${action}`);
+  try {
+    const { subscriptionService } = await import('@/services/subscriptionService');
+    
+    // Track autopost usage when a post is scheduled
+    if (action === 'posts_scheduled') {
+      await subscriptionService.trackUsage(userId, 'autoposts', 1);
+    }
+  } catch (error) {
+    console.error('Error updating usage tracking:', error);
+    // Don't fail the request if usage tracking fails
+  }
 }
