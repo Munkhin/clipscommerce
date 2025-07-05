@@ -15,13 +15,25 @@ const redisUrl = process.env.UPSTASH_REDIS_REST_URL;
 const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN;
 
 // Rate limiter for CSRF token generation
-const rateLimiter = process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN
-  ? new Ratelimit({
-      redis: Redis.fromEnv(),
+let rateLimiter: Ratelimit | null = null;
+
+if (redisUrl && redisToken) {
+  try {
+    rateLimiter = new Ratelimit({
+      redis: new Redis({
+        url: redisUrl,
+        token: redisToken,
+      }),
       limiter: Ratelimit.slidingWindow(10, '10 s'),
       analytics: true,
-    })
-  : null;
+    });
+  } catch (error) {
+    console.warn('[CSRF] Failed to initialize Redis rate limiter:', error);
+    rateLimiter = null;
+  }
+} else {
+  console.debug('[CSRF] Redis not configured, rate limiting disabled for CSRF token generation');
+}
 
 if (!CSRF_SECRET || CSRF_SECRET === 'your-secret-key-change-in-production') {
   if (process.env.NODE_ENV === 'test') {

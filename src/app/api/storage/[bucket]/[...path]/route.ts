@@ -61,7 +61,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       
       if (download) {
         // Redirect to the file with download headers
-        return Response.redirect(publicUrl);
+        return Response.redirect(await publicUrl);
       }
       
       return NextResponse.json({ 

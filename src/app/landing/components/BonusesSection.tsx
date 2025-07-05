@@ -1,27 +1,29 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Gift, Sparkles, UserCheck, Clock } from "lucide-react";
+import { Video, FileText, Users, Clock } from "lucide-react";
 
 export default function BonusesSection() {
   const bonuses = [
     {
-      icon: Gift,
-      title: "Hook generator",
-      description: "Craft thumb-stopping openings proven to make shoppers watch.",
+      icon: Video,
+      title: "The Viral E-commerce Playbook",
+      description: "A step-by-step video course showing how to use the platform to generate sales.",
+      value: 499,
       highlight: false
     },
     {
-      icon: Sparkles,
-      title: "Template generator",
-      description: "Grab plug-and-play templates that convert browsers into buyers.",
+      icon: FileText,
+      title: "Top 100 Viral Video Templates for 2025",
+      description: "A library of proven, fill-in-the-blank video scripts that convert.",
+      value: 299,
       highlight: false
     },
     {
-      icon: UserCheck,
-      title: "Personalized AI model",
-      subtitle: "+ content template generator",
-      description: "AI learns your brand voice so every post sounds uniquely you—at scale.",
+      icon: Users,
+      title: "Private 'Scale Secrets' Community Access",
+      description: "Exclusive access to a private group with experts and other successful sellers.",
+      value: 500,
       highlight: true,
       limitedTime: true
     }
@@ -40,10 +42,10 @@ export default function BonusesSection() {
           transition={{ duration: 0.6 }}
         >
           <h3 className="text-2xl md:text-4xl font-bold mb-3 text-[#5afcc0]">
-            Exclusive Bonuses
+            Get Lifetime Access to Bonuses Worth $1,298
           </h3>
           <p className="text-lg text-white/80 max-w-2xl mx-auto">
-            Supercharge your content strategy with these powerful tools
+            Included for free when you sign up for the Pro Power-Up Bundle today.
           </p>
         </motion.div>
         
@@ -78,18 +80,13 @@ export default function BonusesSection() {
               
               <div className="text-center">
                 <h4 className="font-bold text-xl mb-1 text-white">{bonus.title}</h4>
-                {bonus.subtitle && (
-                  <p className="font-medium text-sm text-[#5afcc0] mb-2">{bonus.subtitle}</p>
-                )}
                 <p className="text-neutral-300 text-center text-sm leading-relaxed">{bonus.description}</p>
               </div>
               
               {/* Add subtle indicator for premium content */}
-              {bonus.highlight && (
-                <div className="mt-4 bg-[#5afcc0]/10 px-3 py-1 rounded-full text-xs font-medium text-[#5afcc0]">
-                  Premium Value
-                </div>
-              )}
+              <div className="mt-4 bg-[#5afcc0]/10 px-3 py-1 rounded-full text-xs font-medium text-[#5afcc0]">
+                  ${bonus.value} Value
+              </div>
             </motion.div>
           ))}
         </div>

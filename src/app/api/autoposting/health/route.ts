@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { AutoPostingScheduler } from '@/app/workflows/autoposting/AutoPostingScheduler';
 
 interface SchedulerMetrics {
   totalProcessed: number;

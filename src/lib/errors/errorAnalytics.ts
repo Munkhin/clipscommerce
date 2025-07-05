@@ -2,7 +2,6 @@
 
 import { ErrorCategory, ErrorSeverity } from './errorReporting';
 import * as Sentry from '@sentry/nextjs';
-import { BrowserTracing } from '@sentry/nextjs';
 
 // Initialize Sentry in production
 if (typeof window !== 'undefined' && process.env.NODE_ENV === 'production') {

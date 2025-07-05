@@ -7,15 +7,15 @@ import { Star } from 'lucide-react';
 export default function TestimonialsSection() {
   const testimonials = [
     {
-      quote: "SocialSchedule helped me turn my Shopify store's social content into a consistent sales machine. The AI-optimized posts generate 73% more conversions than our manual efforts.",
+      quote: "ClipsCommerce turned our social media from a cost center into a profit machine. The AI-optimized posts generated a 73% increase in conversions, adding over $15,000 to our monthly revenue.",
       author: "Emily Parker",
       role: "Fashion Brand Owner",
-      avatar: "/avatars/emily.jpg", // You would add actual avatar images
+      avatar: "/avatars/emily.jpg",
       platform: "Instagram",
-      highlight: "73% increase in conversions"
+      highlight: "+$15,000 in monthly revenue"
     },
     {
-      quote: "The Blitz feature automatically posts when our customers are most likely to buy. Our product sales directly from social media have increased by 215% in just two months.",
+      quote: "The Blitz feature is a game-changer. It automatically posts when our customers are most likely to buy. Our product sales from social media skyrocketed by 215% in just two months.",
       author: "Alex Chen",
       role: "E-commerce Entrepreneur",
       avatar: "/avatars/alex.jpg",
@@ -23,12 +23,12 @@ export default function TestimonialsSection() {
       highlight: "215% increase in sales"
     },
     {
-      quote: "The competitor Scan feature saves me hours of research. I can see exactly what's working for top sellers in my niche and adapt those strategies for my own products.",
+      quote: "The competitor analysis feature saves me at least 10 hours of research every week. I can see what's working for top sellers in my niche and instantly adapt those strategies for my own products.",
       author: "Marcus Johnson",
       role: "Supplement Store Owner",
       avatar: "/avatars/marcus.jpg",
       platform: "YouTube Shorts",
-      highlight: "10 hours saved per week"
+      highlight: "10+ hours saved per week"
     }
   ];
 
@@ -43,15 +43,14 @@ export default function TestimonialsSection() {
           transition={{ duration: 0.6 }}
         >
           <h2 className="text-4xl md:text-6xl font-bold mb-6 text-white">
-            Real Results from <span className="text-[#5afcc0]">Real Businesses</span>
+            Don't Just Take Our Word For It
           </h2>
           <p className="text-xl text-white/80 max-w-3xl mx-auto">
-            See how businesses like yours are turning their social media into profitable revenue streams.
+            See how businesses like yours are turning social media into a primary revenue driver.
           </p>
         </motion.div>
 
         <div className="relative">
-          {/* Decorative background elements */}
           <div className="absolute inset-0 -z-10 opacity-10" aria-hidden="true">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,#3b82f6,transparent_70%)]" />
           </div>
@@ -67,20 +66,18 @@ export default function TestimonialsSection() {
                 transition={{ duration: 0.6, delay: 0.1 * (index + 1) }}
                 whileHover={{ y: -8 }}
               >
-                {/* Stars */}
                 <div className="flex mb-4">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-5 h-5 text-blitz-yellow fill-current" aria-hidden="true" />
+                    <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" aria-hidden="true" />
                   ))}
                 </div>
                 
-                {/* Quote */}
-                <p className="text-lightning-dim/90 mb-6 italic">&quot;{testimonial.quote}&quot;</p>
+                <p className="text-lightning-dim/90 mb-6 italic text-lg">&quot;{testimonial.quote}&quot;</p>
                 
-                {/* Author */}
                 <div className="flex items-center mt-6">
                   <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blitz-blue/20 to-blitz-purple/20 mr-4 relative overflow-hidden border border-storm-light/20 flex-shrink-0" aria-hidden="true">
-                    <div className="absolute inset-0 flex items-center justify-center text-blitz-blue font-bold">
+                    {/* Placeholder for avatar image */}
+                    <div className="absolute inset-0 flex items-center justify-center text-blitz-blue font-bold text-xl">
                       {testimonial.author.charAt(0)}
                     </div>
                   </div>
@@ -92,7 +89,7 @@ export default function TestimonialsSection() {
                 
                 <div className="mt-6 pt-4 border-t border-storm-light/10">
                   <div className="flex items-center font-medium mb-2">
-                    <span className="bg-gradient-to-r from-blitz-blue/10 to-blitz-purple/10 text-blitz-blue px-3 py-1.5 rounded-full text-sm font-medium">
+                    <span className="bg-gradient-to-r from-blitz-blue/10 to-blitz-purple/10 text-blitz-blue px-3 py-1.5 rounded-full text-sm font-semibold">
                       {testimonial.highlight}
                     </span>
                   </div>

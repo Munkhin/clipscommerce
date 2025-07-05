@@ -49,13 +49,13 @@ export default function FinalCTASection({ onGetStarted }: FinalCTASectionProps) 
           </motion.div>
           
           <motion.h2 
-            className="text-3xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-[#5afcc0] to-[#8D5AFF] whitespace-nowrap"
+            className="text-3xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-[#5afcc0] to-[#8D5AFF]"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            Your Competition Is Already Using AI
+            Your Competition Is Already Using AI. Don't Get Left Behind.
           </motion.h2>
           
           <motion.p 
@@ -65,7 +65,7 @@ export default function FinalCTASection({ onGetStarted }: FinalCTASectionProps) 
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            Don&apos;t get left behind. Start turning your content into cash today.
+            Start turning your content into cash today with the Pro Power-Up Bundle.
           </motion.p>
           
           <motion.div 
@@ -79,9 +79,9 @@ export default function FinalCTASection({ onGetStarted }: FinalCTASectionProps) 
             <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-8">
               <div className="text-center md:text-left">
                 <h3 className="text-2xl md:text-3xl font-bold mb-2 text-white">
-                  <span className="text-[#5afcc0]">$5,397</span> Total Value
+                  <span className="text-[#5afcc0]">$1,298</span> in Bonuses
                 </h3>
-                <p className="text-white/60">Everything you need to succeed</p>
+                <p className="text-white/60">Included for free, forever.</p>
               </div>
               
               <div className="flex items-center">
@@ -94,9 +94,9 @@ export default function FinalCTASection({ onGetStarted }: FinalCTASectionProps) 
               
               <div className="text-center md:text-right">
                 <h3 className="text-2xl md:text-3xl font-bold mb-2 text-white">
-                  Only <span className="text-[#5afcc0]">$600</span> Annually
+                  Only <span className="text-[#5afcc0]">$70</span> /month
                 </h3>
-                <p className="text-white/60">Save over 89% today</p>
+                <p className="text-white/60">For the Pro Plan</p>
               </div>
             </div>
             
@@ -128,14 +128,14 @@ export default function FinalCTASection({ onGetStarted }: FinalCTASectionProps) 
               className="flex justify-center"
             >
               <button
-                onClick={() => window.location.href = '/dashboard'}
-                className="bg-gradient-to-r from-[#8D5AFF] to-[#5afcc0] hover:from-[#8D5AFF]/90 hover:to-[#5afcc0]/90 text-white px-10 py-5 rounded-xl text-xl font-bold flex items-center shadow-lg shadow-[#8D5AFF]/20 transition-all duration-300"
+                onClick={onGetStarted}
+                className="bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white px-10 py-5 rounded-xl text-xl font-bold flex items-center shadow-lg shadow-purple-500/30 transition-all duration-300"
                 style={{
                   boxShadow: '0 10px 25px -5px rgba(141, 90, 255, 0.4)'
                 }}
-                aria-label="Get started with ClipsCommerce today"
+                aria-label="Get The Pro Power-Up Bundle"
               >
-                <span>Get Started Today</span>
+                <span>Get The Pro Power-Up Bundle</span>
                 <ArrowRight className="ml-2 h-5 w-5" />
               </button>
             </motion.div>

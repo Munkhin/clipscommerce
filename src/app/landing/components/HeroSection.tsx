@@ -61,7 +61,7 @@ export default function HeroSection({ onGetStarted, onDemo }: HeroSectionProps) 
 
           {/* CTA buttons with decorative border */}
           <motion.div 
-            className="flex flex-col sm:flex-row justify-center gap-6 mb-16 relative"
+            className="flex flex-col items-center justify-center gap-4 mb-16 relative"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
@@ -69,26 +69,21 @@ export default function HeroSection({ onGetStarted, onDemo }: HeroSectionProps) 
             <div className="absolute -inset-4 border-l border-t border-white/10 rounded-tl-lg" aria-hidden="true" />
             <Link href="/sign-up" passHref>
               <motion.button
-                className="bg-[#8D5AFF] hover:bg-[#8D5AFF]/90 text-white px-10 py-5 rounded-lg font-bold text-lg shadow-xl shadow-[#8D5AFF]/30 transform transition-all"
+                className="bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white px-10 py-5 rounded-lg font-bold text-lg shadow-xl shadow-purple-500/30 transform transition-all"
                 whileHover={{ scale: 1.02, boxShadow: '0 10px 25px -5px rgba(141, 90, 255, 0.5)' }}
                 whileTap={{ scale: 0.98 }}
-                aria-label="Get started with ClipsCommerce"
+                aria-label="Get the Pro Power-Up Bundle"
               >
                 <span className="flex items-center justify-center">
-                  Get Started
+                  Get The Pro Power-Up Bundle
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </span>
               </motion.button>
             </Link>
-            <Link href="/landing/results" passHref>
-              <motion.button
-                className="border border-storm-light/25 bg-storm-light/5 hover:bg-storm-light/15 text-[#E5E7EB] hover:text-white px-10 py-5 rounded-lg font-bold text-lg transition-all duration-300 backdrop-blur-sm"
-                whileHover={{ backgroundColor: 'rgba(255, 255, 255, 0.05)' }}
-                whileTap={{ scale: 0.98 }}
-                aria-label="See live demo of ClipsCommerce"
-              >
-                See Live Demo
-              </motion.button>
+            <Link href="#pricing" passHref>
+              <a className="text-sm text-neutral-400 hover:text-white underline transition-colors">
+                No thanks, I'll pass on the free bonuses and pay the same price later.
+              </a>
             </Link>
           </motion.div>
 

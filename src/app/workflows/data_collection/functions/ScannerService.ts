@@ -427,15 +427,15 @@ export class ScannerService {
           case 'instagram':
             this.platformClients.set(platform, new InstagramClient(defaultConfig, authTokenManager, userId));
             break;
-          // case 'youtube': // Ensure YouTubeClient is handled if used
-          //   this.platformClients.set(platform, new YouTubeClient(defaultConfig, authTokenManager, userId));
-          //   break;
-          default:
-            if (!isFeatureEnabled('YOUTUBE_AUTH') && platform === 'youtube') {
+          case 'youtube':
+            if (!isFeatureEnabled('YOUTUBE_AUTH')) {
               this.logStructured('info', `YouTube auth feature not enabled`, { platform });
               continue;
             }
-            this.logStructured('warn', `Platform client initialization not implemented in initializePlatforms for ${platform}`, { platform });
+            this.logStructured('warn', `YouTube client initialization not implemented yet`, { platform });
+            continue;
+          default:
+            this.logStructured('warn', `Unsupported platform: ${platform}`, { platform });
             continue;
         }
         this.logStructured('info', `Successfully initialized ${platform} client directly with token via initializePlatforms.`, { platform, userId });
