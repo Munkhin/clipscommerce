@@ -184,7 +184,7 @@ Marketing → GTM, Risk, Timeline
 
 > These steps replace the full JSON for brevity; reference original `launch_copy` for exact node IDs.
 
-> _"Dominate the mindshare, not just the market."_
+> _"Dominate the mindshare, not just the market."_ 
 
 # Market Domination Roadmap
 

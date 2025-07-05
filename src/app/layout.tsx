@@ -4,10 +4,15 @@ import { AuthProvider } from '@/providers/AuthProvider';
 import { SettingsProvider } from '@/providers/SettingsProvider';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { GlobalErrorBoundary } from '@/components/errors/GlobalErrorBoundary';
-import { PWAInstaller } from '@/components/PWAInstaller';
 import { AnalyticsProvider } from '@/components/analytics/AnalyticsProvider';
 import { setUser, addBreadcrumb } from '@/lib/errors/errorReporting';
 import { URL } from 'url';
+import { Analytics } from "@vercel/analytics/react"
+import { SpeedInsights } from "@vercel/speed-insights/next"
+import { StagewiseToolbar } from "@stagewise/toolbar-next";
+import { ReactPlugin } from "@stagewise-plugins/react";
+import { GeistSans } from "geist/font/sans"
+import { Toaster } from "sonner"
 
 const inter = Inter({ 
   subsets: ['latin'], 
@@ -104,10 +109,11 @@ export default function RootLayout({
               <AppLayout>
                 {children}
               </AppLayout>
-              <PWAInstaller />
             </SettingsProvider>
           </AuthProvider>
         </AnalyticsProvider>
+        <SpeedInsights />
+        <StagewiseToolbar config={{ plugins: [new ReactPlugin()] }} />
       </body>
     </html>
   );
