@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+export async function generateStaticParams() {
+  return [];
+}
+
 // GET - Get specific experiment details
 export async function GET(request: NextRequest, { params }: { params: Promise<{ experimentId: string }> }) {
   return NextResponse.json({

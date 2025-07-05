@@ -1,4 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
+
+export async function generateStaticParams() {
+  return [];
+}
 import { createClient } from '@/lib/supabase/server';
 import { cookies } from 'next/headers';
 import { z } from 'zod';

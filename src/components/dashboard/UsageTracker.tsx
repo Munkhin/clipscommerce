@@ -125,6 +125,12 @@ export default function UsageTracker() {
   };
 
   const formatNextReset = (date: Date) => {
+    // Use a stable calculation to prevent hydration mismatches
+    if (typeof window === 'undefined') {
+      // Return a placeholder during SSR
+      return '- days';
+    }
+    
     const now = new Date();
     const diff = date.getTime() - now.getTime();
     const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
@@ -206,7 +212,7 @@ export default function UsageTracker() {
                   Resets in {formatNextReset(usageStats.nextReset)}
                 </div>
                 <p className="text-xs text-neutral-500">
-                  Next billing cycle: {usageStats.nextReset.toLocaleDateString()}
+                  Next billing cycle: {typeof window !== 'undefined' ? usageStats.nextReset.toLocaleDateString() : 'Loading...'}
                 </p>
               </div>
             )}

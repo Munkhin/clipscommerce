@@ -47,6 +47,8 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
 
   // Load settings from localStorage on mount
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
     const savedSettings = localStorage.getItem('clipscommerce-settings');
     if (savedSettings) {
       try {
@@ -60,6 +62,8 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
 
   // Apply dark mode to document
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
     if (settings.darkMode) {
       document.documentElement.classList.add('dark');
     } else {
@@ -69,6 +73,8 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
 
   // Apply color theme
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
     document.documentElement.setAttribute('data-theme', settings.colorTheme);
   }, [settings.colorTheme]);
 

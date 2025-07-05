@@ -22,6 +22,9 @@ export function AnimatedCounter({
   const [isInView, setIsInView] = useState(false);
 
   useEffect(() => {
+    // Only run on client side
+    if (typeof window === 'undefined') return;
+    
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {

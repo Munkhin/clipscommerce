@@ -17,9 +17,11 @@ export default function NotFound() {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
+    // Only run on client side
+    if (typeof window === 'undefined') return;
+    
     // Extract correlation ID from response headers if available
     const fetchCorrelationId = async () => {
-      if (typeof window === 'undefined') return; // Ensure this runs only on the client
       try {
         // Try to get correlation ID from the current response headers
         const response = await fetch(window.location.href, { method: 'HEAD' });
@@ -36,7 +38,7 @@ export default function NotFound() {
 
     fetchCorrelationId();
 
-    // Report 404 error for tracking
+    // Report 404 error for tracking - only on client side
     reportError(new Error(`Page not found: ${pathname}`), {
       category: ErrorCategory.NAVIGATION,
       severity: ErrorSeverity.NORMAL,
@@ -44,8 +46,8 @@ export default function NotFound() {
       action: 'page_not_found',
       additionalContext: {
         pathname,
-        userAgent: navigator.userAgent,
-        referrer: document.referrer,
+        userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'unknown',
+        referrer: typeof document !== 'undefined' ? document.referrer : 'unknown',
       },
     });
   }, [pathname]);

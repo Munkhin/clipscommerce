@@ -3,6 +3,10 @@ import { createClient } from '@/lib/supabase/server';
 import { cookies } from 'next/headers';
 import Stripe from 'stripe';
 
+export async function generateStaticParams() {
+  return [];
+}
+
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export async function DELETE(

@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+export async function generateStaticParams() {
+  return [];
+}
+
 // POST - Record experiment result
 export async function POST(
   request: NextRequest,

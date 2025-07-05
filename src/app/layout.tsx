@@ -9,7 +9,6 @@ import { setUser, addBreadcrumb } from '@/lib/errors/errorReporting';
 import { URL } from 'url';
 import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/next"
-import { StagewiseToolbar } from "@stagewise/toolbar-next";
 import { ReactPlugin } from "@stagewise-plugins/react";
 import { GeistSans } from "geist/font/sans"
 import { Toaster } from "sonner"
@@ -72,21 +71,9 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          rel="preload"
+          rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-          as="style"
-          onLoad={(e) => {
-            const target = e.target as HTMLLinkElement;
-            target.onload = null;
-            target.rel = 'stylesheet';
-          }}
         />
-        <noscript>
-          <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-          />
-        </noscript>
         
         {/* PWA Meta Tags */}
         <link rel="manifest" href="/manifest.json" />
@@ -117,7 +104,6 @@ export default function RootLayout({
           </AuthProvider>
         </AnalyticsProvider>
         <SpeedInsights />
-        <StagewiseToolbar config={{ plugins: [new ReactPlugin()] }} />
       </body>
     </html>
   );
