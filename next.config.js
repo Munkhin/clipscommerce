@@ -7,6 +7,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  output: 'standalone',
   
   // Minimal experimental features
   experimental: {
@@ -82,46 +83,21 @@ const nextConfig = {
 
     // Optimization configurations for production builds
     if (!dev) {
-      // Optimize chunk splitting
+      // Simplified chunk splitting to avoid module resolution issues
       config.optimization.splitChunks = {
         chunks: 'all',
         cacheGroups: {
-          vendors: {
+          default: {
+            minChunks: 1,
+            priority: -20,
+            reuseExistingChunk: true,
+          },
+          vendor: {
             test: /[\\/]node_modules[\\/]/,
             name: 'vendors',
-            chunks: 'all',
-            priority: 10,
+            priority: -10,
+            reuseExistingChunk: true,
           },
-          react: {
-            test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
-            name: 'react',
-            chunks: 'all',
-            priority: 20,
-          },
-          ui: {
-            test: /[\\/]node_modules[\\/](@radix-ui|lucide-react)[\\/]/,
-            name: 'ui',
-            chunks: 'all',
-            priority: 15,
-          },
-          common: {
-            name: 'common',
-            minChunks: 2,
-            chunks: 'all',
-            priority: 5,
-          },
-        },
-      };
-
-      // Enable tree shaking and minification
-      config.optimization.usedExports = true;
-      config.optimization.sideEffects = false;
-      
-      // Persistent caching for faster rebuilds
-      config.cache = {
-        type: 'filesystem',
-        buildDependencies: {
-          config: [__filename],
         },
       };
     }

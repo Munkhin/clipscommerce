@@ -1,11 +1,2407 @@
 
 > build
-> next build
+> next build --no-lint
 
+ ⚠ Linting is disabled.
   ▲ Next.js 14.2.30
-  - Environments: .env
+  - Environments: .env.local, .env
   - Experiments (use with caution):
     · optimizeCss
     · scrollRestoration
 
    Creating an optimized production build ...
+ ✓ Compiled successfully
+   Skipping validation of types
+   Collecting page data ...
+[CSRF] Redis not configured, rate limiting disabled for CSRF token generation
+[RATE_LIMIT] Redis configuration not found. Rate limiting will be disabled in development mode.
+[CACHE] Redis cache initialized
+{"timestamp":"2025-07-05T03:30:39.100Z","level":"warn","message":"Unsupported platform: TIKTOK","context":{"service":"ScannerService","platform":"TIKTOK"}}
+   Generating static pages (0/78) ...
+Time 8.296384
+Time 1.573024
+   Generating static pages (19/78) 
+[CACHE] Set key: health_check_test with TTL: 10s
+[CACHE] Hit for key: health_check_test
+[CACHE] Deleted key: health_check_test
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/_not-found". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/auth/confirm". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/confirm". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/reset-password". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+   Generating static pages (38/78) 
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/forgot-password". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/sign-in". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/api-docs". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/coming-soon". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/sign-up". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/dashboard/connect-account". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/dashboard/connect-account/success". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/dashboard/accelerate". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/dashboard/autopost". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/dashboard/ai". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/dashboard/blitz". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/dashboard/connect". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/dashboard/cycle". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/dashboard/competitor-tactics". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/dashboard/ideator". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/dashboard". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/dashboard/profile". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/dashboard/reports". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/dashboard/subscription". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/features". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+   Generating static pages (58/78) 
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/landing/demo". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/dashboard/settings/security". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/dashboard/scan". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/dashboard/settings". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/landing/integrations". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/landing". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/landing/pricing". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/landing/resources". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/landing/results". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/landing/solutions". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/landing/terms-of-service". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/login". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/payment-success". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/landing/solutions/content-marketing". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/welcome". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/landing/team". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/landing/solutions/ecommerce". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/offline". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/pricing". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373) {
+  digest: '1939744458'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135349)
+    at listOnTimeout (node:internal/timers:588:17) {
+  digest: '3139182515'
+}
+
+Error occurred prerendering page "/". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: u.a is not a constructor
+    at x (/workspaces/clipscommerce/.next/server/3349.js:35:37613)
+    at eh (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:134660)
+    at e (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:137545)
+    at ek (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:138019)
+    at Array.toJSON (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:135629)
+    at stringify (<anonymous>)
+    at eP (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142093)
+    at eE (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:142572)
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Timeout._onTimeout (/workspaces/clipscommerce/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:150373)
+ ✓ Generating static pages (78/78)
+
+> Export encountered errors on following paths:
+	/(auth)/auth/confirm/page: /auth/confirm
+	/(auth)/confirm/page: /confirm
+	/(auth)/forgot-password/page: /forgot-password
+	/(auth)/reset-password/page: /reset-password
+	/(auth)/sign-in/page: /sign-in
+	/(auth)/sign-up/page: /sign-up
+	/_not-found/page: /_not-found
+	/api-docs/page: /api-docs
+	/coming-soon/page: /coming-soon
+	/dashboard/(onboarding)/connect-account/page: /dashboard/connect-account
+	/dashboard/(onboarding)/connect-account/success/page: /dashboard/connect-account/success
+	/dashboard/accelerate/page: /dashboard/accelerate
+	/dashboard/ai/page: /dashboard/ai
+	/dashboard/autopost/page: /dashboard/autopost
+	/dashboard/blitz/page: /dashboard/blitz
+	/dashboard/competitor-tactics/page: /dashboard/competitor-tactics
+	/dashboard/connect/page: /dashboard/connect
+	/dashboard/cycle/page: /dashboard/cycle
+	/dashboard/ideator/page: /dashboard/ideator
+	/dashboard/page: /dashboard
+	/dashboard/profile/page: /dashboard/profile
+	/dashboard/reports/page: /dashboard/reports
+	/dashboard/scan/page: /dashboard/scan
+	/dashboard/settings/page: /dashboard/settings
+	/dashboard/settings/security/page: /dashboard/settings/security
+	/dashboard/subscription/page: /dashboard/subscription
+	/features/page: /features
+	/landing/demo/page: /landing/demo
+	/landing/integrations/page: /landing/integrations
+	/landing/page: /landing
+	/landing/pricing/page: /landing/pricing
+	/landing/resources/page: /landing/resources
+	/landing/results/page: /landing/results
+	/landing/solutions/content-marketing/page: /landing/solutions/content-marketing
+	/landing/solutions/ecommerce/page: /landing/solutions/ecommerce
+	/landing/solutions/page: /landing/solutions
+	/landing/team/page: /landing/team
+	/landing/terms-of-service/page: /landing/terms-of-service
+	/login/page: /login
+	/offline/page: /offline
+	/page: /
+	/payment-success/page: /payment-success
+	/pricing/page: /pricing
+	/welcome/page: /welcome

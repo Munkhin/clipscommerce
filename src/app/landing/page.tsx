@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
@@ -34,37 +36,27 @@ export default function LandingPage() {
 
   return (
     <div className="bg-black text-white relative">
-      {/* Structured Data - Organization */}
+      {/* Structured Data - Software Application */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "Organization",
+            "@type": "SoftwareApplication",
             "name": "ClipsCommerce",
-            "url": "https://clipscommerce.com",
-            "logo": "https://clipscommerce.com/images/logo.png",
-            "description": "AI-powered short-form content creation platform for e-commerce sellers",
-            "sameAs": [
-              "https://twitter.com/clipscommerce",
-              "https://linkedin.com/company/clipscommerce"
-            ],
-            "contactPoint": {
-              "@type": "ContactPoint",
-              "telephone": "+1-555-012-3456",
-              "contactType": "Customer Service",
-              "email": "hello@clipscommerce.com"
+            "applicationCategory": "BusinessApplication",
+            "operatingSystem": "Web",
+            "description": "ClipsCommerce is an AI-powered marketing platform that helps e-commerce businesses create viral short-form video content, automate posting, and increase sales.",
+            "aggregateRating": {
+              "@type": "AggregateRating",
+              "ratingValue": "4.9",
+              "reviewCount": "124"
             },
-            "foundingDate": "2024",
-            "founders": [
-              {
-                "@type": "Person",
-                "name": "ClipsCommerce Team"
-              }
-            ],
-            "address": {
-              "@type": "PostalAddress",
-              "addressCountry": "US"
+            "offers": {
+              "@type": "Offer",
+              "price": "70.00",
+              "priceCurrency": "USD",
+              "url": "https://clipscommerce.com/landing/pricing"
             }
           })
         }}

@@ -1,3 +1,6 @@
+# Allow all crawlers to access all content
 User-agent: *
 Allow: /
-Sitemap: https://clipscommerce.com/sitemap.xml 
+
+# Sitemap location
+Sitemap: https://clipscommerce.com/sitemap.xml

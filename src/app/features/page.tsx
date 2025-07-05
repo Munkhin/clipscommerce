@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Check, Zap, BarChart3, Users, Shield, Globe, ArrowRight } from 'lucide-react';

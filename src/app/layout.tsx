@@ -24,33 +24,33 @@ const inter = Inter({
 export const metadata = {
   metadataBase: new URL('https://clipscommerce.com'),
   title: {
-    default: 'ClipsCommerce - AI-Powered Content That Sells',
+    default: 'ClipsCommerce: AI-Powered Viral Marketing for E-commerce',
     template: '%s | ClipsCommerce'
   },
-  description: 'Transform your social media content into sales with AI-powered optimization. Generate viral content, automate posting, and boost conversions with ClipsCommerce.',
-  keywords: 'AI content creation, social media automation, e-commerce marketing, viral content, TikTok marketing, Instagram marketing, content optimization',
-  authors: [{ name: 'ClipsCommerce' }],
+  description: 'Stop guessing and start selling. ClipsCommerce uses AI to generate viral video content, optimize your posting schedule, and turn your social media into a revenue machine. For e-commerce stores that want to scale.',
+  keywords: ['AI marketing', 'e-commerce SEO', 'viral video marketing', 'social media automation', 'TikTok for business', 'Instagram marketing', 'content optimization', 'e-commerce sales'],
+  authors: [{ name: 'ClipsCommerce Team' }],
   robots: 'index, follow',
   openGraph: {
-    title: 'ClipsCommerce - AI-Powered Content That Sells',
-    description: 'Transform your social media content into sales with AI-powered optimization.',
+    title: 'ClipsCommerce: AI-Powered Viral Marketing for E-commerce',
+    description: 'Stop guessing and start selling. ClipsCommerce uses AI to generate viral video content, optimize your posting schedule, and turn your social media into a revenue machine.',
     type: 'website',
     url: 'https://clipscommerce.com',
     images: [
       {
-        url: '/images/og-image.png',
+        url: '/images/ChatGPT Image Jun 1, 2025, 07_27_54 PM.png', // Make sure this image exists in /public
         width: 1200,
         height: 630,
-        alt: 'ClipsCommerce - AI-Powered Content That Sells',
+        alt: 'ClipsCommerce Dashboard showing sales growth',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'ClipsCommerce - AI-Powered Content That Sells',
-    description: 'Transform your social media content into sales with AI-powered optimization.',
-    images: ['/images/twitter-card.png'],
-    site: '@clipscommerce',
+    title: 'ClipsCommerce: AI-Powered Viral Marketing for E-commerce',
+    description: 'Stop guessing and start selling. ClipsCommerce uses AI to generate viral video content and turn social media into a revenue machine.',
+    images: ['/images/ChatGPT Image Jun 1, 2025, 07_27_54 PM.png'], // Make sure this image exists in /public
+    creator: '@ClipsCommerce',
   },
 };
 
@@ -75,7 +75,11 @@ export default function RootLayout({
           rel="preload"
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
           as="style"
-          onLoad="this.onload=null;this.rel='stylesheet'"
+          onLoad={(e) => {
+            const target = e.target as HTMLLinkElement;
+            target.onload = null;
+            target.rel = 'stylesheet';
+          }}
         />
         <noscript>
           <link

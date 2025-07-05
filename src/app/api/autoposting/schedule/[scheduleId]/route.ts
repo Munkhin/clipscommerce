@@ -266,7 +266,13 @@ async function validateMediaUrls(urls: string[]) {
   const validationResults = await Promise.all(
     urls.map(async (url) => {
       try {
-        const response = await fetch(url, { method: 'HEAD', timeout: 5000 } as RequestInit);
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
+        const response = await fetch(url, { 
+          method: 'HEAD', 
+          signal: controller.signal 
+        });
+        clearTimeout(timeoutId);
         return {
           url,
           valid: response.ok,

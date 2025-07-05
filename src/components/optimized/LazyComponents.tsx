@@ -166,23 +166,8 @@ export const LazyRechartsComponents = {
   ),
 };
 
-// Motion components (framer-motion is heavy)
-export const LazyMotionComponents = {
-  motion: withLazyLoading(
-    () => import('framer-motion').then(m => ({
-      default: m.motion
-    })),
-    <div>Loading animation...</div>,
-    'LazyMotion'
-  ),
-  AnimatePresence: withLazyLoading(
-    () => import('framer-motion').then(m => ({
-      default: m.AnimatePresence
-    })),
-    <div>Loading animation...</div>,
-    'LazyAnimatePresence'
-  ),
-};
+// Motion components removed due to constructor issues during SSR
+// Use direct imports of framer-motion in client components instead
 
 // Export the wrapper function for custom components
 export { withLazyLoading }; 
