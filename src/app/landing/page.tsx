@@ -78,8 +78,6 @@ export default function LandingPage() {
           <HeroSection onGetStarted={handleGetStarted} onDemo={handleDemo} />
         </motion.div>
         
-        <UrgencyOfferSection />
-
         {/* Section Divider */}
         <div className="w-full max-w-7xl mx-auto px-6 sm:px-12 lg:px-16">
           <div className="h-px bg-gradient-to-r from-transparent via-storm-light/15 to-transparent my-12 md:my-16"></div>
@@ -91,7 +89,6 @@ export default function LandingPage() {
         <BonusesSection />
         <EnterpriseSection />
         <DifferentiatorSection />
-        <FinalCTASection onGetStarted={handleGetStarted} />
       </main>
       
       <motion.footer

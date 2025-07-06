@@ -6,7 +6,6 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { GlobalErrorBoundary } from '@/components/errors/GlobalErrorBoundary';
 import { AnalyticsProvider } from '@/components/analytics/AnalyticsProvider';
 import { setUser, addBreadcrumb } from '@/lib/errors/errorReporting';
-import { URL } from 'url';
 import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { ReactPlugin } from "@stagewise-plugins/react";

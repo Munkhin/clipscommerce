@@ -9,7 +9,7 @@ interface FeatureItemProps {
     title: string;
     subtitle: string;
     description: string;
-    highlights: string[];
+    highlights: { text: string; icon: React.ElementType }[];
     valueIndicator: string;
   };
   isReversed: boolean;
@@ -38,11 +38,11 @@ export default function FeatureItem({ feature, isReversed, index }: FeatureItemP
           {feature.description}
         </p>
         
-        <ul className="space-y-2 mb-6">
+        <ul className="space-y-3 mb-6">
           {feature.highlights.map((highlight, i) => (
             <li key={i} className="flex items-start">
-              <Check className="h-5 w-5 text-[#10b981] mr-2 flex-shrink-0 mt-0.5" />
-              <span className="text-white">{highlight}</span>
+              <highlight.icon className="h-5 w-5 text-[#10b981] mr-3 flex-shrink-0 mt-1" />
+              <span className="text-white">{highlight.text}</span>
             </li>
           ))}
         </ul>

@@ -104,12 +104,16 @@ const navItems: NavItem[] = [
               <Star className="h-4 w-4 mr-1.5 text-yellow-300 fill-yellow-300" />
               Limited time pro plan offer
             </span>
-            <Link 
-              href="/landing/pricing" 
-              className="font-bold underline hover:text-white/90 transition-colors"
-              onClick={() => setMobileMenuOpen(false)}
+            <Link
+              href="/landing/pricing"
+              legacyBehavior
             >
-              upgrade now
+              <a
+                className="font-bold underline hover:text-white/90 transition-colors"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                upgrade now
+              </a>
             </Link>
             <button
               onClick={dismissBanner}
@@ -171,9 +175,11 @@ const navItems: NavItem[] = [
                 ) : (
                   <Link 
                     href={item.href || '#'}
-                    className="text-sm text-gray-200 hover:text-white transition-colors duration-300"
+                    legacyBehavior
                   >
-                    {item.label}
+                    <a className="text-sm text-gray-200 hover:text-white transition-colors duration-300">
+                      {item.label}
+                    </a>
                   </Link>
                 )}
                 
@@ -185,11 +191,14 @@ const navItems: NavItem[] = [
                         <Link
                           key={dropdownItem.label}
                           href={dropdownItem.href}
-                          className="block px-4 py-2 text-sm text-gray-200 hover:bg-gray-800 hover:text-white"
-                          onClick={() => setOpenDropdown(null)}
-                          scroll={true}
+                          legacyBehavior
                         >
-                          {dropdownItem.label}
+                          <a
+                            className="block px-4 py-2 text-sm text-gray-200 hover:bg-gray-800 hover:text-white"
+                            onClick={() => setOpenDropdown(null)}
+                          >
+                            {dropdownItem.label}
+                          </a>
                         </Link>
                       ))}
                     </div>
@@ -203,15 +212,19 @@ const navItems: NavItem[] = [
           <div className="hidden md:flex items-center space-x-4">
             <Link 
               href="/sign-in"
-              className="text-sm text-gray-200 hover:text-white transition-colors duration-300"
+              legacyBehavior
             >
-              Sign In
+              <a className="text-sm text-gray-200 hover:text-white transition-colors duration-300">
+                Sign In
+              </a>
             </Link>
             <Link
               href="/sign-up"
-              className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20 inline-block"
+              legacyBehavior
             >
-              Get Started
+              <a className="bg-white text-black px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-200 transition-colors duration-300">
+                Get Started
+              </a>
             </Link>
           </div>
 

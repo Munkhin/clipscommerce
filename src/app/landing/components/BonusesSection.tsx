@@ -34,20 +34,26 @@ export default function BonusesSection() {
       <div className="absolute inset-0 bg-gradient-to-b from-black via-black/90 to-black opacity-90"></div>
       
       <div className="max-w-5xl mx-auto px-6 sm:px-12 lg:px-16 relative z-10">
-        <motion.div
-          className="text-center mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <h3 className="text-2xl md:text-4xl font-bold mb-3 text-[#5afcc0]">
-            Get Lifetime Access to Bonuses Worth $1,298
-          </h3>
-          <p className="text-lg text-white/80 max-w-2xl mx-auto">
-            Included for free when you sign up for the Pro Power-Up Bundle today.
-          </p>
-        </motion.div>
+        <div className="text-center">
+          <motion.h3 
+            className="text-3xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white to-neutral-400"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            Get Lifetime Access to Bonuses Worth <span className="text-[#5afcc0]">$1,298</span>
+          </motion.h3>
+          <motion.p 
+            className="text-lg text-white/80 mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
+            Included for free when you sign up for the Pro Plan today.
+          </motion.p>
+        </div>
         
         <div className="grid md:grid-cols-3 gap-8">
           {bonuses.map((bonus, i) => (

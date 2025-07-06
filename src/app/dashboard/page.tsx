@@ -2,7 +2,7 @@
 
 export const dynamic = 'force-dynamic';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ElementType } from 'react';
 import { useAuth } from '@/providers/AuthProvider';
 import GlassCard from '@/components/ui/GlassCard';
 import { AnimatedButton } from '@/components/ui/AnimatedButton';
@@ -58,6 +58,14 @@ import { LoginPromptPopup } from '@/components/dashboard/LoginPromptPopup';
 import { SubscriptionPromptPopup } from '@/components/dashboard/SubscriptionPromptPopup';
 import { WelcomeModal } from '@/components/dashboard/welcome-modal';
 import { AutopostScheduler } from '@/components/dashboard/autopost/AutopostScheduler';
+
+interface Activity {
+  id: string;
+  icon: ElementType;
+  title: string;
+  timestamp: string;
+  description: string;
+}
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -454,7 +462,7 @@ export default function DashboardPage() {
       <div className="bg-gray-800 rounded-xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
         <h3 className="text-[18px] font-semibold text-white mb-4">Recent Activity</h3>
         <div className="space-y-4">
-          {recentActivity.map((activity) => (
+          {recentActivity.map((activity: Activity) => (
             <div key={activity.id} className="flex items-start space-x-3">
               <activity.icon className="w-5 h-5 text-gray-400 mt-1" />
               <div>

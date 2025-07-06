@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Line, ResponsiveContainer, Tooltip } from 'recharts';
 import { LazyRechartsComponents } from '@/components/optimized/LazyComponents';
 
@@ -22,8 +22,18 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 };
 
 export function MiniTrendChart({ data, color = '#8884d8', height = 60 }: MiniTrendChartProps) {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   if (!data || data.length === 0) {
     return <div style={{ height: `${height}px` }} className="flex items-center justify-center text-xs text-muted-foreground">No trend data</div>;
+  }
+
+  if (!isClient) {
+    return <div style={{ height: `${height}px` }} className="flex items-center justify-center text-xs text-muted-foreground"></div>;
   }
 
   const { LineChart: RechartsLineChart } = LazyRechartsComponents;

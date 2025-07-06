@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Check } from 'lucide-react';
+import { Check, Zap, Clock, TrendingUp, Target, Sliders, BrainCircuit, BarChart, Lightbulb, Recycle } from 'lucide-react';
 
 // Sub-components for better maintainability
 import FeatureItem from './FeatureItem';
@@ -19,10 +19,10 @@ export default function FeaturesSection({ onGetStarted }: FeatureSectionProps) {
       subtitle: 'Content Optimization Engine',
       description: 'Our AI analyzes your content and optimizes captions, hashtags, and posting times to maximize engagement and reach your target audience effectively.',
       highlights: [
-        'Constant optimization engines that work 24/7',
-        'Real-time learning from audience reactions',
-        'Optimize using tactics from high-performing competitors',
-        'Conveys value through strategic captions'
+        { text: 'Constant optimization engines that work 24/7', icon: Clock },
+        { text: 'Real-time learning from audience reactions', icon: Zap },
+        { text: 'Optimize using tactics from high-performing competitors', icon: Target },
+        { text: 'Conveys value through strategic captions', icon: Sliders }
       ],
       valueIndicator: 'Captures & Audits'
     },
@@ -32,9 +32,9 @@ export default function FeaturesSection({ onGetStarted }: FeatureSectionProps) {
       subtitle: 'Precise Automated Posting',
       description: 'Push your content to the most targeted audience and see results in a flash. Our sophisticated algorithm identifies and reaches the perfect audience in your niche.',
       highlights: [
-        'Precise, automated posting schedules',
-        'Content optimization for maximum engagement',
-        'Sophisticated algorithm to target audience in your niche'
+        { text: 'Precise, automated posting schedules', icon: Clock },
+        { text: 'Content optimization for maximum engagement', icon: TrendingUp },
+        { text: 'Sophisticated algorithm to target audience in your niche', icon: BrainCircuit }
       ],
       valueIndicator: 'Sell At The Right Time'
     },
@@ -44,9 +44,9 @@ export default function FeaturesSection({ onGetStarted }: FeatureSectionProps) {
       subtitle: 'Viral Cycle of Improvements',
       description: 'Create a virtual cycle of improvements with continuous optimization. Our system learns from every post, constantly improving your content strategy and performance metrics.',
       highlights: [
-        'Constantly improve from analytics',
-        'Generate top-performing content ideas',
-        'Simplifies complex analytics into actionable insights'
+        { text: 'Constantly improve from analytics', icon: BarChart },
+        { text: 'Generate top-performing content ideas', icon: Lightbulb },
+        { text: 'Simplifies complex analytics into actionable insights', icon: Recycle }
       ],
       valueIndicator: 'Simplifies Analytics'
     }

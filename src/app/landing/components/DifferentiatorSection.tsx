@@ -55,7 +55,7 @@ export default function DifferentiatorSection() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-2xl md:text-4xl font-bold mb-3 text-[#8D5AFF]">
+          <h2 className="text-3xl md:text-4xl font-bold mb-3 text-white">
             What You&apos;d Pay Separately
           </h2>
           <p className="text-lg text-white/80 max-w-2xl mx-auto">
@@ -64,7 +64,7 @@ export default function DifferentiatorSection() {
         </motion.div>
         
         <motion.div 
-          className="grid md:grid-cols-2 gap-6 mb-12"
+          className="space-y-4 mb-12"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -73,23 +73,23 @@ export default function DifferentiatorSection() {
           {offerings.map((offering, i) => (
             <motion.div 
               key={offering.name}
-              className="bg-[#18181b]/50 backdrop-blur-sm border border-[#8D5AFF]/10 rounded-lg p-5 flex items-start"
+              className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-5 flex items-center"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: 0.1 * i }}
             >
-              <div className="bg-[#8D5AFF]/10 p-2 rounded-full mr-4">
-                <CheckCircle className="h-6 w-6 text-[#8D5AFF]" />
+              <div className="bg-green-500/10 p-3 rounded-full mr-4">
+                <CheckCircle className="h-6 w-6 text-green-400" />
               </div>
-              <div className="flex-1">
-                <div className="flex justify-between items-baseline mb-1">
+              <div className="flex-1 flex justify-between items-center">
+                <div>
                   <h4 className="font-semibold text-white">{offering.name}</h4>
-                  <div className="bg-[#5afcc0]/10 px-2 py-0.5 rounded-full text-[#5afcc0] font-bold text-xs whitespace-nowrap mt-1">
-                    ${offering.value} value
-                  </div>
+                  <p className="text-sm text-neutral-400">{offering.highlight}</p>
                 </div>
-                <p className="text-sm text-neutral-300">{offering.highlight}</p>
+                <div className="bg-green-500/10 px-3 py-1 rounded-full text-green-400 font-bold text-sm whitespace-nowrap">
+                  ${offering.value} value
+                </div>
               </div>
             </motion.div>
           ))}
@@ -104,8 +104,8 @@ export default function DifferentiatorSection() {
         >
           <div className="absolute inset-0 bg-[#8D5AFF]/5 blur-xl rounded-full -z-10"></div>
           
-          <h3 className="text-3xl font-bold mb-6 text-white">
-            All This for Just <span className="text-[#5afcc0]">$600</span> Annually
+          <h3 className="text-3xl font-bold mb-2 text-white">
+            All This for Just <span className="text-green-400">$600</span> Annually
           </h3>
           
           <p className="text-neutral-300 text-lg">

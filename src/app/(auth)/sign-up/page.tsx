@@ -11,6 +11,7 @@ import { useFormStatus } from "react-dom";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
+import Image from "next/image";
 
 function SubmitButton({ 
   children, 
