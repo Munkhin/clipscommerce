@@ -15,13 +15,9 @@ import {
   Crown as CrownIcon,
   Link as LinkIcon,
   RefreshCw as RefreshCwIcon,
-  ChevronRight,
-  MessageCircle
+  ChevronRight
 } from 'lucide-react';
 import { useRole } from '@/hooks/useRole';
-import { Sheet, SheetTrigger, SheetContent } from '@/components/ui/sheet';
-import { Button } from '@/components/ui/button';
-import FeedbackBoard from './FeedbackBoard';
 
 const mainNav = [
   { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
@@ -272,24 +268,6 @@ export default function Sidebar() {
           </div>
         </div>
       </nav>
-      <div className="absolute bottom-0 left-0 w-full p-4 flex justify-center">
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button
-              variant="secondary"
-              size="lg"
-              className="w-full flex items-center gap-2"
-              aria-label="Open feedback board"
-            >
-              <MessageCircle className="h-5 w-5" aria-hidden="true" />
-              <span className="font-medium">Feedback</span>
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="right" className="max-w-md w-full">
-            <FeedbackBoard />
-          </SheetContent>
-        </Sheet>
-      </div>
     </aside>
   );
 }

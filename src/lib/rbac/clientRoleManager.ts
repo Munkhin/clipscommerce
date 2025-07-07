@@ -96,11 +96,6 @@ export class ClientRoleManager {
       const { data, error } = await query;
       
       if (error) {
-        // Check if the error is due to missing tables/schema
-        if (error.code === 'PGRST116' || error.message?.includes('relation "user_roles" does not exist')) {
-          console.warn('[RBAC] RBAC tables not found, returning empty roles. Please run database migrations.');
-          return [];
-        }
         throw error;
       }
       
@@ -133,7 +128,7 @@ export class ClientRoleManager {
     try {
       let query = this.supabase
         .from('user_roles')
-        .select('roles(name), expires_at')
+        .select('roles(name)')
         .eq('user_id', userId)
         .eq('is_active', true);
       
@@ -144,19 +139,10 @@ export class ClientRoleManager {
       const { data, error } = await query;
       
       if (error) {
-        // Check if the error is due to missing tables/schema
-        if (error.code === 'PGRST116' || error.message?.includes('relation "user_roles" does not exist')) {
-          console.warn('[RBAC] RBAC tables not found, defaulting to member role. Please run database migrations.');
-          return Role.MEMBER;
-        }
         throw error;
       }
       
-      if (!data || data.length === 0) {
-        // If no roles found, default to member
-        console.info(`[RBAC] No roles found for user ${userId}, defaulting to member role`);
-        return Role.MEMBER;
-      }
+      if (!data || data.length === 0) return null;
       
       // Filter out expired roles and get role names
       const roleNames = data
@@ -176,12 +162,10 @@ export class ClientRoleManager {
         }
       }
       
-      // If no valid role found, default to member
-      return Role.MEMBER;
+      return null;
     } catch (error) {
       console.error(`[RBAC] Error getting user highest role for ${userId}:`, error);
-      // Fallback to member role if there's any error
-      return Role.MEMBER;
+      return null;
     }
   }
 
@@ -196,11 +180,6 @@ export class ClientRoleManager {
       });
       
       if (error) {
-        // Check if the error is due to missing function/tables
-        if (error.code === 'PGRST202' || error.message?.includes('function user_has_permission') || error.message?.includes('relation "user_roles" does not exist')) {
-          console.warn(`[RBAC] RBAC functions not found, defaulting permission ${permission} to false. Please run database migrations.`);
-          return false;
-        }
         console.error(`[RBAC] Error checking permission ${permission} for user ${userId}:`, error);
         return false;
       }
@@ -222,11 +201,6 @@ export class ClientRoleManager {
       });
       
       if (error) {
-        // Check if the error is due to missing function/tables
-        if (error.code === 'PGRST202' || error.message?.includes('function get_user_permissions') || error.message?.includes('relation "user_roles" does not exist')) {
-          console.warn(`[RBAC] RBAC functions not found, returning empty permissions. Please run database migrations.`);
-          return [];
-        }
         console.error(`[RBAC] Error getting permissions for user ${userId}:`, error);
         return [];
       }

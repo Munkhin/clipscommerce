@@ -34,7 +34,6 @@
     "ai:validate-data": "tsx src/app/workflows/AI_improvement/cli/validate-data.ts",
     "ai:train-models": "tsx src/app/workflows/AI_improvement/cli/train-ai-models.ts",
     "setup-database": "node scripts/setup-database-unified.js",
-    "setup-rbac": "node scripts/run-rbac-migrations.js",
     "ai:setup-database": "node scripts/setup-database-unified.js",
     "ai:manage-models": "tsx src/app/workflows/AI_improvement/cli/manage-models.ts",
     "ai:list-models": "tsx src/app/workflows/AI_improvement/cli/manage-models.ts list",
