@@ -12,7 +12,7 @@ const publicPaths = [
   '/auth/forgot-password',
   '/auth/reset-password',
   '/auth/confirm',
-  '/api/auth/csrf',
+  // Note: /api/auth/csrf requires authentication in the route handler itself
 ];
 
 // Paths that should be accessible only when not authenticated

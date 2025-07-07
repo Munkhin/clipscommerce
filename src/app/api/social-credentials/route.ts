@@ -69,3 +69,36 @@ export async function GET(request: NextRequest) {
 
   return NextResponse.json(data);
 }
+
+export async function DELETE(request: NextRequest) {
+  const supabase = await createClient(cookies());
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const { platform } = await request.json();
+
+  if (!platform) {
+    return NextResponse.json({ error: 'Platform is required' }, { status: 400 });
+  }
+
+  const { data, error } = await supabase
+    .from('user_social_credentials')
+    .delete()
+    .eq('user_id', user.id)
+    .eq('platform', platform)
+    .select();
+
+  if (error) {
+    console.error('Error deleting social credentials:', error);
+    return NextResponse.json({ error: 'Failed to delete credentials' }, { status: 500 });
+  }
+
+  if (!data || data.length === 0) {
+    return NextResponse.json({ error: 'Platform credentials not found' }, { status: 404 });
+  }
+
+  return NextResponse.json({ message: 'Platform credentials deleted successfully', data });
+}

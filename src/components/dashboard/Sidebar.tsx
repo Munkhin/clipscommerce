@@ -48,152 +48,189 @@ export default function Sidebar() {
   const role = useRole();
 
   return (
-    <div className="w-[280px] h-screen bg-[#F9FAFB] border-r border-[#E5E7EB] flex flex-col">
-      {/* Logo Header */}
-      <div className="p-6 border-b border-[#E5E7EB] flex items-center justify-center">
-        <Link href="/dashboard" className="flex items-center space-x-3 group">
-          <div className="relative h-12 w-12 rounded-lg overflow-hidden bg-[#8B5CF6] flex items-center justify-center">
-            <Image
-              src="/images/ChatGPT Image Jun 1, 2025, 07_27_54 PM.png"
-              alt="ClipsCommerce Logo"
-              width={40}
-              height={40}
-              className="object-contain p-1 invert"
-              priority
-            />
-          </div>
-          <span className="text-2xl font-bold text-[#111827]">
-            ClipsCommerce
-          </span>
-        </Link>
-      </div>
-
+    <aside 
+      className="w-[280px] h-screen bg-gray-900 border-r border-gray-800 flex flex-col shadow-2xl backdrop-blur-sm"
+      aria-label="Main navigation"
+    >
       {/* Navigation */}
-      <nav className="flex-1 p-6 space-y-6">
+      <nav className="flex-1 p-6 space-y-4" aria-label="Dashboard navigation">
         {/* Primary Navigation */}
         <div>
-          {mainNav.map((item) => {
-            if (item.name === 'Reports' && role !== 'admin') {
-              return null;
-            }
-            const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
-            return (
-              <Link 
-                key={item.name}
-                href={item.href}
-                className={cn(
-                  "flex items-center py-3 px-4 rounded-lg text-base font-medium transition-all duration-200",
-                  isActive 
-                    ? "bg-[#8B5CF6] text-white font-medium shadow-sm" 
-                    : "text-[#4B5563] hover:bg-[#F3F4F6] hover:text-[#1F2937]"
-                )}
-              >
-                <item.icon 
+          <h3 className="sr-only">Main navigation</h3>
+          <div className="space-y-1">
+            {mainNav.map((item) => {
+              if (item.name === 'Reports' && !role.isAdmin) {
+                return null;
+              }
+              const isActive = item.href === '/dashboard'
+                ? pathname === '/dashboard'
+                : pathname === item.href || pathname.startsWith(`${item.href}/`);
+              return (
+                <Link 
+                  key={item.name}
+                  href={item.href}
                   className={cn(
-                    "mr-3 h-5 w-5", 
+                    "flex items-center py-3 px-4 rounded-xl text-sm font-medium transition-all duration-300 group relative hover:transform hover:translate-x-1",
                     isActive 
-                      ? "text-white" 
-                      : "text-[#4B5563]"
-                  )} 
-                />
-                {item.name}
-              </Link>
-            );
-          })}
+                      ? "bg-gradient-to-r from-[#8B5CF6] to-[#7C3AED] text-white shadow-lg shadow-purple-500/25 border border-purple-400/20" 
+                      : "text-gray-300 hover:bg-gray-800/60 hover:text-white hover:shadow-md"
+                  )}
+                  aria-current={isActive ? 'page' : undefined}
+                >
+                  <item.icon 
+                    className={cn(
+                      "mr-3 h-5 w-5 transition-all duration-300", 
+                      isActive 
+                        ? "text-white drop-shadow-sm" 
+                        : "text-gray-400 group-hover:text-white group-hover:scale-110"
+                    )} 
+                    aria-hidden="true"
+                  />
+                  {item.name}
+                  {isActive && (
+                    <div className="absolute right-3 w-2 h-2 bg-white rounded-full opacity-75 animate-pulse" aria-hidden="true" />
+                  )}
+                  {!isActive && (
+                    <div className="absolute left-0 w-1 h-0 bg-gradient-to-b from-purple-500 to-blue-500 rounded-r-full transition-all duration-300 group-hover:h-full opacity-0 group-hover:opacity-100" />
+                  )}
+                </Link>
+              );
+            })}
+          </div>
         </div>
 
         {/* Sell Faster Section */}
-        <div>
+        <div className="relative">
+          <div className="absolute -left-3 top-0 bottom-0 w-0.5 bg-gradient-to-b from-purple-500/20 to-transparent"></div>
           <button
             onClick={() => setSellFasterOpen(!sellFasterOpen)}
-            className="flex items-center justify-between w-full text-sm font-medium text-[#6B7280] uppercase tracking-wider mb-2 px-4 py-2 hover:text-[#374151] transition-colors"
+            className="flex items-center justify-between w-full text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1 px-4 py-3 hover:text-gray-300 transition-all duration-300 group focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-900 rounded-lg hover:bg-gray-800/30 relative"
+            aria-expanded={sellFasterOpen}
+            aria-controls="sell-faster-nav"
           >
-            <span>Sell Faster</span>
+            <span className="flex items-center">
+              <div className="w-2 h-2 bg-purple-500 rounded-full mr-3 opacity-60 group-hover:opacity-100 transition-opacity duration-300"></div>
+              Sell Faster
+            </span>
             <ChevronRight 
               className={cn(
-                "h-4 w-4 transition-transform", 
-                sellFasterOpen ? "rotate-90" : ""
-              )} 
+                "h-4 w-4 transition-all duration-300 group-hover:text-gray-300 group-hover:scale-110", 
+                sellFasterOpen ? "rotate-90 text-purple-400" : ""
+              )}
+              aria-hidden="true"
             />
           </button>
-          {sellFasterOpen && (
-            <div className="space-y-1">
-              {sellFasterNav.map((item) => {
-                const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
-                return (
-                  <Link
-                    key={item.name}
-                    href={item.href}
+          <div 
+            id="sell-faster-nav"
+            className={cn(
+              "space-y-1 overflow-hidden transition-all duration-300 pl-4",
+              sellFasterOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+            )}
+          >
+            {sellFasterNav.map((item) => {
+              const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
+              return (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={cn(
+                    "flex items-center py-2 px-4 rounded-xl text-sm font-medium transition-all duration-300 group relative hover:transform hover:translate-x-1",
+                    isActive 
+                      ? "bg-gradient-to-r from-[#8B5CF6] to-[#7C3AED] text-white shadow-lg shadow-purple-500/25 border border-purple-400/20" 
+                      : "text-gray-300 hover:bg-gray-800/60 hover:text-white hover:shadow-md"
+                  )}
+                  aria-current={isActive ? 'page' : undefined}
+                >
+                  <item.icon 
                     className={cn(
-                      "flex items-center py-3 px-4 rounded-lg text-base font-medium transition-all duration-200",
+                      "mr-3 h-5 w-5 transition-all duration-300", 
                       isActive 
-                        ? "bg-[#8B5CF6] text-white font-medium shadow-sm" 
-                        : "text-[#4B5563] hover:bg-[#F3F4F6] hover:text-[#1F2937]"
+                        ? "text-white drop-shadow-sm" 
+                        : "text-gray-400 group-hover:text-white group-hover:scale-110"
                     )}
-                  >
-                    <item.icon 
-                      className={cn(
-                        "mr-3 h-5 w-5", 
-                        isActive 
-                          ? "text-white" 
-                          : "text-[#4B5563]"
-                      )} 
-                    />
-                    {item.name}
-                  </Link>
-                );
-              })}
-            </div>
-          )}
+                    aria-hidden="true"
+                  />
+                  {item.name}
+                  {isActive && (
+                    <div className="absolute right-3 w-2 h-2 bg-white rounded-full opacity-75 animate-pulse" aria-hidden="true" />
+                  )}
+                  {!isActive && (
+                    <div className="absolute left-0 w-1 h-0 bg-gradient-to-b from-purple-500 to-blue-500 rounded-r-full transition-all duration-300 group-hover:h-full opacity-0 group-hover:opacity-100" />
+                  )}
+                </Link>
+              );
+            })}
+          </div>
         </div>
 
         {/* How to Sell Section */}
-        <div>
+        <div className="relative">
+          <div className="absolute -left-3 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-500/20 to-transparent"></div>
           <button
             onClick={() => setSellOpen(!sellOpen)}
-            className="flex items-center justify-between w-.full text-sm font-medium text-[#6B7280] uppercase tracking-wider mb-2 px-4 py-2 hover:text-[#374151] transition-colors"
+            className="flex items-center justify-between w-full text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1 px-4 py-3 hover:text-gray-300 transition-all duration-300 group focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-900 rounded-lg hover:bg-gray-800/30 relative"
+            aria-expanded={sellOpen}
+            aria-controls="how-to-sell-nav"
           >
-            <span>How to Sell</span>
+            <span className="flex items-center">
+              <div className="w-2 h-2 bg-blue-500 rounded-full mr-3 opacity-60 group-hover:opacity-100 transition-opacity duration-300"></div>
+              How to Sell
+            </span>
             <ChevronRight 
               className={cn(
-                "h-4 w-4 transition-transform", 
-                sellOpen ? "rotate-90" : ""
-              )} 
+                "h-4 w-4 transition-all duration-300 group-hover:text-gray-300 group-hover:scale-110", 
+                sellOpen ? "rotate-90 text-blue-400" : ""
+              )}
+              aria-hidden="true"
             />
           </button>
-          {sellOpen && (
-            <div className="space-y-1">
-              {howToSellNav.map((item) => {
-                const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
-                return (
-                  <Link
-                    key={item.name}
-                    href={item.href}
+          <div 
+            id="how-to-sell-nav"
+            className={cn(
+              "space-y-1 overflow-hidden transition-all duration-300 pl-4",
+              sellOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+            )}
+          >
+            {howToSellNav.map((item) => {
+              const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
+              return (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={cn(
+                    "flex items-center py-2 px-4 rounded-xl text-sm font-medium transition-all duration-300 group relative hover:transform hover:translate-x-1",
+                    isActive 
+                      ? "bg-gradient-to-r from-[#8B5CF6] to-[#7C3AED] text-white shadow-lg shadow-purple-500/25 border border-purple-400/20" 
+                      : "text-gray-300 hover:bg-gray-800/60 hover:text-white hover:shadow-md"
+                  )}
+                  aria-current={isActive ? 'page' : undefined}
+                >
+                  <item.icon 
                     className={cn(
-                      "flex items-center py-3 px-4 rounded-lg text-base font-medium transition-all duration-200",
+                      "mr-3 h-5 w-5 transition-all duration-300", 
                       isActive 
-                        ? "bg-[#8B5CF6] text-white font-medium shadow-sm" 
-                        : "text-[#4B5563] hover:bg-[#F3F4F6] hover:text-[#1F2937]"
+                        ? "text-white drop-shadow-sm" 
+                        : "text-gray-400 group-hover:text-white group-hover:scale-110"
                     )}
-                  >
-                    <item.icon 
-                      className={cn(
-                        "mr-3 h-5 w-5", 
-                        isActive 
-                          ? "text-white" 
-                          : "text-[#4B5563]"
-                      )} 
-                    />
-                    {item.name}
-                  </Link>
-                );
-              })}
-            </div>
-          )}
+                    aria-hidden="true"
+                  />
+                  {item.name}
+                  {isActive && (
+                    <div className="absolute right-3 w-2 h-2 bg-white rounded-full opacity-75 animate-pulse" aria-hidden="true" />
+                  )}
+                  {!isActive && (
+                    <div className="absolute left-0 w-1 h-0 bg-gradient-to-b from-purple-500 to-blue-500 rounded-r-full transition-all duration-300 group-hover:h-full opacity-0 group-hover:opacity-100" />
+                  )}
+                </Link>
+              );
+            })}
+          </div>
         </div>
 
         {/* Account Section */}
-        <div className="pt-6 mt-6 border-t border-[#E5E7EB]">
+        <div className="pt-2 mt-4 border-t border-gray-800/50 relative">
+          <div className="absolute -left-3 top-0 bottom-0 w-0.5 bg-gradient-to-b from-gray-500/20 to-transparent"></div>
+          <h3 className="sr-only">Account settings</h3>
           <div className="space-y-1">
             {accountNav.map((item) => {
               const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
@@ -202,27 +239,35 @@ export default function Sidebar() {
                   key={item.name}
                   href={item.href}
                   className={cn(
-                    "flex items-center py-3 px-4 rounded-lg text-base font-medium transition-all duration-200",
+                    "flex items-center py-3 px-4 rounded-xl text-sm font-medium transition-all duration-300 group relative hover:transform hover:translate-x-1",
                     isActive 
-                      ? "bg-[#8B5CF6] text-white font-medium shadow-sm" 
-                      : "text-[#4B5563] hover:bg-[#F3F4F6] hover:text-[#1F2937]"
+                      ? "bg-gradient-to-r from-[#8B5CF6] to-[#7C3AED] text-white shadow-lg shadow-purple-500/25 border border-purple-400/20" 
+                      : "text-gray-300 hover:bg-gray-800/60 hover:text-white hover:shadow-md"
                   )}
+                  aria-current={isActive ? 'page' : undefined}
                 >
                   <item.icon 
                     className={cn(
-                      "mr-3 h-5 w-5", 
+                      "mr-3 h-5 w-5 transition-all duration-300", 
                       isActive 
-                        ? "text-white" 
-                        : "text-[#4B5563]"
-                    )} 
+                        ? "text-white drop-shadow-sm" 
+                        : "text-gray-400 group-hover:text-white group-hover:scale-110"
+                    )}
+                    aria-hidden="true"
                   />
                   {item.name}
+                  {isActive && (
+                    <div className="absolute right-3 w-2 h-2 bg-white rounded-full opacity-75 animate-pulse" aria-hidden="true" />
+                  )}
+                  {!isActive && (
+                    <div className="absolute left-0 w-1 h-0 bg-gradient-to-b from-purple-500 to-blue-500 rounded-r-full transition-all duration-300 group-hover:h-full opacity-0 group-hover:opacity-100" />
+                  )}
                 </Link>
               );
             })}
           </div>
         </div>
       </nav>
-    </div>
+    </aside>
   );
 }

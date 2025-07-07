@@ -96,7 +96,8 @@ function signToken(payload: Omit<TokenPayload, 'salt'>, salt: string): string {
     payload.usageCount,
     payload.maxUsage,
     payload.sessionId,
-    payload.fingerprint || ''
+    payload.fingerprint || '',
+    salt  // Include salt in the token structure
   ].join(':');
   
   const signature = hmac.update(data).digest('hex');
@@ -104,13 +105,16 @@ function signToken(payload: Omit<TokenPayload, 'salt'>, salt: string): string {
 }
 
 // Verify and decode token
-async function verifyToken(token: string, salt: string): Promise<TokenPayload | null> {
+async function verifyToken(token: string, providedSalt?: string): Promise<TokenPayload | null> {
   try {
     const parts = token.split(':');
-    if (parts.length < 6) return null; // Ensure all parts are present
+    if (parts.length < 8) return null; // Ensure all parts are present including salt
     
-    const [value, expires, usageCount, maxUsage, sessionId, fingerprint, signature] = parts;
-    if (!value || !expires || !signature) return null;
+    const [value, expires, usageCount, maxUsage, sessionId, fingerprint, salt, signature] = parts;
+    if (!value || !expires || !signature || !salt) return null;
+
+    // Use the salt from the token, or verify it matches the provided salt
+    if (providedSalt && salt !== providedSalt) return null;
 
     // Reconstruct the signed data
     const signedData = [
@@ -119,7 +123,8 @@ async function verifyToken(token: string, salt: string): Promise<TokenPayload | 
       usageCount,
       maxUsage,
       sessionId,
-      fingerprint || ''
+      fingerprint || '',
+      salt
     ].join(':');
 
     // Verify signature
@@ -224,13 +229,10 @@ export async function verifyCsrfToken(token: string): Promise<{ isValid: boolean
     
     if (!cookieToken) return { isValid: false };
     
-    // Extract salt from the token (last part before signature)
-    const salt = token.split(':').slice(-2, -1)[0];
-    if (!salt) return { isValid: false };
-    
+    // Verify both tokens (salt is now included in the token structure)
     const [payload, cookiePayload] = await Promise.all([
-      verifyToken(token, salt),
-      verifyToken(cookieToken, salt)
+      verifyToken(token),
+      verifyToken(cookieToken)
     ]);
     
     // Verify both tokens are valid and match
@@ -247,7 +249,7 @@ export async function verifyCsrfToken(token: string): Promise<{ isValid: boolean
     const newToken = signToken({
       ...payload,
       usageCount: payload.usageCount + 1
-    }, salt);
+    }, payload.salt);
     
     // Create a new response with the updated cookie
     const response = new Response(null, { status: 200 });
@@ -277,10 +279,7 @@ export async function getCsrfToken(): Promise<string | null> {
     if (!token) return null;
     
     // Verify the token is still valid
-    const [, , salt] = token.split(':');
-    if (!salt) return null;
-    
-    const isValid = await verifyToken(token, salt);
+    const isValid = await verifyToken(token);
     return isValid ? token : null;
   } catch (error) {
     console.error('Error getting CSRF token:', error);

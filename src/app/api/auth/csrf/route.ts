@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-export const dynamic = 'force-dynamic';
+import { generateCsrfToken } from '@/lib/csrf';
 import { createClient } from '@/lib/supabase/server';
 import { cookies } from 'next/headers';
-import crypto from 'crypto';
+
+export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
   try {
@@ -15,16 +15,18 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Generate CSRF token
-    const csrfToken = crypto.randomBytes(32).toString('hex');
+    // Generate CSRF token using the proper CSRF library
+    const { token, cookie } = await generateCsrfToken();
     
-    // In a production app, you'd store this token in a secure session store
-    // For now, we'll generate a simple token that can be validated
-    
-    return NextResponse.json({
-      csrfToken,
+    const response = NextResponse.json({
+      token,
       timestamp: Date.now(),
     });
+
+    // Set the CSRF cookie
+    response.headers.set('Set-Cookie', cookie);
+    
+    return response;
 
   } catch (error) {
     console.error('Error generating CSRF token:', error);

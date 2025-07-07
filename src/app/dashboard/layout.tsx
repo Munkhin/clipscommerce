@@ -8,6 +8,7 @@ import Header from '@/components/dashboard/Header';
 import Sidebar from '@/components/dashboard/Sidebar';
 import { usePollingSupabaseTable } from '@/hooks/usePollingSupabase';
 import { isFeatureEnabled } from '@/lib/utils/featureFlags';
+import { initToolbar } from '@stagewise/toolbar';
 
 export default function DashboardLayout({
   children,
@@ -58,25 +59,34 @@ export default function DashboardLayout({
     </nav>
   ) : null;
 
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'development') {
+      initToolbar({ plugins: [] });
+    }
+  }, []);
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen bg-gray-900">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#8B5CF6]"></div>
+        <div className="flex flex-col items-center space-y-4">
+          <div className="relative">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+            <div className="absolute inset-0 rounded-full border-2 border-gray-700"></div>
+          </div>
+          <p className="text-gray-400 text-sm">Loading your dashboard...</p>
+        </div>
       </div>
     );
   }
 
   return (
     <SettingsProvider>
-      <div className="flex h-screen bg-gray-900 text-gray-200 overflow-hidden">
+      <div className="flex h-screen bg-gray-900 text-gray-100 overflow-hidden">
         <Sidebar />
-        <div className="flex-1 flex flex-col min-h-0">
-          <Header breadcrumb={breadcrumb} />
+        <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
           <main className="flex-1 bg-gray-900 overflow-hidden">
-            <div className="h-full overflow-y-auto">
-              <div className="min-h-full p-8">
-                {children}
-              </div>
+            <div className="h-full min-h-full p-6 lg:p-8 overflow-y-auto">
+              {children}
             </div>
           </main>
         </div>

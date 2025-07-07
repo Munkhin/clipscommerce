@@ -357,29 +357,42 @@ export default function DashboardPage() {
   );
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-gray-900">
       <WelcomeModal />
       {!isAuthenticated && <LoginPromptPopup isOpen={showLoginPrompt} onClose={closeLoginPrompt} feature={currentFeature} />}
       {!hasFeatureAccess('analyticsAccess') && isAuthenticated && <SubscriptionPromptPopup isOpen={showSubscriptionPrompt} onClose={closeSubscriptionPrompt} featureName={currentFeature || 'analytics'} />}
 
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-[28px] font-bold text-white mb-2" style={{ fontFamily: 'cursive' }}>
-          {greeting}, {user?.user_metadata.full_name || user?.email || 'User'}!
-        </h1>
-        <p className="text-gray-400 text-sm">{currentTime.toLocaleString()}</p>
+      <div className="mb-6 lg:mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+          <div className="mb-4 sm:mb-0">
+            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
+              {greeting}, {user?.user_metadata.full_name || user?.email?.split('@')[0] || 'User'}!
+            </h1>
+            <p className="text-gray-400 text-sm flex items-center">
+              <span className="inline-block w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
+              {currentTime.toLocaleString()}
+            </p>
+          </div>
+          <div className="flex items-center space-x-4">
+            <div className="px-3 sm:px-4 py-2 bg-gray-800 rounded-xl border border-gray-700">
+              <span className="text-xs text-gray-400">Current Plan</span>
+              <p className="text-sm font-semibold text-white capitalize">{subscriptionTier}</p>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Key Metrics Section */}
-      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-6 lg:mb-8">
         {mainMetrics.map((metric, index) => (
           <div
             key={metric.id}
             className={`
-              bg-gray-800 border-2 border-gray-700 rounded-xl p-6 cursor-pointer transition-all duration-200
+              relative bg-gradient-to-br from-gray-800/90 to-gray-900/90 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-4 lg:p-6 cursor-pointer transition-all duration-500 group overflow-hidden hover:scale-105
               ${hoveredCard === metric.id 
-                ? 'border-[#8B5CF6] shadow-[0_4px_12px_rgba(139,92,246,0.15)] transform -translate-y-0.5' 
-                : 'shadow-[0_2px_8px_rgba(0,0,0,0.06)] hover:border-[#8B5CF6]'
+                ? 'border-purple-500/60 shadow-2xl shadow-purple-500/30 transform -translate-y-2' 
+                : 'hover:border-gray-600/60 hover:shadow-xl hover:shadow-gray-900/40'
               }
             `}
             onMouseEnter={() => setHoveredCard(metric.id)}
@@ -390,85 +403,168 @@ export default function DashboardPage() {
               transitionDelay: `${index * 0.1}s` 
             }}
           >
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center space-x-2">
-                <metric.icon className="w-5 h-5 text-gray-400" />
-                <span className="text-sm font-medium text-gray-400">{metric.title}</span>
+            {/* Enhanced background gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-blue-500/5 to-green-500/5 opacity-0 group-hover:opacity-100 transition-all duration-500" />
+            <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500" />
+            
+            <div className="relative z-10">
+              <div className="flex items-start justify-between mb-4 lg:mb-6">
+                <div className="flex items-center space-x-3 lg:space-x-4">
+                  <div className="p-2.5 lg:p-3 bg-gradient-to-br from-purple-500/20 to-blue-500/20 backdrop-blur-sm rounded-xl border border-purple-500/20 group-hover:from-purple-500/30 group-hover:to-blue-500/30 group-hover:border-purple-400/40 transition-all duration-300">
+                    <metric.icon className="w-5 h-5 lg:w-6 lg:h-6 text-purple-400 group-hover:text-purple-300 group-hover:scale-110 transition-all duration-300" />
+                  </div>
+                  <div>
+                    <span className="text-sm lg:text-base font-medium text-gray-300 group-hover:text-white transition-colors duration-300">{metric.title}</span>
+                    <div className="flex items-center space-x-2 mt-2">
+                      <span className={`
+                        px-2.5 py-1.5 rounded-full text-xs font-semibold flex items-center space-x-1.5 backdrop-blur-sm transition-all duration-300
+                        ${metric.trend === 'up' 
+                          ? 'text-green-300 bg-green-500/20 border border-green-500/30 group-hover:bg-green-500/30' 
+                          : 'text-red-300 bg-red-500/20 border border-red-500/30 group-hover:bg-red-500/30'
+                        }
+                      `}>
+                        <span>{metric.change}</span>
+                        {metric.trend === 'up' ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <span className={`
-                px-2 py-1 rounded text-xs font-semibold
-                ${metric.trend === 'up' 
-                  ? 'text-[#059669] bg-[rgba(5,150,105,0.1)]' 
-                  : 'text-[#DC2626] bg-[rgba(220,38,38,0.1)]'
-                }
-              `}>
-                {metric.change}
-                {metric.trend === 'up' ? <TrendingUp className="ml-1 h-3 w-3 inline" /> : <TrendingDown className="ml-1 h-3 w-3 inline" />}
-              </span>
+              
+              <div className="space-y-2 lg:space-y-3">
+                <p className="text-2xl lg:text-3xl font-bold text-white group-hover:text-gray-100 transition-colors duration-300">{metric.value}</p>
+                <p className="text-sm lg:text-base text-gray-400 group-hover:text-gray-300 transition-colors duration-300 leading-relaxed">{metric.description}</p>
+              </div>
+
+              {/* Animated accent line */}
+              <div className="absolute bottom-0 left-0 w-0 h-1 bg-gradient-to-r from-purple-500 to-blue-500 group-hover:w-full transition-all duration-500 rounded-b-2xl" />
             </div>
-            <p className="text-3xl font-bold text-white mb-2">{metric.value}</p>
-            <p className="text-sm text-gray-400">{metric.description}</p>
           </div>
         ))}
       </section>
 
       {/* Quick Actions Section */}
-      <section className="mb-8">
-        <h2 className="text-[20px] font-semibold text-white mb-6" style={{ fontFamily: 'cursive' }}>
-          Quick Actions
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+      <section className="mb-6 lg:mb-8">
+        <div className="flex items-center justify-between mb-4 lg:mb-6">
+          <div className="flex items-center space-x-3">
+            <h2 className="text-lg lg:text-xl font-semibold text-white">Quick Actions</h2>
+            <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
+          </div>
+          <button className="text-sm text-gray-400 hover:text-white transition-all duration-300 hover:scale-105 px-3 py-1 rounded-lg hover:bg-gray-800/50">View All</button>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
           {quickActions.map((action, index) => (
             <div
               key={action.name}
               className="
-                relative bg-gray-800 border-2 border-gray-700 rounded-xl p-6 cursor-pointer 
-                transition-all duration-200 group hover:border-[#8B5CF6] 
-                hover:shadow-[0_4px_12px_rgba(139,92,246,0.15)] hover:-translate-y-0.5
+                relative bg-gradient-to-br from-gray-800/80 to-gray-900/80 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-4 lg:p-6 cursor-pointer 
+                transition-all duration-500 group hover:border-purple-500/40 hover:shadow-2xl hover:shadow-purple-500/20 hover:-translate-y-2 hover:scale-105 overflow-hidden
               "
               onClick={() => handleFeatureClick(action.name, action.href)}
               style={{ 
                 opacity: animationStage >= 2 ? 1 : 0, 
                 transform: `translateY(${animationStage >= 2 ? 0 : 20}px)`, 
-                transitionDelay: `${index * 0.15}s` 
+                transitionDelay: `${index * 0.1}s` 
               }}
             >
-              <div className="absolute top-4 right-4 w-6 h-6 bg-[#8B5CF6] rounded flex items-center justify-center">
-                <action.icon className="w-3 h-3 text-white" />
+              {/* Enhanced background gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-blue-500/5 to-green-500/5 opacity-0 group-hover:opacity-100 transition-all duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500" />
+              
+              <div className="relative z-10">
+                <div className="flex items-start justify-between mb-4 lg:mb-6">
+                  <div className="p-3 lg:p-4 bg-gradient-to-br from-purple-500/90 to-blue-500/90 rounded-xl shadow-lg shadow-purple-500/25 group-hover:shadow-purple-500/40 group-hover:scale-110 transition-all duration-300">
+                    <action.icon className="w-5 h-5 lg:w-6 lg:h-6 text-white" />
+                  </div>
+                  <ArrowRight className="w-4 h-4 lg:w-5 lg:h-5 text-gray-400 group-hover:text-purple-300 group-hover:translate-x-2 group-hover:scale-110 transition-all duration-300" />
+                </div>
+                
+                <div className="space-y-2 lg:space-y-3">
+                  <h3 className="text-base lg:text-lg font-semibold text-white group-hover:text-gray-100 transition-colors duration-300">
+                    {action.title}
+                  </h3>
+                  <p className="text-sm text-gray-400 group-hover:text-gray-300 leading-relaxed transition-colors duration-300">{action.description}</p>
+                </div>
+
+                {/* Animated accent line */}
+                <div className="absolute bottom-0 left-0 w-0 h-1 bg-gradient-to-r from-purple-500 to-blue-500 group-hover:w-full transition-all duration-500 rounded-b-2xl" />
               </div>
-              <h3 className="text-[20px] font-semibold text-white mb-2 pr-8">
-                {action.title}
-              </h3>
-              <p className="text-sm text-gray-400 leading-relaxed">{action.description}</p>
             </div>
           ))}
         </div>
       </section>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      {/* Charts Section */}
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 lg:gap-6 mb-6 lg:mb-8">
         {/* Performance Trends */}
-        <div className="bg-gray-800 rounded-xl p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
-          <h3 className="text-[18px] font-semibold text-white mb-4">Sales Performance</h3>
-          <LineChartComponent data={salesData} />
+        <div className="bg-gradient-to-br from-gray-800/90 to-gray-900/90 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-4 lg:p-6 shadow-xl hover:shadow-2xl hover:shadow-purple-500/10 transition-all duration-500 group">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 lg:mb-6">
+            <div className="flex items-center space-x-3 mb-2 sm:mb-0">
+              <h3 className="text-base lg:text-lg font-semibold text-white group-hover:text-gray-100 transition-colors duration-300">Sales Performance</h3>
+              <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
+            </div>
+            <div className="flex items-center space-x-4 text-xs lg:text-sm">
+              <div className="flex items-center space-x-2 px-3 py-1.5 bg-purple-500/10 rounded-full border border-purple-500/20">
+                <div className="w-2 h-2 lg:w-3 lg:h-3 bg-purple-500 rounded-full"></div>
+                <span className="text-gray-300">Sales</span>
+              </div>
+              <div className="flex items-center space-x-2 px-3 py-1.5 bg-blue-500/10 rounded-full border border-blue-500/20">
+                <div className="w-2 h-2 lg:w-3 lg:h-3 bg-blue-500 rounded-full"></div>
+                <span className="text-gray-300">Revenue</span>
+              </div>
+            </div>
+          </div>
+          <div className="h-48 lg:h-64 relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-blue-500/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <LineChartComponent data={salesData} />
+          </div>
         </div>
         
-        <div className="bg-gray-800 rounded-xl p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
-          <h3 className="text-[18px] font-semibold text-white mb-4">Engagement Over Time</h3>
-          <BarChartComponent data={engagementData} />
+        <div className="bg-gradient-to-br from-gray-800/90 to-gray-900/90 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-4 lg:p-6 shadow-xl hover:shadow-2xl hover:shadow-green-500/10 transition-all duration-500 group">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 lg:mb-6">
+            <div className="flex items-center space-x-3 mb-2 sm:mb-0">
+              <h3 className="text-base lg:text-lg font-semibold text-white group-hover:text-gray-100 transition-colors duration-300">Engagement Over Time</h3>
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            </div>
+            <div className="flex items-center space-x-4 text-xs lg:text-sm">
+              <div className="flex items-center space-x-2 px-3 py-1.5 bg-green-500/10 rounded-full border border-green-500/20">
+                <div className="w-2 h-2 lg:w-3 lg:h-3 bg-green-500 rounded-full"></div>
+                <span className="text-gray-300">Views</span>
+              </div>
+              <div className="flex items-center space-x-2 px-3 py-1.5 bg-yellow-500/10 rounded-full border border-yellow-500/20">
+                <div className="w-2 h-2 lg:w-3 lg:h-3 bg-yellow-500 rounded-full"></div>
+                <span className="text-gray-300">Likes</span>
+              </div>
+            </div>
+          </div>
+          <div className="h-48 lg:h-64 relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-yellow-500/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <BarChartComponent data={engagementData} />
+          </div>
         </div>
       </div>
 
       {/* Recent Activity */}
-      <div className="bg-gray-800 rounded-xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
-        <h3 className="text-[18px] font-semibold text-white mb-4">Recent Activity</h3>
-        <div className="space-y-4">
-          {recentActivity.map((activity: Activity) => (
-            <div key={activity.id} className="flex items-start space-x-3">
-              <activity.icon className="w-5 h-5 text-gray-400 mt-1" />
-              <div>
-                <p className="font-medium text-white">{activity.title}</p>
-                <p className="text-sm text-gray-400">{activity.description}</p>
-                <p className="text-xs text-gray-400">{activity.timestamp}</p>
+      <div className="bg-gradient-to-br from-gray-800/90 to-gray-900/90 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-4 lg:p-6 shadow-xl hover:shadow-2xl transition-all duration-500 mb-6 lg:mb-8 group">
+        <div className="flex items-center justify-between mb-4 lg:mb-6">
+          <div className="flex items-center space-x-3">
+            <h3 className="text-base lg:text-lg font-semibold text-white group-hover:text-gray-100 transition-colors duration-300">Recent Activity</h3>
+            <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+          </div>
+          <button className="text-sm text-gray-400 hover:text-white transition-all duration-300 hover:scale-105 px-3 py-1 rounded-lg hover:bg-gray-800/50">View All</button>
+        </div>
+        <div className="space-y-3 lg:space-y-4">
+          {recentActivity.map((activity: Activity, index: number) => (
+            <div key={activity.id} className="flex items-start space-x-3 lg:space-x-4 p-3 lg:p-4 bg-gray-700/30 backdrop-blur-sm rounded-xl hover:bg-gray-700/50 border border-gray-600/20 hover:border-gray-600/40 transition-all duration-300 group/item hover:scale-[1.02] hover:-translate-y-0.5">
+              <div className="p-2 lg:p-2.5 bg-gradient-to-br from-gray-600/80 to-gray-700/80 backdrop-blur-sm rounded-lg flex-shrink-0 border border-gray-500/20 group-hover/item:from-purple-500/20 group-hover/item:to-blue-500/20 group-hover/item:border-purple-500/30 transition-all duration-300">
+                <activity.icon className="w-4 h-4 lg:w-5 lg:h-5 text-gray-300 group-hover/item:text-purple-300 transition-colors duration-300" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                  <p className="font-medium text-white group-hover/item:text-gray-100 truncate transition-colors duration-300">{activity.title}</p>
+                  <span className="text-xs text-gray-400 group-hover/item:text-gray-300 mt-1 sm:mt-0 flex-shrink-0 transition-colors duration-300">{activity.timestamp}</span>
+                </div>
+                <p className="text-sm text-gray-400 group-hover/item:text-gray-300 mt-1 transition-colors duration-300">{activity.description}</p>
               </div>
             </div>
           ))}
@@ -476,41 +572,54 @@ export default function DashboardPage() {
       </div>
 
       {/* Usage Tracker */}
-      <GlassCard
-        style={{ opacity: animationStage >= 4 ? 1 : 0, transform: `translateY(${animationStage >= 4 ? 0 : 20}px)`, transitionDelay: '0.7s' }}
+      <div className="bg-gray-800 border border-gray-700 rounded-2xl p-6 shadow-lg mb-8"
+        style={{ 
+          opacity: animationStage >= 4 ? 1 : 0, 
+          transform: `translateY(${animationStage >= 4 ? 0 : 20}px)`, 
+          transitionDelay: '0.7s' 
+        }}
       >
-        <div className="p-6">
-          <UsageTracker />
-        </div>
-      </GlassCard>
+        <UsageTracker />
+      </div>
 
-      {/* Insert ActionableInsights and WorkflowTaskList GlassCard widgets after Recent Activity and UsageTracker sections */}
-      <GlassCard
-        className="mt-8"
-        style={{ opacity: animationStage >= 4 ? 1 : 0, transform: `translateY(${animationStage >= 4 ? 0 : 20}px)`, transitionDelay: '0.8s' }}
-      >
-        <div className="p-6">
-          {/* ActionableInsights content */}
+      {/* Additional Components */}
+      <div className="space-y-8">
+        <div className="bg-gray-800 border border-gray-700 rounded-2xl p-6 shadow-lg"
+          style={{ 
+            opacity: animationStage >= 4 ? 1 : 0, 
+            transform: `translateY(${animationStage >= 4 ? 0 : 20}px)`, 
+            transitionDelay: '0.8s' 
+          }}
+        >
+          <h3 className="text-lg font-semibold text-white mb-4">Actionable Insights</h3>
+          <div className="text-gray-400">
+            <p>AI-powered insights and recommendations will appear here.</p>
+          </div>
         </div>
-      </GlassCard>
 
-      <GlassCard
-        className="mt-8"
-        style={{ opacity: animationStage >= 4 ? 1 : 0, transform: `translateY(${animationStage >= 4 ? 0 : 20}px)`, transitionDelay: '0.9s' }}
-      >
-        <div className="p-6">
-          {/* WorkflowTaskList content */}
+        <div className="bg-gray-800 border border-gray-700 rounded-2xl p-6 shadow-lg"
+          style={{ 
+            opacity: animationStage >= 4 ? 1 : 0, 
+            transform: `translateY(${animationStage >= 4 ? 0 : 20}px)`, 
+            transitionDelay: '0.9s' 
+          }}
+        >
+          <h3 className="text-lg font-semibold text-white mb-4">Workflow Tasks</h3>
+          <div className="text-gray-400">
+            <p>Your workflow tasks and progress will be displayed here.</p>
+          </div>
         </div>
-      </GlassCard>
 
-      <GlassCard
-        className="mt-8"
-        style={{ opacity: animationStage >= 4 ? 1 : 0, transform: `translateY(${animationStage >= 4 ? 0 : 20}px)`, transitionDelay: '1.0s' }}
-      >
-        <div className="p-6">
+        <div className="bg-gray-800 border border-gray-700 rounded-2xl p-6 shadow-lg"
+          style={{ 
+            opacity: animationStage >= 4 ? 1 : 0, 
+            transform: `translateY(${animationStage >= 4 ? 0 : 20}px)`, 
+            transitionDelay: '1.0s' 
+          }}
+        >
           <AutopostScheduler />
         </div>
-      </GlassCard>
+      </div>
     </div>
   );
 }

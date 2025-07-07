@@ -53,7 +53,7 @@ export function WelcomeModal() {
           </div>
         </div>
         <DialogFooter>
-          <Button onClick={handleClose} className="w-full bg-mint text-graphite hover:bg-mint/90">Get Started!</Button>
+          <Button onClick={handleClose} className="w-full bg-[#8D5AFF] text-white hover:bg-[#8D5AFF]/90">Get Started!</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

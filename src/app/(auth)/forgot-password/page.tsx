@@ -41,12 +41,12 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#00A67E] to-[#007567] text-white flex items-center justify-center p-4">
-      <div className="w-full max-w-md rounded-2xl bg-dominator-dark/50 p-8 backdrop-blur-sm border border-dominator-dark/50 shadow-2xl">
+    <div className="min-h-screen bg-black text-white flex items-center justify-center p-4">
+      <div className="w-full max-w-md rounded-2xl bg-gray-900/50 backdrop-blur-xl border border-gray-700/50 p-8 shadow-2xl">
         <div className="space-y-6">
           <div className="space-y-2 text-center">
             <h1 className="text-2xl font-bold">Forgot Password</h1>
-            <p className="text-dominator-300">
+            <p className="text-gray-400">
               Enter your email and we&apos;ll send you a link to reset your password.
             </p>
           </div>
@@ -68,21 +68,21 @@ export default function ForgotPasswordPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 required
-                className="bg-dominator-dark/50 border-dominator-dark/50 text-white placeholder-dominator-400"
+                className="bg-gray-800/50 border-gray-600/50 text-white placeholder-gray-400 focus:ring-2 focus:ring-[#8D5AFF] focus:border-transparent rounded-xl h-12 transition-all"
                 disabled={isLoading}
               />
             </div>
 
             <Button
               type="submit"
-              className="w-full bg-gradient-to-r from-[#00A67E] to-[#007567] hover:from-[#00A67E]/90 hover:to-[#007567]/90 text-white font-semibold py-2.5 rounded-lg transition-all hover:shadow-[0_0_20px_rgba(0,166,126,0.5)]"
+              className="w-full bg-gradient-to-r from-[#00A67E] to-[#007567] hover:from-[#00A67E]/90 hover:to-[#007567]/90 text-white font-semibold py-3 rounded-xl transition-all hover:shadow-lg hover:shadow-[#00A67E]/20 h-12"
               disabled={isLoading}
             >
               {isLoading ? "Sending Reset Link..." : "Send Reset Link"}
             </Button>
           </form>
 
-          <p className="text-center text-sm text-dominator-400">
+          <p className="text-center text-sm text-gray-400">
             Remember your password?{" "}
             <Link
               href="/sign-in"

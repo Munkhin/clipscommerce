@@ -6,7 +6,6 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Check, Zap, BarChart3, Users, Shield, Globe, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
-import { Header } from '@/components/common/Header';
 
 export default function FeaturesPage() {
   const [currentYear, setCurrentYear] = useState(2024);
@@ -75,8 +74,6 @@ export default function FeaturesPage() {
 
   return (
     <div className="bg-black min-h-screen text-white">
-      <Header />
-      
       <div className="pt-20">
         {/* Hero Section */}
         <section className="py-16 md:py-24 bg-gradient-to-b from-black to-[#0A0A0A]">

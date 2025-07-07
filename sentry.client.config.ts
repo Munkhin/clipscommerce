@@ -23,6 +23,15 @@ Sentry.init({
       maskAllText: true,
       blockAllMedia: true,
     }),
+    Sentry.browserTracingIntegration(),
+  ],
+  
+  // Ignore common non-critical errors
+  ignoreErrors: [
+    'ResizeObserver loop limit exceeded',
+    'Script error.',
+    'Network Error',
+    'Failed to fetch'
   ],
   
   // Enhanced error filtering

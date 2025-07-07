@@ -3,26 +3,6 @@
 import { ErrorCategory, ErrorSeverity } from './errorReporting';
 import * as Sentry from '@sentry/nextjs';
 
-// Initialize Sentry in production
-if (typeof window !== 'undefined' && process.env.NODE_ENV === 'production') {
-  const sentryDsn = process.env.NEXT_PUBLIC_SENTRY_DSN;
-  if (sentryDsn) {
-    Sentry.init({
-      dsn: sentryDsn,
-      environment: process.env.NODE_ENV,
-      tracesSampleRate: 0.1,
-      integrations: [],
-      beforeSend(event) {
-        // Filter out non-critical errors in production
-        if (event.level === 'info' || event.level === 'debug') {
-          return null;
-        }
-        return event;
-      },
-    });
-  }
-}
-
 // Analytics event types
 export enum AnalyticsEventType {
   ERROR_OCCURRED = 'error_occurred',

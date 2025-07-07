@@ -1,31 +1,8 @@
-/* Modern Dashboard Design System */
+/* ClipsCommerce Dashboard Design System - Aligned with Global Theme */
 :root {
-  /* Colors - Dark Theme */
-  --bg-primary: #0a0b0f;
-  --bg-secondary: #111318;
-  --bg-accent: #1a1d25;
-  --bg-glass: rgba(255, 255, 255, 0.05);
-  --bg-glass-border: rgba(255, 255, 255, 0.1);
+  /* Inherits from globals.css - these extend the global system */
   
-  /* Gradients */
-  --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-  --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  --gradient-warning: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-  --gradient-error: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-  --gradient-info: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
-  
-  /* Accent Colors */
-  --accent-success: #10b981;
-  --accent-warning: #f59e0b;
-  --accent-error: #ef4444;
-  --accent-info: #06b6d4;
-  
-  /* Typography Colors */
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  
-  /* Spacing Scale */
+  /* Dashboard-specific spacing */
   --space-xs: 4px;
   --space-sm: 8px;
   --space-md: 16px;
@@ -34,16 +11,10 @@
   --space-2xl: 48px;
   --space-3xl: 64px;
   
-  /* Border Radius */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
-  
-  /* Shadows */
+  /* Dashboard-specific shadows */
   --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.37);
   --shadow-elevated: 0 20px 40px rgba(0, 0, 0, 0.4);
-  --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.3);
+  --shadow-glow: 0 0 20px rgba(138, 43, 226, 0.3);
   
   /* Transitions */
   --transition-fast: 150ms ease-in-out;
@@ -51,96 +22,10 @@
   --transition-slow: 500ms ease-out;
 }
 
-/* Global Styles */
-* {
-  box-sizing: border-box;
-}
+/* Dashboard-specific Components */
+/* These styles extend the global design system */
 
-body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  line-height: 1.6;
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-}
-
-/* Glass Morphism Components */
-.glass-card {
-  background: var(--bg-glass);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--bg-glass-border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-glass);
-  transition: all var(--transition-normal);
-  position: relative;
-  overflow: hidden;
-}
-
-.glass-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-  opacity: 0;
-  transition: opacity var(--transition-normal);
-}
-
-.glass-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-elevated), var(--shadow-glow);
-}
-
-.glass-card:hover::before {
-  opacity: 1;
-}
-
-/* Enhanced Cards */
-.enhanced-card {
-  background: var(--bg-secondary);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-glass);
-  transition: all var(--transition-normal);
-  position: relative;
-  overflow: hidden;
-}
-
-.enhanced-card::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
-  transition: left 0.6s ease;
-}
-
-.enhanced-card:hover::after {
-  left: 100%;
-}
-
-.enhanced-card:hover {
-  transform: translateY(-2px);
-  border-color: rgba(99, 102, 241, 0.3);
-  box-shadow: var(--shadow-elevated), 0 0 30px rgba(99, 102, 241, 0.15);
-}
-
-/* Typography */
-.gradient-text {
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  font-weight: 700;
-}
-
+/* Typography Scale */
 .text-display {
   font-size: 3.5rem;
   line-height: 1.1;
@@ -165,9 +50,75 @@ body {
   font-weight: 600;
 }
 
-/* Animated Buttons */
-.btn-primary {
-  background: var(--gradient-primary);
+/* Dashboard Glass Cards - Enhanced version */
+.dashboard-glass-card {
+  background: var(--glass-base);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-glass);
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.dashboard-glass-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+}
+
+.dashboard-glass-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-elevated), var(--shadow-glow);
+}
+
+.dashboard-glass-card:hover::before {
+  opacity: 1;
+}
+
+/* Dashboard Enhanced Cards */
+.dashboard-enhanced-card {
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-glass);
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.dashboard-enhanced-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
+  transition: left 0.6s ease;
+}
+
+.dashboard-enhanced-card:hover::after {
+  left: 100%;
+}
+
+.dashboard-enhanced-card:hover {
+  transform: translateY(-2px);
+  border-color: hsl(var(--primary) / 0.3);
+  box-shadow: var(--shadow-elevated), 0 0 30px hsl(var(--primary) / 0.15);
+}
+
+/* Dashboard Buttons */
+.btn-dashboard-primary {
+  background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));
   border: none;
   color: white;
   padding: var(--space-md) var(--space-xl);
@@ -179,7 +130,7 @@ body {
   overflow: hidden;
 }
 
-.btn-primary::before {
+.btn-dashboard-primary::before {
   content: '';
   position: absolute;
   top: 0;
@@ -190,16 +141,16 @@ body {
   transition: left 0.5s ease;
 }
 
-.btn-primary:hover {
+.btn-dashboard-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 10px 25px hsl(var(--primary) / 0.4);
 }
 
-.btn-primary:hover::before {
+.btn-dashboard-primary:hover::before {
   left: 100%;
 }
 
-.btn-primary:active {
+.btn-dashboard-primary:active {
   transform: scale(0.98);
 }
 
@@ -266,25 +217,32 @@ body {
 }
 
 /* Status Indicators */
-.status-success { color: var(--accent-success); }
-.status-warning { color: var(--accent-warning); }
-.status-error { color: var(--accent-error); }
-.status-info { color: var(--accent-info); }
+.status-success { color: hsl(var(--success)); }
+.status-warning { color: hsl(var(--warning)); }
+.status-error { color: hsl(var(--destructive)); }
+.status-info { color: hsl(var(--accent)); }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
+/* Dashboard Status Badges */
+.badge-success {
+  background: hsl(var(--success) / 0.1);
+  color: hsl(var(--success));
+  border: 1px solid hsl(var(--success) / 0.2);
 }
 
-::-webkit-scrollbar-track {
-  background: var(--bg-secondary);
+.badge-warning {
+  background: hsl(var(--warning) / 0.1);
+  color: hsl(var(--warning));
+  border: 1px solid hsl(var(--warning) / 0.2);
 }
 
-::-webkit-scrollbar-thumb {
-  background: var(--bg-accent);
-  border-radius: 4px;
+.badge-error {
+  background: hsl(var(--destructive) / 0.1);
+  color: hsl(var(--destructive));
+  border: 1px solid hsl(var(--destructive) / 0.2);
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
+.badge-info {
+  background: hsl(var(--accent) / 0.1);
+  color: hsl(var(--accent));
+  border: 1px solid hsl(var(--accent) / 0.2);
 } 

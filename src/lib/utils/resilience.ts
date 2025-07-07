@@ -3,7 +3,26 @@
  * Provides retry logic, circuit breakers, and other resilience patterns
  */
 
-import { performance } from 'perf_hooks';
+// Use browser performance API or Node.js perf_hooks based on environment
+const getPerformance = () => {
+  if (typeof window !== 'undefined') {
+    // Browser environment
+    return window.performance;
+  } else {
+    // Node.js environment
+    try {
+      const { performance } = require('perf_hooks');
+      return performance;
+    } catch {
+      // Fallback if perf_hooks is not available
+      return {
+        now: () => Date.now()
+      };
+    }
+  }
+};
+
+const performance = getPerformance();
 
 /**
  * Circuit breaker states

@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClient } from '@supabase/supabase-js';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -11,7 +10,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/providers/AuthProvider';
-import { AuditLogService } from '@/services/AuditLogService';
 import { Clock, AlertCircle, CheckCircle, XCircle, RefreshCw, Trash2, Edit, Play, Pause } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 
@@ -34,7 +32,7 @@ interface ScheduledPost {
 }
 
 export function AutopostScheduler() {
-  const { user } = useAuth();
+  const { user, supabase } = useAuth();
   const { toast } = useToast();
   const [scheduledPosts, setScheduledPosts] = useState<ScheduledPost[]>([]);
   const [content, setContent] = useState('');
@@ -48,15 +46,11 @@ export function AutopostScheduler() {
   const [isScheduling, setIsScheduling] = useState(false);
   const [selectedPosts, setSelectedPosts] = useState<string[]>([]);
 
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
-  const auditLogService = new AuditLogService();
-
   useEffect(() => {
-    fetchScheduledPosts();
-  }, []);
+    if (user) {
+      fetchScheduledPosts();
+    }
+  }, [user]);
 
   const fetchScheduledPosts = async () => {
     if (!user) return;
@@ -125,7 +119,19 @@ export function AutopostScheduler() {
 
       if (response.ok) {
         const data = await response.json();
-        await auditLogService.log(user.id, 'create_post', { postId: data.scheduled_post.id });
+        
+        // Log audit event via API
+        await fetch('/api/audit/log', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userId: user.id,
+            action: 'create_post',
+            details: { postId: data.scheduled_post.id },
+          }),
+        });
         
         // Refresh the posts list
         await fetchScheduledPosts();

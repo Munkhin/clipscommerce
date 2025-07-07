@@ -80,12 +80,12 @@ export default function ResetPasswordPage() {
 
   if (success) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#00A67E] to-[#007567] text-white flex items-center justify-center p-4">
-        <div className="w-full max-w-md rounded-2xl bg-dominator-dark/50 p-8 backdrop-blur-sm border border-dominator-dark/50 shadow-2xl text-center">
+      <div className="min-h-screen bg-black text-white flex items-center justify-center p-4">
+        <div className="w-full max-w-md rounded-2xl bg-gray-900/50 p-8 backdrop-blur-sm border border-gray-700/50 shadow-2xl text-center">
           <div className="space-y-6">
             <div className="space-y-2">
               <h1 className="text-2xl font-bold">Password Reset Successful!</h1>
-              <p className="text-dominator-300">
+              <p className="text-gray-400">
                 Your password has been updated successfully. Redirecting to sign in...
               </p>
             </div>
@@ -99,12 +99,12 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#00A67E] to-[#007567] text-white flex items-center justify-center p-4">
-      <div className="w-full max-w-md rounded-2xl bg-dominator-dark/50 p-8 backdrop-blur-sm border border-dominator-dark/50 shadow-2xl">
+    <div className="min-h-screen bg-black text-white flex items-center justify-center p-4">
+      <div className="w-full max-w-md rounded-2xl bg-gray-900/50 p-8 backdrop-blur-sm border border-gray-700/50 shadow-2xl">
         <div className="space-y-6">
           <div className="space-y-2 text-center">
             <h1 className="text-2xl font-bold">Reset Your Password</h1>
-            <p className="text-dominator-300">
+            <p className="text-gray-400">
               Enter your new password below.
             </p>
           </div>
@@ -127,7 +127,7 @@ export default function ResetPasswordPage() {
                   placeholder="Enter your new password"
                   required
                   minLength={6}
-                  className="bg-dominator-dark/50 border-dominator-dark/50 text-white placeholder-dominator-400 pr-12"
+                  className="bg-gray-800/50 border-gray-600/50 text-white placeholder-gray-400 focus:ring-2 focus:ring-[#8D5AFF] focus:border-transparent rounded-xl h-12 transition-all pr-12"
                   disabled={isLoading}
                 />
                 <button
@@ -154,7 +154,7 @@ export default function ResetPasswordPage() {
                   placeholder="Confirm your new password"
                   required
                   minLength={6}
-                  className="bg-dominator-dark/50 border-dominator-dark/50 text-white placeholder-dominator-400 pr-12"
+                  className="bg-gray-800/50 border-gray-600/50 text-white placeholder-gray-400 focus:ring-2 focus:ring-[#8D5AFF] focus:border-transparent rounded-xl h-12 transition-all pr-12"
                   disabled={isLoading}
                 />
                 <button
@@ -172,14 +172,14 @@ export default function ResetPasswordPage() {
 
             <Button
               type="submit"
-              className="w-full bg-gradient-to-r from-[#00A67E] to-[#007567] hover:from-[#00A67E]/90 hover:to-[#007567]/90 text-white font-semibold py-2.5 rounded-lg transition-all hover:shadow-[0_0_20px_rgba(0,166,126,0.5)]"
+              className="w-full bg-gradient-to-r from-[#00A67E] to-[#007567] hover:from-[#00A67E]/90 hover:to-[#007567]/90 text-white font-semibold py-3 rounded-xl transition-all hover:shadow-lg hover:shadow-[#00A67E]/20 h-12"
               disabled={isLoading}
             >
               {isLoading ? "Resetting Password..." : "Reset Password"}
             </Button>
           </form>
 
-          <p className="text-center text-sm text-dominator-400">
+          <p className="text-center text-sm text-gray-400">
             Remember your password?{" "}
             <a
               href="/sign-in"

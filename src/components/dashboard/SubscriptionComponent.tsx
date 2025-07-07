@@ -79,15 +79,15 @@ export default function SubscriptionComponent({ navigate, stripeLinks }: Subscri
     {
       id: 'lite',
       name: 'Lite',
-      price: 9,
-      yearlyPrice: 240,
+      price: 20,
+      yearlyPrice: 240, // $20/month, billed annually
       interval: 'monthly',
       description: 'Access to basic content automation features.',
       features: [
-        'AI-driven content generation',
-        'Basic scheduling',
-        'Single platform integration',
-        'Basic analytics (no e-commerce)'
+        'Viral Blitz Cycle Framework (15 uses)',
+        'Idea Generator Framework (15 uses)',
+        '15 autoposts/month',
+        'Basic analytics (no e-commerce)',
       ],
       stripeMonthlyLinkEnv: 'NEXT_PUBLIC_STRIPE_LITE_MONTHLY_LINK',
       stripeYearlyLinkEnv: 'NEXT_PUBLIC_STRIPE_LITE_YEARLY_LINK'
@@ -96,18 +96,17 @@ export default function SubscriptionComponent({ navigate, stripeLinks }: Subscri
       id: 'pro',
       name: 'Pro',
       price: 70,
-      yearlyPrice: 600,
+      yearlyPrice: 600, // $50/month, billed annually
       interval: 'monthly',
       description: 'Advanced features for professional creators.',
       isPopular: true,
       features: [
-        'Everything in Lite',
+        'Viral Blitz Cycle Framework (unlimited)',
+        'Idea Generator Framework (unlimited)',
         'Unlimited posts',
-        '1 set of accounts',
+        'Multiple account sets',
         'E-commerce integration',
-        'AI-driven content optimization',
-        'Multi-platform scheduling',
-        'Detailed performance analytics'
+        'Advanced analytics & reporting',
       ],
       stripeMonthlyLinkEnv: 'NEXT_PUBLIC_STRIPE_PRO_MONTHLY_LINK',
       stripeYearlyLinkEnv: 'NEXT_PUBLIC_STRIPE_PRO_YEARLY_LINK'
@@ -115,16 +114,17 @@ export default function SubscriptionComponent({ navigate, stripeLinks }: Subscri
     {
       id: 'team',
       name: 'Team',
-      price: 199,
-      yearlyPrice: 6000,
+      price: 500,
+      yearlyPrice: 6000, // $500/month, billed annually
       interval: 'monthly',
       description: 'Collaborative features for larger teams.',
       features: [
         'Everything in Pro',
+        'Team dashboard access',
         'Manage unlimited accounts',
         'Brand Voice AI (for consistency)',
         'Team collaboration mode',
-        'Advanced analytics & reporting'
+        'Priority support',
       ],
       stripeMonthlyLinkEnv: 'NEXT_PUBLIC_STRIPE_TEAM_MONTHLY_LINK',
       stripeYearlyLinkEnv: 'NEXT_PUBLIC_STRIPE_TEAM_YEARLY_LINK',
@@ -196,7 +196,7 @@ export default function SubscriptionComponent({ navigate, stripeLinks }: Subscri
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground p-4 md:p-6 space-y-6">
+    <div className="min-h-screen bg-black text-foreground p-4 md:p-6 space-y-6">
       <div>
         <h1 className="text-2xl md:text-3xl font-bold tracking-tight gradient-text">Subscription</h1>
         <p className="text-muted-foreground mt-1">Manage your subscription plan and billing</p>

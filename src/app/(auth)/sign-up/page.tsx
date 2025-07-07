@@ -88,27 +88,20 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#00A67E] to-[#007567] text-white relative overflow-hidden">
-      {/* Background effects */}
-      <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-20 [mask-image:radial-gradient(ellipse_at_center,white,transparent_70%)]"></div>
-      <div className="absolute top-20 right-20 w-72 h-72 bg-[#8D5AFF]/20 rounded-full filter blur-3xl"></div>
-      <div className="absolute bottom-20 left-20 w-96 h-96 bg-[#5afcc0]/10 rounded-full filter blur-3xl"></div>
-      
-      <div className="container mx-auto px-4 py-16 relative z-10">
+    <div className="min-h-screen bg-black text-white relative overflow-hidden">
+      <div className="w-full max-w-md mx-auto px-4 py-16 relative z-10">
         <div className="flex min-h-screen flex-col items-center justify-center px-4 py-12">
           <div className="w-full max-w-md">
             {/* Logo/Brand */}
             <div className="text-center mb-8">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-[#00A67E] to-[#007567] rounded-2xl mb-4">
               <Image
                 src="/images/ChatGPT Image Jun 1, 2025, 07_27_54 PM.png"
                 alt="ClipsCommerce Logo"
                 width={48}
                 height={48}
-                className="object-contain p-1 invert"
+                className="object-contain invert mx-auto mb-4"
                 priority
               />
-            </div>
               <h1 className="text-3xl font-bold tracking-tight text-white mb-2">Create an Account</h1>
               <p className="text-gray-300">
                 Already have an account?{" "}

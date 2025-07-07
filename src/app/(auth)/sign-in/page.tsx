@@ -35,7 +35,7 @@ export default function SignInPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const formRef = useRef<HTMLFormElement>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -55,25 +55,15 @@ export default function SignInPage() {
         const { data: { session } } = await supabase.auth.getSession();
         
         if (session) {
-          // If there are plan parameters, redirect to checkout
-          if (plan && priceId) {
-            window.location.href = priceId;
-          } else if (plan && price) {
-            // For fallback, construct checkout URL or redirect to dashboard
-            router.push('/dashboard');
-          } else {
-            router.push('/welcome');
-          }
-        } else {
-          setIsLoading(false);
+          router.push('/dashboard');
         }
       } catch (err) {
-        setIsLoading(false);
+        // Do nothing, allow user to sign in
       }
     };
 
     checkSession();
-  }, [router, plan, priceId, price]);
+  }, [router]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -119,19 +109,17 @@ export default function SignInPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#00A67E] to-[#007567] text-white flex flex-col items-center justify-center p-6 sm:p-8">
+    <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-6 sm:p-8">
       <div className="w-full max-w-xs space-y-8">
         <div className="text-center">
-          <div className="inline-flex items-center justify-center w-[70px] h-[70px] bg-gradient-to-br from-[#8D5AFF] to-[#5AFCC0] rounded-xl mb-6 shadow-md overflow-hidden">
-            <Image
-              src="/images/ChatGPT Image Jun 1, 2025, 07_27_54 PM.png"
-              alt="ClipsCommerce Logo"
-              width={48}
-              height={48}
-              className="object-contain p-1 invert"
-              priority
-            />
-          </div>
+          <Image
+            src="/images/ChatGPT Image Jun 1, 2025, 07_27_54 PM.png"
+            alt="ClipsCommerce Logo"
+            width={48}
+            height={48}
+            className="object-contain invert mx-auto mb-6"
+            priority
+          />
           <h1 className="text-[32px] font-bold tracking-tight text-white mb-1.5">Welcome back</h1>
           <p className="text-gray-400 text-base">Sign in to your ClipsCommerce account</p>
         </div>

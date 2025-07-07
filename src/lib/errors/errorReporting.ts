@@ -49,16 +49,28 @@ interface ErrorReportingConfig {
   enableLocalStorage: boolean;
   maxBreadcrumbs: number;
   beforeSend?: (event: any) => any | null;
+  sessionId?: string;
 }
 
+// Default configuration
+const defaultConfig: ErrorReportingConfig = {
+  environment: process.env.NODE_ENV || 'development',
+  enableInDevelopment: process.env.NODE_ENV !== 'production',
+  enableConsoleLogging: true,
+  enableLocalStorage: true,
+  maxBreadcrumbs: 50,
+  beforeSend: undefined,
+};
+
 class ErrorReportingService {
-  private isInitialized = false;
+  private static instance: ErrorReportingService;
   private config: ErrorReportingConfig;
+  private isInitialized: boolean = false;
   private sessionId: string;
 
-  constructor(config: ErrorReportingConfig) {
-    this.config = config;
-    this.sessionId = uuidv4();
+  private constructor(config: Partial<ErrorReportingConfig> = {}) {
+    this.config = { ...defaultConfig, ...config };
+    this.sessionId = this.config.sessionId || uuidv4();
     this.initialize();
   }
 
@@ -67,43 +79,6 @@ class ErrorReportingService {
 
     // Initialize Sentry
     if (this.shouldInitializeSentry()) {
-      Sentry.init({
-        dsn: this.config.dsn || process.env.NEXT_PUBLIC_SENTRY_DSN,
-        environment: this.config.environment,
-        debug: process.env.NODE_ENV === 'development',
-        
-        // Performance monitoring
-        tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
-        
-        // Session replay (optional)
-        replaysSessionSampleRate: 0.1,
-        replaysOnErrorSampleRate: 1.0,
-        
-        // Configuration
-        maxBreadcrumbs: this.config.maxBreadcrumbs,
-        beforeSend: this.config.beforeSend || this.defaultBeforeSend.bind(this),
-        
-        // Ignore common non-critical errors
-        ignoreErrors: [
-          'ResizeObserver loop limit exceeded',
-          'Script error.',
-          'Network Error',
-          'Failed to fetch'
-        ],
-
-        // Auto-instrumentation
-        integrations: typeof window !== 'undefined' ? [
-          Sentry.replayIntegration(),
-          Sentry.browserTracingIntegration(),
-        ] : [],
-      });
-
-      // Set global context
-      Sentry.setContext('session', {
-        id: this.sessionId,
-        started: new Date().toISOString()
-      });
-
       this.isInitialized = true;
     }
   }
