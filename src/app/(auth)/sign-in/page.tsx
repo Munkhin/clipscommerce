@@ -84,7 +84,7 @@ export default function SignInPage() {
           // For fallback, redirect to dashboard
           router.push('/dashboard');
         } else {
-          router.push("/welcome");
+          router.push("/dashboard");
         }
       } else {
         setError('An unknown error occurred');

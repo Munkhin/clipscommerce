@@ -106,14 +106,10 @@ const navItems: NavItem[] = [
             </span>
             <Link
               href="/landing/pricing"
-              legacyBehavior
+              className="font-bold underline hover:text-white/90 transition-colors"
+              onClick={() => setMobileMenuOpen(false)}
             >
-              <a
-                className="font-bold underline hover:text-white/90 transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                upgrade now
-              </a>
+              upgrade now
             </Link>
             <button
               onClick={dismissBanner}
@@ -175,11 +171,9 @@ const navItems: NavItem[] = [
                 ) : (
                   <Link 
                     href={item.href || '#'}
-                    legacyBehavior
+                    className="text-sm text-gray-200 hover:text-white transition-colors duration-300"
                   >
-                    <a className="text-sm text-gray-200 hover:text-white transition-colors duration-300">
-                      {item.label}
-                    </a>
+                    {item.label}
                   </Link>
                 )}
                 
@@ -191,14 +185,10 @@ const navItems: NavItem[] = [
                         <Link
                           key={dropdownItem.label}
                           href={dropdownItem.href}
-                          legacyBehavior
+                          className="block px-4 py-2 text-sm text-gray-200 hover:bg-gray-800 hover:text-white"
+                          onClick={() => setOpenDropdown(null)}
                         >
-                          <a
-                            className="block px-4 py-2 text-sm text-gray-200 hover:bg-gray-800 hover:text-white"
-                            onClick={() => setOpenDropdown(null)}
-                          >
-                            {dropdownItem.label}
-                          </a>
+                          {dropdownItem.label}
                         </Link>
                       ))}
                     </div>
@@ -212,19 +202,15 @@ const navItems: NavItem[] = [
           <div className="hidden md:flex items-center space-x-4">
             <Link 
               href="/sign-in"
-              legacyBehavior
+              className="text-sm text-gray-200 hover:text-white transition-colors duration-300"
             >
-              <a className="text-sm text-gray-200 hover:text-white transition-colors duration-300">
-                Sign In
-              </a>
+              Sign In
             </Link>
             <Link
               href="/sign-up"
-              legacyBehavior
+              className="bg-white text-black px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-200 transition-colors duration-300"
             >
-              <a className="bg-white text-black px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-200 transition-colors duration-300">
-                Get Started
-              </a>
+              Get Started
             </Link>
           </div>
 

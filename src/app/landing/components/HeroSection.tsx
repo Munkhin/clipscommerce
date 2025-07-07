@@ -61,20 +61,18 @@ export default function HeroSection({ onGetStarted, onDemo }: HeroSectionProps) 
             transition={{ duration: 0.6, delay: 0.3 }}
           >
             <div className="absolute -inset-4 border-l border-t border-border rounded-tl-lg" aria-hidden="true" />
-            <Link href="/sign-up" legacyBehavior>
-              <a>
-                <motion.button
-                  className="bg-primary-gradient text-primary-foreground px-10 py-5 rounded-lg font-bold text-lg shadow-xl transform transition-all touch-target"
-                  whileHover={{ scale: 1.02, boxShadow: '0 10px 25px -5px hsl(var(--primary) / 0.5)' }}
-                  whileTap={{ scale: 0.98 }}
-                  aria-label="Get Started with ClipsCommerce"
-                >
-                  <span className="flex items-center justify-center">
-                    Get Started
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </span>
-                </motion.button>
-              </a>
+            <Link href="/sign-up">
+              <motion.button
+                className="bg-primary-gradient text-primary-foreground px-10 py-5 rounded-lg font-bold text-lg shadow-xl transform transition-all touch-target"
+                whileHover={{ scale: 1.02, boxShadow: '0 10px 25px -5px hsl(var(--primary) / 0.5)' }}
+                whileTap={{ scale: 0.98 }}
+                aria-label="Get Started with ClipsCommerce"
+              >
+                <span className="flex items-center justify-center">
+                  Get Started
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </span>
+              </motion.button>
             </Link>
           </motion.div>
         </div>
