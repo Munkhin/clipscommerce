@@ -118,7 +118,52 @@ export async function middleware(request: NextRequest) {
     return redirectResponse;
   }
 
-  
+  // Check for team dashboard access control
+  if (pathname.startsWith('/team-dashboard') || pathname.startsWith('/team_dashboard')) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('subscription_tier')
+      .eq('id', session.user.id)
+      .single();
+
+    const tier = (profile as any)?.subscription_tier || 'lite';
+    
+    // Only team tier users can access team dashboard
+    if (tier !== 'team') {
+      const url = new URL('/pricing', request.url);
+      url.searchParams.set('upgrade', 'team');
+      url.searchParams.set('reason', 'team_dashboard_access');
+      const redirectResponse = NextResponse.redirect(url);
+      // Preserve correlation headers
+      const correlationId = response.headers.get(CORRELATION_ID_HEADER);
+      const requestId = response.headers.get(REQUEST_ID_HEADER);
+      if (correlationId) redirectResponse.headers.set(CORRELATION_ID_HEADER, correlationId);
+      if (requestId) redirectResponse.headers.set(REQUEST_ID_HEADER, requestId);
+      return redirectResponse;
+    }
+  }
+
+  // Redirect team users from root to team dashboard
+  if (pathname === '/') {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('subscription_tier')
+      .eq('id', session.user.id)
+      .single();
+
+    const tier = (profile as any)?.subscription_tier || 'lite';
+    
+    if (tier === 'team') {
+      const url = new URL('/team-dashboard', request.url);
+      const redirectResponse = NextResponse.redirect(url);
+      // Preserve correlation headers
+      const correlationId = response.headers.get(CORRELATION_ID_HEADER);
+      const requestId = response.headers.get(REQUEST_ID_HEADER);
+      if (correlationId) redirectResponse.headers.set(CORRELATION_ID_HEADER, correlationId);
+      if (requestId) redirectResponse.headers.set(REQUEST_ID_HEADER, requestId);
+      return redirectResponse;
+    }
+  }
   
   // Merge correlation headers with supabase response
   const correlationId = response.headers.get(CORRELATION_ID_HEADER);

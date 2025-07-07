@@ -107,6 +107,24 @@ export default function PricingPage() {
       ctaText: 'Get Started',
       stripeMonthlyPriceId: process.env.NEXT_PUBLIC_STRIPE_PRO_MONTHLY_LINK,
       stripeYearlyPriceId: process.env.NEXT_PUBLIC_STRIPE_PRO_YEARLY_LINK,
+    },
+    {
+      id: 'team',
+      name: 'Team',
+      price: 500, // Monthly price
+      yearlyPrice: 6000, // $500/month, billed annually
+      description: '$500/month',
+      features: [
+        'Everything in Pro',
+        'Team dashboard access',
+        'Manage unlimited accounts',
+        'Brand Voice AI (for consistency)',
+        'Team collaboration mode',
+        'Priority support'
+      ],
+      ctaText: 'Select Plan',
+      stripeMonthlyPriceId: process.env.NEXT_PUBLIC_STRIPE_TEAM_MONTHLY_LINK,
+      stripeYearlyPriceId: process.env.NEXT_PUBLIC_STRIPE_TEAM_YEARLY_LINK,
     }
   ];
 
@@ -145,7 +163,7 @@ export default function PricingPage() {
     },
     {
       question: "What's the difference between the pricing tiers?",
-      answer: "Lite ($20/month or $240/year) offers essential features for getting started. Pro ($70/month or $600/year) includes unlimited features, multiple account sets, e-commerce integration, and advanced analytics for growing businesses."
+      answer: "Pro ($70/month or $600/year) is for individuals managing up to 3 accounts. Team ($100/month or $900/year) adds collaboration features and supports up to 10 accounts. Enterprise ($160/month or $1,500+/year) offers unlimited accounts, custom integrations, and dedicated support."
     },
     {
       question: 'What payment methods do you accept?',
@@ -277,7 +295,7 @@ export default function PricingPage() {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-12 relative"
+          className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto mb-12 relative"
         >
           {pricingTiers.map((tier: PricingTier, index: number) => {
             // Handle pricing display for all tiers

@@ -2,7 +2,7 @@
 import { test, expect, Page } from '@playwright/test';
 
 test.describe('Navigation & Routing', () => {
-  const pagesToTest = ['/', '/landing/pricing', '/sign-in', '/sign-up'];
+  const pagesToTest = ['/', '/landing/pricing', '/landing/team', '/sign-in', '/sign-up'];
 
   test.beforeEach(async ({ page }) => {
     await page.goto('/');

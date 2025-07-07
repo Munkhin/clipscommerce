@@ -2,7 +2,7 @@
 import { test, expect, Page } from '@playwright/test';
 
 test.describe('SEO', () => {
-  const pagesToTest = ['/', '/landing/pricing'];
+  const pagesToTest = ['/', '/landing/pricing', '/landing/team'];
 
   test('Titles should be dynamic', async ({ page }) => {
     const titles = new Set<string>();

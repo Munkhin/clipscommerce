@@ -41,7 +41,7 @@ Our beachhead: **micro-influencers (1k-10k followers) selling on TikTok.**
 3. **Autoposting Pulse** – intelligent scheduling & content queues.
 4. **Micro-Influencer Flywheel** – freemium pricing & viral growth loops.
 5. **Authenticity Watermark** – augment, never replace, creator personality.
-
+6. **Performance Dashboard** – show ROI from clip → cart.
 7. **Community Template Library** – shared, ranked templates building network effects.
 
 ## Launch-Readiness Checklist

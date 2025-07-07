@@ -4,38 +4,38 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ClipsCommerce Design System - Modern Tech Aesthetic */
+/* ClipsCommerce Design System - Unified Dark Theme */
 :root {
-  /* Core Brand Colors - Enhanced with cyberpunk vibes */
-  --primary: 280 100% 70%; /* Electric Purple */
+  /* Core Brand Colors */
+  --primary: 271 91% 65%; /* Amethyst Purple */
   --primary-foreground: 0 0% 100%;
-  --secondary: 200 100% 60%; /* Cyber Blue */
+  --secondary: 211 71% 59%; /* Cerulean Blue */
   --secondary-foreground: 0 0% 100%;
-  --accent: 160 100% 50%; /* Neon Green */
-  --accent-foreground: 0 0% 10%;
+  --accent: 180 100% 42%; /* Teal */
+  --accent-foreground: 0 0% 100%;
   
-  /* Background Colors - Deeper, more tech-like */
-  --background: 230 25% 4%; /* Ultra Dark */
-  --foreground: 0 0% 95%; /* High Contrast White */
-  --card: 230 20% 8%; /* Card Background */
-  --card-foreground: 0 0% 95%;
-  --popover: 230 20% 8%;
-  --popover-foreground: 0 0% 95%;
+  /* Background Colors */
+  --background: 240 25% 6%; /* Deep Dark */
+  --foreground: 0 0% 88%; /* Light Gray */
+  --card: 240 29% 10%; /* Card Background */
+  --card-foreground: 0 0% 88%;
+  --popover: 240 29% 10%;
+  --popover-foreground: 0 0% 88%;
   
-  /* UI Colors - Better contrast */
-  --muted: 230 15% 12%;
-  --muted-foreground: 0 0% 70%;
-  --border: 230 15% 18%;
-  --input: 230 15% 12%;
-  --ring: 280 100% 70%;
+  /* UI Colors */
+  --muted: 240 20% 15%;
+  --muted-foreground: 0 0% 63%;
+  --border: 240 20% 20%;
+  --input: 240 20% 15%;
+  --ring: 271 91% 65%;
   
-  /* Status Colors - More vibrant */
-  --destructive: 0 100% 65%;
-  --destructive-foreground: 0 0% 100%;
-  --warning: 45 100% 60%;
+  /* Status Colors */
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 98%;
+  --warning: 51 100% 50%;
   --warning-foreground: 0 0% 10%;
-  --success: 140 100% 50%;
-  --success-foreground: 0 0% 10%;
+  --success: 123 39% 57%;
+  --success-foreground: 0 0% 100%;
   
   /* Radius */
   --radius: 0.5rem;
@@ -43,16 +43,11 @@
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
   
-  /* Glassmorphism - Enhanced tech aesthetic */
-  --glass-base: rgba(10, 10, 25, 0.8);
-  --glass-hover: rgba(20, 20, 45, 0.9);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-border-hover: rgba(147, 51, 234, 0.4);
-  
-  /* Tech Glow Effects */
-  --glow-primary: 0 0 20px rgba(147, 51, 234, 0.3);
-  --glow-secondary: 0 0 20px rgba(59, 130, 246, 0.3);
-  --glow-accent: 0 0 20px rgba(16, 185, 129, 0.3);
+  /* Glassmorphism */
+  --glass-base: rgba(36, 36, 63, 0.6);
+  --glass-hover: rgba(52, 52, 85, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.05);
+  --glass-border-hover: rgba(138, 43, 226, 0.3);
   
   /* Chart Colors */
   --chart-1: 271 91% 65%;
@@ -76,11 +71,7 @@
   }
   
   body {
-    background: 
-      radial-gradient(circle at 20% 50%, rgba(147, 51, 234, 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 40% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 50%),
-      linear-gradient(135deg, hsl(230 25% 4%) 0%, hsl(230 20% 6%) 100%);
+    background: radial-gradient(ellipse at center, hsl(240 24% 14%) 0%, hsl(240 25% 6%) 100%);
     background-attachment: fixed;
     color: hsl(var(--foreground));
     font-family: var(--font-sans);
@@ -165,142 +156,75 @@
   }
 }
 
-/* Tech Glassmorphism Components */
+/* Glassmorphism Components */
 .glass-card {
   background: var(--glass-base);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-}
-
-.glass-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  padding: 1px;
-  background: linear-gradient(45deg, transparent, rgba(147, 51, 234, 0.3), transparent);
-  border-radius: inherit;
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask-composite: xor;
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease-in-out;
 }
 
 .glass-card:hover {
   background: var(--glass-hover);
   border-color: var(--glass-border-hover);
-  box-shadow: 
-    0 20px 64px rgba(0, 0, 0, 0.5),
-    var(--glow-primary),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  transform: translateY(-4px);
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4), 0 0 24px rgba(138, 43, 226, 0.2);
+  transform: translateY(-2px);
 }
 
-.glass-card:hover::before {
-  opacity: 1;
-}
-
-/* Tech Enhanced Card */
+/* Enhanced Card */
 .enhanced-card {
   background: hsl(var(--card));
   border: 1px solid hsl(var(--border));
   border-radius: var(--radius);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 
-    0 4px 16px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  position: relative;
-  overflow: hidden;
-}
-
-.enhanced-card::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
-  transition: left 0.6s ease;
-}
-
-.enhanced-card:hover::after {
-  left: 100%;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
 .enhanced-card:hover {
-  border-color: hsl(var(--primary) / 0.4);
-  box-shadow: 
-    0 12px 48px rgba(0, 0, 0, 0.4),
-    var(--glow-primary),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  transform: translateY(-3px);
+  border-color: hsl(var(--primary) / 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 16px rgba(138, 43, 226, 0.15);
+  transform: translateY(-2px);
 }
 
-/* Tech Gradient Text */
+/* Gradient Text */
 .gradient-text {
-  background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)), hsl(var(--accent)));
+  background: linear-gradient(45deg, hsl(var(--primary)), hsl(var(--secondary)));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  background-size: 200% 200%;
-  animation: gradient-shift 3s ease infinite;
 }
 
-@keyframes gradient-shift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-}
-
-/* Tech Animations */
+/* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
+  from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes pulse-glow {
-  0%, 100% { 
-    opacity: 1;
-    filter: brightness(1) drop-shadow(0 0 8px rgba(147, 51, 234, 0.3));
-  }
-  50% { 
-    opacity: 0.8;
-    filter: brightness(1.1) drop-shadow(0 0 16px rgba(147, 51, 234, 0.5));
-  }
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-8px); }
-}
-
-@keyframes matrix-rain {
-  0% { transform: translateY(-100vh); opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
-  100% { transform: translateY(100vh); opacity: 0; }
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: fadeIn 0.5s ease-out;
 }
 
-.animate-pulse-glow {
-  animation: pulse-glow 2s ease-in-out infinite;
+.animate-pulse-slow {
+  animation: pulse 4s ease-in-out infinite;
 }
 
-.animate-float {
-  animation: float 3s ease-in-out infinite;
-}
-
-.animate-matrix {
-  animation: matrix-rain 2s linear infinite;
+.animate-gradient {
+  animation: gradient 8s ease infinite;
+  background-size: 200% 200%;
 }
 
 /* Countdown Timer */

@@ -233,8 +233,8 @@ export function useVideoUpload(options?: {
               
               return {
                 url: result.url,
-                thumbnailUrl: uploadedThumbnailResult.success && uploadedThumbnailResult.data?.[0]?.path ? 
-                  await storageService.getPublicUrl('thumbnails', uploadedThumbnailResult.data[0].path) : 
+                thumbnailUrl: thumbnailUpload.progress[0]?.file ? 
+                  await storageService.getPublicUrl('thumbnails', thumbnailUpload.progress[0].file.name) : 
                   undefined
               };
             } catch {

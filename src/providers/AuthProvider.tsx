@@ -36,8 +36,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(session?.user ?? null);
         
         if (event === 'SIGNED_IN') {
-          // Redirect to dashboard on sign-in
-          router.push('/dashboard');
+          // Immediately redirect to welcome page on successful sign-in
+          router.push('/welcome');
           router.refresh();
         } else if (event === 'SIGNED_OUT') {
           router.push('/auth/sign-in');
