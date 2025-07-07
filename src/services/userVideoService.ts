@@ -29,6 +29,7 @@ export interface VideoUploadOptions {
   file: File;
   title?: string;
   description?: string;
+  thumbnailUrl?: string;
 }
 
 export interface VideoProcessingStatus {
@@ -213,7 +214,8 @@ export class UserVideoService {
           file_size: file.size,
           status: 'uploaded',
           uploaded_at: new Date().toISOString(),
-          description
+          description,
+          thumbnail_url: options.thumbnailUrl
         })
         .select()
         .single();

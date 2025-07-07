@@ -1,8 +1,10 @@
 
 import { test, expect, Page, devices } from '@playwright/test';
 
+// Use devices configuration at the top level
+test.use({ ...devices['iPhone 13'] });
+
 test.describe('PWA / Mobile', () => {
-  test.use({ ...devices['iPhone 13'] });
 
   test('Off-canvas nav should have safe-area-inset', async ({ page }) => {
     await page.goto('/');

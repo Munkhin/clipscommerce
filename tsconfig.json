@@ -28,8 +28,6 @@
       "@/components/*": ["./src/components/*"],
       "@/app/*": ["./src/app/*"]
     },
-    "types": ["node", "react", "react-dom", "jest"],
-    "typeRoots": ["./node_modules/@types", "./src/types", "./types"],
     "strictNullChecks": true,
     "downlevelIteration": true
   },
@@ -38,6 +36,7 @@
     "**/*.tsx",
     "next-env.d.ts",
     ".next/types/**/*.ts",
+    ".next/types/**/*.d.ts",
     "next.config.js"
   ],
   "exclude": [

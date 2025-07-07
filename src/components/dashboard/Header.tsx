@@ -14,7 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Bell, ChevronDown, Menu, User, Users, ArrowLeftRight } from 'lucide-react';
+import { Bell, ChevronDown, Menu, User } from 'lucide-react';
 
 interface HeaderProps {
   breadcrumb?: React.ReactNode;
@@ -26,18 +26,6 @@ export default function Header({ breadcrumb }: HeaderProps) {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
-  // Check if we're currently in team mode
-  const isTeamMode = pathname?.startsWith('/team-dashboard');
-  
-  const handleModeToggle = () => {
-    if (isTeamMode) {
-      // Switch to personal mode
-      router.push('/dashboard');
-    } else {
-      // Switch to team mode
-      router.push('/team-dashboard/operations');
-    }
-  };
 
   return (
     <header className="w-full p-4 border-b border-gray-800/50 backdrop-blur-lg sticky top-0 z-50 bg-black">

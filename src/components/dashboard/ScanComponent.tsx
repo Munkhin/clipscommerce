@@ -36,38 +36,56 @@ export default function ScanComponent() {
 
     setIsScanning(true);
     setError(null);
-    
+    setScanResult(null);
+    setScanCompleted(false);
+
     try {
-      // In a real implementation, this would connect to Supabase
-      // For demo purposes, we'll simulate a successful scan after a delay
-      await new Promise(resolve => setTimeout(resolve, 3000));
-      
-      // Simulate a successful scan response
-      const mockResult: ScanResult = {
-        id: Date.now().toString(),
+      // Start scan via API
+      const res = await fetch('/api/scan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user?.id,
+          niche,
+          competitors,
+          platforms: ['tiktok'],
+          lookbackDays: 30,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || 'Failed to start scan');
+      }
+      const scanId = data.scanId;
+      // Poll for scan result
+      let attempts = 0;
+      let result = null;
+      while (attempts < 20) { // up to ~1 min
+        await new Promise(resolve => setTimeout(resolve, 3000));
+        const res2 = await fetch(`/api/scan?scanId=${scanId}`);
+        const data2 = await res2.json();
+        if (res2.ok && data2.success && data2.data && data2.data.status === 'completed') {
+          result = data2.data;
+          break;
+        }
+        if (res2.ok && data2.data && data2.data.status === 'failed') {
+          throw new Error(data2.data.error || 'Scan failed');
+        }
+        attempts++;
+      }
+      if (!result) {
+        throw new Error('Scan timed out');
+      }
+      // Adapt result to ScanResult type for display
+      setScanResult({
+        id: result.id,
         niche,
         competitors,
-        hooks: [
-          "How I increased my following by 10k in 30 days using this simple trick",
-          "The content strategy that 99% of creators in the [niche] space are missing",
-          "I tested 5 different [niche] approaches - here's what actually worked",
-        ],
-        templates: [
-          "Problem → Solution → Result",
-          "Myth → Reality → Action",
-          "Before → After → Bridge",
-        ],
-        keywords: [
-          `${niche} tips`,
-          `${niche} strategy`,
-          `${niche} guide`,
-          `best ${niche} tools`,
-          `${niche} optimization`,
-        ],
+        hooks: result.metrics?.topPerformingPosts?.map((p: any) => p.hook) || [],
+        templates: ['Problem → Solution → Result', 'Myth → Reality → Action', 'Before → After → Bridge'], // Placeholder, adapt as needed
+        keywords: [niche + ' tips', niche + ' strategy', niche + ' guide'], // Placeholder, adapt as needed
         created_at: new Date().toISOString(),
-      };
-      
-      setScanResult(mockResult);
+      });
       setScanCompleted(true);
     } catch (err: any) {
       setError(err.message || 'An error occurred during the scan');

@@ -18,5 +18,5 @@
 | :--- | :--- | :--- | :--- |
 | **Autoposting** | Connect Scheduler UI to Backend | 🟡 **Partial** | The `AutopostScheduler` component uses its own Supabase client and has hardcoded values. It needs to be fully integrated with the `/api/autoposting/schedule` API. |
 | **Billing** | Fully Integrate Stripe Checkout | 🟡 **Partial** | The app uses pre-configured Stripe links. It should be updated to use the dynamic checkout session creation shown in `/api/temp/checkout/route.ts`. |
-| **Analytics** | Connect Dashboard to Live Data | 🟡 **Partial** | The analytics dashboard is using a mix of mock data and a partially implemented API. The `analyticsService.ts` needs to be updated to use live data, and the dashboard components need to be connected to it. |
+
 

@@ -32,6 +32,7 @@ import { CircularScore } from '@/components/ui/circular-score';
 import { VideoProcessingSkeleton, LoadingSpinner, ProcessingIndicator } from '@/components/ui/loading-states';
 import { NoVideosEmpty } from '@/components/ui/empty-states';
 import { UploadError, ApiError, ProcessingError } from '@/components/ui/error-states';
+import { useVideoUpload } from '@/hooks/useFileUpload';
 
 interface VideoResult {
   insights?: string[];
@@ -204,6 +205,67 @@ export default function AccelerateComponent() {
     })
   );
 
+  const { uploadFiles: uploadVideoFiles } = useVideoUpload({
+    generateThumbnails: true,
+    onSuccess: (results) => {
+      results.forEach(async (result) => {
+        if (result.url && user?.id) {
+          const { UserVideoService } = await import('@/services/userVideoService');
+          const videoService = new UserVideoService();
+          const tempVideoId = `temp-${result.file.name}`;
+
+          // Find the temporary video entry and update it with the actual video ID and URL
+          setVideos(prev => prev.map(v =>
+            v.id === tempVideoId ? {
+              ...v,
+              id: result.file.name, // Use filename as a temporary ID until DB provides one
+              videoUrl: result.url,
+              thumbnailUrl: result.thumbnailUrl,
+              status: 'uploaded',
+              columnId: 'todo',
+              loading: false,
+              uploadProgress: 100,
+            } : v
+          ));
+
+          // Now, save to database
+          const dbResult = await videoService.uploadVideo(user.id, {
+            file: result.file,
+            title: result.file.name,
+            thumbnailUrl: result.thumbnailUrl,
+          });
+
+          if (dbResult.success && dbResult.videoId) {
+            setVideos(prev => prev.map(v =>
+              v.id === result.file.name ? { ...v, id: dbResult.videoId!, status: 'processing', columnId: 'processing' } : v
+            ));
+          } else {
+            setVideos(prev => prev.map(v =>
+              v.id === result.file.name ? { ...v, status: 'error', error: dbResult.error || 'Database save failed' } : v
+            ));
+          }
+        }
+      });
+    },
+    onError: (error) => {
+      setHasError(true);
+      setErrorMessage(error);
+      setVideos(prev => prev.map(v => {
+        if (v.status === 'uploading') {
+          return { ...v, status: 'error', error: error, loading: false, uploadProgress: undefined };
+        }
+        return v;
+      }));
+    },
+    onProgress: (progressUpdates) => {
+      progressUpdates.forEach(update => {
+        setVideos(prev => prev.map(v =>
+          v.id === `temp-${update.file.name}` ? { ...v, uploadProgress: Math.round(update.progress), loading: update.status === 'uploading' } : v
+        ));
+      });
+    }
+  });
+
   // Load user videos
   React.useEffect(() => {
     async function loadUserVideos() {
@@ -257,96 +319,21 @@ export default function AccelerateComponent() {
     const files = event.target.files;
     if (!files || files.length === 0 || !user?.id) return;
 
-    try {
-      const { UserVideoService } = await import('@/services/userVideoService');
-      const videoService = new UserVideoService();
+    // Create temporary video entries to show in UI
+    const tempVideos: Video[] = Array.from(files).map((file, index) => ({
+      id: `temp-${file.name}`, // Use filename as a temporary ID
+      title: file.name,
+      status: 'uploading',
+      columnId: 'todo',
+      thumbnailUrl: '',
+      loading: true,
+      uploadProgress: 0,
+    }));
 
-      // Create temporary video entries to show in UI
-      const tempVideos: Video[] = Array.from(files).map((file, index) => ({
-        id: `temp-${Date.now()}-${index}`,
-        title: file.name,
-        status: 'uploading',
-        columnId: 'todo',
-        thumbnailUrl: '',
-        loading: true,
-        uploadProgress: 0,
-      }));
+    setVideos(prevVideos => [...tempVideos, ...prevVideos]);
 
-      setVideos(prevVideos => [...tempVideos, ...prevVideos]);
-
-      // Upload each file
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        const tempVideo = tempVideos[i];
-
-        // Simulate upload progress
-        let progress = 0;
-        const progressInterval = setInterval(() => {
-          progress += Math.random() * 15 + 5;
-          if (progress >= 95) progress = 95; // Stop at 95% until upload completes
-          
-          setVideos(prev => prev.map(v =>
-            v.id === tempVideo.id ? { ...v, uploadProgress: Math.round(progress) } : v
-          ));
-        }, 200);
-
-        try {
-          const result = await videoService.uploadVideo(user.id, {
-            file,
-            title: file.name,
-          });
-
-          clearInterval(progressInterval);
-
-          if (result.success && result.videoId) {
-            // Replace temp video with actual video
-            setVideos(prev => prev.map(v =>
-              v.id === tempVideo.id ? {
-                ...v,
-                id: result.videoId!,
-                status: 'processing',
-                columnId: 'processing',
-                uploadProgress: 100,
-                loading: true
-              } : v
-            ));
-
-            // Remove upload progress after a short delay
-            setTimeout(() => {
-              setVideos(prev => prev.map(v =>
-                v.id === result.videoId ? { ...v, uploadProgress: undefined } : v
-              ));
-            }, 1000);
-          } else {
-            // Handle upload error
-            setVideos(prev => prev.map(v =>
-              v.id === tempVideo.id ? {
-                ...v,
-                status: 'error',
-                error: result.error || 'Upload failed',
-                loading: false,
-                uploadProgress: undefined
-              } : v
-            ));
-          }
-        } catch (error) {
-          clearInterval(progressInterval);
-          console.error('Upload error:', error);
-          
-          setVideos(prev => prev.map(v =>
-            v.id === tempVideo.id ? {
-              ...v,
-              status: 'error',
-              error: 'Upload failed',
-              loading: false,
-              uploadProgress: undefined
-            } : v
-          ));
-        }
-      }
-    } catch (error) {
-      console.error('File upload error:', error);
-    }
+    // Use the useVideoUpload hook to handle the actual file upload and thumbnail generation
+    await uploadVideoFiles(Array.from(files));
 
     if (fileInputRef.current) {
       fileInputRef.current.value = '';

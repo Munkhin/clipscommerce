@@ -47,21 +47,6 @@ export default function PricingSection({ onGetStarted, navigate }: PricingSectio
         'Advanced analytics & reporting',
       ],
       highlighted: true,
-    },
-    {
-      name: 'Team',
-      subtitle: '$500/month',
-      annualPrice: 6000, // $500/month, billed annually
-      monthlyPrice: 500,
-      features: [
-        'Everything in Pro',
-        'Team dashboard access',
-        'Manage unlimited accounts',
-        'Brand Voice AI (for consistency)',
-        'Team collaboration mode',
-        'Priority support',
-      ],
-      highlighted: false,
     }
   ];
 
@@ -81,13 +66,6 @@ export default function PricingSection({ onGetStarted, navigate }: PricingSectio
       }
     }
     
-    if (plan.name === 'Team') {
-      if (isAnnual) {
-        return process.env.NEXT_PUBLIC_STRIPE_TEAM_YEARLY_LINK || "/dashboard";
-      } else {
-        return process.env.NEXT_PUBLIC_STRIPE_TEAM_MONTHLY_LINK || "/dashboard";
-      }
-    }
     
     return "/dashboard";
   };

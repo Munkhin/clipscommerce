@@ -2,7 +2,7 @@
 import { test, expect, Page } from '@playwright/test';
 
 test.describe('Consistency / Design-System', () => {
-  const pagesToTest = ['/', '/landing/pricing', '/landing/team'];
+  const pagesToTest = ['/', '/landing/pricing'];
 
   test('Primary CTA text should be consistent', async ({ page }) => {
     for (const path of pagesToTest) {

@@ -13,6 +13,20 @@ type FeatureFlag =
 export function isFeatureEnabled(flag: FeatureFlag): boolean {
   const envVar = `FEATURE_${flag}`;
   const value = process.env[envVar];
+  
+  // Check environment-based enabling for social auth
+  if (flag === 'INSTAGRAM_AUTH') {
+    return (value === 'true' || value === '1') && 
+           !!process.env.NEXT_PUBLIC_INSTAGRAM_CLIENT_ID && 
+           !!process.env.INSTAGRAM_CLIENT_SECRET;
+  }
+  
+  if (flag === 'YOUTUBE_AUTH') {
+    return (value === 'true' || value === '1') && 
+           !!process.env.NEXT_PUBLIC_YOUTUBE_CLIENT_ID && 
+           !!process.env.YOUTUBE_CLIENT_SECRET;
+  }
+  
   return value === 'true' || value === '1';
 }
 

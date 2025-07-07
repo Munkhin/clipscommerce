@@ -3,7 +3,7 @@ import { test, expect, Page } from '@playwright/test';
 import { AxeBuilder } from '@axe-core/playwright';
 
 test.describe('Accessibility', () => {
-  const pagesToTest = ['/', '/landing/pricing', '/landing/team', '/sign-in', '/sign-up'];
+  const pagesToTest = ['/', '/landing/pricing', '/sign-in', '/sign-up'];
 
   async function checkAccessibility(page: Page) {
     const accessibilityScanResults = await new AxeBuilder({ page }).analyze();

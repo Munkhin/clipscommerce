@@ -5,10 +5,7 @@ import { CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import GlassCard from '@/components/ui/GlassCard';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Loader2 } from 'lucide-react';
-// Import types for team-dashboard components
-import { BulkOperationsPanelProps } from '../team-dashboard/BulkOperationsPanel';
-import { AdvancedClientFiltersProps } from '../team-dashboard/AdvancedClientFilters';
-import { ClientDetailViewProps } from '../team-dashboard/ClientDetailView';
+// Import types for components
 
 // Generic loading skeleton
 function GenericSkeleton({ title = 'Loading...', rows = 3 }: { title?: string; rows?: number }) {
@@ -104,35 +101,6 @@ export const LazyPerformanceMonitoringDashboard = withLazyLoading(
   'LazyPerformanceMonitoringDashboard'
 );
 
-export const LazyTeamAnalyticsOverview = withLazyLoading(
-  () => import('../team-dashboard/TeamAnalyticsOverview'),
-  <DashboardSkeleton />,
-  'LazyTeamAnalyticsOverview'
-);
-
-export const LazyBulkOperationsPanel = withLazyLoading(
-  () => import('../team-dashboard/BulkOperationsPanel'),
-  <GenericSkeleton title="Loading Bulk Operations..." rows={6} />,
-  'LazyBulkOperationsPanel'
-);
-
-export const LazyAdvancedClientFilters = withLazyLoading(
-  () => import('../team-dashboard/AdvancedClientFilters'),
-  <GenericSkeleton title="Loading Filters..." rows={3} />,
-  'LazyAdvancedClientFilters'
-);
-
-export const LazyClientDetailView = withLazyLoading(
-  () => import('../team-dashboard/ClientDetailView'),
-  <GenericSkeleton title="Loading Client Details..." rows={8} />,
-  'LazyClientDetailView'
-);
-
-export const LazyWorkflowScheduler = withLazyLoading(
-  () => import('../team-dashboard/WorkflowScheduler'),
-  <GenericSkeleton title="Loading Scheduler..." rows={5} />,
-  'LazyWorkflowScheduler'
-);
 
 // Chart components (heavy dependencies)
 export const LazyRechartsComponents = {
